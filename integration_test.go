@@ -41,6 +41,27 @@ func TestListModelsWithPagination(t *testing.T) {
 	}
 }
 
+func TestPostModelOutputsWithUrl(t *testing.T) {
+	client := makeClient()
+	ctx := makeContext()
+
+	postModelOutputsResponse, err := client.PostModelOutputs(
+		ctx,
+		&api.PostModelOutputsRequest{
+			ModelId: GENERAL_MODEL_ID,
+			Inputs: []*api.Input{
+				{
+					Data: &api.Data{
+						Image: &api.Image{
+							Url: DOG_IMAGE_URL}}}}})
+	if err != nil {
+		panic(err)
+	}
+	if len(postModelOutputsResponse.Outputs[0].Data.Concepts) == 0 {
+		t.Errorf("Received no outputs")
+	}
+}
+
 func makeClient() api.V2Client {
 	baseGrpcUrl := os.Getenv("CLARIFAI_BASE_GRPC")
 	port := "443"
