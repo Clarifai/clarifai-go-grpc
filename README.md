@@ -20,34 +20,40 @@ go get github.com/Clarifai/clarifai-go-grpc@INSERT_VERSION_HERE
 
 ## Getting started
 
+Construct the `V2Client` object using which you access all the Clarifai API functionality, and a `Context` object which
+is used for authentication - remember to insert your own Clarifai API key (or PAT).
 
 ```go
 import (
-	"clarifai_grpc/proto/clarifai/api"
-	"clarifai_grpc/proto/clarifai/api/status"
 	"context"
+	"fmt"
+	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api"
+	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
-	"os"
 )
 
-baseGrpcUrl := "api.clarifai.com"
-port := "443"
-
-conn, err := grpc.Dial(baseGrpcUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
+conn, err := grpc.Dial(
+    "api.clarifai.com:443",
+    grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")),
+)
 if err != nil {
     panic(err)
 }
 client := api.NewV2Client(conn)
 
-apiKey := "YOUR_CLARIFAI_API_KEY_OR_PAT"
-ctx := metadata.AppendToOutgoingContext(context.Background(), "Authorization", "Key "+apiKey)
+ctx := metadata.AppendToOutgoingContext(
+    context.Background(),
+    "Authorization", "Key YOUR_CLARIFAI_API_KEY_OR_PAT",
+)
 ```
 
 Predict concepts in an image:
 
 ```go
+// This is a publicly available model ID.
+var GeneralModelId = "aaa03c23b3724a16a56b629203edc62c"
 response, err := client.PostModelOutputs(
     ctx,
     &api.PostModelOutputsRequest{
@@ -56,15 +62,21 @@ response, err := client.PostModelOutputs(
             {
                 Data: &api.Data{
                     Image: &api.Image{
-                        Url: DogImageUrl}}}}})
+                        Url: "https://samples.clarifai.com/dog2.jpeg",
+                    },
+                },
+            },
+        },
+    },
+)
 if err != nil {
     panic(err)
 }
-if statusObj.Code != status.StatusCode_SUCCESS {
-    panic(fmt.Sprintf("Unexpected status: %s", statusObj))
+if response.Status.Code != status.StatusCode_SUCCESS {
+    panic(fmt.Sprintf("Failed response: %s", response))
 }
 
-if len(response.Outputs[0].Data.Concepts) == 0 {
-    t.Errorf("Received no outputs")
+for _, concept := range response.Outputs[0].Data.Concepts {
+    fmt.Printf("%s: %.2f\n", concept.Name, concept.Value)
 }
 ```
