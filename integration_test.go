@@ -20,9 +20,7 @@ func TestGetModel(t *testing.T) {
 	ctx := makeContext()
 
 	response, err := client.GetModel(ctx, &api.GetModelRequest{ModelId: GeneralModelId})
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	assertSuccessResponse(t, response.Status)
 
 	if response.Model.Name != "general" {
@@ -35,9 +33,7 @@ func TestListModelsWithPagination(t *testing.T) {
 	ctx := makeContext()
 
 	response, err := client.ListModels(ctx, &api.ListModelsRequest{PerPage: 2})
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	assertSuccessResponse(t, response.Status)
 
 	if len(response.Models) != 2 {
@@ -64,9 +60,7 @@ func TestPostModelOutputsWithUrl(t *testing.T) {
 			},
 		},
 	)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	assertSuccessResponse(t, response.Status)
 
 	if len(response.Outputs[0].Data.Concepts) == 0 {
@@ -79,9 +73,7 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 	ctx := makeContext()
 
 	fileBytes, err := ioutil.ReadFile("test_assets/red-truck.png")
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	response, err := client.PostModelOutputs(
 		ctx,
@@ -98,9 +90,7 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 			},
 		},
 	)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	assertSuccessResponse(t, response.Status)
 
 	if len(response.Outputs[0].Data.Concepts) == 0 {
@@ -113,9 +103,7 @@ func makeClient() api.V2Client {
 	port := "443"
 
 	conn, err := grpc.Dial(baseGrpcUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	return api.NewV2Client(conn)
 }
 
@@ -127,5 +115,11 @@ func makeContext() context.Context {
 func assertSuccessResponse(t *testing.T, statusObj *status.Status) {
 	if statusObj.Code != status.StatusCode_SUCCESS {
 		t.Errorf("Unexpected status: %s", statusObj)
+	}
+}
+
+func check(err error) {
+	if err != nil {
+		panic(err)
 	}
 }
