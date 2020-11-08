@@ -2,6 +2,7 @@ package clarifai_grpc
 
 import (
 	"clarifai_grpc/proto/clarifai/api"
+	"clarifai_grpc/proto/clarifai/api/status"
 	"context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -10,21 +11,21 @@ import (
 	"testing"
 )
 
-
 var GENERAL_MODEL_ID = "aaa03c23b3724a16a56b629203edc62c"
 var DOG_IMAGE_URL = "https://samples.clarifai.com/dog2.jpeg"
-
 
 func TestGetModel(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	getModelResponse, err := client.GetModel(ctx, &api.GetModelRequest{ModelId: GENERAL_MODEL_ID})
+	response, err := client.GetModel(ctx, &api.GetModelRequest{ModelId: GENERAL_MODEL_ID})
 	if err != nil {
 		panic(err)
 	}
-	if getModelResponse.Model.Name != "general" {
-		t.Errorf("Expected model name `general`, got `%s`\n", getModelResponse.Model.Name)
+	assertSuccessResponse(t, response.Status)
+
+	if response.Model.Name != "general" {
+		t.Errorf("Expected model name `general`, got `%s`\n", response.Model.Name)
 	}
 }
 
@@ -32,12 +33,14 @@ func TestListModelsWithPagination(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	listModelsResponse, err := client.ListModels(ctx, &api.ListModelsRequest{PerPage: 2})
+	response, err := client.ListModels(ctx, &api.ListModelsRequest{PerPage: 2})
 	if err != nil {
 		panic(err)
 	}
-	if len(listModelsResponse.Models) != 2 {
-		t.Errorf("Expected 2 models, got %d\n", len(listModelsResponse.Models))
+	assertSuccessResponse(t, response.Status)
+
+	if len(response.Models) != 2 {
+		t.Errorf("Expected 2 models, got %d\n", len(response.Models))
 	}
 }
 
@@ -45,7 +48,7 @@ func TestPostModelOutputsWithUrl(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	postModelOutputsResponse, err := client.PostModelOutputs(
+	response, err := client.PostModelOutputs(
 		ctx,
 		&api.PostModelOutputsRequest{
 			ModelId: GENERAL_MODEL_ID,
@@ -57,7 +60,9 @@ func TestPostModelOutputsWithUrl(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	if len(postModelOutputsResponse.Outputs[0].Data.Concepts) == 0 {
+	assertSuccessResponse(t, response.Status)
+
+	if len(response.Outputs[0].Data.Concepts) == 0 {
 		t.Errorf("Received no outputs")
 	}
 }
@@ -76,4 +81,10 @@ func makeClient() api.V2Client {
 func makeContext() context.Context {
 	apiKey := os.Getenv("CLARIFAI_API_KEY")
 	return metadata.AppendToOutgoingContext(context.Background(), "Authorization", "Key "+apiKey)
+}
+
+func assertSuccessResponse(t *testing.T, statusObj *status.Status) {
+	if statusObj.Code != status.StatusCode_SUCCESS {
+		t.Errorf("Unexpected status: %s", statusObj)
+	}
 }
