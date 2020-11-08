@@ -11,14 +11,14 @@ import (
 	"testing"
 )
 
-var GENERAL_MODEL_ID = "aaa03c23b3724a16a56b629203edc62c"
-var DOG_IMAGE_URL = "https://samples.clarifai.com/dog2.jpeg"
+var GeneralModelId = "aaa03c23b3724a16a56b629203edc62c"
+var DogImageUrl = "https://samples.clarifai.com/dog2.jpeg"
 
 func TestGetModel(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	response, err := client.GetModel(ctx, &api.GetModelRequest{ModelId: GENERAL_MODEL_ID})
+	response, err := client.GetModel(ctx, &api.GetModelRequest{ModelId: GeneralModelId})
 	if err != nil {
 		panic(err)
 	}
@@ -51,12 +51,12 @@ func TestPostModelOutputsWithUrl(t *testing.T) {
 	response, err := client.PostModelOutputs(
 		ctx,
 		&api.PostModelOutputsRequest{
-			ModelId: GENERAL_MODEL_ID,
+			ModelId: GeneralModelId,
 			Inputs: []*api.Input{
 				{
 					Data: &api.Data{
 						Image: &api.Image{
-							Url: DOG_IMAGE_URL}}}}})
+							Url: DogImageUrl}}}}})
 	if err != nil {
 		panic(err)
 	}
