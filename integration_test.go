@@ -10,10 +10,12 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+	"time"
 )
 
 var GeneralModelId = "aaa03c23b3724a16a56b629203edc62c"
 var DogImageUrl = "https://samples.clarifai.com/dog2.jpeg"
+var NonExistingUrl = "https://example.com/non-existing.jpg"
 
 func TestGetModel(t *testing.T) {
 	client := makeClient()
@@ -96,6 +98,136 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 	if len(response.Outputs[0].Data.Concepts) == 0 {
 		t.Errorf("Received no outputs")
 	}
+}
+
+func TestFailedPostModelOutputs(t *testing.T) {
+	client := makeClient()
+	ctx := makeContext()
+
+	response, err := client.PostModelOutputs(
+		ctx,
+		&api.PostModelOutputsRequest{
+			ModelId: GeneralModelId,
+			Inputs: []*api.Input{
+				{
+					Data: &api.Data{
+						Image: &api.Image{
+							Url: NonExistingUrl,
+						},
+					},
+				},
+			},
+		},
+	)
+	check(err)
+	if response.Status.Code != status.StatusCode_FAILURE {
+		t.Errorf("Expected FAILURE response, got: %s\n", response.Status)
+	}
+	if response.Outputs[0].Status.Code != status.StatusCode_INPUT_DOWNLOAD_FAILED {
+		t.Errorf("Expected INPUT_DOWNLOAD_FAILED response, got: %s\n", response.Status)
+	}
+}
+
+func TestMixedStatusPostModelOutputs(t *testing.T) {
+	client := makeClient()
+	ctx := makeContext()
+
+	response, err := client.PostModelOutputs(
+		ctx,
+		&api.PostModelOutputsRequest{
+			ModelId: GeneralModelId,
+			Inputs: []*api.Input{
+				{
+					Data: &api.Data{
+						Image: &api.Image{
+							Url: DogImageUrl,
+						},
+					},
+				},
+				{
+					Data: &api.Data{
+						Image: &api.Image{
+							Url: NonExistingUrl,
+						},
+					},
+				},
+			},
+		},
+	)
+	check(err)
+	if response.Status.Code != status.StatusCode_MIXED_STATUS {
+		t.Errorf("Expected MIXED_STATUS response, got: %s\n", response.Status)
+	}
+	if response.Outputs[0].Status.Code != status.StatusCode_SUCCESS {
+		t.Errorf("Expected INPUT_DOWNLOAD_SUCCESS response, got: %s\n", response.Status)
+	}
+	if response.Outputs[1].Status.Code != status.StatusCode_INPUT_DOWNLOAD_FAILED {
+		t.Errorf("Expected INPUT_DOWNLOAD_FAILED response, got: %s\n", response.Status)
+	}
+}
+
+func TestPostPatchAndDeleteInput(t *testing.T) {
+	client := makeClient()
+	ctx := makeContext()
+
+	postInputsResponse, err := client.PostInputs(
+		ctx,
+		&api.PostInputsRequest{
+			Inputs: []*api.Input{
+				{
+					Data: &api.Data{
+						Image: &api.Image{
+							Url:               DogImageUrl,
+							AllowDuplicateUrl: true,
+						},
+					},
+				},
+			},
+		},
+	)
+	check(err)
+	assertSuccessResponse(t, postInputsResponse.Status)
+
+	inputId := postInputsResponse.Inputs[0].Id
+	for true {
+		getInputResponse, err := client.GetInput(ctx, &api.GetInputRequest{InputId: inputId})
+		check(err)
+		assertSuccessResponse(t, getInputResponse.Status)
+
+		inputStatusCode := getInputResponse.Input.Status.Code
+		if inputStatusCode == status.StatusCode_INPUT_DOWNLOAD_SUCCESS {
+			break
+		}
+		if inputStatusCode != status.StatusCode_INPUT_DOWNLOAD_PENDING && inputStatusCode != status.StatusCode_INPUT_DOWNLOAD_IN_PROGRESS {
+			t.Errorf("Waiting for input ID %s failed, status code is %s", inputId, inputStatusCode)
+		}
+		time.Sleep(1 * time.Second)
+	}
+
+	patchInputsResponse, err := client.PatchInputs(
+		ctx,
+		&api.PatchInputsRequest{
+			Action: "overwrite",
+			Inputs: []*api.Input{
+				{
+					Id: inputId,
+					Data: &api.Data{
+						Concepts: []*api.Concept{
+							{
+								Id: "very-red-truck",
+							},
+						},
+					},
+				},
+			},
+		},
+	)
+	check(err)
+	assertSuccessResponse(t, patchInputsResponse.Status)
+
+	deleteInputResponse, err := client.DeleteInput(ctx, &api.DeleteInputRequest{InputId: inputId})
+	check(err)
+	assertSuccessResponse(t, deleteInputResponse.Status)
 }
 
 func makeClient() api.V2Client {
