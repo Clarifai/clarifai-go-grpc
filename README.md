@@ -15,7 +15,7 @@ and natural language processing.
 # Installation
 
 ```
-WIP
+go get github.com/Clarifai/clarifai-go-grpc@INSERT_VERSION_HERE
 ```
 
 ## Getting started
