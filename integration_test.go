@@ -1,9 +1,9 @@
-package clarifai_grpc
+package tests
 
 import (
-	"clarifai_grpc/proto/clarifai/api"
-	"clarifai_grpc/proto/clarifai/api/status"
 	"context"
+	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api"
+	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"

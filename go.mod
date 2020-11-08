@@ -1,4 +1,4 @@
-module clarifai_grpc
+module github.com/Clarifai/clarifai-go-grpc
 
 go 1.13
 
