@@ -57,7 +57,13 @@ func TestPostModelOutputsWithUrl(t *testing.T) {
 				{
 					Data: &api.Data{
 						Image: &api.Image{
-							Url: DogImageUrl}}}}})
+							Url: DogImageUrl,
+						},
+					},
+				},
+			},
+		},
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -85,7 +91,13 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 				{
 					Data: &api.Data{
 						Image: &api.Image{
-							Base64: fileBytes}}}}})
+							Base64: fileBytes,
+						},
+					},
+				},
+			},
+		},
+	)
 	if err != nil {
 		panic(err)
 	}
