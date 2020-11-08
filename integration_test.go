@@ -10,9 +10,12 @@ import (
 	"testing"
 )
 
-func TestGetModel(t *testing.T) {
-	GENERAL_MODEL_ID := "aaa03c23b3724a16a56b629203edc62c"
 
+var GENERAL_MODEL_ID = "aaa03c23b3724a16a56b629203edc62c"
+var DOG_IMAGE_URL = "https://samples.clarifai.com/dog2.jpeg"
+
+
+func TestGetModel(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
@@ -42,7 +45,7 @@ func makeClient() api.V2Client {
 	baseGrpcUrl := os.Getenv("CLARIFAI_BASE_GRPC")
 	port := "443"
 
-	conn, err := grpc.Dial(baseGrpcUrl + ":" + port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
+	conn, err := grpc.Dial(baseGrpcUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	if err != nil {
 		panic(err)
 	}
@@ -51,5 +54,5 @@ func makeClient() api.V2Client {
 
 func makeContext() context.Context {
 	apiKey := os.Getenv("CLARIFAI_API_KEY")
-	return metadata.AppendToOutgoingContext(context.Background(), "Authorization", "Key " + apiKey)
+	return metadata.AppendToOutgoingContext(context.Background(), "Authorization", "Key "+apiKey)
 }
