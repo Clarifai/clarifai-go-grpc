@@ -22,6 +22,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
     - name: Get dependencies
+      shell: bash
       run: |
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
@@ -29,6 +30,7 @@ jobs:
             dep ensure
         fi
     - name: Test
+      shell: bash
       env:
         CLARIFAI_BASE_GRPC: ${{ secrets.CLARIFAI_BASE_GRPC }}
         CLARIFAI_API_KEY: ${{ secrets.CLARIFAI_API_KEY }}
