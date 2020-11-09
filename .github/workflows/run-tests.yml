@@ -7,20 +7,20 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
+    runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
         go-version: ^1.13
-
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
     - name: Get dependencies
       run: |
         go get -v -t -d ./...
@@ -28,7 +28,6 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
-
     - name: Test
       env:
         CLARIFAI_BASE_GRPC: ${{ secrets.CLARIFAI_BASE_GRPC }}
