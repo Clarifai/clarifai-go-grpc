@@ -31,6 +31,7 @@ jobs:
 
     - name: Test
       env:
+        CLARIFAI_BASE_GRPC: ${{ secrets.CLARIFAI_BASE_GRPC }}
         CLARIFAI_API_KEY: ${{ secrets.CLARIFAI_API_KEY }}
       run: go test -v .
 
