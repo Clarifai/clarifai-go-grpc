@@ -29,9 +29,6 @@ jobs:
             dep ensure
         fi
 
-    - name: Build
-      run: go build -v .
-
     - name: Test
       env:
         CLARIFAI_API_KEY: ${{ secrets.CLARIFAI_API_KEY }}
