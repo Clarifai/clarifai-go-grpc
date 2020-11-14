@@ -12,6 +12,7 @@ and natural language processing.
 * Sign up for a free account at: https://portal.clarifai.com/signup
 * Read the documentation at: https://docs.clarifai.com/
 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/Clarifai/clarifai-go-grpc/)](https://pkg.go.dev/github.com/Clarifai/clarifai-go-grpc/)
 [![Run tests](https://github.com/Clarifai/clarifai-go-grpc/workflows/Run%20tests/badge.svg)](https://github.com/Clarifai/clarifai-go-grpc/actions)
 
 # Installation
