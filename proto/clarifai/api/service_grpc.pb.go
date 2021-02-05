@@ -18,6 +18,14 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type V2Client interface {
+	// List concept relations between concepts in the platform.
+	// MUST be above ListConcepts so that if concept_id is empty this will still match
+	// /concepts/relations to list all the concept relations in the app.
+	ListConceptRelations(ctx context.Context, in *ListConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error)
+	// Post concept relations to create relations between concepts in the platform.
+	PostConceptRelations(ctx context.Context, in *PostConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error)
+	// Post concept relations to create relations between concepts in the platform.
+	DeleteConceptRelations(ctx context.Context, in *DeleteConceptRelationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all the concepts with their positive and negative counts
 	GetConceptCounts(ctx context.Context, in *GetConceptCountsRequest, opts ...grpc.CallOption) (*MultiConceptCountResponse, error)
 	// Get a specific concept from an app.
@@ -41,12 +49,6 @@ type V2Client interface {
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
 	PatchConceptLanguages(ctx context.Context, in *PatchConceptLanguagesRequest, opts ...grpc.CallOption) (*MultiConceptLanguageResponse, error)
-	// List concept relations between concepts in the platform.
-	ListConceptRelations(ctx context.Context, in *ListConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error)
-	// Post concept relations to create relations between concepts in the platform.
-	PostConceptRelations(ctx context.Context, in *PostConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error)
-	// Post concept relations to create relations between concepts in the platform.
-	DeleteConceptRelations(ctx context.Context, in *DeleteConceptRelationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all domain graphs.
 	ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
@@ -61,16 +63,20 @@ type V2Client interface {
 	PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
 	PatchAnnotations(ctx context.Context, in *PatchAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
+	// Patch annotations status by worker id and task id.
+	PatchAnnotationsStatus(ctx context.Context, in *PatchAnnotationsStatusRequest, opts ...grpc.CallOption) (*PatchAnnotationsStatusResponse, error)
 	// Delete a single annotation.
 	DeleteAnnotation(ctx context.Context, in *DeleteAnnotationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(ctx context.Context, in *DeleteAnnotationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Execute a search over annotation
 	PostAnnotationsSearches(ctx context.Context, in *PostAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
-	// Patch one or more inputs.
+	// Get input count per status.
 	GetInputCount(ctx context.Context, in *GetInputCountRequest, opts ...grpc.CallOption) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
 	StreamInputs(ctx context.Context, in *StreamInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// Get a specific input from an app.
+	GetInputSamples(ctx context.Context, in *GetInputSamplesRequest, opts ...grpc.CallOption) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(ctx context.Context, in *GetInputRequest, opts ...grpc.CallOption) (*SingleInputResponse, error)
 	// List all the inputs.
@@ -93,6 +99,7 @@ type V2Client interface {
 	// Get a specific model type.
 	GetModelType(ctx context.Context, in *GetModelTypeRequest, opts ...grpc.CallOption) (*SingleModelTypeResponse, error)
 	// List all the model types available in the platform.
+	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(ctx context.Context, in *ListModelTypesRequest, opts ...grpc.CallOption) (*MultiModelTypeResponse, error)
 	// Get a specific model from an app.
 	GetModel(ctx context.Context, in *GetModelRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
@@ -222,8 +229,10 @@ type V2Client interface {
 	GetAppDuplication(ctx context.Context, in *GetAppDuplicationRequest, opts ...grpc.CallOption) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
 	PostTasks(ctx context.Context, in *PostTasksRequest, opts ...grpc.CallOption) (*MultiTaskResponse, error)
-	// Task annotation counts
-	GetTaskAnnotationsCount(ctx context.Context, in *GetTaskAnnotationsCountRequest, opts ...grpc.CallOption) (*SingleTaskAnnotationsCountResponse, error)
+	// Task annotation count
+	GetTaskAnnotationCount(ctx context.Context, in *GetTaskCountRequest, opts ...grpc.CallOption) (*SingleTaskCountResponse, error)
+	// Task Input count
+	GetTaskInputCount(ctx context.Context, in *GetTaskCountRequest, opts ...grpc.CallOption) (*SingleTaskCountResponse, error)
 	// Get a specific task from an app.
 	GetTask(ctx context.Context, in *GetTaskRequest, opts ...grpc.CallOption) (*SingleTaskResponse, error)
 	// List tasks from an app.
@@ -258,6 +267,33 @@ type v2Client struct {
 
 func NewV2Client(cc grpc.ClientConnInterface) V2Client {
 	return &v2Client{cc}
+}
+
+func (c *v2Client) ListConceptRelations(ctx context.Context, in *ListConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error) {
+	out := new(MultiConceptRelationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListConceptRelations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostConceptRelations(ctx context.Context, in *PostConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error) {
+	out := new(MultiConceptRelationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostConceptRelations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteConceptRelations(ctx context.Context, in *DeleteConceptRelationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteConceptRelations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *v2Client) GetConceptCounts(ctx context.Context, in *GetConceptCountsRequest, opts ...grpc.CallOption) (*MultiConceptCountResponse, error) {
@@ -350,33 +386,6 @@ func (c *v2Client) PatchConceptLanguages(ctx context.Context, in *PatchConceptLa
 	return out, nil
 }
 
-func (c *v2Client) ListConceptRelations(ctx context.Context, in *ListConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error) {
-	out := new(MultiConceptRelationResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListConceptRelations", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostConceptRelations(ctx context.Context, in *PostConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error) {
-	out := new(MultiConceptRelationResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostConceptRelations", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteConceptRelations(ctx context.Context, in *DeleteConceptRelationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteConceptRelations", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error) {
 	out := new(MultiKnowledgeGraphResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListKnowledgeGraphs", in, out, opts...)
@@ -440,6 +449,15 @@ func (c *v2Client) PatchAnnotations(ctx context.Context, in *PatchAnnotationsReq
 	return out, nil
 }
 
+func (c *v2Client) PatchAnnotationsStatus(ctx context.Context, in *PatchAnnotationsStatusRequest, opts ...grpc.CallOption) (*PatchAnnotationsStatusResponse, error) {
+	out := new(PatchAnnotationsStatusResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchAnnotationsStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) DeleteAnnotation(ctx context.Context, in *DeleteAnnotationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteAnnotation", in, out, opts...)
@@ -479,6 +497,15 @@ func (c *v2Client) GetInputCount(ctx context.Context, in *GetInputCountRequest, 
 func (c *v2Client) StreamInputs(ctx context.Context, in *StreamInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
 	out := new(MultiInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/StreamInputs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetInputSamples(ctx context.Context, in *GetInputSamplesRequest, opts ...grpc.CallOption) (*MultiInputAnnotationResponse, error) {
+	out := new(MultiInputAnnotationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInputSamples", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1097,9 +1124,18 @@ func (c *v2Client) PostTasks(ctx context.Context, in *PostTasksRequest, opts ...
 	return out, nil
 }
 
-func (c *v2Client) GetTaskAnnotationsCount(ctx context.Context, in *GetTaskAnnotationsCountRequest, opts ...grpc.CallOption) (*SingleTaskAnnotationsCountResponse, error) {
-	out := new(SingleTaskAnnotationsCountResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetTaskAnnotationsCount", in, out, opts...)
+func (c *v2Client) GetTaskAnnotationCount(ctx context.Context, in *GetTaskCountRequest, opts ...grpc.CallOption) (*SingleTaskCountResponse, error) {
+	out := new(SingleTaskCountResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetTaskAnnotationCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetTaskInputCount(ctx context.Context, in *GetTaskCountRequest, opts ...grpc.CallOption) (*SingleTaskCountResponse, error) {
+	out := new(SingleTaskCountResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetTaskInputCount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1209,6 +1245,14 @@ func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValu
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
 type V2Server interface {
+	// List concept relations between concepts in the platform.
+	// MUST be above ListConcepts so that if concept_id is empty this will still match
+	// /concepts/relations to list all the concept relations in the app.
+	ListConceptRelations(context.Context, *ListConceptRelationsRequest) (*MultiConceptRelationResponse, error)
+	// Post concept relations to create relations between concepts in the platform.
+	PostConceptRelations(context.Context, *PostConceptRelationsRequest) (*MultiConceptRelationResponse, error)
+	// Post concept relations to create relations between concepts in the platform.
+	DeleteConceptRelations(context.Context, *DeleteConceptRelationsRequest) (*status.BaseResponse, error)
 	// List all the concepts with their positive and negative counts
 	GetConceptCounts(context.Context, *GetConceptCountsRequest) (*MultiConceptCountResponse, error)
 	// Get a specific concept from an app.
@@ -1232,12 +1276,6 @@ type V2Server interface {
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
 	PatchConceptLanguages(context.Context, *PatchConceptLanguagesRequest) (*MultiConceptLanguageResponse, error)
-	// List concept relations between concepts in the platform.
-	ListConceptRelations(context.Context, *ListConceptRelationsRequest) (*MultiConceptRelationResponse, error)
-	// Post concept relations to create relations between concepts in the platform.
-	PostConceptRelations(context.Context, *PostConceptRelationsRequest) (*MultiConceptRelationResponse, error)
-	// Post concept relations to create relations between concepts in the platform.
-	DeleteConceptRelations(context.Context, *DeleteConceptRelationsRequest) (*status.BaseResponse, error)
 	// List all domain graphs.
 	ListKnowledgeGraphs(context.Context, *ListKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
@@ -1252,16 +1290,20 @@ type V2Server interface {
 	PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
 	PatchAnnotations(context.Context, *PatchAnnotationsRequest) (*MultiAnnotationResponse, error)
+	// Patch annotations status by worker id and task id.
+	PatchAnnotationsStatus(context.Context, *PatchAnnotationsStatusRequest) (*PatchAnnotationsStatusResponse, error)
 	// Delete a single annotation.
 	DeleteAnnotation(context.Context, *DeleteAnnotationRequest) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(context.Context, *DeleteAnnotationsRequest) (*status.BaseResponse, error)
 	// Execute a search over annotation
 	PostAnnotationsSearches(context.Context, *PostAnnotationsSearchesRequest) (*MultiSearchResponse, error)
-	// Patch one or more inputs.
+	// Get input count per status.
 	GetInputCount(context.Context, *GetInputCountRequest) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
 	StreamInputs(context.Context, *StreamInputsRequest) (*MultiInputResponse, error)
+	// Get a specific input from an app.
+	GetInputSamples(context.Context, *GetInputSamplesRequest) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error)
 	// List all the inputs.
@@ -1284,6 +1326,7 @@ type V2Server interface {
 	// Get a specific model type.
 	GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error)
 	// List all the model types available in the platform.
+	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(context.Context, *ListModelTypesRequest) (*MultiModelTypeResponse, error)
 	// Get a specific model from an app.
 	GetModel(context.Context, *GetModelRequest) (*SingleModelResponse, error)
@@ -1413,8 +1456,10 @@ type V2Server interface {
 	GetAppDuplication(context.Context, *GetAppDuplicationRequest) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
 	PostTasks(context.Context, *PostTasksRequest) (*MultiTaskResponse, error)
-	// Task annotation counts
-	GetTaskAnnotationsCount(context.Context, *GetTaskAnnotationsCountRequest) (*SingleTaskAnnotationsCountResponse, error)
+	// Task annotation count
+	GetTaskAnnotationCount(context.Context, *GetTaskCountRequest) (*SingleTaskCountResponse, error)
+	// Task Input count
+	GetTaskInputCount(context.Context, *GetTaskCountRequest) (*SingleTaskCountResponse, error)
 	// Get a specific task from an app.
 	GetTask(context.Context, *GetTaskRequest) (*SingleTaskResponse, error)
 	// List tasks from an app.
@@ -1448,6 +1493,15 @@ type V2Server interface {
 type UnimplementedV2Server struct {
 }
 
+func (UnimplementedV2Server) ListConceptRelations(context.Context, *ListConceptRelationsRequest) (*MultiConceptRelationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListConceptRelations not implemented")
+}
+func (UnimplementedV2Server) PostConceptRelations(context.Context, *PostConceptRelationsRequest) (*MultiConceptRelationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptRelations not implemented")
+}
+func (UnimplementedV2Server) DeleteConceptRelations(context.Context, *DeleteConceptRelationsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteConceptRelations not implemented")
+}
 func (UnimplementedV2Server) GetConceptCounts(context.Context, *GetConceptCountsRequest) (*MultiConceptCountResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetConceptCounts not implemented")
 }
@@ -1478,15 +1532,6 @@ func (UnimplementedV2Server) PostConceptLanguages(context.Context, *PostConceptL
 func (UnimplementedV2Server) PatchConceptLanguages(context.Context, *PatchConceptLanguagesRequest) (*MultiConceptLanguageResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchConceptLanguages not implemented")
 }
-func (UnimplementedV2Server) ListConceptRelations(context.Context, *ListConceptRelationsRequest) (*MultiConceptRelationResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListConceptRelations not implemented")
-}
-func (UnimplementedV2Server) PostConceptRelations(context.Context, *PostConceptRelationsRequest) (*MultiConceptRelationResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptRelations not implemented")
-}
-func (UnimplementedV2Server) DeleteConceptRelations(context.Context, *DeleteConceptRelationsRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteConceptRelations not implemented")
-}
 func (UnimplementedV2Server) ListKnowledgeGraphs(context.Context, *ListKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListKnowledgeGraphs not implemented")
 }
@@ -1508,6 +1553,9 @@ func (UnimplementedV2Server) PostAnnotations(context.Context, *PostAnnotationsRe
 func (UnimplementedV2Server) PatchAnnotations(context.Context, *PatchAnnotationsRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotations not implemented")
 }
+func (UnimplementedV2Server) PatchAnnotationsStatus(context.Context, *PatchAnnotationsStatusRequest) (*PatchAnnotationsStatusResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotationsStatus not implemented")
+}
 func (UnimplementedV2Server) DeleteAnnotation(context.Context, *DeleteAnnotationRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotation not implemented")
 }
@@ -1522,6 +1570,9 @@ func (UnimplementedV2Server) GetInputCount(context.Context, *GetInputCountReques
 }
 func (UnimplementedV2Server) StreamInputs(context.Context, *StreamInputsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method StreamInputs not implemented")
+}
+func (UnimplementedV2Server) GetInputSamples(context.Context, *GetInputSamplesRequest) (*MultiInputAnnotationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetInputSamples not implemented")
 }
 func (UnimplementedV2Server) GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInput not implemented")
@@ -1727,8 +1778,11 @@ func (UnimplementedV2Server) GetAppDuplication(context.Context, *GetAppDuplicati
 func (UnimplementedV2Server) PostTasks(context.Context, *PostTasksRequest) (*MultiTaskResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostTasks not implemented")
 }
-func (UnimplementedV2Server) GetTaskAnnotationsCount(context.Context, *GetTaskAnnotationsCountRequest) (*SingleTaskAnnotationsCountResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetTaskAnnotationsCount not implemented")
+func (UnimplementedV2Server) GetTaskAnnotationCount(context.Context, *GetTaskCountRequest) (*SingleTaskCountResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetTaskAnnotationCount not implemented")
+}
+func (UnimplementedV2Server) GetTaskInputCount(context.Context, *GetTaskCountRequest) (*SingleTaskCountResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetTaskInputCount not implemented")
 }
 func (UnimplementedV2Server) GetTask(context.Context, *GetTaskRequest) (*SingleTaskResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetTask not implemented")
@@ -1774,6 +1828,60 @@ type UnsafeV2Server interface {
 
 func RegisterV2Server(s grpc.ServiceRegistrar, srv V2Server) {
 	s.RegisterService(&_V2_serviceDesc, srv)
+}
+
+func _V2_ListConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListConceptRelationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListConceptRelations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListConceptRelations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListConceptRelations(ctx, req.(*ListConceptRelationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostConceptRelationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostConceptRelations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostConceptRelations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostConceptRelations(ctx, req.(*PostConceptRelationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteConceptRelationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteConceptRelations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteConceptRelations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteConceptRelations(ctx, req.(*DeleteConceptRelationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _V2_GetConceptCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1956,60 +2064,6 @@ func _V2_PatchConceptLanguages_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_ListConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListConceptRelationsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListConceptRelations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/ListConceptRelations",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListConceptRelations(ctx, req.(*ListConceptRelationsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostConceptRelationsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostConceptRelations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/PostConceptRelations",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostConceptRelations(ctx, req.(*PostConceptRelationsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteConceptRelationsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteConceptRelations(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/DeleteConceptRelations",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteConceptRelations(ctx, req.(*DeleteConceptRelationsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_ListKnowledgeGraphs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListKnowledgeGraphsRequest)
 	if err := dec(in); err != nil {
@@ -2136,6 +2190,24 @@ func _V2_PatchAnnotations_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchAnnotationsStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAnnotationsStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAnnotationsStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchAnnotationsStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAnnotationsStatus(ctx, req.(*PatchAnnotationsStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_DeleteAnnotation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteAnnotationRequest)
 	if err := dec(in); err != nil {
@@ -2222,6 +2294,24 @@ func _V2_StreamInputs_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).StreamInputs(ctx, req.(*StreamInputsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetInputSamples_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInputSamplesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetInputSamples(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetInputSamples",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetInputSamples(ctx, req.(*GetInputSamplesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3450,20 +3540,38 @@ func _V2_PostTasks_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_GetTaskAnnotationsCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTaskAnnotationsCountRequest)
+func _V2_GetTaskAnnotationCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTaskCountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V2Server).GetTaskAnnotationsCount(ctx, in)
+		return srv.(V2Server).GetTaskAnnotationCount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/clarifai.api.V2/GetTaskAnnotationsCount",
+		FullMethod: "/clarifai.api.V2/GetTaskAnnotationCount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetTaskAnnotationsCount(ctx, req.(*GetTaskAnnotationsCountRequest))
+		return srv.(V2Server).GetTaskAnnotationCount(ctx, req.(*GetTaskCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetTaskInputCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTaskCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetTaskInputCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetTaskInputCount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetTaskInputCount(ctx, req.(*GetTaskCountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3671,6 +3779,18 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*V2Server)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "ListConceptRelations",
+			Handler:    _V2_ListConceptRelations_Handler,
+		},
+		{
+			MethodName: "PostConceptRelations",
+			Handler:    _V2_PostConceptRelations_Handler,
+		},
+		{
+			MethodName: "DeleteConceptRelations",
+			Handler:    _V2_DeleteConceptRelations_Handler,
+		},
+		{
 			MethodName: "GetConceptCounts",
 			Handler:    _V2_GetConceptCounts_Handler,
 		},
@@ -3711,18 +3831,6 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchConceptLanguages_Handler,
 		},
 		{
-			MethodName: "ListConceptRelations",
-			Handler:    _V2_ListConceptRelations_Handler,
-		},
-		{
-			MethodName: "PostConceptRelations",
-			Handler:    _V2_PostConceptRelations_Handler,
-		},
-		{
-			MethodName: "DeleteConceptRelations",
-			Handler:    _V2_DeleteConceptRelations_Handler,
-		},
-		{
 			MethodName: "ListKnowledgeGraphs",
 			Handler:    _V2_ListKnowledgeGraphs_Handler,
 		},
@@ -3751,6 +3859,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchAnnotations_Handler,
 		},
 		{
+			MethodName: "PatchAnnotationsStatus",
+			Handler:    _V2_PatchAnnotationsStatus_Handler,
+		},
+		{
 			MethodName: "DeleteAnnotation",
 			Handler:    _V2_DeleteAnnotation_Handler,
 		},
@@ -3769,6 +3881,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "StreamInputs",
 			Handler:    _V2_StreamInputs_Handler,
+		},
+		{
+			MethodName: "GetInputSamples",
+			Handler:    _V2_GetInputSamples_Handler,
 		},
 		{
 			MethodName: "GetInput",
@@ -4043,8 +4159,12 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostTasks_Handler,
 		},
 		{
-			MethodName: "GetTaskAnnotationsCount",
-			Handler:    _V2_GetTaskAnnotationsCount_Handler,
+			MethodName: "GetTaskAnnotationCount",
+			Handler:    _V2_GetTaskAnnotationCount_Handler,
+		},
+		{
+			MethodName: "GetTaskInputCount",
+			Handler:    _V2_GetTaskInputCount_Handler,
 		},
 		{
 			MethodName: "GetTask",
