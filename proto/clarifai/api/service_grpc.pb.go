@@ -87,10 +87,10 @@ type V2Client interface {
 	PostInputs(ctx context.Context, in *PostInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(ctx context.Context, in *PatchInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// Delete a single input.  This call is synchronous.
+	// Delete a single input asynchronously.
 	DeleteInput(ctx context.Context, in *DeleteInputRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple inputs in one request.
-	// This call is asynchronous. Use DeleteInput if you want a synchronous version.
+	// This call is asynchronous.
 	DeleteInputs(ctx context.Context, in *DeleteInputsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Execute a search over input
 	PostInputsSearches(ctx context.Context, in *PostInputsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
@@ -130,6 +130,7 @@ type V2Client interface {
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
+	PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(ctx context.Context, in *DeleteModelVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get the evaluation metrics for a model version.
@@ -169,7 +170,7 @@ type V2Client interface {
 	// the user the scopes/access of the key/credential they're providing, as computed by
 	// our authorizer:
 	MyScopes(ctx context.Context, in *MyScopesRequest, opts ...grpc.CallOption) (*MultiScopeResponse, error)
-	// List all auth scopes available.
+	// List all auth scopes available to me as a user.
 	ListScopes(ctx context.Context, in *ListScopesRequest, opts ...grpc.CallOption) (*MultiScopeDepsResponse, error)
 	// Get a specific app from an app.
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*SingleAppResponse, error)
@@ -704,6 +705,15 @@ func (c *v2Client) ListModelVersions(ctx context.Context, in *ListModelVersionsR
 func (c *v2Client) PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error) {
 	out := new(SingleModelResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error) {
+	out := new(MultiModelVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModelVersions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1314,10 +1324,10 @@ type V2Server interface {
 	PostInputs(context.Context, *PostInputsRequest) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(context.Context, *PatchInputsRequest) (*MultiInputResponse, error)
-	// Delete a single input.  This call is synchronous.
+	// Delete a single input asynchronously.
 	DeleteInput(context.Context, *DeleteInputRequest) (*status.BaseResponse, error)
 	// Delete multiple inputs in one request.
-	// This call is asynchronous. Use DeleteInput if you want a synchronous version.
+	// This call is asynchronous.
 	DeleteInputs(context.Context, *DeleteInputsRequest) (*status.BaseResponse, error)
 	// Execute a search over input
 	PostInputsSearches(context.Context, *PostInputsSearchesRequest) (*MultiSearchResponse, error)
@@ -1357,6 +1367,7 @@ type V2Server interface {
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error)
+	PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error)
 	// Get the evaluation metrics for a model version.
@@ -1396,7 +1407,7 @@ type V2Server interface {
 	// the user the scopes/access of the key/credential they're providing, as computed by
 	// our authorizer:
 	MyScopes(context.Context, *MyScopesRequest) (*MultiScopeResponse, error)
-	// List all auth scopes available.
+	// List all auth scopes available to me as a user.
 	ListScopes(context.Context, *ListScopesRequest) (*MultiScopeDepsResponse, error)
 	// Get a specific app from an app.
 	GetApp(context.Context, *GetAppRequest) (*SingleAppResponse, error)
@@ -1639,6 +1650,9 @@ func (UnimplementedV2Server) ListModelVersions(context.Context, *ListModelVersio
 }
 func (UnimplementedV2Server) PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersions not implemented")
+}
+func (UnimplementedV2Server) PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModelVersions not implemented")
 }
 func (UnimplementedV2Server) DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelVersion not implemented")
@@ -2708,6 +2722,24 @@ func _V2_PostModelVersions_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostModelVersions(ctx, req.(*PostModelVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchModelVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModelVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModelVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModelVersions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModelVersions(ctx, req.(*PatchModelVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3973,6 +4005,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelVersions",
 			Handler:    _V2_PostModelVersions_Handler,
+		},
+		{
+			MethodName: "PatchModelVersions",
+			Handler:    _V2_PatchModelVersions_Handler,
 		},
 		{
 			MethodName: "DeleteModelVersion",
