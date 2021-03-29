@@ -4,7 +4,7 @@ package api
 
 import (
 	context "context"
-	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
+	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status1 "google.golang.org/grpc/status"
