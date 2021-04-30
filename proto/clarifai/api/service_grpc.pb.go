@@ -4,7 +4,7 @@ package api
 
 import (
 	context "context"
-	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
+	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status1 "google.golang.org/grpc/status"
@@ -137,6 +137,10 @@ type V2Client interface {
 	GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
+	// Lists model references tied to a particular model id.
+	ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
+	GetModelVersionInputExample(ctx context.Context, in *GetModelVersionInputExampleRequest, opts ...grpc.CallOption) (*SingleModelVersionInputExampleResponse, error)
+	ListModelVersionInputExamples(ctx context.Context, in *ListModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*SingleWorkflowResponse, error)
 	// List all the workflows.
@@ -741,6 +745,33 @@ func (c *v2Client) GetModelVersionMetrics(ctx context.Context, in *GetModelVersi
 func (c *v2Client) PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error) {
 	out := new(SingleModelVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error) {
+	out := new(MultiModelReferenceResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelReferences", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetModelVersionInputExample(ctx context.Context, in *GetModelVersionInputExampleRequest, opts ...grpc.CallOption) (*SingleModelVersionInputExampleResponse, error) {
+	out := new(SingleModelVersionInputExampleResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelVersionInputExample", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListModelVersionInputExamples(ctx context.Context, in *ListModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error) {
+	out := new(MultiModelVersionInputExampleResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelVersionInputExamples", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1374,6 +1405,10 @@ type V2Server interface {
 	GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
+	// Lists model references tied to a particular model id.
+	ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error)
+	GetModelVersionInputExample(context.Context, *GetModelVersionInputExampleRequest) (*SingleModelVersionInputExampleResponse, error)
+	ListModelVersionInputExamples(context.Context, *ListModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*SingleWorkflowResponse, error)
 	// List all the workflows.
@@ -1662,6 +1697,15 @@ func (UnimplementedV2Server) GetModelVersionMetrics(context.Context, *GetModelVe
 }
 func (UnimplementedV2Server) PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionMetrics not implemented")
+}
+func (UnimplementedV2Server) ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListModelReferences not implemented")
+}
+func (UnimplementedV2Server) GetModelVersionInputExample(context.Context, *GetModelVersionInputExampleRequest) (*SingleModelVersionInputExampleResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetModelVersionInputExample not implemented")
+}
+func (UnimplementedV2Server) ListModelVersionInputExamples(context.Context, *ListModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListModelVersionInputExamples not implemented")
 }
 func (UnimplementedV2Server) GetWorkflow(context.Context, *GetWorkflowRequest) (*SingleWorkflowResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflow not implemented")
@@ -2794,6 +2838,60 @@ func _V2_PostModelVersionMetrics_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostModelVersionMetrics(ctx, req.(*PostModelVersionMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListModelReferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListModelReferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListModelReferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListModelReferences",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListModelReferences(ctx, req.(*ListModelReferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetModelVersionInputExample_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetModelVersionInputExampleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetModelVersionInputExample(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetModelVersionInputExample",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetModelVersionInputExample(ctx, req.(*GetModelVersionInputExampleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListModelVersionInputExamples_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListModelVersionInputExamplesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListModelVersionInputExamples(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListModelVersionInputExamples",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListModelVersionInputExamples(ctx, req.(*ListModelVersionInputExamplesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4021,6 +4119,18 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelVersionMetrics",
 			Handler:    _V2_PostModelVersionMetrics_Handler,
+		},
+		{
+			MethodName: "ListModelReferences",
+			Handler:    _V2_ListModelReferences_Handler,
+		},
+		{
+			MethodName: "GetModelVersionInputExample",
+			Handler:    _V2_GetModelVersionInputExample_Handler,
+		},
+		{
+			MethodName: "ListModelVersionInputExamples",
+			Handler:    _V2_ListModelVersionInputExamples_Handler,
 		},
 		{
 			MethodName: "GetWorkflow",
