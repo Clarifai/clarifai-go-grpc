@@ -98,6 +98,8 @@ type V2Client interface {
 	PostModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (*MultiOutputResponse, error)
 	// Get a specific model type.
 	GetModelType(ctx context.Context, in *GetModelTypeRequest, opts ...grpc.CallOption) (*SingleModelTypeResponse, error)
+	// List all the supported open source licenses in the platform.
+	ListOpenSourceLicenses(ctx context.Context, in *ListOpenSourceLicensesRequest, opts ...grpc.CallOption) (*ListOpenSourceLicensesResponse, error)
 	// List all the model types available in the platform.
 	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(ctx context.Context, in *ListModelTypesRequest, opts ...grpc.CallOption) (*MultiModelTypeResponse, error)
@@ -156,6 +158,14 @@ type V2Client interface {
 	// Predict using a workflow.
 	PostWorkflowResults(ctx context.Context, in *PostWorkflowResultsRequest, opts ...grpc.CallOption) (*PostWorkflowResultsResponse, error)
 	PostWorkflowResultsSimilarity(ctx context.Context, in *PostWorkflowResultsSimilarityRequest, opts ...grpc.CallOption) (*PostWorkflowResultsSimilarityResponse, error)
+	// List workflow versions.
+	ListWorkflowVersions(ctx context.Context, in *ListWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error)
+	// Get single workflow version.
+	GetWorkflowVersion(ctx context.Context, in *GetWorkflowVersionRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionResponse, error)
+	// Delete workflow versions.
+	DeleteWorkflowVersions(ctx context.Context, in *DeleteWorkflowVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Patch workflow versions.
+	PatchWorkflowVersions(ctx context.Context, in *PatchWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error)
 	// Get a specific key from an app.
 	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error)
 	// List all the keys.
@@ -264,6 +274,10 @@ type V2Client interface {
 	DeleteCollectors(ctx context.Context, in *DeleteCollectorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
+	// Increase the view metric for a detail view
+	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List the view metrics for a detail view
+	ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error)
 }
 
 type v2Client struct {
@@ -598,6 +612,15 @@ func (c *v2Client) GetModelType(ctx context.Context, in *GetModelTypeRequest, op
 	return out, nil
 }
 
+func (c *v2Client) ListOpenSourceLicenses(ctx context.Context, in *ListOpenSourceLicensesRequest, opts ...grpc.CallOption) (*ListOpenSourceLicensesResponse, error) {
+	out := new(ListOpenSourceLicensesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOpenSourceLicenses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListModelTypes(ctx context.Context, in *ListModelTypesRequest, opts ...grpc.CallOption) (*MultiModelTypeResponse, error) {
 	out := new(MultiModelTypeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelTypes", in, out, opts...)
@@ -844,6 +867,42 @@ func (c *v2Client) PostWorkflowResults(ctx context.Context, in *PostWorkflowResu
 func (c *v2Client) PostWorkflowResultsSimilarity(ctx context.Context, in *PostWorkflowResultsSimilarityRequest, opts ...grpc.CallOption) (*PostWorkflowResultsSimilarityResponse, error) {
 	out := new(PostWorkflowResultsSimilarityResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostWorkflowResultsSimilarity", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListWorkflowVersions(ctx context.Context, in *ListWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error) {
+	out := new(MultiWorkflowVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListWorkflowVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetWorkflowVersion(ctx context.Context, in *GetWorkflowVersionRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionResponse, error) {
+	out := new(SingleWorkflowVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetWorkflowVersion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteWorkflowVersions(ctx context.Context, in *DeleteWorkflowVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteWorkflowVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchWorkflowVersions(ctx context.Context, in *PatchWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error) {
+	out := new(MultiWorkflowVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchWorkflowVersions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1282,6 +1341,24 @@ func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValu
 	return out, nil
 }
 
+func (c *v2Client) PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostTrendingMetricsView", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error) {
+	out := new(MultiTrendingMetricsViewResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTrendingMetricsViews", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -1366,6 +1443,8 @@ type V2Server interface {
 	PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error)
 	// Get a specific model type.
 	GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error)
+	// List all the supported open source licenses in the platform.
+	ListOpenSourceLicenses(context.Context, *ListOpenSourceLicensesRequest) (*ListOpenSourceLicensesResponse, error)
 	// List all the model types available in the platform.
 	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(context.Context, *ListModelTypesRequest) (*MultiModelTypeResponse, error)
@@ -1424,6 +1503,14 @@ type V2Server interface {
 	// Predict using a workflow.
 	PostWorkflowResults(context.Context, *PostWorkflowResultsRequest) (*PostWorkflowResultsResponse, error)
 	PostWorkflowResultsSimilarity(context.Context, *PostWorkflowResultsSimilarityRequest) (*PostWorkflowResultsSimilarityResponse, error)
+	// List workflow versions.
+	ListWorkflowVersions(context.Context, *ListWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error)
+	// Get single workflow version.
+	GetWorkflowVersion(context.Context, *GetWorkflowVersionRequest) (*SingleWorkflowVersionResponse, error)
+	// Delete workflow versions.
+	DeleteWorkflowVersions(context.Context, *DeleteWorkflowVersionsRequest) (*status.BaseResponse, error)
+	// Patch workflow versions.
+	PatchWorkflowVersions(context.Context, *PatchWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error)
 	// Get a specific key from an app.
 	GetKey(context.Context, *GetKeyRequest) (*SingleKeyResponse, error)
 	// List all the keys.
@@ -1532,6 +1619,10 @@ type V2Server interface {
 	DeleteCollectors(context.Context, *DeleteCollectorsRequest) (*status.BaseResponse, error)
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
+	// Increase the view metric for a detail view
+	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)
+	// List the view metrics for a detail view
+	ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -1647,6 +1738,9 @@ func (UnimplementedV2Server) PostModelOutputs(context.Context, *PostModelOutputs
 func (UnimplementedV2Server) GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelType not implemented")
 }
+func (UnimplementedV2Server) ListOpenSourceLicenses(context.Context, *ListOpenSourceLicensesRequest) (*ListOpenSourceLicensesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOpenSourceLicenses not implemented")
+}
 func (UnimplementedV2Server) ListModelTypes(context.Context, *ListModelTypesRequest) (*MultiModelTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelTypes not implemented")
 }
@@ -1730,6 +1824,18 @@ func (UnimplementedV2Server) PostWorkflowResults(context.Context, *PostWorkflowR
 }
 func (UnimplementedV2Server) PostWorkflowResultsSimilarity(context.Context, *PostWorkflowResultsSimilarityRequest) (*PostWorkflowResultsSimilarityResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowResultsSimilarity not implemented")
+}
+func (UnimplementedV2Server) ListWorkflowVersions(context.Context, *ListWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowVersions not implemented")
+}
+func (UnimplementedV2Server) GetWorkflowVersion(context.Context, *GetWorkflowVersionRequest) (*SingleWorkflowVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflowVersion not implemented")
+}
+func (UnimplementedV2Server) DeleteWorkflowVersions(context.Context, *DeleteWorkflowVersionsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteWorkflowVersions not implemented")
+}
+func (UnimplementedV2Server) PatchWorkflowVersions(context.Context, *PatchWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersions not implemented")
 }
 func (UnimplementedV2Server) GetKey(context.Context, *GetKeyRequest) (*SingleKeyResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetKey not implemented")
@@ -1874,6 +1980,12 @@ func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequ
 }
 func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValuesAggregate not implemented")
+}
+func (UnimplementedV2Server) PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostTrendingMetricsView not implemented")
+}
+func (UnimplementedV2Server) ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTrendingMetricsViews not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -2536,6 +2648,24 @@ func _V2_GetModelType_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListOpenSourceLicenses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOpenSourceLicensesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOpenSourceLicenses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOpenSourceLicenses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOpenSourceLicenses(ctx, req.(*ListOpenSourceLicensesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListModelTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListModelTypesRequest)
 	if err := dec(in); err != nil {
@@ -3036,6 +3166,78 @@ func _V2_PostWorkflowResultsSimilarity_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostWorkflowResultsSimilarity(ctx, req.(*PostWorkflowResultsSimilarityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListWorkflowVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWorkflowVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListWorkflowVersions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWorkflowVersions(ctx, req.(*ListWorkflowVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetWorkflowVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkflowVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetWorkflowVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetWorkflowVersion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetWorkflowVersion(ctx, req.(*GetWorkflowVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteWorkflowVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWorkflowVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteWorkflowVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteWorkflowVersions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteWorkflowVersions(ctx, req.(*DeleteWorkflowVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchWorkflowVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchWorkflowVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchWorkflowVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchWorkflowVersions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchWorkflowVersions(ctx, req.(*PatchWorkflowVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3904,6 +4106,42 @@ func _V2_PostStatValuesAggregate_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostTrendingMetricsView_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostTrendingMetricsViewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostTrendingMetricsView(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostTrendingMetricsView",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostTrendingMetricsView(ctx, req.(*PostTrendingMetricsViewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListTrendingMetricsViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTrendingMetricsViewsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTrendingMetricsViews(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTrendingMetricsViews",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTrendingMetricsViews(ctx, req.(*ListTrendingMetricsViewsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _V2_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "clarifai.api.V2",
 	HandlerType: (*V2Server)(nil),
@@ -4053,6 +4291,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_GetModelType_Handler,
 		},
 		{
+			MethodName: "ListOpenSourceLicenses",
+			Handler:    _V2_ListOpenSourceLicenses_Handler,
+		},
+		{
 			MethodName: "ListModelTypes",
 			Handler:    _V2_ListModelTypes_Handler,
 		},
@@ -4163,6 +4405,22 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostWorkflowResultsSimilarity",
 			Handler:    _V2_PostWorkflowResultsSimilarity_Handler,
+		},
+		{
+			MethodName: "ListWorkflowVersions",
+			Handler:    _V2_ListWorkflowVersions_Handler,
+		},
+		{
+			MethodName: "GetWorkflowVersion",
+			Handler:    _V2_GetWorkflowVersion_Handler,
+		},
+		{
+			MethodName: "DeleteWorkflowVersions",
+			Handler:    _V2_DeleteWorkflowVersions_Handler,
+		},
+		{
+			MethodName: "PatchWorkflowVersions",
+			Handler:    _V2_PatchWorkflowVersions_Handler,
 		},
 		{
 			MethodName: "GetKey",
@@ -4355,6 +4613,14 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostStatValuesAggregate",
 			Handler:    _V2_PostStatValuesAggregate_Handler,
+		},
+		{
+			MethodName: "PostTrendingMetricsView",
+			Handler:    _V2_PostTrendingMetricsView_Handler,
+		},
+		{
+			MethodName: "ListTrendingMetricsViews",
+			Handler:    _V2_ListTrendingMetricsViews_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
