@@ -98,6 +98,8 @@ type V2Client interface {
 	PostModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (*MultiOutputResponse, error)
 	// Get a specific model type.
 	GetModelType(ctx context.Context, in *GetModelTypeRequest, opts ...grpc.CallOption) (*SingleModelTypeResponse, error)
+	// List all the supported open source licenses in the platform.
+	ListOpenSourceLicenses(ctx context.Context, in *ListOpenSourceLicensesRequest, opts ...grpc.CallOption) (*ListOpenSourceLicensesResponse, error)
 	// List all the model types available in the platform.
 	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(ctx context.Context, in *ListModelTypesRequest, opts ...grpc.CallOption) (*MultiModelTypeResponse, error)
@@ -592,6 +594,15 @@ func (c *v2Client) PostModelOutputs(ctx context.Context, in *PostModelOutputsReq
 func (c *v2Client) GetModelType(ctx context.Context, in *GetModelTypeRequest, opts ...grpc.CallOption) (*SingleModelTypeResponse, error) {
 	out := new(SingleModelTypeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOpenSourceLicenses(ctx context.Context, in *ListOpenSourceLicensesRequest, opts ...grpc.CallOption) (*ListOpenSourceLicensesResponse, error) {
+	out := new(ListOpenSourceLicensesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOpenSourceLicenses", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1366,6 +1377,8 @@ type V2Server interface {
 	PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error)
 	// Get a specific model type.
 	GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error)
+	// List all the supported open source licenses in the platform.
+	ListOpenSourceLicenses(context.Context, *ListOpenSourceLicensesRequest) (*ListOpenSourceLicensesResponse, error)
 	// List all the model types available in the platform.
 	// This MUST be above ListModels so that the /models/types endpoint takes precedence.
 	ListModelTypes(context.Context, *ListModelTypesRequest) (*MultiModelTypeResponse, error)
@@ -1646,6 +1659,9 @@ func (UnimplementedV2Server) PostModelOutputs(context.Context, *PostModelOutputs
 }
 func (UnimplementedV2Server) GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelType not implemented")
+}
+func (UnimplementedV2Server) ListOpenSourceLicenses(context.Context, *ListOpenSourceLicensesRequest) (*ListOpenSourceLicensesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOpenSourceLicenses not implemented")
 }
 func (UnimplementedV2Server) ListModelTypes(context.Context, *ListModelTypesRequest) (*MultiModelTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelTypes not implemented")
@@ -2532,6 +2548,24 @@ func _V2_GetModelType_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetModelType(ctx, req.(*GetModelTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOpenSourceLicenses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOpenSourceLicensesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOpenSourceLicenses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOpenSourceLicenses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOpenSourceLicenses(ctx, req.(*ListOpenSourceLicensesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4051,6 +4085,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetModelType",
 			Handler:    _V2_GetModelType_Handler,
+		},
+		{
+			MethodName: "ListOpenSourceLicenses",
+			Handler:    _V2_ListOpenSourceLicenses_Handler,
 		},
 		{
 			MethodName: "ListModelTypes",
