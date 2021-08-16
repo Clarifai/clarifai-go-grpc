@@ -276,6 +276,8 @@ type V2Client interface {
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List the view metrics for a detail view
+	ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error)
 }
 
 type v2Client struct {
@@ -1348,6 +1350,15 @@ func (c *v2Client) PostTrendingMetricsView(ctx context.Context, in *PostTrending
 	return out, nil
 }
 
+func (c *v2Client) ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error) {
+	out := new(MultiTrendingMetricsViewResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTrendingMetricsViews", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -1610,6 +1621,8 @@ type V2Server interface {
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)
+	// List the view metrics for a detail view
+	ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -1970,6 +1983,9 @@ func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatV
 }
 func (UnimplementedV2Server) PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostTrendingMetricsView not implemented")
+}
+func (UnimplementedV2Server) ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTrendingMetricsViews not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -4108,6 +4124,24 @@ func _V2_PostTrendingMetricsView_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListTrendingMetricsViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTrendingMetricsViewsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTrendingMetricsViews(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTrendingMetricsViews",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTrendingMetricsViews(ctx, req.(*ListTrendingMetricsViewsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _V2_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "clarifai.api.V2",
 	HandlerType: (*V2Server)(nil),
@@ -4583,6 +4617,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostTrendingMetricsView",
 			Handler:    _V2_PostTrendingMetricsView_Handler,
+		},
+		{
+			MethodName: "ListTrendingMetricsViews",
+			Handler:    _V2_ListTrendingMetricsViews_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
