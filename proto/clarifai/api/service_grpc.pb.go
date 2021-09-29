@@ -129,6 +129,8 @@ type V2Client interface {
 	GetModelVersion(ctx context.Context, in *GetModelVersionRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// List all the models.
 	ListModelVersions(ctx context.Context, in *ListModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
+	PostModelVersionsPublish(ctx context.Context, in *PostModelVersionsPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	DeleteModelVersionsUnPublish(ctx context.Context, in *DeleteModelVersionsUnpublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
@@ -184,6 +186,8 @@ type V2Client interface {
 	// the user the scopes/access of the key/credential they're providing, as computed by
 	// our authorizer:
 	MyScopes(ctx context.Context, in *MyScopesRequest, opts ...grpc.CallOption) (*MultiScopeResponse, error)
+	MyScopesUser(ctx context.Context, in *MyScopesUserRequest, opts ...grpc.CallOption) (*MultiScopeUserResponse, error)
+	MyScopesRoot(ctx context.Context, in *MyScopesRootRequest, opts ...grpc.CallOption) (*MultiScopeRootResponse, error)
 	// List all auth scopes available to me as a user.
 	ListScopes(ctx context.Context, in *ListScopesRequest, opts ...grpc.CallOption) (*MultiScopeDepsResponse, error)
 	// Get a specific app from an app.
@@ -729,6 +733,24 @@ func (c *v2Client) ListModelVersions(ctx context.Context, in *ListModelVersionsR
 	return out, nil
 }
 
+func (c *v2Client) PostModelVersionsPublish(ctx context.Context, in *PostModelVersionsPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionsPublish", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteModelVersionsUnPublish(ctx context.Context, in *DeleteModelVersionsUnpublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModelVersionsUnPublish", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error) {
 	out := new(SingleModelResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersions", in, out, opts...)
@@ -966,6 +988,24 @@ func (c *v2Client) PatchKeys(ctx context.Context, in *PatchKeysRequest, opts ...
 func (c *v2Client) MyScopes(ctx context.Context, in *MyScopesRequest, opts ...grpc.CallOption) (*MultiScopeResponse, error) {
 	out := new(MultiScopeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/MyScopes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) MyScopesUser(ctx context.Context, in *MyScopesUserRequest, opts ...grpc.CallOption) (*MultiScopeUserResponse, error) {
+	out := new(MultiScopeUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/MyScopesUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) MyScopesRoot(ctx context.Context, in *MyScopesRootRequest, opts ...grpc.CallOption) (*MultiScopeRootResponse, error) {
+	out := new(MultiScopeRootResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/MyScopesRoot", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1474,6 +1514,8 @@ type V2Server interface {
 	GetModelVersion(context.Context, *GetModelVersionRequest) (*SingleModelVersionResponse, error)
 	// List all the models.
 	ListModelVersions(context.Context, *ListModelVersionsRequest) (*MultiModelVersionResponse, error)
+	PostModelVersionsPublish(context.Context, *PostModelVersionsPublishRequest) (*status.BaseResponse, error)
+	DeleteModelVersionsUnPublish(context.Context, *DeleteModelVersionsUnpublishRequest) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error)
@@ -1529,6 +1571,8 @@ type V2Server interface {
 	// the user the scopes/access of the key/credential they're providing, as computed by
 	// our authorizer:
 	MyScopes(context.Context, *MyScopesRequest) (*MultiScopeResponse, error)
+	MyScopesUser(context.Context, *MyScopesUserRequest) (*MultiScopeUserResponse, error)
+	MyScopesRoot(context.Context, *MyScopesRootRequest) (*MultiScopeRootResponse, error)
 	// List all auth scopes available to me as a user.
 	ListScopes(context.Context, *ListScopesRequest) (*MultiScopeDepsResponse, error)
 	// Get a specific app from an app.
@@ -1777,6 +1821,12 @@ func (UnimplementedV2Server) GetModelVersion(context.Context, *GetModelVersionRe
 func (UnimplementedV2Server) ListModelVersions(context.Context, *ListModelVersionsRequest) (*MultiModelVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelVersions not implemented")
 }
+func (UnimplementedV2Server) PostModelVersionsPublish(context.Context, *PostModelVersionsPublishRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsPublish not implemented")
+}
+func (UnimplementedV2Server) DeleteModelVersionsUnPublish(context.Context, *DeleteModelVersionsUnpublishRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelVersionsUnPublish not implemented")
+}
 func (UnimplementedV2Server) PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersions not implemented")
 }
@@ -1857,6 +1907,12 @@ func (UnimplementedV2Server) PatchKeys(context.Context, *PatchKeysRequest) (*Mul
 }
 func (UnimplementedV2Server) MyScopes(context.Context, *MyScopesRequest) (*MultiScopeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method MyScopes not implemented")
+}
+func (UnimplementedV2Server) MyScopesUser(context.Context, *MyScopesUserRequest) (*MultiScopeUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method MyScopesUser not implemented")
+}
+func (UnimplementedV2Server) MyScopesRoot(context.Context, *MyScopesRootRequest) (*MultiScopeRootResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method MyScopesRoot not implemented")
 }
 func (UnimplementedV2Server) ListScopes(context.Context, *ListScopesRequest) (*MultiScopeDepsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListScopes not implemented")
@@ -2882,6 +2938,42 @@ func _V2_ListModelVersions_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostModelVersionsPublish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelVersionsPublishRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelVersionsPublish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelVersionsPublish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelVersionsPublish(ctx, req.(*PostModelVersionsPublishRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteModelVersionsUnPublish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelVersionsUnpublishRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteModelVersionsUnPublish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteModelVersionsUnPublish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteModelVersionsUnPublish(ctx, req.(*DeleteModelVersionsUnpublishRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostModelVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostModelVersionsRequest)
 	if err := dec(in); err != nil {
@@ -3364,6 +3456,42 @@ func _V2_MyScopes_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).MyScopes(ctx, req.(*MyScopesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_MyScopesUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MyScopesUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).MyScopesUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/MyScopesUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).MyScopesUser(ctx, req.(*MyScopesUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_MyScopesRoot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MyScopesRootRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).MyScopesRoot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/MyScopesRoot",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).MyScopesRoot(ctx, req.(*MyScopesRootRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4343,6 +4471,14 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_ListModelVersions_Handler,
 		},
 		{
+			MethodName: "PostModelVersionsPublish",
+			Handler:    _V2_PostModelVersionsPublish_Handler,
+		},
+		{
+			MethodName: "DeleteModelVersionsUnPublish",
+			Handler:    _V2_DeleteModelVersionsUnPublish_Handler,
+		},
+		{
 			MethodName: "PostModelVersions",
 			Handler:    _V2_PostModelVersions_Handler,
 		},
@@ -4449,6 +4585,14 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MyScopes",
 			Handler:    _V2_MyScopes_Handler,
+		},
+		{
+			MethodName: "MyScopesUser",
+			Handler:    _V2_MyScopesUser_Handler,
+		},
+		{
+			MethodName: "MyScopesRoot",
+			Handler:    _V2_MyScopesRoot_Handler,
 		},
 		{
 			MethodName: "ListScopes",
