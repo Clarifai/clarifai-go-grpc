@@ -123,6 +123,12 @@ type V2Client interface {
 	DeleteModel(ctx context.Context, in *DeleteModelRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple models in one request.
 	DeleteModels(ctx context.Context, in *DeleteModelsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Update model toolkits tags
+	PatchModelToolkits(ctx context.Context, in *PatchModelToolkitsRequest, opts ...grpc.CallOption) (*MultiModelToolkitResponse, error)
+	// Update model use_cases tags
+	PatchModelUseCases(ctx context.Context, in *PatchModelUseCasesRequest, opts ...grpc.CallOption) (*MultiModelUseCaseResponse, error)
+	// Update model languages tags
+	PatchModelLanguages(ctx context.Context, in *PatchModelLanguagesRequest, opts ...grpc.CallOption) (*MultiModelLanguageResponse, error)
 	// List all the inputs.
 	ListModelInputs(ctx context.Context, in *ListModelInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Get a specific model from an app.
@@ -130,7 +136,7 @@ type V2Client interface {
 	// List all the models.
 	ListModelVersions(ctx context.Context, in *ListModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	PostModelVersionsPublish(ctx context.Context, in *PostModelVersionsPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	DeleteModelVersionsUnPublish(ctx context.Context, in *DeleteModelVersionsUnpublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	PostModelVersionsUnPublish(ctx context.Context, in *PostModelVersionsUnPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
@@ -706,6 +712,33 @@ func (c *v2Client) DeleteModels(ctx context.Context, in *DeleteModelsRequest, op
 	return out, nil
 }
 
+func (c *v2Client) PatchModelToolkits(ctx context.Context, in *PatchModelToolkitsRequest, opts ...grpc.CallOption) (*MultiModelToolkitResponse, error) {
+	out := new(MultiModelToolkitResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModelToolkits", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchModelUseCases(ctx context.Context, in *PatchModelUseCasesRequest, opts ...grpc.CallOption) (*MultiModelUseCaseResponse, error) {
+	out := new(MultiModelUseCaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModelUseCases", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchModelLanguages(ctx context.Context, in *PatchModelLanguagesRequest, opts ...grpc.CallOption) (*MultiModelLanguageResponse, error) {
+	out := new(MultiModelLanguageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModelLanguages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListModelInputs(ctx context.Context, in *ListModelInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
 	out := new(MultiInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelInputs", in, out, opts...)
@@ -742,9 +775,9 @@ func (c *v2Client) PostModelVersionsPublish(ctx context.Context, in *PostModelVe
 	return out, nil
 }
 
-func (c *v2Client) DeleteModelVersionsUnPublish(ctx context.Context, in *DeleteModelVersionsUnpublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+func (c *v2Client) PostModelVersionsUnPublish(ctx context.Context, in *PostModelVersionsUnPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModelVersionsUnPublish", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionsUnPublish", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1508,6 +1541,12 @@ type V2Server interface {
 	DeleteModel(context.Context, *DeleteModelRequest) (*status.BaseResponse, error)
 	// Delete multiple models in one request.
 	DeleteModels(context.Context, *DeleteModelsRequest) (*status.BaseResponse, error)
+	// Update model toolkits tags
+	PatchModelToolkits(context.Context, *PatchModelToolkitsRequest) (*MultiModelToolkitResponse, error)
+	// Update model use_cases tags
+	PatchModelUseCases(context.Context, *PatchModelUseCasesRequest) (*MultiModelUseCaseResponse, error)
+	// Update model languages tags
+	PatchModelLanguages(context.Context, *PatchModelLanguagesRequest) (*MultiModelLanguageResponse, error)
 	// List all the inputs.
 	ListModelInputs(context.Context, *ListModelInputsRequest) (*MultiInputResponse, error)
 	// Get a specific model from an app.
@@ -1515,7 +1554,7 @@ type V2Server interface {
 	// List all the models.
 	ListModelVersions(context.Context, *ListModelVersionsRequest) (*MultiModelVersionResponse, error)
 	PostModelVersionsPublish(context.Context, *PostModelVersionsPublishRequest) (*status.BaseResponse, error)
-	DeleteModelVersionsUnPublish(context.Context, *DeleteModelVersionsUnpublishRequest) (*status.BaseResponse, error)
+	PostModelVersionsUnPublish(context.Context, *PostModelVersionsUnPublishRequest) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
 	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error)
@@ -1812,6 +1851,15 @@ func (UnimplementedV2Server) DeleteModel(context.Context, *DeleteModelRequest) (
 func (UnimplementedV2Server) DeleteModels(context.Context, *DeleteModelsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModels not implemented")
 }
+func (UnimplementedV2Server) PatchModelToolkits(context.Context, *PatchModelToolkitsRequest) (*MultiModelToolkitResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModelToolkits not implemented")
+}
+func (UnimplementedV2Server) PatchModelUseCases(context.Context, *PatchModelUseCasesRequest) (*MultiModelUseCaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModelUseCases not implemented")
+}
+func (UnimplementedV2Server) PatchModelLanguages(context.Context, *PatchModelLanguagesRequest) (*MultiModelLanguageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModelLanguages not implemented")
+}
 func (UnimplementedV2Server) ListModelInputs(context.Context, *ListModelInputsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelInputs not implemented")
 }
@@ -1824,8 +1872,8 @@ func (UnimplementedV2Server) ListModelVersions(context.Context, *ListModelVersio
 func (UnimplementedV2Server) PostModelVersionsPublish(context.Context, *PostModelVersionsPublishRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsPublish not implemented")
 }
-func (UnimplementedV2Server) DeleteModelVersionsUnPublish(context.Context, *DeleteModelVersionsUnpublishRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelVersionsUnPublish not implemented")
+func (UnimplementedV2Server) PostModelVersionsUnPublish(context.Context, *PostModelVersionsUnPublishRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsUnPublish not implemented")
 }
 func (UnimplementedV2Server) PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersions not implemented")
@@ -2884,6 +2932,60 @@ func _V2_DeleteModels_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchModelToolkits_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModelToolkitsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModelToolkits(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModelToolkits",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModelToolkits(ctx, req.(*PatchModelToolkitsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchModelUseCases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModelUseCasesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModelUseCases(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModelUseCases",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModelUseCases(ctx, req.(*PatchModelUseCasesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchModelLanguages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModelLanguagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModelLanguages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModelLanguages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModelLanguages(ctx, req.(*PatchModelLanguagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListModelInputs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListModelInputsRequest)
 	if err := dec(in); err != nil {
@@ -2956,20 +3058,20 @@ func _V2_PostModelVersionsPublish_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_DeleteModelVersionsUnPublish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteModelVersionsUnpublishRequest)
+func _V2_PostModelVersionsUnPublish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelVersionsUnPublishRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(V2Server).DeleteModelVersionsUnPublish(ctx, in)
+		return srv.(V2Server).PostModelVersionsUnPublish(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/clarifai.api.V2/DeleteModelVersionsUnPublish",
+		FullMethod: "/clarifai.api.V2/PostModelVersionsUnPublish",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteModelVersionsUnPublish(ctx, req.(*DeleteModelVersionsUnpublishRequest))
+		return srv.(V2Server).PostModelVersionsUnPublish(ctx, req.(*PostModelVersionsUnPublishRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4459,6 +4561,18 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteModels_Handler,
 		},
 		{
+			MethodName: "PatchModelToolkits",
+			Handler:    _V2_PatchModelToolkits_Handler,
+		},
+		{
+			MethodName: "PatchModelUseCases",
+			Handler:    _V2_PatchModelUseCases_Handler,
+		},
+		{
+			MethodName: "PatchModelLanguages",
+			Handler:    _V2_PatchModelLanguages_Handler,
+		},
+		{
 			MethodName: "ListModelInputs",
 			Handler:    _V2_ListModelInputs_Handler,
 		},
@@ -4475,8 +4589,8 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostModelVersionsPublish_Handler,
 		},
 		{
-			MethodName: "DeleteModelVersionsUnPublish",
-			Handler:    _V2_DeleteModelVersionsUnPublish_Handler,
+			MethodName: "PostModelVersionsUnPublish",
+			Handler:    _V2_PostModelVersionsUnPublish_Handler,
 		},
 		{
 			MethodName: "PostModelVersions",
