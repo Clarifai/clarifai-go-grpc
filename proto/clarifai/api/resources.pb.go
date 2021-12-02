@@ -7,9 +7,9 @@
 package api
 
 import (
-	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
-	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/utils"
-	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/util"
+	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
+	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/utils"
+	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/util"
 	proto "github.com/golang/protobuf/proto"
 	_struct "github.com/golang/protobuf/ptypes/struct"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"

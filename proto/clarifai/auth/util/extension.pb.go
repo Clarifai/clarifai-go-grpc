@@ -7,8 +7,8 @@
 package util
 
 import (
-	scope "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/scope"
-	types "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/types"
+	scope "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/scope"
+	types "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/types"
 	proto "github.com/golang/protobuf/proto"
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

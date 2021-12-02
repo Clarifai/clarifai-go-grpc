@@ -7,7 +7,7 @@
 package status
 
 import (
-	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/util"
+	_ "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/auth/util"
 	proto "github.com/golang/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
