@@ -44,7 +44,7 @@ type V2Client interface {
 	GetConceptLanguage(ctx context.Context, in *GetConceptLanguageRequest, opts ...grpc.CallOption) (*SingleConceptLanguageResponse, error)
 	// List the concept in all the translated languages.
 	ListConceptLanguages(ctx context.Context, in *ListConceptLanguagesRequest, opts ...grpc.CallOption) (*MultiConceptLanguageResponse, error)
-	// Add a new tranlsation for this concept.
+	// Add a new translation for this concept.
 	PostConceptLanguages(ctx context.Context, in *PostConceptLanguagesRequest, opts ...grpc.CallOption) (*MultiConceptLanguageResponse, error)
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
@@ -115,7 +115,6 @@ type V2Client interface {
 	// per_page as url query param variables in this request.
 	PostModelsSearches(ctx context.Context, in *PostModelsSearchesRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
 	// Add a models to an app.
-	// FIXME(zeiler): this should have been a plural response.
 	PostModels(ctx context.Context, in *PostModelsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(ctx context.Context, in *PatchModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
@@ -135,11 +134,13 @@ type V2Client interface {
 	GetModelVersion(ctx context.Context, in *GetModelVersionRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// List all the models.
 	ListModelVersions(ctx context.Context, in *ListModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
+	// PostModelVersionsPublish
 	PostModelVersionsPublish(ctx context.Context, in *PostModelVersionsPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// PostModelVersionsUnPublish
 	PostModelVersionsUnPublish(ctx context.Context, in *PostModelVersionsUnPublishRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
-	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(ctx context.Context, in *PostModelVersionsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
+	// PatchModelVersions
 	PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(ctx context.Context, in *DeleteModelVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -149,7 +150,9 @@ type V2Client interface {
 	PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
+	// GetModelVersionInputExample
 	GetModelVersionInputExample(ctx context.Context, in *GetModelVersionInputExampleRequest, opts ...grpc.CallOption) (*SingleModelVersionInputExampleResponse, error)
+	// ListModelVersionInputExamples
 	ListModelVersionInputExamples(ctx context.Context, in *ListModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*SingleWorkflowResponse, error)
@@ -165,6 +168,7 @@ type V2Client interface {
 	DeleteWorkflows(ctx context.Context, in *DeleteWorkflowsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Predict using a workflow.
 	PostWorkflowResults(ctx context.Context, in *PostWorkflowResultsRequest, opts ...grpc.CallOption) (*PostWorkflowResultsResponse, error)
+	// Compare embeddings distances using a workflow
 	PostWorkflowResultsSimilarity(ctx context.Context, in *PostWorkflowResultsSimilarityRequest, opts ...grpc.CallOption) (*PostWorkflowResultsSimilarityResponse, error)
 	// List workflow versions.
 	ListWorkflowVersions(ctx context.Context, in *ListWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error)
@@ -228,6 +232,7 @@ type V2Client interface {
 	GetAnnotationSearchMetrics(ctx context.Context, in *GetAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
 	// List the evaluation results between two search requests
 	ListAnnotationSearchMetrics(ctx context.Context, in *ListAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
+	// DeleteAnnotationSearchMetrics
 	DeleteAnnotationSearchMetrics(ctx context.Context, in *DeleteAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(ctx context.Context, in *DeleteSearchRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -282,7 +287,9 @@ type V2Client interface {
 	// Delete multiple collectors in one request.
 	// This call is asynchronous. Use DeleteCollector if you want a synchronous version.
 	DeleteCollectors(ctx context.Context, in *DeleteCollectorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// PostStatValues
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
+	// PostStatValuesAggregate
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -1462,7 +1469,7 @@ type V2Server interface {
 	GetConceptLanguage(context.Context, *GetConceptLanguageRequest) (*SingleConceptLanguageResponse, error)
 	// List the concept in all the translated languages.
 	ListConceptLanguages(context.Context, *ListConceptLanguagesRequest) (*MultiConceptLanguageResponse, error)
-	// Add a new tranlsation for this concept.
+	// Add a new translation for this concept.
 	PostConceptLanguages(context.Context, *PostConceptLanguagesRequest) (*MultiConceptLanguageResponse, error)
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
@@ -1533,7 +1540,6 @@ type V2Server interface {
 	// per_page as url query param variables in this request.
 	PostModelsSearches(context.Context, *PostModelsSearchesRequest) (*MultiModelResponse, error)
 	// Add a models to an app.
-	// FIXME(zeiler): this should have been a plural response.
 	PostModels(context.Context, *PostModelsRequest) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(context.Context, *PatchModelsRequest) (*MultiModelResponse, error)
@@ -1553,11 +1559,13 @@ type V2Server interface {
 	GetModelVersion(context.Context, *GetModelVersionRequest) (*SingleModelVersionResponse, error)
 	// List all the models.
 	ListModelVersions(context.Context, *ListModelVersionsRequest) (*MultiModelVersionResponse, error)
+	// PostModelVersionsPublish
 	PostModelVersionsPublish(context.Context, *PostModelVersionsPublishRequest) (*status.BaseResponse, error)
+	// PostModelVersionsUnPublish
 	PostModelVersionsUnPublish(context.Context, *PostModelVersionsUnPublishRequest) (*status.BaseResponse, error)
 	// Create a new model version to trigger training of the model.
-	// FIXME(zeiler): this should have been a plural response.
 	PostModelVersions(context.Context, *PostModelVersionsRequest) (*SingleModelResponse, error)
+	// PatchModelVersions
 	PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error)
@@ -1567,7 +1575,9 @@ type V2Server interface {
 	PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error)
+	// GetModelVersionInputExample
 	GetModelVersionInputExample(context.Context, *GetModelVersionInputExampleRequest) (*SingleModelVersionInputExampleResponse, error)
+	// ListModelVersionInputExamples
 	ListModelVersionInputExamples(context.Context, *ListModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*SingleWorkflowResponse, error)
@@ -1583,6 +1593,7 @@ type V2Server interface {
 	DeleteWorkflows(context.Context, *DeleteWorkflowsRequest) (*status.BaseResponse, error)
 	// Predict using a workflow.
 	PostWorkflowResults(context.Context, *PostWorkflowResultsRequest) (*PostWorkflowResultsResponse, error)
+	// Compare embeddings distances using a workflow
 	PostWorkflowResultsSimilarity(context.Context, *PostWorkflowResultsSimilarityRequest) (*PostWorkflowResultsSimilarityResponse, error)
 	// List workflow versions.
 	ListWorkflowVersions(context.Context, *ListWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error)
@@ -1646,6 +1657,7 @@ type V2Server interface {
 	GetAnnotationSearchMetrics(context.Context, *GetAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
 	// List the evaluation results between two search requests
 	ListAnnotationSearchMetrics(context.Context, *ListAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
+	// DeleteAnnotationSearchMetrics
 	DeleteAnnotationSearchMetrics(context.Context, *DeleteAnnotationSearchMetricsRequest) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(context.Context, *DeleteSearchRequest) (*status.BaseResponse, error)
@@ -1700,7 +1712,9 @@ type V2Server interface {
 	// Delete multiple collectors in one request.
 	// This call is asynchronous. Use DeleteCollector if you want a synchronous version.
 	DeleteCollectors(context.Context, *DeleteCollectorsRequest) (*status.BaseResponse, error)
+	// PostStatValues
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
+	// PostStatValuesAggregate
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)

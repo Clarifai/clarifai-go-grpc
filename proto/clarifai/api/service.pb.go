@@ -149,9 +149,7 @@ func (x *Pagination) GetPerPage() uint32 {
 	return 0
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/annotation.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetAnnotationRequest
 type GetAnnotationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -215,6 +213,7 @@ func (x *GetAnnotationRequest) GetInputId() string {
 	return ""
 }
 
+// ListAnnotationsRequest
 type ListAnnotationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -361,6 +360,7 @@ func (x *ListAnnotationsRequest) GetTaskId() string {
 	return ""
 }
 
+// PostAnnotationsRequest
 type PostAnnotationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -416,6 +416,7 @@ func (x *PostAnnotationsRequest) GetAnnotations() []*Annotation {
 	return nil
 }
 
+// PatchAnnotationsRequest
 type PatchAnnotationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -481,6 +482,7 @@ func (x *PatchAnnotationsRequest) GetAction() string {
 	return ""
 }
 
+// PatchAnnotationsStatusRequest
 type PatchAnnotationsStatusRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -562,6 +564,7 @@ func (x *PatchAnnotationsStatusRequest) GetAction() string {
 	return ""
 }
 
+// PatchAnnotationsStatusResponse
 type PatchAnnotationsStatusResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -625,6 +628,7 @@ func (x *PatchAnnotationsStatusResponse) GetUpdatedCount() uint32 {
 	return 0
 }
 
+// DeleteAnnotationRequest
 type DeleteAnnotationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -759,6 +763,7 @@ func (x *DeleteAnnotationsRequest) GetInputIds() []string {
 	return nil
 }
 
+// SingleAnnotationResponse
 type SingleAnnotationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -814,6 +819,7 @@ func (x *SingleAnnotationResponse) GetAnnotation() *Annotation {
 	return nil
 }
 
+// MultiAnnotationResponse
 type MultiAnnotationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -869,9 +875,7 @@ func (x *MultiAnnotationResponse) GetAnnotations() []*Annotation {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/app.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetAppRequest
 type GetAppRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -928,6 +932,7 @@ func (x *GetAppRequest) GetAdditionalFields() []string {
 	return nil
 }
 
+// ListAppsRequest
 type ListAppsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1099,6 +1104,7 @@ func (*ListAppsRequest_SortByName) isListAppsRequest_SortBy() {}
 
 func (*ListAppsRequest_SortByModifiedAt) isListAppsRequest_SortBy() {}
 
+// PostAppsRequest
 type PostAppsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1154,6 +1160,7 @@ func (x *PostAppsRequest) GetApps() []*App {
 	return nil
 }
 
+// DeleteAppRequest
 type DeleteAppRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1201,6 +1208,7 @@ func (x *DeleteAppRequest) GetUserAppId() *UserAppIDSet {
 	return nil
 }
 
+// PatchAppsRequest
 type PatchAppsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1351,6 +1359,7 @@ func (x *PostAppsSearchesRequest) GetPagination() *Pagination {
 	return nil
 }
 
+// SingleAppResponse
 type SingleAppResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1406,6 +1415,7 @@ func (x *SingleAppResponse) GetApp() *App {
 	return nil
 }
 
+// MultiAppResponse
 type MultiAppResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1461,9 +1471,7 @@ func (x *MultiAppResponse) GetApps() []*App {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/app_sharing.proto
-////////////////////////////////////////////////////////////////////////////////
+// ListCollaboratorsRequest
 type ListCollaboratorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1521,6 +1529,7 @@ func (x *ListCollaboratorsRequest) GetListAllCollaborators() bool {
 	return false
 }
 
+// PostCollaboratorsRequest
 type PostCollaboratorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1576,6 +1585,7 @@ func (x *PostCollaboratorsRequest) GetCollaborators() []*Collaborator {
 	return nil
 }
 
+// PatchCollaboratorsRequest
 type PatchCollaboratorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1641,6 +1651,7 @@ func (x *PatchCollaboratorsRequest) GetAction() string {
 	return ""
 }
 
+// DeleteCollaboratorsRequest
 type DeleteCollaboratorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1704,6 +1715,7 @@ func (x *DeleteCollaboratorsRequest) GetUserEmails() []string {
 	return nil
 }
 
+// MultiCollaboratorsResponse
 type MultiCollaboratorsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1759,6 +1771,7 @@ func (x *MultiCollaboratorsResponse) GetCollaborators() []*Collaborator {
 	return nil
 }
 
+// ListCollaborationsRequest
 type ListCollaborationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1826,6 +1839,7 @@ func (x *ListCollaborationsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// MultiCollaborationsResponse
 type MultiCollaborationsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1881,9 +1895,7 @@ func (x *MultiCollaborationsResponse) GetCollaborations() []*Collaboration {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/code.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetStatusCodeRequest
 type GetStatusCodeRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1931,6 +1943,7 @@ func (x *GetStatusCodeRequest) GetStatusCodeId() string {
 	return ""
 }
 
+// ListStatusCodesRequest
 type ListStatusCodesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1969,6 +1982,7 @@ func (*ListStatusCodesRequest) Descriptor() ([]byte, []int) {
 	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{27}
 }
 
+// SingleStatusCodeResponse
 type SingleStatusCodeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2017,6 +2031,7 @@ func (x *SingleStatusCodeResponse) GetStatus() *status.Status {
 	return nil
 }
 
+// MultiStatusCodeResponse
 type MultiStatusCodeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2072,9 +2087,7 @@ func (x *MultiStatusCodeResponse) GetStatuses() []*status.Status {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/concept.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetConceptRequest
 type GetConceptRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2131,6 +2144,7 @@ func (x *GetConceptRequest) GetConceptId() string {
 	return ""
 }
 
+// ListConceptsRequest
 type ListConceptsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2198,6 +2212,7 @@ func (x *ListConceptsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// PostConceptsSearchesRequest
 type PostConceptsSearchesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2265,6 +2280,7 @@ func (x *PostConceptsSearchesRequest) GetPagination() *Pagination {
 	return nil
 }
 
+// PostConceptsRequest
 type PostConceptsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2321,6 +2337,7 @@ func (x *PostConceptsRequest) GetConcepts() []*Concept {
 	return nil
 }
 
+// PatchConceptsRequest
 type PatchConceptsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2387,6 +2404,7 @@ func (x *PatchConceptsRequest) GetAction() string {
 	return ""
 }
 
+// GetConceptCountsRequest
 type GetConceptCountsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2454,6 +2472,7 @@ func (x *GetConceptCountsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// SingleConceptResponse
 type SingleConceptResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2511,6 +2530,7 @@ func (x *SingleConceptResponse) GetConcept() *Concept {
 	return nil
 }
 
+// MultiConceptResponse
 type MultiConceptResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2568,6 +2588,7 @@ func (x *MultiConceptResponse) GetConcepts() []*Concept {
 	return nil
 }
 
+// MultiConceptCountResponse
 type MultiConceptCountResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -2625,14 +2646,6 @@ func (x *MultiConceptCountResponse) GetConceptCounts() []*ConceptCount {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/concept_graph.proto
-////////////////////////////////////////////////////////////////////////////////
-//////////////////////
-// Responses
-//////////////////////
-// Requests
-//////////////////////
 // GET all relations such that the concept_id refers to the subject of the relation
 type ListConceptRelationsRequest struct {
 	state         protoimpl.MessageState
@@ -3046,6 +3059,7 @@ func (x *PostConceptMappingJobsRequest) GetConceptMappingJobs() []*ConceptMappin
 	return nil
 }
 
+// MultiConceptRelationResponse
 type MultiConceptRelationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3103,6 +3117,7 @@ func (x *MultiConceptRelationResponse) GetConceptRelations() []*ConceptRelation 
 	return nil
 }
 
+// MultiKnowledgeGraphResponse
 type MultiKnowledgeGraphResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3160,6 +3175,7 @@ func (x *MultiKnowledgeGraphResponse) GetKnowledgeGraphs() []*KnowledgeGraph {
 	return nil
 }
 
+// MultiConceptMappingJobResponse
 type MultiConceptMappingJobResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3217,9 +3233,6 @@ func (x *MultiConceptMappingJobResponse) GetIds() []string {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/concept_language.proto
-////////////////////////////////////////////////////////////////////////////////
 // GET single concept language for the given concept.
 type GetConceptLanguageRequest struct {
 	state         protoimpl.MessageState
@@ -3498,6 +3511,7 @@ func (x *PostConceptLanguagesRequest) GetConceptLanguages() []*ConceptLanguage {
 	return nil
 }
 
+// SingleConceptLanguageResponse
 type SingleConceptLanguageResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3553,6 +3567,7 @@ func (x *SingleConceptLanguageResponse) GetConceptLanguage() *ConceptLanguage {
 	return nil
 }
 
+// MultiConceptLanguageResponse
 type MultiConceptLanguageResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3608,9 +3623,7 @@ func (x *MultiConceptLanguageResponse) GetConceptLanguages() []*ConceptLanguage 
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/input.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetInputRequest
 type GetInputRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3666,6 +3679,7 @@ func (x *GetInputRequest) GetInputId() string {
 	return ""
 }
 
+// GetInputSamplesRequest
 type GetInputSamplesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3730,6 +3744,7 @@ func (x *GetInputSamplesRequest) GetUserIds() []string {
 	return nil
 }
 
+// ListInputsRequest
 type ListInputsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3814,6 +3829,7 @@ func (x *ListInputsRequest) GetIds() []string {
 	return nil
 }
 
+// StreamInputsRequest
 type StreamInputsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3887,6 +3903,7 @@ func (x *StreamInputsRequest) GetDescending() bool {
 	return false
 }
 
+// PostInputsRequest
 type PostInputsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3942,6 +3959,7 @@ func (x *PostInputsRequest) GetInputs() []*Input {
 	return nil
 }
 
+// PatchInputsRequest
 type PatchInputsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4007,6 +4025,7 @@ func (x *PatchInputsRequest) GetAction() string {
 	return ""
 }
 
+// DeleteInputRequest
 type DeleteInputRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4118,6 +4137,7 @@ func (x *DeleteInputsRequest) GetIds() []string {
 	return nil
 }
 
+// SingleInputResponse
 type SingleInputResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4173,6 +4193,7 @@ func (x *SingleInputResponse) GetInput() *Input {
 	return nil
 }
 
+// MultiInputResponse
 type MultiInputResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4228,6 +4249,7 @@ func (x *MultiInputResponse) GetInputs() []*Input {
 	return nil
 }
 
+// MultiInputAnnotationResponse
 type MultiInputAnnotationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4283,14 +4305,14 @@ func (x *MultiInputAnnotationResponse) GetHits() []*Hit {
 	return nil
 }
 
+// SingleInputCountResponse
 type SingleInputCountResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	Status *status.Status `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	// NOTE: inconsistency: not named after the object name.
-	Counts *InputCount `protobuf:"bytes,2,opt,name=counts,proto3" json:"counts,omitempty"`
+	Counts *InputCount    `protobuf:"bytes,2,opt,name=counts,proto3" json:"counts,omitempty"`
 }
 
 func (x *SingleInputCountResponse) Reset() {
@@ -4339,6 +4361,7 @@ func (x *SingleInputCountResponse) GetCounts() *InputCount {
 	return nil
 }
 
+// GetInputCountRequest
 type GetInputCountRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4555,9 +4578,7 @@ func (x *ListModelInputsRequest) GetPerPage() uint32 {
 	return 0
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/key.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetKeyRequest
 type GetKeyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4613,6 +4634,7 @@ func (x *GetKeyRequest) GetKeyId() string {
 	return ""
 }
 
+// ListKeysRequest
 type ListKeysRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4680,6 +4702,7 @@ func (x *ListKeysRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// ListAppKeysRequest
 type ListAppKeysRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4747,6 +4770,7 @@ func (x *ListAppKeysRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// PostKeysRequest
 type PostKeysRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4802,6 +4826,7 @@ func (x *PostKeysRequest) GetKeys() []*Key {
 	return nil
 }
 
+// DeleteKeyRequest
 type DeleteKeyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4857,6 +4882,7 @@ func (x *DeleteKeyRequest) GetKeyId() string {
 	return ""
 }
 
+// PatchKeysRequest
 type PatchKeysRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4922,6 +4948,7 @@ func (x *PatchKeysRequest) GetAction() string {
 	return ""
 }
 
+// SingleKeyResponse
 type SingleKeyResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4977,6 +5004,7 @@ func (x *SingleKeyResponse) GetKey() *Key {
 	return nil
 }
 
+// MultiKeyResponse
 type MultiKeyResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5032,9 +5060,7 @@ func (x *MultiKeyResponse) GetKeys() []*Key {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/model.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetModelRequest
 type GetModelRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5125,6 +5151,7 @@ func (x *GetModelRequest) GetAdditionalFields() []string {
 	return nil
 }
 
+// ListModelsRequest
 type ListModelsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5767,6 +5794,7 @@ func (x *MultiModelLanguageResponse) GetLanguages() []string {
 	return nil
 }
 
+// PostModelsRequest
 type PostModelsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5838,6 +5866,7 @@ func (x *PostModelsRequest) GetModels() []*Model {
 	return nil
 }
 
+// PatchModelsRequest
 type PatchModelsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -5903,6 +5932,7 @@ func (x *PatchModelsRequest) GetAction() string {
 	return ""
 }
 
+// DeleteModelRequest
 type DeleteModelRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6090,6 +6120,7 @@ func (x *PostModelsSearchesRequest) GetPagination() *Pagination {
 	return nil
 }
 
+// SingleModelResponse
 type SingleModelResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6145,6 +6176,7 @@ func (x *SingleModelResponse) GetModel() *Model {
 	return nil
 }
 
+// MultiModelResponse
 type MultiModelResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6200,9 +6232,7 @@ func (x *MultiModelResponse) GetModels() []*Model {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/model_version.proto
-////////////////////////////////////////////////////////////////////////////////
+// PatchModelVersionsRequest
 type PatchModelVersionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6276,7 +6306,6 @@ func (x *PatchModelVersionsRequest) GetAction() string {
 	return ""
 }
 
-// NOTE: this is same as GetModelRequest but backend doesn't support sharing same
 // request for different endpoints currently.
 type GetModelVersionRequest struct {
 	state         protoimpl.MessageState
@@ -6341,6 +6370,7 @@ func (x *GetModelVersionRequest) GetVersionId() string {
 	return ""
 }
 
+// ListModelVersionsRequest
 type ListModelVersionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6425,6 +6455,7 @@ func (x *ListModelVersionsRequest) GetConceptIds() []string {
 	return nil
 }
 
+// DeleteModelVersionRequest
 type DeleteModelVersionRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6488,6 +6519,7 @@ func (x *DeleteModelVersionRequest) GetVersionId() string {
 	return ""
 }
 
+// SingleModelVersionResponse
 type SingleModelVersionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6543,6 +6575,7 @@ func (x *SingleModelVersionResponse) GetModelVersion() *ModelVersion {
 	return nil
 }
 
+// MultiModelVersionResponse
 type MultiModelVersionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6729,6 +6762,7 @@ func (x *PostModelVersionsRequest) GetDatasetVersion() *DatasetVersion {
 	return nil
 }
 
+// ModelVersionPublishRequest
 type ModelVersionPublishRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6776,6 +6810,7 @@ func (x *ModelVersionPublishRequest) GetVersionId() string {
 	return ""
 }
 
+// PostModelVersionsPublishRequest
 type PostModelVersionsPublishRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6839,6 +6874,7 @@ func (x *PostModelVersionsPublishRequest) GetPublications() []*ModelVersionPubli
 	return nil
 }
 
+// ModelVersionUnpublishRequest
 type ModelVersionUnpublishRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6886,6 +6922,7 @@ func (x *ModelVersionUnpublishRequest) GetVersionId() string {
 	return ""
 }
 
+// PostModelVersionsUnPublishRequest
 type PostModelVersionsUnPublishRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7104,6 +7141,7 @@ func (x *GetModelVersionMetricsRequest) GetFields() *FieldsValue {
 	return nil
 }
 
+// GetModelTypeRequest
 type GetModelTypeRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7161,6 +7199,7 @@ func (x *GetModelTypeRequest) GetModelTypeId() string {
 	return ""
 }
 
+// ListModelTypesRequest
 type ListModelTypesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7229,6 +7268,7 @@ func (x *ListModelTypesRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// ListOpenSourceLicensesRequest
 type ListOpenSourceLicensesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7267,6 +7307,7 @@ func (*ListOpenSourceLicensesRequest) Descriptor() ([]byte, []int) {
 	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{107}
 }
 
+// ListOpenSourceLicensesResponse
 type ListOpenSourceLicensesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7322,6 +7363,7 @@ func (x *ListOpenSourceLicensesResponse) GetLicenses() []string {
 	return nil
 }
 
+// SingleModelTypeResponse
 type SingleModelTypeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7379,6 +7421,7 @@ func (x *SingleModelTypeResponse) GetModelType() *ModelType {
 	return nil
 }
 
+// MultiModelTypeResponse
 type MultiModelTypeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7436,9 +7479,7 @@ func (x *MultiModelTypeResponse) GetModelTypes() []*ModelType {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses for Model Version Input Examples
-////////////////////////////////////////////////////////////////////////////////
+// GetModelVersionInputExampleRequest
 type GetModelVersionInputExampleRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7514,6 +7555,7 @@ func (x *GetModelVersionInputExampleRequest) GetExampleId() string {
 	return ""
 }
 
+// ListModelVersionInputExamplesRequest
 type ListModelVersionInputExamplesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7598,6 +7640,7 @@ func (x *ListModelVersionInputExamplesRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// SingleModelVersionInputExampleResponse
 type SingleModelVersionInputExampleResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7655,6 +7698,7 @@ func (x *SingleModelVersionInputExampleResponse) GetModelVersionInputExample() *
 	return nil
 }
 
+// MultiModelVersionInputExampleResponse
 type MultiModelVersionInputExampleResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7712,6 +7756,7 @@ func (x *MultiModelVersionInputExampleResponse) GetModelVersionInputExamples() [
 	return nil
 }
 
+// ListModelReferencesRequest
 type ListModelReferencesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7785,6 +7830,7 @@ func (x *ListModelReferencesRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// MultiModelReferenceResponse
 type MultiModelReferenceResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7840,12 +7886,7 @@ func (x *MultiModelReferenceResponse) GetModelReferences() []*ModelReference {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/output.proto
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-// Outputs related requests
-////////////////////////////////////////////////////
+// MultiOutputResponse
 type MultiOutputResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7901,9 +7942,7 @@ func (x *MultiOutputResponse) GetOutputs() []*Output {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/scope.proto
-////////////////////////////////////////////////////////////////////////////////
+// ListScopesRequest
 type ListScopesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7962,6 +8001,7 @@ func (x *ListScopesRequest) GetUserAppId() *UserAppIDSet {
 	return nil
 }
 
+// MyScopesRequest
 type MyScopesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8009,6 +8049,7 @@ func (x *MyScopesRequest) GetUserAppId() *UserAppIDSet {
 	return nil
 }
 
+// MyScopesUserRequest
 type MyScopesUserRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8056,6 +8097,7 @@ func (x *MyScopesUserRequest) GetUserAppId() *UserAppIDSet {
 	return nil
 }
 
+// MyScopesRootRequest
 type MyScopesRootRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8094,6 +8136,7 @@ func (*MyScopesRootRequest) Descriptor() ([]byte, []int) {
 	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{121}
 }
 
+// MultiScopeDepsResponse
 type MultiScopeDepsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8162,6 +8205,7 @@ func (x *MultiScopeDepsResponse) GetEndpointDeps() []*EndpointDeps {
 	return nil
 }
 
+// MultiScopeResponse
 type MultiScopeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8237,6 +8281,7 @@ func (x *MultiScopeResponse) GetEndpoints() []string {
 	return nil
 }
 
+// MultiScopeUserResponse
 type MultiScopeUserResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8303,6 +8348,7 @@ func (x *MultiScopeUserResponse) GetEndpoints() []string {
 	return nil
 }
 
+// MultiScopeRootResponse
 type MultiScopeRootResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8369,9 +8415,7 @@ func (x *MultiScopeRootResponse) GetEndpoints() []string {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/search.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetSearchRequest
 type GetSearchRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8427,6 +8471,7 @@ func (x *GetSearchRequest) GetId() string {
 	return ""
 }
 
+// ListSearchesRequest
 type ListSearchesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8494,6 +8539,7 @@ func (x *ListSearchesRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// PostSearchesRequest
 type PostSearchesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8640,6 +8686,7 @@ func (x *PostSearchesByIDRequest) GetPagination() *Pagination {
 	return nil
 }
 
+// DeleteSearchRequest
 type DeleteSearchRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8763,6 +8810,7 @@ func (x *PostAnnotationsSearchesRequest) GetPagination() *Pagination {
 	return nil
 }
 
+// DeleteAnnotationSearchMetricsRequest
 type DeleteAnnotationSearchMetricsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8942,6 +8990,7 @@ func (x *SingleSearchResponse) GetSearch() *Search {
 	return nil
 }
 
+// MultiSearchResponse
 type MultiSearchResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9026,6 +9075,7 @@ func (x *MultiSearchResponse) GetSearches() []*Search {
 	return nil
 }
 
+// PostAnnotationSearchMetricsRequest
 type PostAnnotationSearchMetricsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9119,6 +9169,7 @@ func (x *PostAnnotationSearchMetricsRequest) GetEvaluationType() EvaluationType 
 	return EvaluationType_Classification
 }
 
+// GetAnnotationSearchMetricsRequest
 type GetAnnotationSearchMetricsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9175,6 +9226,7 @@ func (x *GetAnnotationSearchMetricsRequest) GetId() string {
 	return ""
 }
 
+// ListAnnotationSearchMetricsRequest
 type ListAnnotationSearchMetricsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9222,6 +9274,7 @@ func (x *ListAnnotationSearchMetricsRequest) GetUserAppId() *UserAppIDSet {
 	return nil
 }
 
+// MultiAnnotationSearchMetricsResponse
 type MultiAnnotationSearchMetricsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9278,6 +9331,7 @@ func (x *MultiAnnotationSearchMetricsResponse) GetAnnotationSearchMetrics() []*A
 	return nil
 }
 
+// PostValidatePasswordRequest
 type PostValidatePasswordRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9334,6 +9388,7 @@ func (x *PostValidatePasswordRequest) GetPassword() *Password {
 	return nil
 }
 
+// SinglePasswordValidationResponse
 type SinglePasswordValidationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9390,9 +9445,7 @@ func (x *SinglePasswordValidationResponse) GetPasswordViolations() *PasswordViol
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Requests / Responses from /proto/clarifai/api/workflow.proto
-////////////////////////////////////////////////////////////////////////////////
+// GetWorkflowRequest
 type GetWorkflowRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9469,6 +9522,7 @@ func (x *GetWorkflowRequest) GetAdditionalFields() []string {
 	return nil
 }
 
+// ListWorkflowsRequest
 type ListWorkflowsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9639,6 +9693,7 @@ func (*ListWorkflowsRequest_SortById) isListWorkflowsRequest_SortBy() {}
 
 func (*ListWorkflowsRequest_SortByModifiedAt) isListWorkflowsRequest_SortBy() {}
 
+// PostWorkflowsRequest
 type PostWorkflowsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9694,6 +9749,7 @@ func (x *PostWorkflowsRequest) GetWorkflows() []*Workflow {
 	return nil
 }
 
+// PatchWorkflowsRequest
 type PatchWorkflowsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9759,6 +9815,7 @@ func (x *PatchWorkflowsRequest) GetAction() string {
 	return ""
 }
 
+// DeleteWorkflowRequest
 type DeleteWorkflowRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9878,6 +9935,7 @@ func (x *DeleteWorkflowsRequest) GetDeleteAll() bool {
 	return false
 }
 
+// SingleWorkflowResponse
 type SingleWorkflowResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9933,6 +9991,7 @@ func (x *SingleWorkflowResponse) GetWorkflow() *Workflow {
 	return nil
 }
 
+// MultiWorkflowResponse
 type MultiWorkflowResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -9988,6 +10047,7 @@ func (x *MultiWorkflowResponse) GetWorkflows() []*Workflow {
 	return nil
 }
 
+// PostWorkflowResultsRequest
 type PostWorkflowResultsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10098,6 +10158,7 @@ func (x *PostWorkflowResultsRequest) GetWorkflowState() *WorkflowState {
 	return nil
 }
 
+// PostWorkflowResultsResponse
 type PostWorkflowResultsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10177,6 +10238,7 @@ func (x *PostWorkflowResultsResponse) GetWorkflowState() *WorkflowState {
 	return nil
 }
 
+// PostWorkflowResultsSimilarityRequest
 type PostWorkflowResultsSimilarityRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10278,6 +10340,7 @@ func (x *PostWorkflowResultsSimilarityRequest) GetFavorClarifaiWorkflows() bool 
 	return false
 }
 
+// PostWorkflowResultsSimilarityResponse
 type PostWorkflowResultsSimilarityResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10333,6 +10396,7 @@ func (x *PostWorkflowResultsSimilarityResponse) GetResults() []*WorkflowResultsS
 	return nil
 }
 
+// ListWorkflowVersionsRequest
 type ListWorkflowVersionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10409,6 +10473,7 @@ func (x *ListWorkflowVersionsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// GetWorkflowVersionRequest
 type GetWorkflowVersionRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10474,6 +10539,7 @@ func (x *GetWorkflowVersionRequest) GetWorkflowVersionId() string {
 	return ""
 }
 
+// DeleteWorkflowVersionsRequest
 type DeleteWorkflowVersionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10539,6 +10605,7 @@ func (x *DeleteWorkflowVersionsRequest) GetWorkflowVersionIds() []string {
 	return nil
 }
 
+// PatchWorkflowVersionsRequest
 type PatchWorkflowVersionsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10614,6 +10681,7 @@ func (x *PatchWorkflowVersionsRequest) GetAction() string {
 	return ""
 }
 
+// MultiWorkflowVersionResponse
 type MultiWorkflowVersionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10669,6 +10737,7 @@ func (x *MultiWorkflowVersionResponse) GetWorkflowVersions() []*WorkflowVersion 
 	return nil
 }
 
+// SingleWorkflowVersionResponse
 type SingleWorkflowVersionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10905,6 +10974,7 @@ func (x *ListAppDuplicationsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// MultiAppDuplicationsResponse
 type MultiAppDuplicationsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -10960,6 +11030,7 @@ func (x *MultiAppDuplicationsResponse) GetAppDuplications() []*AppDuplication {
 	return nil
 }
 
+// SingleAppDuplicationResponse
 type SingleAppDuplicationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -11231,7 +11302,7 @@ type PatchTasksRequest struct {
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	Tasks     []*Task       `protobuf:"bytes,2,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	// The action to perform on the patched objects
-	// For now only 'overwrite' action is supported
+	// For now actions 'merge', 'overwrite', and 'remove' are supported
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 }
 
@@ -11652,6 +11723,7 @@ func (x *PostCollectorsRequest) GetCollectors() []*Collector {
 	return nil
 }
 
+// PatchCollectorsRequest
 type PatchCollectorsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12018,9 +12090,7 @@ func (x *SingleCollectorResponse) GetCollector() *Collector {
 	return nil
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Stats Collection Endpoints.
-////////////////////////////////////////////////////////////////////////////////
+// PostStatValuesRequest
 type PostStatValuesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12078,6 +12148,7 @@ func (x *PostStatValuesRequest) GetStatValues() []*StatValue {
 	return nil
 }
 
+// MultiStatValueResponse
 type MultiStatValueResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12135,6 +12206,7 @@ func (x *MultiStatValueResponse) GetStatValues() []*StatValue {
 	return nil
 }
 
+// PostStatValuesAggregateRequest
 type PostStatValuesAggregateRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12192,6 +12264,7 @@ func (x *PostStatValuesAggregateRequest) GetStatValueAggregateQueries() []*StatV
 	return nil
 }
 
+// MultiStatValueAggregateResponse
 type MultiStatValueAggregateResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12249,6 +12322,7 @@ func (x *MultiStatValueAggregateResponse) GetStatValueAggregateResults() []*Stat
 	return nil
 }
 
+// PostTrendingMetricsViewRequest
 type PostTrendingMetricsViewRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12315,6 +12389,7 @@ func (x *PostTrendingMetricsViewRequest) GetObjectId() string {
 	return ""
 }
 
+// ListTrendingMetricsViewsRequest
 type ListTrendingMetricsViewsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -12392,6 +12467,7 @@ func (x *ListTrendingMetricsViewsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+// MultiTrendingMetricsViewResponse
 type MultiTrendingMetricsViewResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -16199,13 +16275,16 @@ var file_proto_clarifai_api_service_proto_rawDesc = []byte{
 	0x7d, 0x5a, 0x28, 0x12, 0x26, 0x2f, 0x76, 0x32, 0x2f, 0x74, 0x72, 0x65, 0x6e, 0x64, 0x69, 0x6e,
 	0x67, 0x5f, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x2f, 0x76, 0x69, 0x65, 0x77, 0x73, 0x2f,
 	0x7b, 0x76, 0x69, 0x65, 0x77, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x98, 0x9c, 0x27, 0x02, 0x42,
-	0x5d, 0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
-	0x67, 0x72, 0x70, 0x63, 0x2e, 0x61, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x3b, 0x67, 0x69, 0x74, 0x68,
-	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f,
-	0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2d, 0x67, 0x6f, 0x2d, 0x67, 0x72, 0x70, 0x63,
-	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f,
-	0x61, 0x70, 0x69, 0x2f, 0x61, 0x70, 0x69, 0xa2, 0x02, 0x04, 0x43, 0x41, 0x49, 0x50, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x95, 0x01, 0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x61, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x73, 0x67, 0x69, 0x74,
+	0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2d, 0x67, 0x6f, 0x2d, 0x67, 0x72, 0x70,
+	0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2f, 0x61, 0x70, 0x69, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x43, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61,
+	0x69, 0x2d, 0x67, 0x6f, 0x2d, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x70, 0x69,
+	0xa2, 0x02, 0x04, 0x43, 0x41, 0x49, 0x50, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
