@@ -271,6 +271,17 @@ type V2Client interface {
 	PatchTasks(ctx context.Context, in *PatchTasksRequest, opts ...grpc.CallOption) (*MultiTaskResponse, error)
 	// Delete multiple tasks in one request.
 	DeleteTasks(ctx context.Context, in *DeleteTasksRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Add Label orders.
+	PostLabelOrders(ctx context.Context, in *PostLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error)
+	// Get a label order.
+	GetLabelOrder(ctx context.Context, in *GetLabelOrderRequest, opts ...grpc.CallOption) (*SingleLabelOrderResponse, error)
+	// List label orders.
+	ListLabelOrders(ctx context.Context, in *ListLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error)
+	// Patch one or more label orders.
+	PatchLabelOrders(ctx context.Context, in *PatchLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error)
+	// Delete multiple label orders in one request.
+	// this do not change task status
+	DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Add a list of Collectors to an app.
 	// In the handler of this endpoint we also check for all the scopes of the  POST /inputs
 	// endpoint.
@@ -1358,6 +1369,51 @@ func (c *v2Client) DeleteTasks(ctx context.Context, in *DeleteTasksRequest, opts
 	return out, nil
 }
 
+func (c *v2Client) PostLabelOrders(ctx context.Context, in *PostLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error) {
+	out := new(MultiLabelOrderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostLabelOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetLabelOrder(ctx context.Context, in *GetLabelOrderRequest, opts ...grpc.CallOption) (*SingleLabelOrderResponse, error) {
+	out := new(SingleLabelOrderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetLabelOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListLabelOrders(ctx context.Context, in *ListLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error) {
+	out := new(MultiLabelOrderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListLabelOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchLabelOrders(ctx context.Context, in *PatchLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error) {
+	out := new(MultiLabelOrderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchLabelOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteLabelOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostCollectors(ctx context.Context, in *PostCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error) {
 	out := new(MultiCollectorResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostCollectors", in, out, opts...)
@@ -1696,6 +1752,17 @@ type V2Server interface {
 	PatchTasks(context.Context, *PatchTasksRequest) (*MultiTaskResponse, error)
 	// Delete multiple tasks in one request.
 	DeleteTasks(context.Context, *DeleteTasksRequest) (*status.BaseResponse, error)
+	// Add Label orders.
+	PostLabelOrders(context.Context, *PostLabelOrdersRequest) (*MultiLabelOrderResponse, error)
+	// Get a label order.
+	GetLabelOrder(context.Context, *GetLabelOrderRequest) (*SingleLabelOrderResponse, error)
+	// List label orders.
+	ListLabelOrders(context.Context, *ListLabelOrdersRequest) (*MultiLabelOrderResponse, error)
+	// Patch one or more label orders.
+	PatchLabelOrders(context.Context, *PatchLabelOrdersRequest) (*MultiLabelOrderResponse, error)
+	// Delete multiple label orders in one request.
+	// this do not change task status
+	DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error)
 	// Add a list of Collectors to an app.
 	// In the handler of this endpoint we also check for all the scopes of the  POST /inputs
 	// endpoint.
@@ -2077,6 +2144,21 @@ func (UnimplementedV2Server) PatchTasks(context.Context, *PatchTasksRequest) (*M
 }
 func (UnimplementedV2Server) DeleteTasks(context.Context, *DeleteTasksRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteTasks not implemented")
+}
+func (UnimplementedV2Server) PostLabelOrders(context.Context, *PostLabelOrdersRequest) (*MultiLabelOrderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostLabelOrders not implemented")
+}
+func (UnimplementedV2Server) GetLabelOrder(context.Context, *GetLabelOrderRequest) (*SingleLabelOrderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetLabelOrder not implemented")
+}
+func (UnimplementedV2Server) ListLabelOrders(context.Context, *ListLabelOrdersRequest) (*MultiLabelOrderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListLabelOrders not implemented")
+}
+func (UnimplementedV2Server) PatchLabelOrders(context.Context, *PatchLabelOrdersRequest) (*MultiLabelOrderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchLabelOrders not implemented")
+}
+func (UnimplementedV2Server) DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteLabelOrders not implemented")
 }
 func (UnimplementedV2Server) PostCollectors(context.Context, *PostCollectorsRequest) (*MultiCollectorResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostCollectors not implemented")
@@ -4224,6 +4306,96 @@ func _V2_DeleteTasks_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostLabelOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLabelOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostLabelOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostLabelOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostLabelOrders(ctx, req.(*PostLabelOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetLabelOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLabelOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetLabelOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetLabelOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetLabelOrder(ctx, req.(*GetLabelOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListLabelOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLabelOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListLabelOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListLabelOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListLabelOrders(ctx, req.(*ListLabelOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchLabelOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchLabelOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchLabelOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchLabelOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchLabelOrders(ctx, req.(*PatchLabelOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteLabelOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteLabelOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteLabelOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteLabelOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteLabelOrders(ctx, req.(*DeleteLabelOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostCollectors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostCollectorsRequest)
 	if err := dec(in); err != nil {
@@ -4857,6 +5029,26 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTasks",
 			Handler:    _V2_DeleteTasks_Handler,
+		},
+		{
+			MethodName: "PostLabelOrders",
+			Handler:    _V2_PostLabelOrders_Handler,
+		},
+		{
+			MethodName: "GetLabelOrder",
+			Handler:    _V2_GetLabelOrder_Handler,
+		},
+		{
+			MethodName: "ListLabelOrders",
+			Handler:    _V2_ListLabelOrders_Handler,
+		},
+		{
+			MethodName: "PatchLabelOrders",
+			Handler:    _V2_PatchLabelOrders_Handler,
+		},
+		{
+			MethodName: "DeleteLabelOrders",
+			Handler:    _V2_DeleteLabelOrders_Handler,
 		},
 		{
 			MethodName: "PostCollectors",
