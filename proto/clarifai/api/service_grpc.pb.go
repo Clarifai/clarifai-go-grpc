@@ -69,7 +69,9 @@ type V2Client interface {
 	DeleteAnnotation(ctx context.Context, in *DeleteAnnotationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(ctx context.Context, in *DeleteAnnotationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Execute a search over annotation
+	// Patch saved annotations searches by ids.
+	PatchAnnotationsSearches(ctx context.Context, in *PatchAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Execute a search over annotations
 	PostAnnotationsSearches(ctx context.Context, in *PostAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Get input count per status.
 	GetInputCount(ctx context.Context, in *GetInputCountRequest, opts ...grpc.CallOption) (*SingleInputCountResponse, error)
@@ -92,7 +94,9 @@ type V2Client interface {
 	// Delete multiple inputs in one request.
 	// This call is asynchronous.
 	DeleteInputs(ctx context.Context, in *DeleteInputsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Execute a search over input
+	// Patch saved inputs searches by ids.
+	PatchInputsSearches(ctx context.Context, in *PatchInputsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Execute a search over inputs
 	PostInputsSearches(ctx context.Context, in *PostInputsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Get predicted outputs from the model.
 	PostModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (*MultiOutputResponse, error)
@@ -118,6 +122,8 @@ type V2Client interface {
 	PostModels(ctx context.Context, in *PostModelsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(ctx context.Context, in *PatchModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
+	// Patch one or more models.
+	PatchModelIds(ctx context.Context, in *PatchModelIdsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
 	// Delete a single model.
 	DeleteModel(ctx context.Context, in *DeleteModelRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple models in one request.
@@ -218,13 +224,15 @@ type V2Client interface {
 	PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(ctx context.Context, in *PostValidatePasswordRequest, opts ...grpc.CallOption) (*SinglePasswordValidationResponse, error)
-	// Get a saved search.
+	// Get a saved legacy search.
 	GetSearch(ctx context.Context, in *GetSearchRequest, opts ...grpc.CallOption) (*SingleSearchResponse, error)
-	// List all saved searches.
+	// List all saved legacy searches.
 	ListSearches(ctx context.Context, in *ListSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Patch saved legacy searches by ids.
+	PatchSearches(ctx context.Context, in *PatchSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a new search and optionally save it.
 	PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
-	// Execute a previously saved search.
+	// Execute a previously saved legacy search.
 	PostSearchesByID(ctx context.Context, in *PostSearchesByIDRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Evaluate the results of two search requests
 	PostAnnotationSearchMetrics(ctx context.Context, in *PostAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
@@ -523,6 +531,15 @@ func (c *v2Client) DeleteAnnotations(ctx context.Context, in *DeleteAnnotationsR
 	return out, nil
 }
 
+func (c *v2Client) PatchAnnotationsSearches(ctx context.Context, in *PatchAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
+	out := new(MultiSearchResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchAnnotationsSearches", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostAnnotationsSearches(ctx context.Context, in *PostAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
 	out := new(MultiSearchResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAnnotationsSearches", in, out, opts...)
@@ -607,6 +624,15 @@ func (c *v2Client) DeleteInput(ctx context.Context, in *DeleteInputRequest, opts
 func (c *v2Client) DeleteInputs(ctx context.Context, in *DeleteInputsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteInputs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchInputsSearches(ctx context.Context, in *PatchInputsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
+	out := new(MultiSearchResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchInputsSearches", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -706,6 +732,15 @@ func (c *v2Client) PostModels(ctx context.Context, in *PostModelsRequest, opts .
 func (c *v2Client) PatchModels(ctx context.Context, in *PatchModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error) {
 	out := new(MultiModelResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModels", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchModelIds(ctx context.Context, in *PatchModelIdsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error) {
+	out := new(MultiModelResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModelIds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1153,6 +1188,15 @@ func (c *v2Client) ListSearches(ctx context.Context, in *ListSearchesRequest, op
 	return out, nil
 }
 
+func (c *v2Client) PatchSearches(ctx context.Context, in *PatchSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
+	out := new(MultiSearchResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchSearches", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
 	out := new(MultiSearchResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSearches", in, out, opts...)
@@ -1550,7 +1594,9 @@ type V2Server interface {
 	DeleteAnnotation(context.Context, *DeleteAnnotationRequest) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(context.Context, *DeleteAnnotationsRequest) (*status.BaseResponse, error)
-	// Execute a search over annotation
+	// Patch saved annotations searches by ids.
+	PatchAnnotationsSearches(context.Context, *PatchAnnotationsSearchesRequest) (*MultiSearchResponse, error)
+	// Execute a search over annotations
 	PostAnnotationsSearches(context.Context, *PostAnnotationsSearchesRequest) (*MultiSearchResponse, error)
 	// Get input count per status.
 	GetInputCount(context.Context, *GetInputCountRequest) (*SingleInputCountResponse, error)
@@ -1573,7 +1619,9 @@ type V2Server interface {
 	// Delete multiple inputs in one request.
 	// This call is asynchronous.
 	DeleteInputs(context.Context, *DeleteInputsRequest) (*status.BaseResponse, error)
-	// Execute a search over input
+	// Patch saved inputs searches by ids.
+	PatchInputsSearches(context.Context, *PatchInputsSearchesRequest) (*MultiSearchResponse, error)
+	// Execute a search over inputs
 	PostInputsSearches(context.Context, *PostInputsSearchesRequest) (*MultiSearchResponse, error)
 	// Get predicted outputs from the model.
 	PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error)
@@ -1599,6 +1647,8 @@ type V2Server interface {
 	PostModels(context.Context, *PostModelsRequest) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(context.Context, *PatchModelsRequest) (*MultiModelResponse, error)
+	// Patch one or more models.
+	PatchModelIds(context.Context, *PatchModelIdsRequest) (*MultiModelResponse, error)
 	// Delete a single model.
 	DeleteModel(context.Context, *DeleteModelRequest) (*status.BaseResponse, error)
 	// Delete multiple models in one request.
@@ -1699,13 +1749,15 @@ type V2Server interface {
 	PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(context.Context, *PostValidatePasswordRequest) (*SinglePasswordValidationResponse, error)
-	// Get a saved search.
+	// Get a saved legacy search.
 	GetSearch(context.Context, *GetSearchRequest) (*SingleSearchResponse, error)
-	// List all saved searches.
+	// List all saved legacy searches.
 	ListSearches(context.Context, *ListSearchesRequest) (*MultiSearchResponse, error)
+	// Patch saved legacy searches by ids.
+	PatchSearches(context.Context, *PatchSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a new search and optionally save it.
 	PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error)
-	// Execute a previously saved search.
+	// Execute a previously saved legacy search.
 	PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error)
 	// Evaluate the results of two search requests
 	PostAnnotationSearchMetrics(context.Context, *PostAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
@@ -1863,6 +1915,9 @@ func (UnimplementedV2Server) DeleteAnnotation(context.Context, *DeleteAnnotation
 func (UnimplementedV2Server) DeleteAnnotations(context.Context, *DeleteAnnotationsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotations not implemented")
 }
+func (UnimplementedV2Server) PatchAnnotationsSearches(context.Context, *PatchAnnotationsSearchesRequest) (*MultiSearchResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotationsSearches not implemented")
+}
 func (UnimplementedV2Server) PostAnnotationsSearches(context.Context, *PostAnnotationsSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotationsSearches not implemented")
 }
@@ -1892,6 +1947,9 @@ func (UnimplementedV2Server) DeleteInput(context.Context, *DeleteInputRequest) (
 }
 func (UnimplementedV2Server) DeleteInputs(context.Context, *DeleteInputsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteInputs not implemented")
+}
+func (UnimplementedV2Server) PatchInputsSearches(context.Context, *PatchInputsSearchesRequest) (*MultiSearchResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchInputsSearches not implemented")
 }
 func (UnimplementedV2Server) PostInputsSearches(context.Context, *PostInputsSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsSearches not implemented")
@@ -1925,6 +1983,9 @@ func (UnimplementedV2Server) PostModels(context.Context, *PostModelsRequest) (*S
 }
 func (UnimplementedV2Server) PatchModels(context.Context, *PatchModelsRequest) (*MultiModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchModels not implemented")
+}
+func (UnimplementedV2Server) PatchModelIds(context.Context, *PatchModelIdsRequest) (*MultiModelResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModelIds not implemented")
 }
 func (UnimplementedV2Server) DeleteModel(context.Context, *DeleteModelRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModel not implemented")
@@ -2072,6 +2133,9 @@ func (UnimplementedV2Server) GetSearch(context.Context, *GetSearchRequest) (*Sin
 }
 func (UnimplementedV2Server) ListSearches(context.Context, *ListSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListSearches not implemented")
+}
+func (UnimplementedV2Server) PatchSearches(context.Context, *PatchSearchesRequest) (*MultiSearchResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchSearches not implemented")
 }
 func (UnimplementedV2Server) PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostSearches not implemented")
@@ -2614,6 +2678,24 @@ func _V2_DeleteAnnotations_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchAnnotationsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAnnotationsSearchesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAnnotationsSearches(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchAnnotationsSearches",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAnnotationsSearches(ctx, req.(*PatchAnnotationsSearchesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostAnnotationsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostAnnotationsSearchesRequest)
 	if err := dec(in); err != nil {
@@ -2790,6 +2872,24 @@ func _V2_DeleteInputs_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeleteInputs(ctx, req.(*DeleteInputsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchInputsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchInputsSearchesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchInputsSearches(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchInputsSearches",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchInputsSearches(ctx, req.(*PatchInputsSearchesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2988,6 +3088,24 @@ func _V2_PatchModels_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PatchModels(ctx, req.(*PatchModelsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchModelIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModelIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModelIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModelIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModelIds(ctx, req.(*PatchModelIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3874,6 +3992,24 @@ func _V2_ListSearches_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchSearchesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchSearches(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchSearches",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchSearches(ctx, req.(*PatchSearchesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostSearchesRequest)
 	if err := dec(in); err != nil {
@@ -4655,6 +4791,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteAnnotations_Handler,
 		},
 		{
+			MethodName: "PatchAnnotationsSearches",
+			Handler:    _V2_PatchAnnotationsSearches_Handler,
+		},
+		{
 			MethodName: "PostAnnotationsSearches",
 			Handler:    _V2_PostAnnotationsSearches_Handler,
 		},
@@ -4693,6 +4833,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteInputs",
 			Handler:    _V2_DeleteInputs_Handler,
+		},
+		{
+			MethodName: "PatchInputsSearches",
+			Handler:    _V2_PatchInputsSearches_Handler,
 		},
 		{
 			MethodName: "PostInputsSearches",
@@ -4737,6 +4881,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PatchModels",
 			Handler:    _V2_PatchModels_Handler,
+		},
+		{
+			MethodName: "PatchModelIds",
+			Handler:    _V2_PatchModelIds_Handler,
 		},
 		{
 			MethodName: "DeleteModel",
@@ -4933,6 +5081,10 @@ var _V2_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSearches",
 			Handler:    _V2_ListSearches_Handler,
+		},
+		{
+			MethodName: "PatchSearches",
+			Handler:    _V2_PatchSearches_Handler,
 		},
 		{
 			MethodName: "PostSearches",
