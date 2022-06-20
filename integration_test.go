@@ -25,8 +25,8 @@ func TestGetModel(t *testing.T) {
 	check(err)
 	assertSuccessResponse(t, response.Status)
 
-	if response.Model.Name != "general" {
-		t.Errorf("Expected model name `general`, got `%s`\n", response.Model.Name)
+	if response.Model.Name != "Image Recognition" {
+		t.Errorf("Expected model name `Image Recognition`, got `%s`\n", response.Model.Name)
 	}
 }
 
