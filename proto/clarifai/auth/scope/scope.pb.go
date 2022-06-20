@@ -196,12 +196,12 @@ const (
 	S_ModelVersionPublications_Delete S = 118
 	S_WorkflowPublications_Add        S = 119
 	S_WorkflowPublications_Delete     S = 120
-	// Write to the table in the DB.
 	// TODO(Hemanth): Expose Bulk Operation endpoints only after implementation
+	// To write bulk operations to the DB
 	S_BulkOperation_Add S = 121
-	// Read from the annotation table in the DB.
+	// To Read Bulk Operations from the DB
 	S_BulkOperation_Get S = 122 // [(clarfai_exposed) = true];
-	// To delete we need read/write
+	// To Delete Bulk Operations from the DB
 	S_BulkOperation_Delete S = 123
 )
 

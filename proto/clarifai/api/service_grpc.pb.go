@@ -126,9 +126,13 @@ type V2Client interface {
 	// Get a specific dataset input.
 	GetDatasetInput(ctx context.Context, in *GetDatasetInputRequest, opts ...grpc.CallOption) (*SingleDatasetInputResponse, error)
 	// Add dataset inputs to a dataset.
-	// The process is atomic, i.e. either all or no dataset inputs are added.
-	// If there is an error for one dataset input,
-	// the process will stop, revert the transaction and return the error.
+	// The process is not atomic, i.e. if there are errors with some dataset
+	// inputs, others might still be added. The response reports
+	//   - SUCCESS if all dataset inputs were added,
+	//   - MIXED_STATUS if only some dataset inputs were added, and
+	//   - FAILURE if no dataset inputs were added.
+	// Each individual dataset input in the response has the status set to
+	// indicate if it was successful or if there was an error.
 	PostDatasetInputs(ctx context.Context, in *PostDatasetInputsRequest, opts ...grpc.CallOption) (*MultiDatasetInputResponse, error)
 	// Delete one or more dataset inputs in a single request.
 	DeleteDatasetInputs(ctx context.Context, in *DeleteDatasetInputsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -265,6 +269,10 @@ type V2Client interface {
 	PostApps(ctx context.Context, in *PostAppsRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
 	// Patch one or more apps.
 	PatchApps(ctx context.Context, in *PatchAppsRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
+	// Patch one app.
+	PatchApp(ctx context.Context, in *PatchAppRequest, opts ...grpc.CallOption) (*SingleAppResponse, error)
+	// Patch apps ids.
+	PatchAppsIds(ctx context.Context, in *PatchAppsIdsRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
 	// Validate new password in real-time for a user
@@ -369,6 +377,8 @@ type V2Client interface {
 	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List the view metrics for a detail view
 	ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error)
+	// Get a specific job.
+	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
 }
 
 type v2Client struct {
@@ -1360,6 +1370,24 @@ func (c *v2Client) PatchApps(ctx context.Context, in *PatchAppsRequest, opts ...
 	return out, nil
 }
 
+func (c *v2Client) PatchApp(ctx context.Context, in *PatchAppRequest, opts ...grpc.CallOption) (*SingleAppResponse, error) {
+	out := new(SingleAppResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchApp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchAppsIds(ctx context.Context, in *PatchAppsIdsRequest, opts ...grpc.CallOption) (*MultiAppResponse, error) {
+	out := new(MultiAppResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchAppsIds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error) {
 	out := new(MultiAppResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAppsSearches", in, out, opts...)
@@ -1792,6 +1820,15 @@ func (c *v2Client) ListTrendingMetricsViews(ctx context.Context, in *ListTrendin
 	return out, nil
 }
 
+func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error) {
+	out := new(SingleDatasetInputsSearchAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetDatasetInputsSearchAddJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -1899,9 +1936,13 @@ type V2Server interface {
 	// Get a specific dataset input.
 	GetDatasetInput(context.Context, *GetDatasetInputRequest) (*SingleDatasetInputResponse, error)
 	// Add dataset inputs to a dataset.
-	// The process is atomic, i.e. either all or no dataset inputs are added.
-	// If there is an error for one dataset input,
-	// the process will stop, revert the transaction and return the error.
+	// The process is not atomic, i.e. if there are errors with some dataset
+	// inputs, others might still be added. The response reports
+	//   - SUCCESS if all dataset inputs were added,
+	//   - MIXED_STATUS if only some dataset inputs were added, and
+	//   - FAILURE if no dataset inputs were added.
+	// Each individual dataset input in the response has the status set to
+	// indicate if it was successful or if there was an error.
 	PostDatasetInputs(context.Context, *PostDatasetInputsRequest) (*MultiDatasetInputResponse, error)
 	// Delete one or more dataset inputs in a single request.
 	DeleteDatasetInputs(context.Context, *DeleteDatasetInputsRequest) (*status.BaseResponse, error)
@@ -2038,6 +2079,10 @@ type V2Server interface {
 	PostApps(context.Context, *PostAppsRequest) (*MultiAppResponse, error)
 	// Patch one or more apps.
 	PatchApps(context.Context, *PatchAppsRequest) (*MultiAppResponse, error)
+	// Patch one app.
+	PatchApp(context.Context, *PatchAppRequest) (*SingleAppResponse, error)
+	// Patch apps ids.
+	PatchAppsIds(context.Context, *PatchAppsIdsRequest) (*MultiAppResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error)
 	// Validate new password in real-time for a user
@@ -2142,6 +2187,8 @@ type V2Server interface {
 	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)
 	// List the view metrics for a detail view
 	ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error)
+	// Get a specific job.
+	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -2476,6 +2523,12 @@ func (UnimplementedV2Server) PostApps(context.Context, *PostAppsRequest) (*Multi
 func (UnimplementedV2Server) PatchApps(context.Context, *PatchAppsRequest) (*MultiAppResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchApps not implemented")
 }
+func (UnimplementedV2Server) PatchApp(context.Context, *PatchAppRequest) (*SingleAppResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchApp not implemented")
+}
+func (UnimplementedV2Server) PatchAppsIds(context.Context, *PatchAppsIdsRequest) (*MultiAppResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAppsIds not implemented")
+}
 func (UnimplementedV2Server) PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAppsSearches not implemented")
 }
@@ -2619,6 +2672,9 @@ func (UnimplementedV2Server) PostTrendingMetricsView(context.Context, *PostTrend
 }
 func (UnimplementedV2Server) ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListTrendingMetricsViews not implemented")
+}
+func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -4595,6 +4651,42 @@ func _V2_PatchApps_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchApp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchApp(ctx, req.(*PatchAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchAppsIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAppsIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAppsIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchAppsIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAppsIds(ctx, req.(*PatchAppsIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostAppsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostAppsSearchesRequest)
 	if err := dec(in); err != nil {
@@ -5459,6 +5551,24 @@ func _V2_ListTrendingMetricsViews_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDatasetInputsSearchAddJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetDatasetInputsSearchAddJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetDatasetInputsSearchAddJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetDatasetInputsSearchAddJob(ctx, req.(*GetDatasetInputsSearchAddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5903,6 +6013,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchApps_Handler,
 		},
 		{
+			MethodName: "PatchApp",
+			Handler:    _V2_PatchApp_Handler,
+		},
+		{
+			MethodName: "PatchAppsIds",
+			Handler:    _V2_PatchAppsIds_Handler,
+		},
+		{
 			MethodName: "PostAppsSearches",
 			Handler:    _V2_PostAppsSearches_Handler,
 		},
@@ -6093,6 +6211,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTrendingMetricsViews",
 			Handler:    _V2_ListTrendingMetricsViews_Handler,
+		},
+		{
+			MethodName: "GetDatasetInputsSearchAddJob",
+			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
