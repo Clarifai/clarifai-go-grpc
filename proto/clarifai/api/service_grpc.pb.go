@@ -147,6 +147,8 @@ type V2Client interface {
 	PatchDatasetVersions(ctx context.Context, in *PatchDatasetVersionsRequest, opts ...grpc.CallOption) (*MultiDatasetVersionResponse, error)
 	// Delete one or more dataset versions in a single request.
 	DeleteDatasetVersions(ctx context.Context, in *DeleteDatasetVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Create export of a dataset version.
+	PutDatasetVersionExports(ctx context.Context, in *PutDatasetVersionExportsRequest, opts ...grpc.CallOption) (*MultiDatasetVersionExportResponse, error)
 	// Get a specific model type.
 	GetModelType(ctx context.Context, in *GetModelTypeRequest, opts ...grpc.CallOption) (*SingleModelTypeResponse, error)
 	// List all the supported open source licenses in the platform.
@@ -397,12 +399,19 @@ type V2Client interface {
 	PostModuleVersions(ctx context.Context, in *PostModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Get installed modules vesrions for an app.
+	GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error)
 	// List installed modules vesrions for an app.
 	ListInstalledModuleVersions(ctx context.Context, in *ListInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error)
 	// Install a new module version which will deploy the specific ModuleVersion to the app in the url.
 	PostInstalledModuleVersions(ctx context.Context, in *PostInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error)
-	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app in the url.
+	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app
+	// in the url.
+	// This cleaned up any associated caller keys so needs the Keys_Delete scope.
 	DeleteInstalledModuleVersions(ctx context.Context, in *DeleteInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Assign a key that the caller owns to be used when accessing this installed module version
+	// If this endpoint is called with a different key then it overwrites what is there.
+	PostInstalledModuleVersionsKey(ctx context.Context, in *PostInstalledModuleVersionsKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -417,6 +426,11 @@ type V2Client interface {
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
+	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
+	PutUploadContentParts(ctx context.Context, in *PutUploadContentPartsRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
+	GetUpload(ctx context.Context, in *GetUploadRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
+	ListUploads(ctx context.Context, in *ListUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
+	DeleteUploads(ctx context.Context, in *DeleteUploadsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 }
 
 type v2Client struct {
@@ -889,6 +903,15 @@ func (c *v2Client) PatchDatasetVersions(ctx context.Context, in *PatchDatasetVer
 func (c *v2Client) DeleteDatasetVersions(ctx context.Context, in *DeleteDatasetVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteDatasetVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PutDatasetVersionExports(ctx context.Context, in *PutDatasetVersionExportsRequest, opts ...grpc.CallOption) (*MultiDatasetVersionExportResponse, error) {
+	out := new(MultiDatasetVersionExportResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PutDatasetVersionExports", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1948,6 +1971,15 @@ func (c *v2Client) DeleteModuleVersions(ctx context.Context, in *DeleteModuleVer
 	return out, nil
 }
 
+func (c *v2Client) GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error) {
+	out := new(SingleInstalledModuleVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInstalledModuleVersion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListInstalledModuleVersions(ctx context.Context, in *ListInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error) {
 	out := new(MultiInstalledModuleVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListInstalledModuleVersions", in, out, opts...)
@@ -1969,6 +2001,15 @@ func (c *v2Client) PostInstalledModuleVersions(ctx context.Context, in *PostInst
 func (c *v2Client) DeleteInstalledModuleVersions(ctx context.Context, in *DeleteInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteInstalledModuleVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInstalledModuleVersionsKey(ctx context.Context, in *PostInstalledModuleVersionsKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error) {
+	out := new(SingleKeyResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInstalledModuleVersionsKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2023,6 +2064,51 @@ func (c *v2Client) DeleteBulkOperations(ctx context.Context, in *DeleteBulkOpera
 func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error) {
 	out := new(SingleDatasetInputsSearchAddJobResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetDatasetInputsSearchAddJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error) {
+	out := new(MultiUploadResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUploads", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PutUploadContentParts(ctx context.Context, in *PutUploadContentPartsRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error) {
+	out := new(SingleUploadResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PutUploadContentParts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetUpload(ctx context.Context, in *GetUploadRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error) {
+	out := new(SingleUploadResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetUpload", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUploads(ctx context.Context, in *ListUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error) {
+	out := new(MultiUploadResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUploads", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteUploads(ctx context.Context, in *DeleteUploadsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteUploads", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2157,6 +2243,8 @@ type V2Server interface {
 	PatchDatasetVersions(context.Context, *PatchDatasetVersionsRequest) (*MultiDatasetVersionResponse, error)
 	// Delete one or more dataset versions in a single request.
 	DeleteDatasetVersions(context.Context, *DeleteDatasetVersionsRequest) (*status.BaseResponse, error)
+	// Create export of a dataset version.
+	PutDatasetVersionExports(context.Context, *PutDatasetVersionExportsRequest) (*MultiDatasetVersionExportResponse, error)
 	// Get a specific model type.
 	GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error)
 	// List all the supported open source licenses in the platform.
@@ -2407,12 +2495,19 @@ type V2Server interface {
 	PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error)
+	// Get installed modules vesrions for an app.
+	GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error)
 	// List installed modules vesrions for an app.
 	ListInstalledModuleVersions(context.Context, *ListInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error)
 	// Install a new module version which will deploy the specific ModuleVersion to the app in the url.
 	PostInstalledModuleVersions(context.Context, *PostInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error)
-	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app in the url.
+	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app
+	// in the url.
+	// This cleaned up any associated caller keys so needs the Keys_Delete scope.
 	DeleteInstalledModuleVersions(context.Context, *DeleteInstalledModuleVersionsRequest) (*status.BaseResponse, error)
+	// Assign a key that the caller owns to be used when accessing this installed module version
+	// If this endpoint is called with a different key then it overwrites what is there.
+	PostInstalledModuleVersionsKey(context.Context, *PostInstalledModuleVersionsKeyRequest) (*SingleKeyResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -2427,6 +2522,11 @@ type V2Server interface {
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
+	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
+	PutUploadContentParts(context.Context, *PutUploadContentPartsRequest) (*SingleUploadResponse, error)
+	GetUpload(context.Context, *GetUploadRequest) (*SingleUploadResponse, error)
+	ListUploads(context.Context, *ListUploadsRequest) (*MultiUploadResponse, error)
+	DeleteUploads(context.Context, *DeleteUploadsRequest) (*status.BaseResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -2589,6 +2689,9 @@ func (UnimplementedV2Server) PatchDatasetVersions(context.Context, *PatchDataset
 }
 func (UnimplementedV2Server) DeleteDatasetVersions(context.Context, *DeleteDatasetVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteDatasetVersions not implemented")
+}
+func (UnimplementedV2Server) PutDatasetVersionExports(context.Context, *PutDatasetVersionExportsRequest) (*MultiDatasetVersionExportResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PutDatasetVersionExports not implemented")
 }
 func (UnimplementedV2Server) GetModelType(context.Context, *GetModelTypeRequest) (*SingleModelTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelType not implemented")
@@ -2941,6 +3044,9 @@ func (UnimplementedV2Server) PostModuleVersions(context.Context, *PostModuleVers
 func (UnimplementedV2Server) DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModuleVersions not implemented")
 }
+func (UnimplementedV2Server) GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetInstalledModuleVersion not implemented")
+}
 func (UnimplementedV2Server) ListInstalledModuleVersions(context.Context, *ListInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInstalledModuleVersions not implemented")
 }
@@ -2949,6 +3055,9 @@ func (UnimplementedV2Server) PostInstalledModuleVersions(context.Context, *PostI
 }
 func (UnimplementedV2Server) DeleteInstalledModuleVersions(context.Context, *DeleteInstalledModuleVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteInstalledModuleVersions not implemented")
+}
+func (UnimplementedV2Server) PostInstalledModuleVersionsKey(context.Context, *PostInstalledModuleVersionsKeyRequest) (*SingleKeyResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInstalledModuleVersionsKey not implemented")
 }
 func (UnimplementedV2Server) PostBulkOperations(context.Context, *PostBulkOperationsRequest) (*MultiBulkOperationsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostBulkOperations not implemented")
@@ -2967,6 +3076,21 @@ func (UnimplementedV2Server) DeleteBulkOperations(context.Context, *DeleteBulkOp
 }
 func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
+}
+func (UnimplementedV2Server) PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostUploads not implemented")
+}
+func (UnimplementedV2Server) PutUploadContentParts(context.Context, *PutUploadContentPartsRequest) (*SingleUploadResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PutUploadContentParts not implemented")
+}
+func (UnimplementedV2Server) GetUpload(context.Context, *GetUploadRequest) (*SingleUploadResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetUpload not implemented")
+}
+func (UnimplementedV2Server) ListUploads(context.Context, *ListUploadsRequest) (*MultiUploadResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUploads not implemented")
+}
+func (UnimplementedV2Server) DeleteUploads(context.Context, *DeleteUploadsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteUploads not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -3913,6 +4037,24 @@ func _V2_DeleteDatasetVersions_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeleteDatasetVersions(ctx, req.(*DeleteDatasetVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PutDatasetVersionExports_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutDatasetVersionExportsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PutDatasetVersionExports(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PutDatasetVersionExports",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PutDatasetVersionExports(ctx, req.(*PutDatasetVersionExportsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6023,6 +6165,24 @@ func _V2_DeleteModuleVersions_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetInstalledModuleVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInstalledModuleVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetInstalledModuleVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetInstalledModuleVersion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetInstalledModuleVersion(ctx, req.(*GetInstalledModuleVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListInstalledModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListInstalledModuleVersionsRequest)
 	if err := dec(in); err != nil {
@@ -6073,6 +6233,24 @@ func _V2_DeleteInstalledModuleVersions_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeleteInstalledModuleVersions(ctx, req.(*DeleteInstalledModuleVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInstalledModuleVersionsKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInstalledModuleVersionsKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInstalledModuleVersionsKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInstalledModuleVersionsKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInstalledModuleVersionsKey(ctx, req.(*PostInstalledModuleVersionsKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6181,6 +6359,96 @@ func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetDatasetInputsSearchAddJob(ctx, req.(*GetDatasetInputsSearchAddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUploadsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostUploads(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostUploads",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostUploads(ctx, req.(*PostUploadsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PutUploadContentParts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutUploadContentPartsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PutUploadContentParts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PutUploadContentParts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PutUploadContentParts(ctx, req.(*PutUploadContentPartsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetUpload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetUpload",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetUpload(ctx, req.(*GetUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUploadsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUploads(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUploads",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUploads(ctx, req.(*ListUploadsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUploadsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteUploads(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteUploads",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteUploads(ctx, req.(*DeleteUploadsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6399,6 +6667,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDatasetVersions",
 			Handler:    _V2_DeleteDatasetVersions_Handler,
+		},
+		{
+			MethodName: "PutDatasetVersionExports",
+			Handler:    _V2_PutDatasetVersionExports_Handler,
 		},
 		{
 			MethodName: "GetModelType",
@@ -6869,6 +7141,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteModuleVersions_Handler,
 		},
 		{
+			MethodName: "GetInstalledModuleVersion",
+			Handler:    _V2_GetInstalledModuleVersion_Handler,
+		},
+		{
 			MethodName: "ListInstalledModuleVersions",
 			Handler:    _V2_ListInstalledModuleVersions_Handler,
 		},
@@ -6879,6 +7155,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteInstalledModuleVersions",
 			Handler:    _V2_DeleteInstalledModuleVersions_Handler,
+		},
+		{
+			MethodName: "PostInstalledModuleVersionsKey",
+			Handler:    _V2_PostInstalledModuleVersionsKey_Handler,
 		},
 		{
 			MethodName: "PostBulkOperations",
@@ -6903,6 +7183,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDatasetInputsSearchAddJob",
 			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
+		},
+		{
+			MethodName: "PostUploads",
+			Handler:    _V2_PostUploads_Handler,
+		},
+		{
+			MethodName: "PutUploadContentParts",
+			Handler:    _V2_PutUploadContentParts_Handler,
+		},
+		{
+			MethodName: "GetUpload",
+			Handler:    _V2_GetUpload_Handler,
+		},
+		{
+			MethodName: "ListUploads",
+			Handler:    _V2_ListUploads_Handler,
+		},
+		{
+			MethodName: "DeleteUploads",
+			Handler:    _V2_DeleteUploads_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
