@@ -119,6 +119,8 @@ type V2Client interface {
 	// If there is an error for one dataset,
 	// the process will stop, revert the transaction and return the error.
 	PatchDatasets(ctx context.Context, in *PatchDatasetsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error)
+	// Patch one or more dataset ids.
+	PatchDatasetIds(ctx context.Context, in *PatchDatasetIdsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error)
 	// Delete one or more datasets in a single request.
 	DeleteDatasets(ctx context.Context, in *DeleteDatasetsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all the dataset inputs in a dataset.
@@ -171,7 +173,7 @@ type V2Client interface {
 	PostModels(ctx context.Context, in *PostModelsRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(ctx context.Context, in *PatchModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
-	// Patch one or more models.
+	// Patch one or more models ids.
 	PatchModelIds(ctx context.Context, in *PatchModelIdsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
 	// Delete a single model.
 	DeleteModel(ctx context.Context, in *DeleteModelRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -221,6 +223,8 @@ type V2Client interface {
 	PostWorkflows(ctx context.Context, in *PostWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
 	PatchWorkflows(ctx context.Context, in *PatchWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
+	// Patch one or more workflows ids.
+	PatchWorkflowIds(ctx context.Context, in *PatchWorkflowIdsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Delete a single workflow.
 	DeleteWorkflow(ctx context.Context, in *DeleteWorkflowRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple workflows in one request.
@@ -426,6 +430,10 @@ type V2Client interface {
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List all the inputs add jobs
+	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
+	// Get the input add job details by ID
+	GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
 	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
 	PutUploadContentParts(ctx context.Context, in *PutUploadContentPartsRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
 	GetUpload(ctx context.Context, in *GetUploadRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
@@ -804,6 +812,15 @@ func (c *v2Client) PostDatasets(ctx context.Context, in *PostDatasetsRequest, op
 func (c *v2Client) PatchDatasets(ctx context.Context, in *PatchDatasetsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error) {
 	out := new(MultiDatasetResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchDatasets", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchDatasetIds(ctx context.Context, in *PatchDatasetIdsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error) {
+	out := new(MultiDatasetResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchDatasetIds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1227,6 +1244,15 @@ func (c *v2Client) PostWorkflows(ctx context.Context, in *PostWorkflowsRequest, 
 func (c *v2Client) PatchWorkflows(ctx context.Context, in *PatchWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error) {
 	out := new(MultiWorkflowResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchWorkflows", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchWorkflowIds(ctx context.Context, in *PatchWorkflowIdsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error) {
+	out := new(MultiWorkflowResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchWorkflowIds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2070,6 +2096,24 @@ func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetData
 	return out, nil
 }
 
+func (c *v2Client) ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error) {
+	out := new(MultiInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListInputsAddJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error) {
+	out := new(SingleInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInputsAddJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error) {
 	out := new(MultiUploadResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUploads", in, out, opts...)
@@ -2215,6 +2259,8 @@ type V2Server interface {
 	// If there is an error for one dataset,
 	// the process will stop, revert the transaction and return the error.
 	PatchDatasets(context.Context, *PatchDatasetsRequest) (*MultiDatasetResponse, error)
+	// Patch one or more dataset ids.
+	PatchDatasetIds(context.Context, *PatchDatasetIdsRequest) (*MultiDatasetResponse, error)
 	// Delete one or more datasets in a single request.
 	DeleteDatasets(context.Context, *DeleteDatasetsRequest) (*status.BaseResponse, error)
 	// List all the dataset inputs in a dataset.
@@ -2267,7 +2313,7 @@ type V2Server interface {
 	PostModels(context.Context, *PostModelsRequest) (*SingleModelResponse, error)
 	// Patch one or more models.
 	PatchModels(context.Context, *PatchModelsRequest) (*MultiModelResponse, error)
-	// Patch one or more models.
+	// Patch one or more models ids.
 	PatchModelIds(context.Context, *PatchModelIdsRequest) (*MultiModelResponse, error)
 	// Delete a single model.
 	DeleteModel(context.Context, *DeleteModelRequest) (*status.BaseResponse, error)
@@ -2317,6 +2363,8 @@ type V2Server interface {
 	PostWorkflows(context.Context, *PostWorkflowsRequest) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
 	PatchWorkflows(context.Context, *PatchWorkflowsRequest) (*MultiWorkflowResponse, error)
+	// Patch one or more workflows ids.
+	PatchWorkflowIds(context.Context, *PatchWorkflowIdsRequest) (*MultiWorkflowResponse, error)
 	// Delete a single workflow.
 	DeleteWorkflow(context.Context, *DeleteWorkflowRequest) (*status.BaseResponse, error)
 	// Delete multiple workflows in one request.
@@ -2522,6 +2570,10 @@ type V2Server interface {
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List all the inputs add jobs
+	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
+	// Get the input add job details by ID
+	GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
 	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
 	PutUploadContentParts(context.Context, *PutUploadContentPartsRequest) (*SingleUploadResponse, error)
 	GetUpload(context.Context, *GetUploadRequest) (*SingleUploadResponse, error)
@@ -2656,6 +2708,9 @@ func (UnimplementedV2Server) PostDatasets(context.Context, *PostDatasetsRequest)
 }
 func (UnimplementedV2Server) PatchDatasets(context.Context, *PatchDatasetsRequest) (*MultiDatasetResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchDatasets not implemented")
+}
+func (UnimplementedV2Server) PatchDatasetIds(context.Context, *PatchDatasetIdsRequest) (*MultiDatasetResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchDatasetIds not implemented")
 }
 func (UnimplementedV2Server) DeleteDatasets(context.Context, *DeleteDatasetsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteDatasets not implemented")
@@ -2797,6 +2852,9 @@ func (UnimplementedV2Server) PostWorkflows(context.Context, *PostWorkflowsReques
 }
 func (UnimplementedV2Server) PatchWorkflows(context.Context, *PatchWorkflowsRequest) (*MultiWorkflowResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflows not implemented")
+}
+func (UnimplementedV2Server) PatchWorkflowIds(context.Context, *PatchWorkflowIdsRequest) (*MultiWorkflowResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowIds not implemented")
 }
 func (UnimplementedV2Server) DeleteWorkflow(context.Context, *DeleteWorkflowRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteWorkflow not implemented")
@@ -3076,6 +3134,12 @@ func (UnimplementedV2Server) DeleteBulkOperations(context.Context, *DeleteBulkOp
 }
 func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
+}
+func (UnimplementedV2Server) ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListInputsAddJobs not implemented")
+}
+func (UnimplementedV2Server) GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetInputsAddJob not implemented")
 }
 func (UnimplementedV2Server) PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostUploads not implemented")
@@ -3839,6 +3903,24 @@ func _V2_PatchDatasets_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PatchDatasets(ctx, req.(*PatchDatasetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchDatasetIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchDatasetIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchDatasetIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchDatasetIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchDatasetIds(ctx, req.(*PatchDatasetIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4685,6 +4767,24 @@ func _V2_PatchWorkflows_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PatchWorkflows(ctx, req.(*PatchWorkflowsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchWorkflowIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchWorkflowIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchWorkflowIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchWorkflowIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchWorkflowIds(ctx, req.(*PatchWorkflowIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6363,6 +6463,42 @@ func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListInputsAddJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListInputsAddJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListInputsAddJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListInputsAddJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListInputsAddJobs(ctx, req.(*ListInputsAddJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetInputsAddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInputsAddJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetInputsAddJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetInputsAddJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetInputsAddJob(ctx, req.(*GetInputsAddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostUploadsRequest)
 	if err := dec(in); err != nil {
@@ -6625,6 +6761,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchDatasets_Handler,
 		},
 		{
+			MethodName: "PatchDatasetIds",
+			Handler:    _V2_PatchDatasetIds_Handler,
+		},
+		{
 			MethodName: "DeleteDatasets",
 			Handler:    _V2_DeleteDatasets_Handler,
 		},
@@ -6811,6 +6951,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PatchWorkflows",
 			Handler:    _V2_PatchWorkflows_Handler,
+		},
+		{
+			MethodName: "PatchWorkflowIds",
+			Handler:    _V2_PatchWorkflowIds_Handler,
 		},
 		{
 			MethodName: "DeleteWorkflow",
@@ -7183,6 +7327,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDatasetInputsSearchAddJob",
 			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
+		},
+		{
+			MethodName: "ListInputsAddJobs",
+			Handler:    _V2_ListInputsAddJobs_Handler,
+		},
+		{
+			MethodName: "GetInputsAddJob",
+			Handler:    _V2_GetInputsAddJob_Handler,
 		},
 		{
 			MethodName: "PostUploads",
