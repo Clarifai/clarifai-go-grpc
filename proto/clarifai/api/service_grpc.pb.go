@@ -37,6 +37,8 @@ type V2Client interface {
 	GetConcept(ctx context.Context, in *GetConceptRequest, opts ...grpc.CallOption) (*SingleConceptResponse, error)
 	// List all the concepts.
 	ListConcepts(ctx context.Context, in *ListConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
+	// List models concepts.
+	ListModelConcepts(ctx context.Context, in *ListModelConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
 	// Search over the concepts to find one or more you're looking for.
 	// This leverage the "body" parameter because we also have page and
 	// per_page as url query param variables in this request.
@@ -497,6 +499,15 @@ func (c *v2Client) GetConcept(ctx context.Context, in *GetConceptRequest, opts .
 func (c *v2Client) ListConcepts(ctx context.Context, in *ListConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error) {
 	out := new(MultiConceptResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListConcepts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListModelConcepts(ctx context.Context, in *ListModelConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error) {
+	out := new(MultiConceptResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelConcepts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2177,6 +2188,8 @@ type V2Server interface {
 	GetConcept(context.Context, *GetConceptRequest) (*SingleConceptResponse, error)
 	// List all the concepts.
 	ListConcepts(context.Context, *ListConceptsRequest) (*MultiConceptResponse, error)
+	// List models concepts.
+	ListModelConcepts(context.Context, *ListModelConceptsRequest) (*MultiConceptResponse, error)
 	// Search over the concepts to find one or more you're looking for.
 	// This leverage the "body" parameter because we also have page and
 	// per_page as url query param variables in this request.
@@ -2603,6 +2616,9 @@ func (UnimplementedV2Server) GetConcept(context.Context, *GetConceptRequest) (*S
 }
 func (UnimplementedV2Server) ListConcepts(context.Context, *ListConceptsRequest) (*MultiConceptResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListConcepts not implemented")
+}
+func (UnimplementedV2Server) ListModelConcepts(context.Context, *ListModelConceptsRequest) (*MultiConceptResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListModelConcepts not implemented")
 }
 func (UnimplementedV2Server) PostConceptsSearches(context.Context, *PostConceptsSearchesRequest) (*MultiConceptResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptsSearches not implemented")
@@ -3273,6 +3289,24 @@ func _V2_ListConcepts_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListConcepts(ctx, req.(*ListConceptsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListModelConcepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListModelConceptsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListModelConcepts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListModelConcepts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListModelConcepts(ctx, req.(*ListModelConceptsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6619,6 +6653,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListConcepts",
 			Handler:    _V2_ListConcepts_Handler,
+		},
+		{
+			MethodName: "ListModelConcepts",
+			Handler:    _V2_ListModelConcepts_Handler,
 		},
 		{
 			MethodName: "PostConceptsSearches",
