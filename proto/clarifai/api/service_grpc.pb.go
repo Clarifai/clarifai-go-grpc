@@ -7,8 +7,8 @@
 package api
 
 import (
+	status "clarifai/api/status"
 	context "context"
-	status "github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status1 "google.golang.org/grpc/status"
@@ -23,6 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type V2Client interface {
+	// Common echo example.
+	Echo(ctx context.Context, in *TestMessage, opts ...grpc.CallOption) (*TestMessage, error)
 	// List concept relations between concepts in the platform.
 	// MUST be above ListConcepts so that if concept_id is empty this will still match
 	// /concepts/relations to list all the concept relations in the app.
@@ -47,6 +49,26 @@ type V2Client interface {
 	PostConcepts(ctx context.Context, in *PostConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
 	// Patch one or more concepts.
 	PatchConcepts(ctx context.Context, in *PatchConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
+	// Get a specific vocab from an app.
+	GetVocab(ctx context.Context, in *GetVocabRequest, opts ...grpc.CallOption) (*SingleVocabResponse, error)
+	// List all the vocabs.
+	ListVocabs(ctx context.Context, in *ListVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error)
+	// Add a vocab to an app.
+	PostVocabs(ctx context.Context, in *PostVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error)
+	// Patch one or more vocabs.
+	PatchVocabs(ctx context.Context, in *PatchVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error)
+	// Delete a single vocab.
+	DeleteVocab(ctx context.Context, in *DeleteVocabRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Delete multiple vocabs in one request.
+	DeleteVocabs(ctx context.Context, in *DeleteVocabsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List all the vocabs.
+	ListVocabConcepts(ctx context.Context, in *ListVocabConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
+	// Add a vocab to an app.
+	PostVocabConcepts(ctx context.Context, in *PostVocabConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error)
+	// Delete a single concept from a vocab.
+	DeleteVocabConcept(ctx context.Context, in *DeleteVocabConceptRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Delete multiple concepts from a vocab in one request.
+	DeleteVocabConcepts(ctx context.Context, in *DeleteVocabConceptsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific concept from an app.
 	GetConceptLanguage(ctx context.Context, in *GetConceptLanguageRequest, opts ...grpc.CallOption) (*SingleConceptLanguageResponse, error)
 	// List the concept in all the translated languages.
@@ -56,12 +78,18 @@ type V2Client interface {
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
 	PatchConceptLanguages(ctx context.Context, in *PatchConceptLanguagesRequest, opts ...grpc.CallOption) (*MultiConceptLanguageResponse, error)
+	// List the concept in all the outside sources where we found these concepts.
+	ListConceptReferences(ctx context.Context, in *ListConceptReferencesRequest, opts ...grpc.CallOption) (*MultiConceptReferenceResponse, error)
 	// List all domain graphs.
 	ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
 	PostKnowledgeGraphs(ctx context.Context, in *PostKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error)
 	// Start concept mapping jobs.
 	PostConceptMappingJobs(ctx context.Context, in *PostConceptMappingJobsRequest, opts ...grpc.CallOption) (*MultiConceptMappingJobResponse, error)
+	// List all concept mappings for a given concept id.
+	ListConceptMappings(ctx context.Context, in *ListConceptMappingsRequest, opts ...grpc.CallOption) (*MultiConceptMappingResponse, error)
+	// Post concept mappings.
+	PostConceptMappings(ctx context.Context, in *PostConceptMappingsRequest, opts ...grpc.CallOption) (*MultiConceptMappingResponse, error)
 	// Get a specific annotation from an app.
 	GetAnnotation(ctx context.Context, in *GetAnnotationRequest, opts ...grpc.CallOption) (*SingleAnnotationResponse, error)
 	// List all the annotation.
@@ -94,6 +122,13 @@ type V2Client interface {
 	// This call is synchronous if the PostInputsRequest contains exactly one image input. Otherwise,
 	// it is asynchronous.
 	PostInputs(ctx context.Context, in *PostInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// Add an input (or set of inputs) to an app via a file.
+	// This is asynchronous.
+	PostInputsFile(ctx context.Context, in *PostInputsFileRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// Add an input or set of inputs to an app designed for NiFi integration.
+	PostInputsNiFi(ctx context.Context, in *PostInputsNiFiRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// Add an input or set of inputs to an app designed for Document integration.
+	PostInputsDocument(ctx context.Context, in *PostInputsDocumentRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(ctx context.Context, in *PatchInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Delete a single input asynchronously.
@@ -213,14 +248,40 @@ type V2Client interface {
 	PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
+	// Add new reference(s) to a particular model
+	PostModelReferences(ctx context.Context, in *PostModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
+	// Delete model references tied to a model id by reference id.
+	DeleteModelReferences(ctx context.Context, in *DeleteModelReferencesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// GetModelVersionInputExample
 	GetModelVersionInputExample(ctx context.Context, in *GetModelVersionInputExampleRequest, opts ...grpc.CallOption) (*SingleModelVersionInputExampleResponse, error)
 	// ListModelVersionInputExamples
 	ListModelVersionInputExamples(ctx context.Context, in *ListModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error)
+	// PostModelVersionInputExamples
+	PostModelVersionInputExamples(ctx context.Context, in *PostModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error)
+	// DeleteModelVersionInputExamples
+	DeleteModelVersionInputExamples(ctx context.Context, in *DeleteModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Star a model
+	PostModelStars(ctx context.Context, in *PostModelStarsRequest, opts ...grpc.CallOption) (*MultiModelStarResponse, error)
+	//Un-star a model
+	DeleteModelStars(ctx context.Context, in *DeleteModelStarsRequest, opts ...grpc.CallOption) (*DeleteModelStarsResponse, error)
+	// Star a user
+	PostUserStars(ctx context.Context, in *PostUserStarsRequest, opts ...grpc.CallOption) (*MultiUserStarResponse, error)
+	// Un-star a user
+	DeleteUserStars(ctx context.Context, in *DeleteUserStarsRequest, opts ...grpc.CallOption) (*DeleteUserStarsResponse, error)
+	// Star a workflow
+	PostWorkflowStars(ctx context.Context, in *PostWorkflowStarsRequest, opts ...grpc.CallOption) (*MultiWorkflowStarResponse, error)
+	// Un-star a workflow
+	DeleteWorkflowStars(ctx context.Context, in *DeleteWorkflowStarsRequest, opts ...grpc.CallOption) (*DeleteWorkflowStarsResponse, error)
+	// Star an app
+	PostAppStars(ctx context.Context, in *PostAppStarsRequest, opts ...grpc.CallOption) (*MultiAppStarResponse, error)
+	// Un-star an app
+	DeleteAppStars(ctx context.Context, in *DeleteAppStarsRequest, opts ...grpc.CallOption) (*DeleteAppStarsResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*SingleWorkflowResponse, error)
 	// List all the workflows.
 	ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
+	// List all public workflows.
+	ListPublicWorkflows(ctx context.Context, in *ListPublicWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Add a workflow to an app.
 	PostWorkflows(ctx context.Context, in *PostWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
@@ -243,6 +304,16 @@ type V2Client interface {
 	DeleteWorkflowVersions(ctx context.Context, in *DeleteWorkflowVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Patch workflow versions.
 	PatchWorkflowVersions(ctx context.Context, in *PatchWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error)
+	// Evaluate all the nodes in the workflow.
+	PostWorkflowMetrics(ctx context.Context, in *PostWorkflowMetricsRequest, opts ...grpc.CallOption) (*MultiWorkflowMetricsResponse, error)
+	// Get workflow evaluation data.
+	GetWorkflowMetrics(ctx context.Context, in *GetWorkflowMetricsRequest, opts ...grpc.CallOption) (*SingleWorkflowMetricsResponse, error)
+	// GetWorkflowNodeMetrics
+	GetWorkflowNodeMetrics(ctx context.Context, in *GetWorkflowNodeMetricsRequest, opts ...grpc.CallOption) (*SingleWorkflowNodeMetricsResponse, error)
+	// ListWorkflowMetrics
+	ListWorkflowMetrics(ctx context.Context, in *ListWorkflowMetricsRequest, opts ...grpc.CallOption) (*MultiWorkflowMetricsResponse, error)
+	// Delete one or more workflow metrics.
+	DeleteWorkflowMetrics(ctx context.Context, in *DeleteWorkflowMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific key from an app.
 	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error)
 	// List all the keys.
@@ -283,17 +354,134 @@ type V2Client interface {
 	PatchAppsIds(ctx context.Context, in *PatchAppsIdsRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
 	// Patch one app.
 	PatchApp(ctx context.Context, in *PatchAppRequest, opts ...grpc.CallOption) (*SingleAppResponse, error)
+	// Patch app owner.
+	// The new app owner can only be an org, and the original owner must be a member of that org.
+	PatchAppOwner(ctx context.Context, in *PatchAppOwnerRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
+	// Get current user information
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error)
+	// List users
+	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*MultiUserResponse, error)
+	// Update gdpr fields of current user.
+	PostUserConsent(ctx context.Context, in *PostUserConsentRequest, opts ...grpc.CallOption) (*SingleUserResponse, error)
+	// Patch information of current user or another user in the same organisation
+	PatchUser(ctx context.Context, in *PatchUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error)
+	// Post user access request
+	PostUserAccess(ctx context.Context, in *PostUserAccessRequest, opts ...grpc.CallOption) (*MultiUserAccessResponse, error)
+	// Get user access request
+	GetUserAccess(ctx context.Context, in *GetUserAccessRequest, opts ...grpc.CallOption) (*SingleUserAccessResponse, error)
+	////////////////////////////////////////
+	// Email
+	////////////////////////////////////////
+	// Add Email
+	PostEmails(ctx context.Context, in *PostEmailsRequest, opts ...grpc.CallOption) (*MultipleEmailResponse, error)
+	// List emails
+	ListEmails(ctx context.Context, in *ListEmailsRequest, opts ...grpc.CallOption) (*MultipleEmailResponse, error)
+	// For sending another verification email.
+	PostResendVerifyEmail(ctx context.Context, in *PostResendVerifyRequest, opts ...grpc.CallOption) (*SingleResendVerifyResponse, error)
+	// Deleting an email.
+	DeleteEmail(ctx context.Context, in *DeleteEmailRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Create primate email.
+	PostPrimaryEmail(ctx context.Context, in *PostPrimaryEmailRequest, opts ...grpc.CallOption) (*SingleEmailResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(ctx context.Context, in *PostValidatePasswordRequest, opts ...grpc.CallOption) (*SinglePasswordValidationResponse, error)
+	// Get global policy
+	ListGlobalPasswordPolicies(ctx context.Context, in *ListGlobalPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error)
+	// Get a specific set of password policies attached to a user.
+	ListPasswordPolicies(ctx context.Context, in *ListPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error)
+	// Create a specific set of password policies attached to a user or an organization.
+	PostPasswordPolicies(ctx context.Context, in *PostPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error)
+	// Update a specific set of password policies attached to a user or an organization.
+	PatchPasswordPolicies(ctx context.Context, in *PatchPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error)
+	// DeletePasswordPolicies
+	DeletePasswordPolicies(ctx context.Context, in *DeletePasswordPoliciesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Get user feature config
+	GetUserFeatureConfig(ctx context.Context, in *UserFeatureConfigRequest, opts ...grpc.CallOption) (*SingleUserFeatureConfigResponse, error)
+	// Add organizations
+	PostOrganizations(ctx context.Context, in *PostOrganizationsRequest, opts ...grpc.CallOption) (*MultiOrganizationResponse, error)
+	// List the provided user's organizations with their roles
+	ListUsersOrganizations(ctx context.Context, in *ListUsersOrganizationsRequest, opts ...grpc.CallOption) (*MultiUsersOrganizationsResponse, error)
+	// List multiple organizations
+	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*MultiOrganizationResponse, error)
+	// Get single organization
+	GetOrganization(ctx context.Context, in *GetOrganizationRequest, opts ...grpc.CallOption) (*SingleOrganizationResponse, error)
+	// Patch an organization
+	PatchOrganization(ctx context.Context, in *PatchOrganizationRequest, opts ...grpc.CallOption) (*SingleOrganizationResponse, error)
+	// Delete an organization
+	DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List organization members
+	ListOrganizationMembers(ctx context.Context, in *ListOrganizationMembersRequest, opts ...grpc.CallOption) (*MultiOrganizationMemberResponse, error)
+	// ListOrganizationAppMembers
+	ListOrganizationAppMembers(ctx context.Context, in *ListOrganizationAppMembersRequest, opts ...grpc.CallOption) (*MultiOrganizationMemberResponse, error)
+	// Add new member to organization
+	PostOrganizationMember(ctx context.Context, in *PostOrganizationMemberRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// PatchOrganizationMember
+	PatchOrganizationMember(ctx context.Context, in *PatchOrganizationMembersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Remove a member from organization
+	DeleteOrganizationMember(ctx context.Context, in *DeleteOrganizationMemberRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Organization invites
+	PostOrganizationInvitations(ctx context.Context, in *PostOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error)
+	// PatchOrganizationInvitations
+	PatchOrganizationInvitations(ctx context.Context, in *PatchOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error)
+	// ListOrganizationInvitations
+	ListOrganizationInvitations(ctx context.Context, in *ListOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error)
+	// GetOrganizationInvitation
+	GetOrganizationInvitation(ctx context.Context, in *GetOrganizationInvitationRequest, opts ...grpc.CallOption) (*SingleOrganizationInvitationResponse, error)
+	// PostDeclineOrganizationInvitation
+	PostDeclineOrganizationInvitation(ctx context.Context, in *PostDeclineOrganizationInvitationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// PostAcceptOrganizationInvitation
+	PostAcceptOrganizationInvitation(ctx context.Context, in *PostAcceptOrganizationInvitationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// GetOrganizationInvitationPublic
+	GetOrganizationInvitationPublic(ctx context.Context, in *GetOrganizationInvitationPublicRequest, opts ...grpc.CallOption) (*SingleOrganizationInvitationResponse, error)
+	// Leave an organization
+	DeleteRequestingUserFromOrganization(ctx context.Context, in *DeleteRequestingUserFromOrganizationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Add IdentityProviders
+	PostIdentityProviders(ctx context.Context, in *PostIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error)
+	// List multiple IdentityProviders
+	ListIdentityProviders(ctx context.Context, in *ListIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error)
+	// Get single IdentityProvider
+	GetIdentityProvider(ctx context.Context, in *GetIdentityProviderRequest, opts ...grpc.CallOption) (*SingleIdentityProviderResponse, error)
+	// Patch multiple IdentityProviders
+	PatchIdentityProviders(ctx context.Context, in *PatchIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error)
+	// Delete multiple IdentityProviders
+	DeleteIdentityProviders(ctx context.Context, in *DeleteIdentityProvidersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Add teams
+	PostTeams(ctx context.Context, in *PostTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error)
+	// List multiple teams
+	ListTeams(ctx context.Context, in *ListTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error)
+	// Get single team
+	GetTeam(ctx context.Context, in *GetTeamRequest, opts ...grpc.CallOption) (*SingleTeamResponse, error)
+	// Patch multiple teams
+	PatchTeams(ctx context.Context, in *PatchTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error)
+	// Delete multiple teams
+	DeleteTeams(ctx context.Context, in *DeleteTeamsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Add users to a team
+	PostTeamUsers(ctx context.Context, in *PostTeamUsersRequest, opts ...grpc.CallOption) (*MultiTeamUserResponse, error)
+	// List team users
+	ListTeamUsers(ctx context.Context, in *ListTeamUsersRequest, opts ...grpc.CallOption) (*MultiTeamUserResponse, error)
+	// Delete users from a team
+	DeleteTeamUsers(ctx context.Context, in *DeleteTeamUsersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Add applications to team
+	PostTeamApps(ctx context.Context, in *PostTeamAppsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List team applications
+	ListTeamApps(ctx context.Context, in *ListTeamAppsRequest, opts ...grpc.CallOption) (*MultiTeamAppsResponse, error)
+	// Remove applications from team
+	DeleteTeamApps(ctx context.Context, in *DeleteTeamAppsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List multiple roles
+	ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*MultiRoleResponse, error)
+	// Get single role
+	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*SingleRoleResponse, error)
 	// Get a saved legacy search.
 	GetSearch(ctx context.Context, in *GetSearchRequest, opts ...grpc.CallOption) (*SingleSearchResponse, error)
 	// List all saved legacy searches.
 	ListSearches(ctx context.Context, in *ListSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Patch saved legacy searches by ids.
 	PatchSearches(ctx context.Context, in *PatchSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Deprecated: Do not use.
 	// Execute a new search and optionally save it.
+	//
+	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
 	PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(ctx context.Context, in *PostSearchesByIDRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
@@ -307,6 +495,8 @@ type V2Client interface {
 	DeleteAnnotationSearchMetrics(ctx context.Context, in *DeleteAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(ctx context.Context, in *DeleteSearchRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Execute an attribute search.
+	PostAttributeSearch(ctx context.Context, in *PostAttributeSearchRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// List all the annotation filters.
 	ListAnnotationFilters(ctx context.Context, in *ListAnnotationFiltersRequest, opts ...grpc.CallOption) (*MultiAnnotationFilterResponse, error)
 	// Get a specific annotation filter.
@@ -317,10 +507,91 @@ type V2Client interface {
 	PatchAnnotationFilters(ctx context.Context, in *PatchAnnotationFiltersRequest, opts ...grpc.CallOption) (*MultiAnnotationFilterResponse, error)
 	// Delete one or more annotation filters in a single request.
 	DeleteAnnotationFilters(ctx context.Context, in *DeleteAnnotationFiltersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Get a list of clusters in an app
+	ListClusters(ctx context.Context, in *ListClustersRequest, opts ...grpc.CallOption) (*MultiClusterResponse, error)
+	// List all the annotations for a given cluster.
+	ListAnnotationsForCluster(ctx context.Context, in *ListAnnotationsForClusterRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
+	// List all the annotations for a given cluser.
+	PostClustersSearches(ctx context.Context, in *PostClustersSearchesRequest, opts ...grpc.CallOption) (*MultiClusterResponse, error)
+	// Verify email
+	PostVerifyEmail(ctx context.Context, in *PostVerifyEmailRequest, opts ...grpc.CallOption) (*SingleVerifyEmailResponse, error)
+	// Request for password reset email
+	PostRequestResetPassword(ctx context.Context, in *RequestResetPasswordRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Complete reset password
+	PostCompleteResetPassword(ctx context.Context, in *CompleteResetPasswordRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Login with user/pass
+	PostLogin(ctx context.Context, in *PostLoginRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error)
+	// Signup with account.
+	PostSignup(ctx context.Context, in *PostSignupRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error)
+	// Logout use
+	PostLogout(ctx context.Context, in *PostLogoutRequest, opts ...grpc.CallOption) (*SingleLogoutResponse, error)
+	// List available authentication methods, e.g.
+	// * standard auth method - login using user & password
+	// * SAML auth methods - SSO using SAML Identity Providers like Okta, Github, Google GSuite, LinkedIn, etc.
+	ListAuthMethods(ctx context.Context, in *ListAuthMethodsRequest, opts ...grpc.CallOption) (*ListAuthMethodsResponse, error)
+	// ListOrgAuthMethods
+	ListOrgAuthMethods(ctx context.Context, in *ListAuthMethodsRequest, opts ...grpc.CallOption) (*ListAuthMethodsResponse, error)
+	// ListOrgAuthMethods
+	PostIdLoginFinalizer(ctx context.Context, in *PostIdLoginFinalizerRequest, opts ...grpc.CallOption) (*PostIdLoginFinalizerResponse, error)
+	// PostLinkIdpUser
+	PostLinkIdpUser(ctx context.Context, in *PostLinkIdpUserRequest, opts ...grpc.CallOption) (*PostLinkIdpUserResponse, error)
+	// GetLoginInfo
+	GetLoginInfo(ctx context.Context, in *GetLoginInfoRequest, opts ...grpc.CallOption) (*GetLoginInfoResponse, error)
+	// List available 2FA methods in current environment, e.g.
+	// * TOTP auth method - login layer using time synced  codes
+	ListAuth2FAMethods(ctx context.Context, in *List2FAMethodsRequest, opts ...grpc.CallOption) (*List2FAMethodsResponse, error)
+	// Enable Clarifai TOTP 2FA
+	PostAuth2FATotpRegisterEnable(ctx context.Context, in *PostAuth2FATotpRegisterEnableRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRegisterEnableResponse, error)
+	// Verify Clarifai TOTP 2FA activation
+	PostAuth2FATotpRegisterVerify(ctx context.Context, in *PostAuth2FATotpRegisterVerifyRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRegisterVerifyResponse, error)
+	// Disable Clarifai TOTP 2FA
+	PostAuth2FATotpDisable(ctx context.Context, in *PostAuth2FATotpDisableRequest, opts ...grpc.CallOption) (*PostAuth2FATotpDisableResponse, error)
+	// Login with Clarifai TOTP 2FA activation
+	PostAuth2FATotpLogin(ctx context.Context, in *PostAuth2FATotpLoginRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error)
+	// Recover users Clarifai TOTP 2FA activation through sending an email confirmation.
+	PostAuth2FATotpRecover(ctx context.Context, in *PostAuth2FATotpRecoverRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRecoverResponse, error)
+	// Confirm the recovery of users Clarifai TOTP 2FA. Will be called by user from email link (via portal).
+	GetAuth2FATotpRecoverConfirm(ctx context.Context, in *GetAuth2FATotpRecoverConfirmRequest, opts ...grpc.CallOption) (*GetAuth2FATotpRecoverConfirmResponse, error)
+	// List the subscriptions.
+	GetSubscription(ctx context.Context, in *GetSubscriptionRequest, opts ...grpc.CallOption) (*SingleSubscriptionResponse, error)
+	// Add a new subscription.
+	PostSubscription(ctx context.Context, in *PostSubscriptionRequest, opts ...grpc.CallOption) (*SingleSubscriptionResponse, error)
+	// List all credit cards.
+	ListCreditCards(ctx context.Context, in *ListCreditCardsRequest, opts ...grpc.CallOption) (*MultipleCreditCardResponse, error)
+	// Add a new credit card.
+	PostCreditCard(ctx context.Context, in *PostCreditCardRequest, opts ...grpc.CallOption) (*SingleCreditCardResponse, error)
+	// Delete a credit card.
+	DeleteCreditCard(ctx context.Context, in *DeleteCreditCardRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Update a credit card.
+	PatchCreditCards(ctx context.Context, in *PatchCreditCardsRequest, opts ...grpc.CallOption) (*MultipleCreditCardResponse, error)
+	// Get the shipping address.
+	GetShippingAddress(ctx context.Context, in *GetShippingAddressRequest, opts ...grpc.CallOption) (*SingleShippingAddressResponse, error)
+	// Update shipping address.
+	PutShippingAddress(ctx context.Context, in *PutShippingAddressRequest, opts ...grpc.CallOption) (*SingleShippingAddressResponse, error)
+	// ListPlans
+	ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*MultiPlanResponse, error)
 	// List all status codes.
 	ListStatusCodes(ctx context.Context, in *ListStatusCodesRequest, opts ...grpc.CallOption) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, opts ...grpc.CallOption) (*SingleStatusCodeResponse, error)
+	// Health check endpoint
+	GetHealthz(ctx context.Context, in *GetHealthzRequest, opts ...grpc.CallOption) (*GetHealthzResponse, error)
+	// List all billing  cycles - old billing
+	ListUserBillingCycles(ctx context.Context, in *ListUserBillingCyclesRequest, opts ...grpc.CallOption) (*ListUserBillingCyclesResponse, error)
+	// List user usage.cycles.
+	ListUserCycles(ctx context.Context, in *ListUserCyclesRequest, opts ...grpc.CallOption) (*ListUserCyclesResponse, error)
+	// Gets the billing cycle start and end date as well as invoice items.
+	GetBillingUsage(ctx context.Context, in *GetBillingUsageRequest, opts ...grpc.CallOption) (*GetBillingUsageResponse, error)
+	// Add historical usage. - Billing 1
+	PostHistoricalUsage(ctx context.Context, in *PostHistoricalUsageRequest, opts ...grpc.CallOption) (*PostHistoricalUsageResponse, error)
+	// Get historical usage. - Billing 2
+	GetHistoricalUsage(ctx context.Context, in *GetHistoricalUsageRequest, opts ...grpc.CallOption) (*GetHistoricalUsageResponse, error)
+	// Get a list of valid usage intervals
+	ListUsageIntervals(ctx context.Context, in *ListUsageIntervalsRequest, opts ...grpc.CallOption) (*ListUsageIntervalsResponse, error)
+	// Get realtime usage.
+	GetRealtimeUsage(ctx context.Context, in *GetRealtimeUsageRequest, opts ...grpc.CallOption) (*GetRealtimeUsageResponse, error)
+	// Post usage to platform. Only called by on prem now.
+	PostUsage(ctx context.Context, in *PostUsageRequest, opts ...grpc.CallOption) (*PostUsageResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(ctx context.Context, in *ListCollaboratorsRequest, opts ...grpc.CallOption) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -331,6 +602,14 @@ type V2Client interface {
 	DeleteCollaborators(ctx context.Context, in *DeleteCollaboratorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(ctx context.Context, in *ListCollaborationsRequest, opts ...grpc.CallOption) (*MultiCollaborationsResponse, error)
+	// Get the license with crypto security.
+	FetchLicense(ctx context.Context, in *FetchLicenseRequest, opts ...grpc.CallOption) (*FetchLicenseResponse, error)
+	// List all licenses.
+	ListLicenses(ctx context.Context, in *ListLicensesRequest, opts ...grpc.CallOption) (*MultipleLicensesResponse, error)
+	// Get a license
+	GetLicense(ctx context.Context, in *GetLicenseRequest, opts ...grpc.CallOption) (*SingleLicenseResponse, error)
+	// Check that a license is still valid.
+	ValidateLicense(ctx context.Context, in *ValidateLicenseRequest, opts ...grpc.CallOption) (*ValidateLicenseResponse, error)
 	// start to duplicate an app which copies all the inputs, annotations, models, concepts etc. to a new app.
 	// this is an async process, you should use ListAppDuplications or GetAppDuplication to check the status.
 	PostAppDuplications(ctx context.Context, in *PostAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error)
@@ -352,6 +631,8 @@ type V2Client interface {
 	PatchTasks(ctx context.Context, in *PatchTasksRequest, opts ...grpc.CallOption) (*MultiTaskResponse, error)
 	// Delete multiple tasks in one request.
 	DeleteTasks(ctx context.Context, in *DeleteTasksRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Rollup annotation count for task.
+	PatchAnnotationCountsRollup(ctx context.Context, in *PatchAnnotationCountsRollupRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Add Label orders.
 	PostLabelOrders(ctx context.Context, in *PostLabelOrdersRequest, opts ...grpc.CallOption) (*MultiLabelOrderResponse, error)
 	// Get a label order.
@@ -383,10 +664,34 @@ type V2Client interface {
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
+	// Add a new analytics entry into our database
+	PostAnalytics(ctx context.Context, in *PostAnalyticsRequest, opts ...grpc.CallOption) (*PostAnalyticsResponse, error)
+	// Add a new sdk_billing entry into our database
+	PostSDKBilling(ctx context.Context, in *PostSDKBillingRequest, opts ...grpc.CallOption) (*PostSDKBillingResponse, error)
+	// Find annotations duplicates based on an specified attribute of different annotations
+	PostFindDuplicateAnnotationsJobs(ctx context.Context, in *PostFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*MultiFindDuplicateAnnotationsJobResponse, error)
+	// Get annotations find duplicates jobs results by id
+	GetFindDuplicateAnnotationsJob(ctx context.Context, in *GetFindDuplicateAnnotationsJobRequest, opts ...grpc.CallOption) (*SingleFindDuplicateAnnotationsJobResponse, error)
+	// List all the annotations find duplicates jobs results
+	ListFindDuplicateAnnotationsJobs(ctx context.Context, in *ListFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*MultiFindDuplicateAnnotationsJobResponse, error)
+	// DeleteFindDuplicateAnnotationsJobs
+	DeleteFindDuplicateAnnotationsJobs(ctx context.Context, in *DeleteFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List the view metrics for a detail view
 	ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error)
+	// Validates the ids (app and user supported), returns validation errors and recommendations
+	PostIdValidation(ctx context.Context, in *PostIdValidationRequest, opts ...grpc.CallOption) (*MultiIdValidationResponse, error)
+	// List all the available tags for specified object_type grouped by category
+	ListTagCategories(ctx context.Context, in *ListTagCategoriesRequest, opts ...grpc.CallOption) (*MultiTagCategoryResponse, error)
+	// List users web notifications
+	ListWebNotifications(ctx context.Context, in *ListWebNotificationsRequest, opts ...grpc.CallOption) (*MultiWebNotificationResponse, error)
+	// Get a web notification
+	GetWebNotification(ctx context.Context, in *GetWebNotificationRequest, opts ...grpc.CallOption) (*SingleWebNotificationResponse, error)
+	// Update users web notifications
+	PatchWebNotifications(ctx context.Context, in *PatchWebNotificationsRequest, opts ...grpc.CallOption) (*MultiWebNotificationResponse, error)
+	// Delete users web notifications
+	DeleteWebNotifications(ctx context.Context, in *DeleteWebNotificationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific module from an app.
 	GetModule(ctx context.Context, in *GetModuleRequest, opts ...grpc.CallOption) (*SingleModuleResponse, error)
 	// List all the modules in community, by user or by app.
@@ -432,10 +737,23 @@ type V2Client interface {
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List next non-labeled and unassigned inputs from task's dataset
+	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// PostWaitlistEmails adds new e-mail addresses to a feature waiting list.
+	PostWaitlistEmails(ctx context.Context, in *PostWaitlistEmailsRequest, opts ...grpc.CallOption) (*MultiWaitlistEmailResponse, error)
+	// GetSampledPredictResults get sampled prediction metrics by model id
+	GetSampledPredictMetrics(ctx context.Context, in *GetSampledPredictMetricsRequest, opts ...grpc.CallOption) (*MultiSampledPredictMetricsResponse, error)
+	// Create a job to add inputs from a cloud storage to an app on the clarifai platform
+	// This is an Asynchronous process. Use ListInputsAddJobs or GetInputsJob to check the status.
+	PostInputsAddJobs(ctx context.Context, in *PostInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
+	// cancel the input add job by ID
+	CancelInputsAddJob(ctx context.Context, in *CancelInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
 	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
 	PutUploadContentParts(ctx context.Context, in *PutUploadContentPartsRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
 	GetUpload(ctx context.Context, in *GetUploadRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
@@ -449,6 +767,15 @@ type v2Client struct {
 
 func NewV2Client(cc grpc.ClientConnInterface) V2Client {
 	return &v2Client{cc}
+}
+
+func (c *v2Client) Echo(ctx context.Context, in *TestMessage, opts ...grpc.CallOption) (*TestMessage, error) {
+	out := new(TestMessage)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/Echo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *v2Client) ListConceptRelations(ctx context.Context, in *ListConceptRelationsRequest, opts ...grpc.CallOption) (*MultiConceptRelationResponse, error) {
@@ -541,6 +868,96 @@ func (c *v2Client) PatchConcepts(ctx context.Context, in *PatchConceptsRequest, 
 	return out, nil
 }
 
+func (c *v2Client) GetVocab(ctx context.Context, in *GetVocabRequest, opts ...grpc.CallOption) (*SingleVocabResponse, error) {
+	out := new(SingleVocabResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetVocab", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListVocabs(ctx context.Context, in *ListVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error) {
+	out := new(MultiVocabResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListVocabs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostVocabs(ctx context.Context, in *PostVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error) {
+	out := new(MultiVocabResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostVocabs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchVocabs(ctx context.Context, in *PatchVocabsRequest, opts ...grpc.CallOption) (*MultiVocabResponse, error) {
+	out := new(MultiVocabResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchVocabs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteVocab(ctx context.Context, in *DeleteVocabRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteVocab", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteVocabs(ctx context.Context, in *DeleteVocabsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteVocabs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListVocabConcepts(ctx context.Context, in *ListVocabConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error) {
+	out := new(MultiConceptResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListVocabConcepts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostVocabConcepts(ctx context.Context, in *PostVocabConceptsRequest, opts ...grpc.CallOption) (*MultiConceptResponse, error) {
+	out := new(MultiConceptResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostVocabConcepts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteVocabConcept(ctx context.Context, in *DeleteVocabConceptRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteVocabConcept", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteVocabConcepts(ctx context.Context, in *DeleteVocabConceptsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteVocabConcepts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetConceptLanguage(ctx context.Context, in *GetConceptLanguageRequest, opts ...grpc.CallOption) (*SingleConceptLanguageResponse, error) {
 	out := new(SingleConceptLanguageResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetConceptLanguage", in, out, opts...)
@@ -577,6 +994,15 @@ func (c *v2Client) PatchConceptLanguages(ctx context.Context, in *PatchConceptLa
 	return out, nil
 }
 
+func (c *v2Client) ListConceptReferences(ctx context.Context, in *ListConceptReferencesRequest, opts ...grpc.CallOption) (*MultiConceptReferenceResponse, error) {
+	out := new(MultiConceptReferenceResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListConceptReferences", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error) {
 	out := new(MultiKnowledgeGraphResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListKnowledgeGraphs", in, out, opts...)
@@ -598,6 +1024,24 @@ func (c *v2Client) PostKnowledgeGraphs(ctx context.Context, in *PostKnowledgeGra
 func (c *v2Client) PostConceptMappingJobs(ctx context.Context, in *PostConceptMappingJobsRequest, opts ...grpc.CallOption) (*MultiConceptMappingJobResponse, error) {
 	out := new(MultiConceptMappingJobResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostConceptMappingJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListConceptMappings(ctx context.Context, in *ListConceptMappingsRequest, opts ...grpc.CallOption) (*MultiConceptMappingResponse, error) {
+	out := new(MultiConceptMappingResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListConceptMappings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostConceptMappings(ctx context.Context, in *PostConceptMappingsRequest, opts ...grpc.CallOption) (*MultiConceptMappingResponse, error) {
+	out := new(MultiConceptMappingResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostConceptMappings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -733,6 +1177,33 @@ func (c *v2Client) ListInputs(ctx context.Context, in *ListInputsRequest, opts .
 func (c *v2Client) PostInputs(ctx context.Context, in *PostInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
 	out := new(MultiInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInputsFile(ctx context.Context, in *PostInputsFileRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
+	out := new(MultiInputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputsFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInputsNiFi(ctx context.Context, in *PostInputsNiFiRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
+	out := new(MultiInputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputsNiFi", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInputsDocument(ctx context.Context, in *PostInputsDocumentRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
+	out := new(MultiInputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputsDocument", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1207,6 +1678,24 @@ func (c *v2Client) ListModelReferences(ctx context.Context, in *ListModelReferen
 	return out, nil
 }
 
+func (c *v2Client) PostModelReferences(ctx context.Context, in *PostModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error) {
+	out := new(MultiModelReferenceResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelReferences", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteModelReferences(ctx context.Context, in *DeleteModelReferencesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModelReferences", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetModelVersionInputExample(ctx context.Context, in *GetModelVersionInputExampleRequest, opts ...grpc.CallOption) (*SingleModelVersionInputExampleResponse, error) {
 	out := new(SingleModelVersionInputExampleResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelVersionInputExample", in, out, opts...)
@@ -1225,6 +1714,96 @@ func (c *v2Client) ListModelVersionInputExamples(ctx context.Context, in *ListMo
 	return out, nil
 }
 
+func (c *v2Client) PostModelVersionInputExamples(ctx context.Context, in *PostModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*MultiModelVersionInputExampleResponse, error) {
+	out := new(MultiModelVersionInputExampleResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionInputExamples", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteModelVersionInputExamples(ctx context.Context, in *DeleteModelVersionInputExamplesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModelVersionInputExamples", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostModelStars(ctx context.Context, in *PostModelStarsRequest, opts ...grpc.CallOption) (*MultiModelStarResponse, error) {
+	out := new(MultiModelStarResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteModelStars(ctx context.Context, in *DeleteModelStarsRequest, opts ...grpc.CallOption) (*DeleteModelStarsResponse, error) {
+	out := new(DeleteModelStarsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModelStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostUserStars(ctx context.Context, in *PostUserStarsRequest, opts ...grpc.CallOption) (*MultiUserStarResponse, error) {
+	out := new(MultiUserStarResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUserStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteUserStars(ctx context.Context, in *DeleteUserStarsRequest, opts ...grpc.CallOption) (*DeleteUserStarsResponse, error) {
+	out := new(DeleteUserStarsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteUserStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostWorkflowStars(ctx context.Context, in *PostWorkflowStarsRequest, opts ...grpc.CallOption) (*MultiWorkflowStarResponse, error) {
+	out := new(MultiWorkflowStarResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostWorkflowStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteWorkflowStars(ctx context.Context, in *DeleteWorkflowStarsRequest, opts ...grpc.CallOption) (*DeleteWorkflowStarsResponse, error) {
+	out := new(DeleteWorkflowStarsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteWorkflowStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAppStars(ctx context.Context, in *PostAppStarsRequest, opts ...grpc.CallOption) (*MultiAppStarResponse, error) {
+	out := new(MultiAppStarResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAppStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteAppStars(ctx context.Context, in *DeleteAppStarsRequest, opts ...grpc.CallOption) (*DeleteAppStarsResponse, error) {
+	out := new(DeleteAppStarsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteAppStars", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts ...grpc.CallOption) (*SingleWorkflowResponse, error) {
 	out := new(SingleWorkflowResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetWorkflow", in, out, opts...)
@@ -1237,6 +1816,15 @@ func (c *v2Client) GetWorkflow(ctx context.Context, in *GetWorkflowRequest, opts
 func (c *v2Client) ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error) {
 	out := new(MultiWorkflowResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListWorkflows", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPublicWorkflows(ctx context.Context, in *ListPublicWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error) {
+	out := new(MultiWorkflowResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListPublicWorkflows", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1336,6 +1924,51 @@ func (c *v2Client) DeleteWorkflowVersions(ctx context.Context, in *DeleteWorkflo
 func (c *v2Client) PatchWorkflowVersions(ctx context.Context, in *PatchWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error) {
 	out := new(MultiWorkflowVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchWorkflowVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostWorkflowMetrics(ctx context.Context, in *PostWorkflowMetricsRequest, opts ...grpc.CallOption) (*MultiWorkflowMetricsResponse, error) {
+	out := new(MultiWorkflowMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostWorkflowMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetWorkflowMetrics(ctx context.Context, in *GetWorkflowMetricsRequest, opts ...grpc.CallOption) (*SingleWorkflowMetricsResponse, error) {
+	out := new(SingleWorkflowMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetWorkflowMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetWorkflowNodeMetrics(ctx context.Context, in *GetWorkflowNodeMetricsRequest, opts ...grpc.CallOption) (*SingleWorkflowNodeMetricsResponse, error) {
+	out := new(SingleWorkflowNodeMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetWorkflowNodeMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListWorkflowMetrics(ctx context.Context, in *ListWorkflowMetricsRequest, opts ...grpc.CallOption) (*MultiWorkflowMetricsResponse, error) {
+	out := new(MultiWorkflowMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListWorkflowMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteWorkflowMetrics(ctx context.Context, in *DeleteWorkflowMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteWorkflowMetrics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1495,6 +2128,15 @@ func (c *v2Client) PatchApp(ctx context.Context, in *PatchAppRequest, opts ...gr
 	return out, nil
 }
 
+func (c *v2Client) PatchAppOwner(ctx context.Context, in *PatchAppOwnerRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchAppOwner", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error) {
 	out := new(MultiAppResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAppsSearches", in, out, opts...)
@@ -1504,9 +2146,495 @@ func (c *v2Client) PostAppsSearches(ctx context.Context, in *PostAppsSearchesReq
 	return out, nil
 }
 
+func (c *v2Client) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error) {
+	out := new(SingleUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*MultiUserResponse, error) {
+	out := new(MultiUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostUserConsent(ctx context.Context, in *PostUserConsentRequest, opts ...grpc.CallOption) (*SingleUserResponse, error) {
+	out := new(SingleUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUserConsent", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchUser(ctx context.Context, in *PatchUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error) {
+	out := new(SingleUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostUserAccess(ctx context.Context, in *PostUserAccessRequest, opts ...grpc.CallOption) (*MultiUserAccessResponse, error) {
+	out := new(MultiUserAccessResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUserAccess", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetUserAccess(ctx context.Context, in *GetUserAccessRequest, opts ...grpc.CallOption) (*SingleUserAccessResponse, error) {
+	out := new(SingleUserAccessResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetUserAccess", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostEmails(ctx context.Context, in *PostEmailsRequest, opts ...grpc.CallOption) (*MultipleEmailResponse, error) {
+	out := new(MultipleEmailResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostEmails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListEmails(ctx context.Context, in *ListEmailsRequest, opts ...grpc.CallOption) (*MultipleEmailResponse, error) {
+	out := new(MultipleEmailResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListEmails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostResendVerifyEmail(ctx context.Context, in *PostResendVerifyRequest, opts ...grpc.CallOption) (*SingleResendVerifyResponse, error) {
+	out := new(SingleResendVerifyResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostResendVerifyEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteEmail(ctx context.Context, in *DeleteEmailRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPrimaryEmail(ctx context.Context, in *PostPrimaryEmailRequest, opts ...grpc.CallOption) (*SingleEmailResponse, error) {
+	out := new(SingleEmailResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostPrimaryEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostValidatePassword(ctx context.Context, in *PostValidatePasswordRequest, opts ...grpc.CallOption) (*SinglePasswordValidationResponse, error) {
 	out := new(SinglePasswordValidationResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostValidatePassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListGlobalPasswordPolicies(ctx context.Context, in *ListGlobalPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error) {
+	out := new(MultiplePasswordPoliciesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListGlobalPasswordPolicies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPasswordPolicies(ctx context.Context, in *ListPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error) {
+	out := new(MultiplePasswordPoliciesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListPasswordPolicies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPasswordPolicies(ctx context.Context, in *PostPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error) {
+	out := new(MultiplePasswordPoliciesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostPasswordPolicies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchPasswordPolicies(ctx context.Context, in *PatchPasswordPoliciesRequest, opts ...grpc.CallOption) (*MultiplePasswordPoliciesResponse, error) {
+	out := new(MultiplePasswordPoliciesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchPasswordPolicies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeletePasswordPolicies(ctx context.Context, in *DeletePasswordPoliciesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeletePasswordPolicies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetUserFeatureConfig(ctx context.Context, in *UserFeatureConfigRequest, opts ...grpc.CallOption) (*SingleUserFeatureConfigResponse, error) {
+	out := new(SingleUserFeatureConfigResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetUserFeatureConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostOrganizations(ctx context.Context, in *PostOrganizationsRequest, opts ...grpc.CallOption) (*MultiOrganizationResponse, error) {
+	out := new(MultiOrganizationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostOrganizations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUsersOrganizations(ctx context.Context, in *ListUsersOrganizationsRequest, opts ...grpc.CallOption) (*MultiUsersOrganizationsResponse, error) {
+	out := new(MultiUsersOrganizationsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUsersOrganizations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*MultiOrganizationResponse, error) {
+	out := new(MultiOrganizationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOrganizations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetOrganization(ctx context.Context, in *GetOrganizationRequest, opts ...grpc.CallOption) (*SingleOrganizationResponse, error) {
+	out := new(SingleOrganizationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetOrganization", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchOrganization(ctx context.Context, in *PatchOrganizationRequest, opts ...grpc.CallOption) (*SingleOrganizationResponse, error) {
+	out := new(SingleOrganizationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchOrganization", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteOrganization(ctx context.Context, in *DeleteOrganizationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteOrganization", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOrganizationMembers(ctx context.Context, in *ListOrganizationMembersRequest, opts ...grpc.CallOption) (*MultiOrganizationMemberResponse, error) {
+	out := new(MultiOrganizationMemberResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOrganizationMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOrganizationAppMembers(ctx context.Context, in *ListOrganizationAppMembersRequest, opts ...grpc.CallOption) (*MultiOrganizationMemberResponse, error) {
+	out := new(MultiOrganizationMemberResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOrganizationAppMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostOrganizationMember(ctx context.Context, in *PostOrganizationMemberRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostOrganizationMember", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchOrganizationMember(ctx context.Context, in *PatchOrganizationMembersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchOrganizationMember", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteOrganizationMember(ctx context.Context, in *DeleteOrganizationMemberRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteOrganizationMember", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostOrganizationInvitations(ctx context.Context, in *PostOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error) {
+	out := new(MultiOrganizationInvitationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostOrganizationInvitations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchOrganizationInvitations(ctx context.Context, in *PatchOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error) {
+	out := new(MultiOrganizationInvitationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchOrganizationInvitations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOrganizationInvitations(ctx context.Context, in *ListOrganizationInvitationsRequest, opts ...grpc.CallOption) (*MultiOrganizationInvitationResponse, error) {
+	out := new(MultiOrganizationInvitationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOrganizationInvitations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetOrganizationInvitation(ctx context.Context, in *GetOrganizationInvitationRequest, opts ...grpc.CallOption) (*SingleOrganizationInvitationResponse, error) {
+	out := new(SingleOrganizationInvitationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetOrganizationInvitation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostDeclineOrganizationInvitation(ctx context.Context, in *PostDeclineOrganizationInvitationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostDeclineOrganizationInvitation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAcceptOrganizationInvitation(ctx context.Context, in *PostAcceptOrganizationInvitationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAcceptOrganizationInvitation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetOrganizationInvitationPublic(ctx context.Context, in *GetOrganizationInvitationPublicRequest, opts ...grpc.CallOption) (*SingleOrganizationInvitationResponse, error) {
+	out := new(SingleOrganizationInvitationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetOrganizationInvitationPublic", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteRequestingUserFromOrganization(ctx context.Context, in *DeleteRequestingUserFromOrganizationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteRequestingUserFromOrganization", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostIdentityProviders(ctx context.Context, in *PostIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error) {
+	out := new(MultiIdentityProviderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostIdentityProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListIdentityProviders(ctx context.Context, in *ListIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error) {
+	out := new(MultiIdentityProviderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListIdentityProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetIdentityProvider(ctx context.Context, in *GetIdentityProviderRequest, opts ...grpc.CallOption) (*SingleIdentityProviderResponse, error) {
+	out := new(SingleIdentityProviderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetIdentityProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchIdentityProviders(ctx context.Context, in *PatchIdentityProvidersRequest, opts ...grpc.CallOption) (*MultiIdentityProviderResponse, error) {
+	out := new(MultiIdentityProviderResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchIdentityProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteIdentityProviders(ctx context.Context, in *DeleteIdentityProvidersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteIdentityProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostTeams(ctx context.Context, in *PostTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error) {
+	out := new(MultiTeamResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostTeams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListTeams(ctx context.Context, in *ListTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error) {
+	out := new(MultiTeamResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTeams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetTeam(ctx context.Context, in *GetTeamRequest, opts ...grpc.CallOption) (*SingleTeamResponse, error) {
+	out := new(SingleTeamResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetTeam", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchTeams(ctx context.Context, in *PatchTeamsRequest, opts ...grpc.CallOption) (*MultiTeamResponse, error) {
+	out := new(MultiTeamResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchTeams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteTeams(ctx context.Context, in *DeleteTeamsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteTeams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostTeamUsers(ctx context.Context, in *PostTeamUsersRequest, opts ...grpc.CallOption) (*MultiTeamUserResponse, error) {
+	out := new(MultiTeamUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostTeamUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListTeamUsers(ctx context.Context, in *ListTeamUsersRequest, opts ...grpc.CallOption) (*MultiTeamUserResponse, error) {
+	out := new(MultiTeamUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTeamUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteTeamUsers(ctx context.Context, in *DeleteTeamUsersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteTeamUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostTeamApps(ctx context.Context, in *PostTeamAppsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostTeamApps", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListTeamApps(ctx context.Context, in *ListTeamAppsRequest, opts ...grpc.CallOption) (*MultiTeamAppsResponse, error) {
+	out := new(MultiTeamAppsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTeamApps", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteTeamApps(ctx context.Context, in *DeleteTeamAppsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteTeamApps", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*MultiRoleResponse, error) {
+	out := new(MultiRoleResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListRoles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*SingleRoleResponse, error) {
+	out := new(SingleRoleResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1540,6 +2668,7 @@ func (c *v2Client) PatchSearches(ctx context.Context, in *PatchSearchesRequest, 
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
 	out := new(MultiSearchResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSearches", in, out, opts...)
@@ -1603,6 +2732,15 @@ func (c *v2Client) DeleteSearch(ctx context.Context, in *DeleteSearchRequest, op
 	return out, nil
 }
 
+func (c *v2Client) PostAttributeSearch(ctx context.Context, in *PostAttributeSearchRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
+	out := new(MultiSearchResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAttributeSearch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListAnnotationFilters(ctx context.Context, in *ListAnnotationFiltersRequest, opts ...grpc.CallOption) (*MultiAnnotationFilterResponse, error) {
 	out := new(MultiAnnotationFilterResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListAnnotationFilters", in, out, opts...)
@@ -1648,6 +2786,276 @@ func (c *v2Client) DeleteAnnotationFilters(ctx context.Context, in *DeleteAnnota
 	return out, nil
 }
 
+func (c *v2Client) ListClusters(ctx context.Context, in *ListClustersRequest, opts ...grpc.CallOption) (*MultiClusterResponse, error) {
+	out := new(MultiClusterResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListClusters", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListAnnotationsForCluster(ctx context.Context, in *ListAnnotationsForClusterRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error) {
+	out := new(MultiAnnotationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListAnnotationsForCluster", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostClustersSearches(ctx context.Context, in *PostClustersSearchesRequest, opts ...grpc.CallOption) (*MultiClusterResponse, error) {
+	out := new(MultiClusterResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostClustersSearches", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostVerifyEmail(ctx context.Context, in *PostVerifyEmailRequest, opts ...grpc.CallOption) (*SingleVerifyEmailResponse, error) {
+	out := new(SingleVerifyEmailResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostVerifyEmail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostRequestResetPassword(ctx context.Context, in *RequestResetPasswordRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostRequestResetPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostCompleteResetPassword(ctx context.Context, in *CompleteResetPasswordRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostCompleteResetPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostLogin(ctx context.Context, in *PostLoginRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error) {
+	out := new(SingleLoginResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostLogin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostSignup(ctx context.Context, in *PostSignupRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error) {
+	out := new(SingleLoginResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSignup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostLogout(ctx context.Context, in *PostLogoutRequest, opts ...grpc.CallOption) (*SingleLogoutResponse, error) {
+	out := new(SingleLogoutResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostLogout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListAuthMethods(ctx context.Context, in *ListAuthMethodsRequest, opts ...grpc.CallOption) (*ListAuthMethodsResponse, error) {
+	out := new(ListAuthMethodsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListAuthMethods", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListOrgAuthMethods(ctx context.Context, in *ListAuthMethodsRequest, opts ...grpc.CallOption) (*ListAuthMethodsResponse, error) {
+	out := new(ListAuthMethodsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListOrgAuthMethods", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostIdLoginFinalizer(ctx context.Context, in *PostIdLoginFinalizerRequest, opts ...grpc.CallOption) (*PostIdLoginFinalizerResponse, error) {
+	out := new(PostIdLoginFinalizerResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostIdLoginFinalizer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostLinkIdpUser(ctx context.Context, in *PostLinkIdpUserRequest, opts ...grpc.CallOption) (*PostLinkIdpUserResponse, error) {
+	out := new(PostLinkIdpUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostLinkIdpUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetLoginInfo(ctx context.Context, in *GetLoginInfoRequest, opts ...grpc.CallOption) (*GetLoginInfoResponse, error) {
+	out := new(GetLoginInfoResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetLoginInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListAuth2FAMethods(ctx context.Context, in *List2FAMethodsRequest, opts ...grpc.CallOption) (*List2FAMethodsResponse, error) {
+	out := new(List2FAMethodsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListAuth2FAMethods", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAuth2FATotpRegisterEnable(ctx context.Context, in *PostAuth2FATotpRegisterEnableRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRegisterEnableResponse, error) {
+	out := new(PostAuth2FATotpRegisterEnableResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAuth2FATotpRegisterEnable", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAuth2FATotpRegisterVerify(ctx context.Context, in *PostAuth2FATotpRegisterVerifyRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRegisterVerifyResponse, error) {
+	out := new(PostAuth2FATotpRegisterVerifyResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAuth2FATotpRegisterVerify", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAuth2FATotpDisable(ctx context.Context, in *PostAuth2FATotpDisableRequest, opts ...grpc.CallOption) (*PostAuth2FATotpDisableResponse, error) {
+	out := new(PostAuth2FATotpDisableResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAuth2FATotpDisable", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAuth2FATotpLogin(ctx context.Context, in *PostAuth2FATotpLoginRequest, opts ...grpc.CallOption) (*SingleLoginResponse, error) {
+	out := new(SingleLoginResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAuth2FATotpLogin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAuth2FATotpRecover(ctx context.Context, in *PostAuth2FATotpRecoverRequest, opts ...grpc.CallOption) (*PostAuth2FATotpRecoverResponse, error) {
+	out := new(PostAuth2FATotpRecoverResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAuth2FATotpRecover", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetAuth2FATotpRecoverConfirm(ctx context.Context, in *GetAuth2FATotpRecoverConfirmRequest, opts ...grpc.CallOption) (*GetAuth2FATotpRecoverConfirmResponse, error) {
+	out := new(GetAuth2FATotpRecoverConfirmResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetAuth2FATotpRecoverConfirm", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetSubscription(ctx context.Context, in *GetSubscriptionRequest, opts ...grpc.CallOption) (*SingleSubscriptionResponse, error) {
+	out := new(SingleSubscriptionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetSubscription", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostSubscription(ctx context.Context, in *PostSubscriptionRequest, opts ...grpc.CallOption) (*SingleSubscriptionResponse, error) {
+	out := new(SingleSubscriptionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSubscription", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListCreditCards(ctx context.Context, in *ListCreditCardsRequest, opts ...grpc.CallOption) (*MultipleCreditCardResponse, error) {
+	out := new(MultipleCreditCardResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListCreditCards", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostCreditCard(ctx context.Context, in *PostCreditCardRequest, opts ...grpc.CallOption) (*SingleCreditCardResponse, error) {
+	out := new(SingleCreditCardResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostCreditCard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteCreditCard(ctx context.Context, in *DeleteCreditCardRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteCreditCard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchCreditCards(ctx context.Context, in *PatchCreditCardsRequest, opts ...grpc.CallOption) (*MultipleCreditCardResponse, error) {
+	out := new(MultipleCreditCardResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchCreditCards", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetShippingAddress(ctx context.Context, in *GetShippingAddressRequest, opts ...grpc.CallOption) (*SingleShippingAddressResponse, error) {
+	out := new(SingleShippingAddressResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetShippingAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PutShippingAddress(ctx context.Context, in *PutShippingAddressRequest, opts ...grpc.CallOption) (*SingleShippingAddressResponse, error) {
+	out := new(SingleShippingAddressResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PutShippingAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPlans(ctx context.Context, in *ListPlansRequest, opts ...grpc.CallOption) (*MultiPlanResponse, error) {
+	out := new(MultiPlanResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListPlans", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListStatusCodes(ctx context.Context, in *ListStatusCodesRequest, opts ...grpc.CallOption) (*MultiStatusCodeResponse, error) {
 	out := new(MultiStatusCodeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListStatusCodes", in, out, opts...)
@@ -1660,6 +3068,87 @@ func (c *v2Client) ListStatusCodes(ctx context.Context, in *ListStatusCodesReque
 func (c *v2Client) GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, opts ...grpc.CallOption) (*SingleStatusCodeResponse, error) {
 	out := new(SingleStatusCodeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetStatusCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetHealthz(ctx context.Context, in *GetHealthzRequest, opts ...grpc.CallOption) (*GetHealthzResponse, error) {
+	out := new(GetHealthzResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetHealthz", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUserBillingCycles(ctx context.Context, in *ListUserBillingCyclesRequest, opts ...grpc.CallOption) (*ListUserBillingCyclesResponse, error) {
+	out := new(ListUserBillingCyclesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUserBillingCycles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUserCycles(ctx context.Context, in *ListUserCyclesRequest, opts ...grpc.CallOption) (*ListUserCyclesResponse, error) {
+	out := new(ListUserCyclesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUserCycles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetBillingUsage(ctx context.Context, in *GetBillingUsageRequest, opts ...grpc.CallOption) (*GetBillingUsageResponse, error) {
+	out := new(GetBillingUsageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetBillingUsage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostHistoricalUsage(ctx context.Context, in *PostHistoricalUsageRequest, opts ...grpc.CallOption) (*PostHistoricalUsageResponse, error) {
+	out := new(PostHistoricalUsageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostHistoricalUsage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetHistoricalUsage(ctx context.Context, in *GetHistoricalUsageRequest, opts ...grpc.CallOption) (*GetHistoricalUsageResponse, error) {
+	out := new(GetHistoricalUsageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetHistoricalUsage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListUsageIntervals(ctx context.Context, in *ListUsageIntervalsRequest, opts ...grpc.CallOption) (*ListUsageIntervalsResponse, error) {
+	out := new(ListUsageIntervalsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListUsageIntervals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetRealtimeUsage(ctx context.Context, in *GetRealtimeUsageRequest, opts ...grpc.CallOption) (*GetRealtimeUsageResponse, error) {
+	out := new(GetRealtimeUsageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetRealtimeUsage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostUsage(ctx context.Context, in *PostUsageRequest, opts ...grpc.CallOption) (*PostUsageResponse, error) {
+	out := new(PostUsageResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUsage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1705,6 +3194,42 @@ func (c *v2Client) DeleteCollaborators(ctx context.Context, in *DeleteCollaborat
 func (c *v2Client) ListCollaborations(ctx context.Context, in *ListCollaborationsRequest, opts ...grpc.CallOption) (*MultiCollaborationsResponse, error) {
 	out := new(MultiCollaborationsResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListCollaborations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) FetchLicense(ctx context.Context, in *FetchLicenseRequest, opts ...grpc.CallOption) (*FetchLicenseResponse, error) {
+	out := new(FetchLicenseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/FetchLicense", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListLicenses(ctx context.Context, in *ListLicensesRequest, opts ...grpc.CallOption) (*MultipleLicensesResponse, error) {
+	out := new(MultipleLicensesResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListLicenses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetLicense(ctx context.Context, in *GetLicenseRequest, opts ...grpc.CallOption) (*SingleLicenseResponse, error) {
+	out := new(SingleLicenseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetLicense", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ValidateLicense(ctx context.Context, in *ValidateLicenseRequest, opts ...grpc.CallOption) (*ValidateLicenseResponse, error) {
+	out := new(ValidateLicenseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ValidateLicense", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1795,6 +3320,15 @@ func (c *v2Client) PatchTasks(ctx context.Context, in *PatchTasksRequest, opts .
 func (c *v2Client) DeleteTasks(ctx context.Context, in *DeleteTasksRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteTasks", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchAnnotationCountsRollup(ctx context.Context, in *PatchAnnotationCountsRollupRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchAnnotationCountsRollup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1909,6 +3443,60 @@ func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValu
 	return out, nil
 }
 
+func (c *v2Client) PostAnalytics(ctx context.Context, in *PostAnalyticsRequest, opts ...grpc.CallOption) (*PostAnalyticsResponse, error) {
+	out := new(PostAnalyticsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAnalytics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostSDKBilling(ctx context.Context, in *PostSDKBillingRequest, opts ...grpc.CallOption) (*PostSDKBillingResponse, error) {
+	out := new(PostSDKBillingResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSDKBilling", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostFindDuplicateAnnotationsJobs(ctx context.Context, in *PostFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*MultiFindDuplicateAnnotationsJobResponse, error) {
+	out := new(MultiFindDuplicateAnnotationsJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostFindDuplicateAnnotationsJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetFindDuplicateAnnotationsJob(ctx context.Context, in *GetFindDuplicateAnnotationsJobRequest, opts ...grpc.CallOption) (*SingleFindDuplicateAnnotationsJobResponse, error) {
+	out := new(SingleFindDuplicateAnnotationsJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetFindDuplicateAnnotationsJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListFindDuplicateAnnotationsJobs(ctx context.Context, in *ListFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*MultiFindDuplicateAnnotationsJobResponse, error) {
+	out := new(MultiFindDuplicateAnnotationsJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListFindDuplicateAnnotationsJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteFindDuplicateAnnotationsJobs(ctx context.Context, in *DeleteFindDuplicateAnnotationsJobsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteFindDuplicateAnnotationsJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostTrendingMetricsView", in, out, opts...)
@@ -1921,6 +3509,60 @@ func (c *v2Client) PostTrendingMetricsView(ctx context.Context, in *PostTrending
 func (c *v2Client) ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error) {
 	out := new(MultiTrendingMetricsViewResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTrendingMetricsViews", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostIdValidation(ctx context.Context, in *PostIdValidationRequest, opts ...grpc.CallOption) (*MultiIdValidationResponse, error) {
+	out := new(MultiIdValidationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostIdValidation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListTagCategories(ctx context.Context, in *ListTagCategoriesRequest, opts ...grpc.CallOption) (*MultiTagCategoryResponse, error) {
+	out := new(MultiTagCategoryResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListTagCategories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListWebNotifications(ctx context.Context, in *ListWebNotificationsRequest, opts ...grpc.CallOption) (*MultiWebNotificationResponse, error) {
+	out := new(MultiWebNotificationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListWebNotifications", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetWebNotification(ctx context.Context, in *GetWebNotificationRequest, opts ...grpc.CallOption) (*SingleWebNotificationResponse, error) {
+	out := new(SingleWebNotificationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetWebNotification", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchWebNotifications(ctx context.Context, in *PatchWebNotificationsRequest, opts ...grpc.CallOption) (*MultiWebNotificationResponse, error) {
+	out := new(MultiWebNotificationResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchWebNotifications", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteWebNotifications(ctx context.Context, in *DeleteWebNotificationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteWebNotifications", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2107,6 +3749,51 @@ func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetData
 	return out, nil
 }
 
+func (c *v2Client) ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
+	out := new(MultiInputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListNextTaskAssignments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PutTaskAssignments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostWaitlistEmails(ctx context.Context, in *PostWaitlistEmailsRequest, opts ...grpc.CallOption) (*MultiWaitlistEmailResponse, error) {
+	out := new(MultiWaitlistEmailResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostWaitlistEmails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetSampledPredictMetrics(ctx context.Context, in *GetSampledPredictMetricsRequest, opts ...grpc.CallOption) (*MultiSampledPredictMetricsResponse, error) {
+	out := new(MultiSampledPredictMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetSampledPredictMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInputsAddJobs(ctx context.Context, in *PostInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error) {
+	out := new(MultiInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputsAddJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error) {
 	out := new(MultiInputsAddJobResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListInputsAddJobs", in, out, opts...)
@@ -2119,6 +3806,15 @@ func (c *v2Client) ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsR
 func (c *v2Client) GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error) {
 	out := new(SingleInputsAddJobResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInputsAddJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) CancelInputsAddJob(ctx context.Context, in *CancelInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error) {
+	out := new(SingleInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/CancelInputsAddJob", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2174,6 +3870,8 @@ func (c *v2Client) DeleteUploads(ctx context.Context, in *DeleteUploadsRequest, 
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
 type V2Server interface {
+	// Common echo example.
+	Echo(context.Context, *TestMessage) (*TestMessage, error)
 	// List concept relations between concepts in the platform.
 	// MUST be above ListConcepts so that if concept_id is empty this will still match
 	// /concepts/relations to list all the concept relations in the app.
@@ -2198,6 +3896,26 @@ type V2Server interface {
 	PostConcepts(context.Context, *PostConceptsRequest) (*MultiConceptResponse, error)
 	// Patch one or more concepts.
 	PatchConcepts(context.Context, *PatchConceptsRequest) (*MultiConceptResponse, error)
+	// Get a specific vocab from an app.
+	GetVocab(context.Context, *GetVocabRequest) (*SingleVocabResponse, error)
+	// List all the vocabs.
+	ListVocabs(context.Context, *ListVocabsRequest) (*MultiVocabResponse, error)
+	// Add a vocab to an app.
+	PostVocabs(context.Context, *PostVocabsRequest) (*MultiVocabResponse, error)
+	// Patch one or more vocabs.
+	PatchVocabs(context.Context, *PatchVocabsRequest) (*MultiVocabResponse, error)
+	// Delete a single vocab.
+	DeleteVocab(context.Context, *DeleteVocabRequest) (*status.BaseResponse, error)
+	// Delete multiple vocabs in one request.
+	DeleteVocabs(context.Context, *DeleteVocabsRequest) (*status.BaseResponse, error)
+	// List all the vocabs.
+	ListVocabConcepts(context.Context, *ListVocabConceptsRequest) (*MultiConceptResponse, error)
+	// Add a vocab to an app.
+	PostVocabConcepts(context.Context, *PostVocabConceptsRequest) (*MultiConceptResponse, error)
+	// Delete a single concept from a vocab.
+	DeleteVocabConcept(context.Context, *DeleteVocabConceptRequest) (*status.BaseResponse, error)
+	// Delete multiple concepts from a vocab in one request.
+	DeleteVocabConcepts(context.Context, *DeleteVocabConceptsRequest) (*status.BaseResponse, error)
 	// Get a specific concept from an app.
 	GetConceptLanguage(context.Context, *GetConceptLanguageRequest) (*SingleConceptLanguageResponse, error)
 	// List the concept in all the translated languages.
@@ -2207,12 +3925,18 @@ type V2Server interface {
 	// Patch the name for a given language names by passing in a list of concepts with the new names
 	// for the languages.
 	PatchConceptLanguages(context.Context, *PatchConceptLanguagesRequest) (*MultiConceptLanguageResponse, error)
+	// List the concept in all the outside sources where we found these concepts.
+	ListConceptReferences(context.Context, *ListConceptReferencesRequest) (*MultiConceptReferenceResponse, error)
 	// List all domain graphs.
 	ListKnowledgeGraphs(context.Context, *ListKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
 	PostKnowledgeGraphs(context.Context, *PostKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error)
 	// Start concept mapping jobs.
 	PostConceptMappingJobs(context.Context, *PostConceptMappingJobsRequest) (*MultiConceptMappingJobResponse, error)
+	// List all concept mappings for a given concept id.
+	ListConceptMappings(context.Context, *ListConceptMappingsRequest) (*MultiConceptMappingResponse, error)
+	// Post concept mappings.
+	PostConceptMappings(context.Context, *PostConceptMappingsRequest) (*MultiConceptMappingResponse, error)
 	// Get a specific annotation from an app.
 	GetAnnotation(context.Context, *GetAnnotationRequest) (*SingleAnnotationResponse, error)
 	// List all the annotation.
@@ -2245,6 +3969,13 @@ type V2Server interface {
 	// This call is synchronous if the PostInputsRequest contains exactly one image input. Otherwise,
 	// it is asynchronous.
 	PostInputs(context.Context, *PostInputsRequest) (*MultiInputResponse, error)
+	// Add an input (or set of inputs) to an app via a file.
+	// This is asynchronous.
+	PostInputsFile(context.Context, *PostInputsFileRequest) (*MultiInputResponse, error)
+	// Add an input or set of inputs to an app designed for NiFi integration.
+	PostInputsNiFi(context.Context, *PostInputsNiFiRequest) (*MultiInputResponse, error)
+	// Add an input or set of inputs to an app designed for Document integration.
+	PostInputsDocument(context.Context, *PostInputsDocumentRequest) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(context.Context, *PatchInputsRequest) (*MultiInputResponse, error)
 	// Delete a single input asynchronously.
@@ -2364,14 +4095,40 @@ type V2Server interface {
 	PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error)
+	// Add new reference(s) to a particular model
+	PostModelReferences(context.Context, *PostModelReferencesRequest) (*MultiModelReferenceResponse, error)
+	// Delete model references tied to a model id by reference id.
+	DeleteModelReferences(context.Context, *DeleteModelReferencesRequest) (*status.BaseResponse, error)
 	// GetModelVersionInputExample
 	GetModelVersionInputExample(context.Context, *GetModelVersionInputExampleRequest) (*SingleModelVersionInputExampleResponse, error)
 	// ListModelVersionInputExamples
 	ListModelVersionInputExamples(context.Context, *ListModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error)
+	// PostModelVersionInputExamples
+	PostModelVersionInputExamples(context.Context, *PostModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error)
+	// DeleteModelVersionInputExamples
+	DeleteModelVersionInputExamples(context.Context, *DeleteModelVersionInputExamplesRequest) (*status.BaseResponse, error)
+	// Star a model
+	PostModelStars(context.Context, *PostModelStarsRequest) (*MultiModelStarResponse, error)
+	//Un-star a model
+	DeleteModelStars(context.Context, *DeleteModelStarsRequest) (*DeleteModelStarsResponse, error)
+	// Star a user
+	PostUserStars(context.Context, *PostUserStarsRequest) (*MultiUserStarResponse, error)
+	// Un-star a user
+	DeleteUserStars(context.Context, *DeleteUserStarsRequest) (*DeleteUserStarsResponse, error)
+	// Star a workflow
+	PostWorkflowStars(context.Context, *PostWorkflowStarsRequest) (*MultiWorkflowStarResponse, error)
+	// Un-star a workflow
+	DeleteWorkflowStars(context.Context, *DeleteWorkflowStarsRequest) (*DeleteWorkflowStarsResponse, error)
+	// Star an app
+	PostAppStars(context.Context, *PostAppStarsRequest) (*MultiAppStarResponse, error)
+	// Un-star an app
+	DeleteAppStars(context.Context, *DeleteAppStarsRequest) (*DeleteAppStarsResponse, error)
 	// Get a specific workflow from an app.
 	GetWorkflow(context.Context, *GetWorkflowRequest) (*SingleWorkflowResponse, error)
 	// List all the workflows.
 	ListWorkflows(context.Context, *ListWorkflowsRequest) (*MultiWorkflowResponse, error)
+	// List all public workflows.
+	ListPublicWorkflows(context.Context, *ListPublicWorkflowsRequest) (*MultiWorkflowResponse, error)
 	// Add a workflow to an app.
 	PostWorkflows(context.Context, *PostWorkflowsRequest) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
@@ -2394,6 +4151,16 @@ type V2Server interface {
 	DeleteWorkflowVersions(context.Context, *DeleteWorkflowVersionsRequest) (*status.BaseResponse, error)
 	// Patch workflow versions.
 	PatchWorkflowVersions(context.Context, *PatchWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error)
+	// Evaluate all the nodes in the workflow.
+	PostWorkflowMetrics(context.Context, *PostWorkflowMetricsRequest) (*MultiWorkflowMetricsResponse, error)
+	// Get workflow evaluation data.
+	GetWorkflowMetrics(context.Context, *GetWorkflowMetricsRequest) (*SingleWorkflowMetricsResponse, error)
+	// GetWorkflowNodeMetrics
+	GetWorkflowNodeMetrics(context.Context, *GetWorkflowNodeMetricsRequest) (*SingleWorkflowNodeMetricsResponse, error)
+	// ListWorkflowMetrics
+	ListWorkflowMetrics(context.Context, *ListWorkflowMetricsRequest) (*MultiWorkflowMetricsResponse, error)
+	// Delete one or more workflow metrics.
+	DeleteWorkflowMetrics(context.Context, *DeleteWorkflowMetricsRequest) (*status.BaseResponse, error)
 	// Get a specific key from an app.
 	GetKey(context.Context, *GetKeyRequest) (*SingleKeyResponse, error)
 	// List all the keys.
@@ -2434,17 +4201,134 @@ type V2Server interface {
 	PatchAppsIds(context.Context, *PatchAppsIdsRequest) (*MultiAppResponse, error)
 	// Patch one app.
 	PatchApp(context.Context, *PatchAppRequest) (*SingleAppResponse, error)
+	// Patch app owner.
+	// The new app owner can only be an org, and the original owner must be a member of that org.
+	PatchAppOwner(context.Context, *PatchAppOwnerRequest) (*status.BaseResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error)
+	// Get current user information
+	GetUser(context.Context, *GetUserRequest) (*SingleUserResponse, error)
+	// List users
+	ListUsers(context.Context, *ListUsersRequest) (*MultiUserResponse, error)
+	// Update gdpr fields of current user.
+	PostUserConsent(context.Context, *PostUserConsentRequest) (*SingleUserResponse, error)
+	// Patch information of current user or another user in the same organisation
+	PatchUser(context.Context, *PatchUserRequest) (*SingleUserResponse, error)
+	// Post user access request
+	PostUserAccess(context.Context, *PostUserAccessRequest) (*MultiUserAccessResponse, error)
+	// Get user access request
+	GetUserAccess(context.Context, *GetUserAccessRequest) (*SingleUserAccessResponse, error)
+	////////////////////////////////////////
+	// Email
+	////////////////////////////////////////
+	// Add Email
+	PostEmails(context.Context, *PostEmailsRequest) (*MultipleEmailResponse, error)
+	// List emails
+	ListEmails(context.Context, *ListEmailsRequest) (*MultipleEmailResponse, error)
+	// For sending another verification email.
+	PostResendVerifyEmail(context.Context, *PostResendVerifyRequest) (*SingleResendVerifyResponse, error)
+	// Deleting an email.
+	DeleteEmail(context.Context, *DeleteEmailRequest) (*status.BaseResponse, error)
+	// Create primate email.
+	PostPrimaryEmail(context.Context, *PostPrimaryEmailRequest) (*SingleEmailResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(context.Context, *PostValidatePasswordRequest) (*SinglePasswordValidationResponse, error)
+	// Get global policy
+	ListGlobalPasswordPolicies(context.Context, *ListGlobalPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error)
+	// Get a specific set of password policies attached to a user.
+	ListPasswordPolicies(context.Context, *ListPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error)
+	// Create a specific set of password policies attached to a user or an organization.
+	PostPasswordPolicies(context.Context, *PostPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error)
+	// Update a specific set of password policies attached to a user or an organization.
+	PatchPasswordPolicies(context.Context, *PatchPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error)
+	// DeletePasswordPolicies
+	DeletePasswordPolicies(context.Context, *DeletePasswordPoliciesRequest) (*status.BaseResponse, error)
+	// Get user feature config
+	GetUserFeatureConfig(context.Context, *UserFeatureConfigRequest) (*SingleUserFeatureConfigResponse, error)
+	// Add organizations
+	PostOrganizations(context.Context, *PostOrganizationsRequest) (*MultiOrganizationResponse, error)
+	// List the provided user's organizations with their roles
+	ListUsersOrganizations(context.Context, *ListUsersOrganizationsRequest) (*MultiUsersOrganizationsResponse, error)
+	// List multiple organizations
+	ListOrganizations(context.Context, *ListOrganizationsRequest) (*MultiOrganizationResponse, error)
+	// Get single organization
+	GetOrganization(context.Context, *GetOrganizationRequest) (*SingleOrganizationResponse, error)
+	// Patch an organization
+	PatchOrganization(context.Context, *PatchOrganizationRequest) (*SingleOrganizationResponse, error)
+	// Delete an organization
+	DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*status.BaseResponse, error)
+	// List organization members
+	ListOrganizationMembers(context.Context, *ListOrganizationMembersRequest) (*MultiOrganizationMemberResponse, error)
+	// ListOrganizationAppMembers
+	ListOrganizationAppMembers(context.Context, *ListOrganizationAppMembersRequest) (*MultiOrganizationMemberResponse, error)
+	// Add new member to organization
+	PostOrganizationMember(context.Context, *PostOrganizationMemberRequest) (*status.BaseResponse, error)
+	// PatchOrganizationMember
+	PatchOrganizationMember(context.Context, *PatchOrganizationMembersRequest) (*status.BaseResponse, error)
+	// Remove a member from organization
+	DeleteOrganizationMember(context.Context, *DeleteOrganizationMemberRequest) (*status.BaseResponse, error)
+	// Organization invites
+	PostOrganizationInvitations(context.Context, *PostOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error)
+	// PatchOrganizationInvitations
+	PatchOrganizationInvitations(context.Context, *PatchOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error)
+	// ListOrganizationInvitations
+	ListOrganizationInvitations(context.Context, *ListOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error)
+	// GetOrganizationInvitation
+	GetOrganizationInvitation(context.Context, *GetOrganizationInvitationRequest) (*SingleOrganizationInvitationResponse, error)
+	// PostDeclineOrganizationInvitation
+	PostDeclineOrganizationInvitation(context.Context, *PostDeclineOrganizationInvitationRequest) (*status.BaseResponse, error)
+	// PostAcceptOrganizationInvitation
+	PostAcceptOrganizationInvitation(context.Context, *PostAcceptOrganizationInvitationRequest) (*status.BaseResponse, error)
+	// GetOrganizationInvitationPublic
+	GetOrganizationInvitationPublic(context.Context, *GetOrganizationInvitationPublicRequest) (*SingleOrganizationInvitationResponse, error)
+	// Leave an organization
+	DeleteRequestingUserFromOrganization(context.Context, *DeleteRequestingUserFromOrganizationRequest) (*status.BaseResponse, error)
+	// Add IdentityProviders
+	PostIdentityProviders(context.Context, *PostIdentityProvidersRequest) (*MultiIdentityProviderResponse, error)
+	// List multiple IdentityProviders
+	ListIdentityProviders(context.Context, *ListIdentityProvidersRequest) (*MultiIdentityProviderResponse, error)
+	// Get single IdentityProvider
+	GetIdentityProvider(context.Context, *GetIdentityProviderRequest) (*SingleIdentityProviderResponse, error)
+	// Patch multiple IdentityProviders
+	PatchIdentityProviders(context.Context, *PatchIdentityProvidersRequest) (*MultiIdentityProviderResponse, error)
+	// Delete multiple IdentityProviders
+	DeleteIdentityProviders(context.Context, *DeleteIdentityProvidersRequest) (*status.BaseResponse, error)
+	// Add teams
+	PostTeams(context.Context, *PostTeamsRequest) (*MultiTeamResponse, error)
+	// List multiple teams
+	ListTeams(context.Context, *ListTeamsRequest) (*MultiTeamResponse, error)
+	// Get single team
+	GetTeam(context.Context, *GetTeamRequest) (*SingleTeamResponse, error)
+	// Patch multiple teams
+	PatchTeams(context.Context, *PatchTeamsRequest) (*MultiTeamResponse, error)
+	// Delete multiple teams
+	DeleteTeams(context.Context, *DeleteTeamsRequest) (*status.BaseResponse, error)
+	// Add users to a team
+	PostTeamUsers(context.Context, *PostTeamUsersRequest) (*MultiTeamUserResponse, error)
+	// List team users
+	ListTeamUsers(context.Context, *ListTeamUsersRequest) (*MultiTeamUserResponse, error)
+	// Delete users from a team
+	DeleteTeamUsers(context.Context, *DeleteTeamUsersRequest) (*status.BaseResponse, error)
+	// Add applications to team
+	PostTeamApps(context.Context, *PostTeamAppsRequest) (*status.BaseResponse, error)
+	// List team applications
+	ListTeamApps(context.Context, *ListTeamAppsRequest) (*MultiTeamAppsResponse, error)
+	// Remove applications from team
+	DeleteTeamApps(context.Context, *DeleteTeamAppsRequest) (*status.BaseResponse, error)
+	// List multiple roles
+	ListRoles(context.Context, *ListRolesRequest) (*MultiRoleResponse, error)
+	// Get single role
+	GetRole(context.Context, *GetRoleRequest) (*SingleRoleResponse, error)
 	// Get a saved legacy search.
 	GetSearch(context.Context, *GetSearchRequest) (*SingleSearchResponse, error)
 	// List all saved legacy searches.
 	ListSearches(context.Context, *ListSearchesRequest) (*MultiSearchResponse, error)
 	// Patch saved legacy searches by ids.
 	PatchSearches(context.Context, *PatchSearchesRequest) (*MultiSearchResponse, error)
+	// Deprecated: Do not use.
 	// Execute a new search and optionally save it.
+	//
+	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
 	PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error)
@@ -2458,6 +4342,8 @@ type V2Server interface {
 	DeleteAnnotationSearchMetrics(context.Context, *DeleteAnnotationSearchMetricsRequest) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(context.Context, *DeleteSearchRequest) (*status.BaseResponse, error)
+	// Execute an attribute search.
+	PostAttributeSearch(context.Context, *PostAttributeSearchRequest) (*MultiSearchResponse, error)
 	// List all the annotation filters.
 	ListAnnotationFilters(context.Context, *ListAnnotationFiltersRequest) (*MultiAnnotationFilterResponse, error)
 	// Get a specific annotation filter.
@@ -2468,10 +4354,91 @@ type V2Server interface {
 	PatchAnnotationFilters(context.Context, *PatchAnnotationFiltersRequest) (*MultiAnnotationFilterResponse, error)
 	// Delete one or more annotation filters in a single request.
 	DeleteAnnotationFilters(context.Context, *DeleteAnnotationFiltersRequest) (*status.BaseResponse, error)
+	// Get a list of clusters in an app
+	ListClusters(context.Context, *ListClustersRequest) (*MultiClusterResponse, error)
+	// List all the annotations for a given cluster.
+	ListAnnotationsForCluster(context.Context, *ListAnnotationsForClusterRequest) (*MultiAnnotationResponse, error)
+	// List all the annotations for a given cluser.
+	PostClustersSearches(context.Context, *PostClustersSearchesRequest) (*MultiClusterResponse, error)
+	// Verify email
+	PostVerifyEmail(context.Context, *PostVerifyEmailRequest) (*SingleVerifyEmailResponse, error)
+	// Request for password reset email
+	PostRequestResetPassword(context.Context, *RequestResetPasswordRequest) (*status.BaseResponse, error)
+	// Complete reset password
+	PostCompleteResetPassword(context.Context, *CompleteResetPasswordRequest) (*status.BaseResponse, error)
+	// Login with user/pass
+	PostLogin(context.Context, *PostLoginRequest) (*SingleLoginResponse, error)
+	// Signup with account.
+	PostSignup(context.Context, *PostSignupRequest) (*SingleLoginResponse, error)
+	// Logout use
+	PostLogout(context.Context, *PostLogoutRequest) (*SingleLogoutResponse, error)
+	// List available authentication methods, e.g.
+	// * standard auth method - login using user & password
+	// * SAML auth methods - SSO using SAML Identity Providers like Okta, Github, Google GSuite, LinkedIn, etc.
+	ListAuthMethods(context.Context, *ListAuthMethodsRequest) (*ListAuthMethodsResponse, error)
+	// ListOrgAuthMethods
+	ListOrgAuthMethods(context.Context, *ListAuthMethodsRequest) (*ListAuthMethodsResponse, error)
+	// ListOrgAuthMethods
+	PostIdLoginFinalizer(context.Context, *PostIdLoginFinalizerRequest) (*PostIdLoginFinalizerResponse, error)
+	// PostLinkIdpUser
+	PostLinkIdpUser(context.Context, *PostLinkIdpUserRequest) (*PostLinkIdpUserResponse, error)
+	// GetLoginInfo
+	GetLoginInfo(context.Context, *GetLoginInfoRequest) (*GetLoginInfoResponse, error)
+	// List available 2FA methods in current environment, e.g.
+	// * TOTP auth method - login layer using time synced  codes
+	ListAuth2FAMethods(context.Context, *List2FAMethodsRequest) (*List2FAMethodsResponse, error)
+	// Enable Clarifai TOTP 2FA
+	PostAuth2FATotpRegisterEnable(context.Context, *PostAuth2FATotpRegisterEnableRequest) (*PostAuth2FATotpRegisterEnableResponse, error)
+	// Verify Clarifai TOTP 2FA activation
+	PostAuth2FATotpRegisterVerify(context.Context, *PostAuth2FATotpRegisterVerifyRequest) (*PostAuth2FATotpRegisterVerifyResponse, error)
+	// Disable Clarifai TOTP 2FA
+	PostAuth2FATotpDisable(context.Context, *PostAuth2FATotpDisableRequest) (*PostAuth2FATotpDisableResponse, error)
+	// Login with Clarifai TOTP 2FA activation
+	PostAuth2FATotpLogin(context.Context, *PostAuth2FATotpLoginRequest) (*SingleLoginResponse, error)
+	// Recover users Clarifai TOTP 2FA activation through sending an email confirmation.
+	PostAuth2FATotpRecover(context.Context, *PostAuth2FATotpRecoverRequest) (*PostAuth2FATotpRecoverResponse, error)
+	// Confirm the recovery of users Clarifai TOTP 2FA. Will be called by user from email link (via portal).
+	GetAuth2FATotpRecoverConfirm(context.Context, *GetAuth2FATotpRecoverConfirmRequest) (*GetAuth2FATotpRecoverConfirmResponse, error)
+	// List the subscriptions.
+	GetSubscription(context.Context, *GetSubscriptionRequest) (*SingleSubscriptionResponse, error)
+	// Add a new subscription.
+	PostSubscription(context.Context, *PostSubscriptionRequest) (*SingleSubscriptionResponse, error)
+	// List all credit cards.
+	ListCreditCards(context.Context, *ListCreditCardsRequest) (*MultipleCreditCardResponse, error)
+	// Add a new credit card.
+	PostCreditCard(context.Context, *PostCreditCardRequest) (*SingleCreditCardResponse, error)
+	// Delete a credit card.
+	DeleteCreditCard(context.Context, *DeleteCreditCardRequest) (*status.BaseResponse, error)
+	// Update a credit card.
+	PatchCreditCards(context.Context, *PatchCreditCardsRequest) (*MultipleCreditCardResponse, error)
+	// Get the shipping address.
+	GetShippingAddress(context.Context, *GetShippingAddressRequest) (*SingleShippingAddressResponse, error)
+	// Update shipping address.
+	PutShippingAddress(context.Context, *PutShippingAddressRequest) (*SingleShippingAddressResponse, error)
+	// ListPlans
+	ListPlans(context.Context, *ListPlansRequest) (*MultiPlanResponse, error)
 	// List all status codes.
 	ListStatusCodes(context.Context, *ListStatusCodesRequest) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error)
+	// Health check endpoint
+	GetHealthz(context.Context, *GetHealthzRequest) (*GetHealthzResponse, error)
+	// List all billing  cycles - old billing
+	ListUserBillingCycles(context.Context, *ListUserBillingCyclesRequest) (*ListUserBillingCyclesResponse, error)
+	// List user usage.cycles.
+	ListUserCycles(context.Context, *ListUserCyclesRequest) (*ListUserCyclesResponse, error)
+	// Gets the billing cycle start and end date as well as invoice items.
+	GetBillingUsage(context.Context, *GetBillingUsageRequest) (*GetBillingUsageResponse, error)
+	// Add historical usage. - Billing 1
+	PostHistoricalUsage(context.Context, *PostHistoricalUsageRequest) (*PostHistoricalUsageResponse, error)
+	// Get historical usage. - Billing 2
+	GetHistoricalUsage(context.Context, *GetHistoricalUsageRequest) (*GetHistoricalUsageResponse, error)
+	// Get a list of valid usage intervals
+	ListUsageIntervals(context.Context, *ListUsageIntervalsRequest) (*ListUsageIntervalsResponse, error)
+	// Get realtime usage.
+	GetRealtimeUsage(context.Context, *GetRealtimeUsageRequest) (*GetRealtimeUsageResponse, error)
+	// Post usage to platform. Only called by on prem now.
+	PostUsage(context.Context, *PostUsageRequest) (*PostUsageResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -2482,6 +4449,14 @@ type V2Server interface {
 	DeleteCollaborators(context.Context, *DeleteCollaboratorsRequest) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(context.Context, *ListCollaborationsRequest) (*MultiCollaborationsResponse, error)
+	// Get the license with crypto security.
+	FetchLicense(context.Context, *FetchLicenseRequest) (*FetchLicenseResponse, error)
+	// List all licenses.
+	ListLicenses(context.Context, *ListLicensesRequest) (*MultipleLicensesResponse, error)
+	// Get a license
+	GetLicense(context.Context, *GetLicenseRequest) (*SingleLicenseResponse, error)
+	// Check that a license is still valid.
+	ValidateLicense(context.Context, *ValidateLicenseRequest) (*ValidateLicenseResponse, error)
 	// start to duplicate an app which copies all the inputs, annotations, models, concepts etc. to a new app.
 	// this is an async process, you should use ListAppDuplications or GetAppDuplication to check the status.
 	PostAppDuplications(context.Context, *PostAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error)
@@ -2503,6 +4478,8 @@ type V2Server interface {
 	PatchTasks(context.Context, *PatchTasksRequest) (*MultiTaskResponse, error)
 	// Delete multiple tasks in one request.
 	DeleteTasks(context.Context, *DeleteTasksRequest) (*status.BaseResponse, error)
+	// Rollup annotation count for task.
+	PatchAnnotationCountsRollup(context.Context, *PatchAnnotationCountsRollupRequest) (*status.BaseResponse, error)
 	// Add Label orders.
 	PostLabelOrders(context.Context, *PostLabelOrdersRequest) (*MultiLabelOrderResponse, error)
 	// Get a label order.
@@ -2534,10 +4511,34 @@ type V2Server interface {
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
+	// Add a new analytics entry into our database
+	PostAnalytics(context.Context, *PostAnalyticsRequest) (*PostAnalyticsResponse, error)
+	// Add a new sdk_billing entry into our database
+	PostSDKBilling(context.Context, *PostSDKBillingRequest) (*PostSDKBillingResponse, error)
+	// Find annotations duplicates based on an specified attribute of different annotations
+	PostFindDuplicateAnnotationsJobs(context.Context, *PostFindDuplicateAnnotationsJobsRequest) (*MultiFindDuplicateAnnotationsJobResponse, error)
+	// Get annotations find duplicates jobs results by id
+	GetFindDuplicateAnnotationsJob(context.Context, *GetFindDuplicateAnnotationsJobRequest) (*SingleFindDuplicateAnnotationsJobResponse, error)
+	// List all the annotations find duplicates jobs results
+	ListFindDuplicateAnnotationsJobs(context.Context, *ListFindDuplicateAnnotationsJobsRequest) (*MultiFindDuplicateAnnotationsJobResponse, error)
+	// DeleteFindDuplicateAnnotationsJobs
+	DeleteFindDuplicateAnnotationsJobs(context.Context, *DeleteFindDuplicateAnnotationsJobsRequest) (*status.BaseResponse, error)
 	// Increase the view metric for a detail view
 	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)
 	// List the view metrics for a detail view
 	ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error)
+	// Validates the ids (app and user supported), returns validation errors and recommendations
+	PostIdValidation(context.Context, *PostIdValidationRequest) (*MultiIdValidationResponse, error)
+	// List all the available tags for specified object_type grouped by category
+	ListTagCategories(context.Context, *ListTagCategoriesRequest) (*MultiTagCategoryResponse, error)
+	// List users web notifications
+	ListWebNotifications(context.Context, *ListWebNotificationsRequest) (*MultiWebNotificationResponse, error)
+	// Get a web notification
+	GetWebNotification(context.Context, *GetWebNotificationRequest) (*SingleWebNotificationResponse, error)
+	// Update users web notifications
+	PatchWebNotifications(context.Context, *PatchWebNotificationsRequest) (*MultiWebNotificationResponse, error)
+	// Delete users web notifications
+	DeleteWebNotifications(context.Context, *DeleteWebNotificationsRequest) (*status.BaseResponse, error)
 	// Get a specific module from an app.
 	GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error)
 	// List all the modules in community, by user or by app.
@@ -2583,10 +4584,23 @@ type V2Server interface {
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List next non-labeled and unassigned inputs from task's dataset
+	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
+	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*status.BaseResponse, error)
+	// PostWaitlistEmails adds new e-mail addresses to a feature waiting list.
+	PostWaitlistEmails(context.Context, *PostWaitlistEmailsRequest) (*MultiWaitlistEmailResponse, error)
+	// GetSampledPredictResults get sampled prediction metrics by model id
+	GetSampledPredictMetrics(context.Context, *GetSampledPredictMetricsRequest) (*MultiSampledPredictMetricsResponse, error)
+	// Create a job to add inputs from a cloud storage to an app on the clarifai platform
+	// This is an Asynchronous process. Use ListInputsAddJobs or GetInputsJob to check the status.
+	PostInputsAddJobs(context.Context, *PostInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
+	// cancel the input add job by ID
+	CancelInputsAddJob(context.Context, *CancelInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
 	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
 	PutUploadContentParts(context.Context, *PutUploadContentPartsRequest) (*SingleUploadResponse, error)
 	GetUpload(context.Context, *GetUploadRequest) (*SingleUploadResponse, error)
@@ -2599,6 +4613,9 @@ type V2Server interface {
 type UnimplementedV2Server struct {
 }
 
+func (UnimplementedV2Server) Echo(context.Context, *TestMessage) (*TestMessage, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method Echo not implemented")
+}
 func (UnimplementedV2Server) ListConceptRelations(context.Context, *ListConceptRelationsRequest) (*MultiConceptRelationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListConceptRelations not implemented")
 }
@@ -2629,6 +4646,36 @@ func (UnimplementedV2Server) PostConcepts(context.Context, *PostConceptsRequest)
 func (UnimplementedV2Server) PatchConcepts(context.Context, *PatchConceptsRequest) (*MultiConceptResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchConcepts not implemented")
 }
+func (UnimplementedV2Server) GetVocab(context.Context, *GetVocabRequest) (*SingleVocabResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetVocab not implemented")
+}
+func (UnimplementedV2Server) ListVocabs(context.Context, *ListVocabsRequest) (*MultiVocabResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListVocabs not implemented")
+}
+func (UnimplementedV2Server) PostVocabs(context.Context, *PostVocabsRequest) (*MultiVocabResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostVocabs not implemented")
+}
+func (UnimplementedV2Server) PatchVocabs(context.Context, *PatchVocabsRequest) (*MultiVocabResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchVocabs not implemented")
+}
+func (UnimplementedV2Server) DeleteVocab(context.Context, *DeleteVocabRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteVocab not implemented")
+}
+func (UnimplementedV2Server) DeleteVocabs(context.Context, *DeleteVocabsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteVocabs not implemented")
+}
+func (UnimplementedV2Server) ListVocabConcepts(context.Context, *ListVocabConceptsRequest) (*MultiConceptResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListVocabConcepts not implemented")
+}
+func (UnimplementedV2Server) PostVocabConcepts(context.Context, *PostVocabConceptsRequest) (*MultiConceptResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostVocabConcepts not implemented")
+}
+func (UnimplementedV2Server) DeleteVocabConcept(context.Context, *DeleteVocabConceptRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteVocabConcept not implemented")
+}
+func (UnimplementedV2Server) DeleteVocabConcepts(context.Context, *DeleteVocabConceptsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteVocabConcepts not implemented")
+}
 func (UnimplementedV2Server) GetConceptLanguage(context.Context, *GetConceptLanguageRequest) (*SingleConceptLanguageResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetConceptLanguage not implemented")
 }
@@ -2641,6 +4688,9 @@ func (UnimplementedV2Server) PostConceptLanguages(context.Context, *PostConceptL
 func (UnimplementedV2Server) PatchConceptLanguages(context.Context, *PatchConceptLanguagesRequest) (*MultiConceptLanguageResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchConceptLanguages not implemented")
 }
+func (UnimplementedV2Server) ListConceptReferences(context.Context, *ListConceptReferencesRequest) (*MultiConceptReferenceResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListConceptReferences not implemented")
+}
 func (UnimplementedV2Server) ListKnowledgeGraphs(context.Context, *ListKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListKnowledgeGraphs not implemented")
 }
@@ -2649,6 +4699,12 @@ func (UnimplementedV2Server) PostKnowledgeGraphs(context.Context, *PostKnowledge
 }
 func (UnimplementedV2Server) PostConceptMappingJobs(context.Context, *PostConceptMappingJobsRequest) (*MultiConceptMappingJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptMappingJobs not implemented")
+}
+func (UnimplementedV2Server) ListConceptMappings(context.Context, *ListConceptMappingsRequest) (*MultiConceptMappingResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListConceptMappings not implemented")
+}
+func (UnimplementedV2Server) PostConceptMappings(context.Context, *PostConceptMappingsRequest) (*MultiConceptMappingResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptMappings not implemented")
 }
 func (UnimplementedV2Server) GetAnnotation(context.Context, *GetAnnotationRequest) (*SingleAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetAnnotation not implemented")
@@ -2694,6 +4750,15 @@ func (UnimplementedV2Server) ListInputs(context.Context, *ListInputsRequest) (*M
 }
 func (UnimplementedV2Server) PostInputs(context.Context, *PostInputsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostInputs not implemented")
+}
+func (UnimplementedV2Server) PostInputsFile(context.Context, *PostInputsFileRequest) (*MultiInputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsFile not implemented")
+}
+func (UnimplementedV2Server) PostInputsNiFi(context.Context, *PostInputsNiFiRequest) (*MultiInputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsNiFi not implemented")
+}
+func (UnimplementedV2Server) PostInputsDocument(context.Context, *PostInputsDocumentRequest) (*MultiInputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsDocument not implemented")
 }
 func (UnimplementedV2Server) PatchInputs(context.Context, *PatchInputsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchInputs not implemented")
@@ -2851,17 +4916,56 @@ func (UnimplementedV2Server) PostModelVersionMetrics(context.Context, *PostModel
 func (UnimplementedV2Server) ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelReferences not implemented")
 }
+func (UnimplementedV2Server) PostModelReferences(context.Context, *PostModelReferencesRequest) (*MultiModelReferenceResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelReferences not implemented")
+}
+func (UnimplementedV2Server) DeleteModelReferences(context.Context, *DeleteModelReferencesRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelReferences not implemented")
+}
 func (UnimplementedV2Server) GetModelVersionInputExample(context.Context, *GetModelVersionInputExampleRequest) (*SingleModelVersionInputExampleResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelVersionInputExample not implemented")
 }
 func (UnimplementedV2Server) ListModelVersionInputExamples(context.Context, *ListModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelVersionInputExamples not implemented")
 }
+func (UnimplementedV2Server) PostModelVersionInputExamples(context.Context, *PostModelVersionInputExamplesRequest) (*MultiModelVersionInputExampleResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionInputExamples not implemented")
+}
+func (UnimplementedV2Server) DeleteModelVersionInputExamples(context.Context, *DeleteModelVersionInputExamplesRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelVersionInputExamples not implemented")
+}
+func (UnimplementedV2Server) PostModelStars(context.Context, *PostModelStarsRequest) (*MultiModelStarResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelStars not implemented")
+}
+func (UnimplementedV2Server) DeleteModelStars(context.Context, *DeleteModelStarsRequest) (*DeleteModelStarsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelStars not implemented")
+}
+func (UnimplementedV2Server) PostUserStars(context.Context, *PostUserStarsRequest) (*MultiUserStarResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostUserStars not implemented")
+}
+func (UnimplementedV2Server) DeleteUserStars(context.Context, *DeleteUserStarsRequest) (*DeleteUserStarsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteUserStars not implemented")
+}
+func (UnimplementedV2Server) PostWorkflowStars(context.Context, *PostWorkflowStarsRequest) (*MultiWorkflowStarResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowStars not implemented")
+}
+func (UnimplementedV2Server) DeleteWorkflowStars(context.Context, *DeleteWorkflowStarsRequest) (*DeleteWorkflowStarsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteWorkflowStars not implemented")
+}
+func (UnimplementedV2Server) PostAppStars(context.Context, *PostAppStarsRequest) (*MultiAppStarResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAppStars not implemented")
+}
+func (UnimplementedV2Server) DeleteAppStars(context.Context, *DeleteAppStarsRequest) (*DeleteAppStarsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAppStars not implemented")
+}
 func (UnimplementedV2Server) GetWorkflow(context.Context, *GetWorkflowRequest) (*SingleWorkflowResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflow not implemented")
 }
 func (UnimplementedV2Server) ListWorkflows(context.Context, *ListWorkflowsRequest) (*MultiWorkflowResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflows not implemented")
+}
+func (UnimplementedV2Server) ListPublicWorkflows(context.Context, *ListPublicWorkflowsRequest) (*MultiWorkflowResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPublicWorkflows not implemented")
 }
 func (UnimplementedV2Server) PostWorkflows(context.Context, *PostWorkflowsRequest) (*MultiWorkflowResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflows not implemented")
@@ -2895,6 +4999,21 @@ func (UnimplementedV2Server) DeleteWorkflowVersions(context.Context, *DeleteWork
 }
 func (UnimplementedV2Server) PatchWorkflowVersions(context.Context, *PatchWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersions not implemented")
+}
+func (UnimplementedV2Server) PostWorkflowMetrics(context.Context, *PostWorkflowMetricsRequest) (*MultiWorkflowMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowMetrics not implemented")
+}
+func (UnimplementedV2Server) GetWorkflowMetrics(context.Context, *GetWorkflowMetricsRequest) (*SingleWorkflowMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflowMetrics not implemented")
+}
+func (UnimplementedV2Server) GetWorkflowNodeMetrics(context.Context, *GetWorkflowNodeMetricsRequest) (*SingleWorkflowNodeMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflowNodeMetrics not implemented")
+}
+func (UnimplementedV2Server) ListWorkflowMetrics(context.Context, *ListWorkflowMetricsRequest) (*MultiWorkflowMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowMetrics not implemented")
+}
+func (UnimplementedV2Server) DeleteWorkflowMetrics(context.Context, *DeleteWorkflowMetricsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteWorkflowMetrics not implemented")
 }
 func (UnimplementedV2Server) GetKey(context.Context, *GetKeyRequest) (*SingleKeyResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetKey not implemented")
@@ -2947,11 +5066,176 @@ func (UnimplementedV2Server) PatchAppsIds(context.Context, *PatchAppsIdsRequest)
 func (UnimplementedV2Server) PatchApp(context.Context, *PatchAppRequest) (*SingleAppResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchApp not implemented")
 }
+func (UnimplementedV2Server) PatchAppOwner(context.Context, *PatchAppOwnerRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAppOwner not implemented")
+}
 func (UnimplementedV2Server) PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAppsSearches not implemented")
 }
+func (UnimplementedV2Server) GetUser(context.Context, *GetUserRequest) (*SingleUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedV2Server) ListUsers(context.Context, *ListUsersRequest) (*MultiUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedV2Server) PostUserConsent(context.Context, *PostUserConsentRequest) (*SingleUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostUserConsent not implemented")
+}
+func (UnimplementedV2Server) PatchUser(context.Context, *PatchUserRequest) (*SingleUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchUser not implemented")
+}
+func (UnimplementedV2Server) PostUserAccess(context.Context, *PostUserAccessRequest) (*MultiUserAccessResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostUserAccess not implemented")
+}
+func (UnimplementedV2Server) GetUserAccess(context.Context, *GetUserAccessRequest) (*SingleUserAccessResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetUserAccess not implemented")
+}
+func (UnimplementedV2Server) PostEmails(context.Context, *PostEmailsRequest) (*MultipleEmailResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostEmails not implemented")
+}
+func (UnimplementedV2Server) ListEmails(context.Context, *ListEmailsRequest) (*MultipleEmailResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListEmails not implemented")
+}
+func (UnimplementedV2Server) PostResendVerifyEmail(context.Context, *PostResendVerifyRequest) (*SingleResendVerifyResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostResendVerifyEmail not implemented")
+}
+func (UnimplementedV2Server) DeleteEmail(context.Context, *DeleteEmailRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteEmail not implemented")
+}
+func (UnimplementedV2Server) PostPrimaryEmail(context.Context, *PostPrimaryEmailRequest) (*SingleEmailResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPrimaryEmail not implemented")
+}
 func (UnimplementedV2Server) PostValidatePassword(context.Context, *PostValidatePasswordRequest) (*SinglePasswordValidationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostValidatePassword not implemented")
+}
+func (UnimplementedV2Server) ListGlobalPasswordPolicies(context.Context, *ListGlobalPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListGlobalPasswordPolicies not implemented")
+}
+func (UnimplementedV2Server) ListPasswordPolicies(context.Context, *ListPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPasswordPolicies not implemented")
+}
+func (UnimplementedV2Server) PostPasswordPolicies(context.Context, *PostPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPasswordPolicies not implemented")
+}
+func (UnimplementedV2Server) PatchPasswordPolicies(context.Context, *PatchPasswordPoliciesRequest) (*MultiplePasswordPoliciesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchPasswordPolicies not implemented")
+}
+func (UnimplementedV2Server) DeletePasswordPolicies(context.Context, *DeletePasswordPoliciesRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeletePasswordPolicies not implemented")
+}
+func (UnimplementedV2Server) GetUserFeatureConfig(context.Context, *UserFeatureConfigRequest) (*SingleUserFeatureConfigResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetUserFeatureConfig not implemented")
+}
+func (UnimplementedV2Server) PostOrganizations(context.Context, *PostOrganizationsRequest) (*MultiOrganizationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostOrganizations not implemented")
+}
+func (UnimplementedV2Server) ListUsersOrganizations(context.Context, *ListUsersOrganizationsRequest) (*MultiUsersOrganizationsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUsersOrganizations not implemented")
+}
+func (UnimplementedV2Server) ListOrganizations(context.Context, *ListOrganizationsRequest) (*MultiOrganizationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
+}
+func (UnimplementedV2Server) GetOrganization(context.Context, *GetOrganizationRequest) (*SingleOrganizationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetOrganization not implemented")
+}
+func (UnimplementedV2Server) PatchOrganization(context.Context, *PatchOrganizationRequest) (*SingleOrganizationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchOrganization not implemented")
+}
+func (UnimplementedV2Server) DeleteOrganization(context.Context, *DeleteOrganizationRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteOrganization not implemented")
+}
+func (UnimplementedV2Server) ListOrganizationMembers(context.Context, *ListOrganizationMembersRequest) (*MultiOrganizationMemberResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOrganizationMembers not implemented")
+}
+func (UnimplementedV2Server) ListOrganizationAppMembers(context.Context, *ListOrganizationAppMembersRequest) (*MultiOrganizationMemberResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOrganizationAppMembers not implemented")
+}
+func (UnimplementedV2Server) PostOrganizationMember(context.Context, *PostOrganizationMemberRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostOrganizationMember not implemented")
+}
+func (UnimplementedV2Server) PatchOrganizationMember(context.Context, *PatchOrganizationMembersRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchOrganizationMember not implemented")
+}
+func (UnimplementedV2Server) DeleteOrganizationMember(context.Context, *DeleteOrganizationMemberRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteOrganizationMember not implemented")
+}
+func (UnimplementedV2Server) PostOrganizationInvitations(context.Context, *PostOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostOrganizationInvitations not implemented")
+}
+func (UnimplementedV2Server) PatchOrganizationInvitations(context.Context, *PatchOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchOrganizationInvitations not implemented")
+}
+func (UnimplementedV2Server) ListOrganizationInvitations(context.Context, *ListOrganizationInvitationsRequest) (*MultiOrganizationInvitationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOrganizationInvitations not implemented")
+}
+func (UnimplementedV2Server) GetOrganizationInvitation(context.Context, *GetOrganizationInvitationRequest) (*SingleOrganizationInvitationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetOrganizationInvitation not implemented")
+}
+func (UnimplementedV2Server) PostDeclineOrganizationInvitation(context.Context, *PostDeclineOrganizationInvitationRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostDeclineOrganizationInvitation not implemented")
+}
+func (UnimplementedV2Server) PostAcceptOrganizationInvitation(context.Context, *PostAcceptOrganizationInvitationRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAcceptOrganizationInvitation not implemented")
+}
+func (UnimplementedV2Server) GetOrganizationInvitationPublic(context.Context, *GetOrganizationInvitationPublicRequest) (*SingleOrganizationInvitationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetOrganizationInvitationPublic not implemented")
+}
+func (UnimplementedV2Server) DeleteRequestingUserFromOrganization(context.Context, *DeleteRequestingUserFromOrganizationRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteRequestingUserFromOrganization not implemented")
+}
+func (UnimplementedV2Server) PostIdentityProviders(context.Context, *PostIdentityProvidersRequest) (*MultiIdentityProviderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostIdentityProviders not implemented")
+}
+func (UnimplementedV2Server) ListIdentityProviders(context.Context, *ListIdentityProvidersRequest) (*MultiIdentityProviderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListIdentityProviders not implemented")
+}
+func (UnimplementedV2Server) GetIdentityProvider(context.Context, *GetIdentityProviderRequest) (*SingleIdentityProviderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetIdentityProvider not implemented")
+}
+func (UnimplementedV2Server) PatchIdentityProviders(context.Context, *PatchIdentityProvidersRequest) (*MultiIdentityProviderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchIdentityProviders not implemented")
+}
+func (UnimplementedV2Server) DeleteIdentityProviders(context.Context, *DeleteIdentityProvidersRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteIdentityProviders not implemented")
+}
+func (UnimplementedV2Server) PostTeams(context.Context, *PostTeamsRequest) (*MultiTeamResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostTeams not implemented")
+}
+func (UnimplementedV2Server) ListTeams(context.Context, *ListTeamsRequest) (*MultiTeamResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTeams not implemented")
+}
+func (UnimplementedV2Server) GetTeam(context.Context, *GetTeamRequest) (*SingleTeamResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetTeam not implemented")
+}
+func (UnimplementedV2Server) PatchTeams(context.Context, *PatchTeamsRequest) (*MultiTeamResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchTeams not implemented")
+}
+func (UnimplementedV2Server) DeleteTeams(context.Context, *DeleteTeamsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteTeams not implemented")
+}
+func (UnimplementedV2Server) PostTeamUsers(context.Context, *PostTeamUsersRequest) (*MultiTeamUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostTeamUsers not implemented")
+}
+func (UnimplementedV2Server) ListTeamUsers(context.Context, *ListTeamUsersRequest) (*MultiTeamUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTeamUsers not implemented")
+}
+func (UnimplementedV2Server) DeleteTeamUsers(context.Context, *DeleteTeamUsersRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteTeamUsers not implemented")
+}
+func (UnimplementedV2Server) PostTeamApps(context.Context, *PostTeamAppsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostTeamApps not implemented")
+}
+func (UnimplementedV2Server) ListTeamApps(context.Context, *ListTeamAppsRequest) (*MultiTeamAppsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTeamApps not implemented")
+}
+func (UnimplementedV2Server) DeleteTeamApps(context.Context, *DeleteTeamAppsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteTeamApps not implemented")
+}
+func (UnimplementedV2Server) ListRoles(context.Context, *ListRolesRequest) (*MultiRoleResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListRoles not implemented")
+}
+func (UnimplementedV2Server) GetRole(context.Context, *GetRoleRequest) (*SingleRoleResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
 func (UnimplementedV2Server) GetSearch(context.Context, *GetSearchRequest) (*SingleSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetSearch not implemented")
@@ -2983,6 +5267,9 @@ func (UnimplementedV2Server) DeleteAnnotationSearchMetrics(context.Context, *Del
 func (UnimplementedV2Server) DeleteSearch(context.Context, *DeleteSearchRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteSearch not implemented")
 }
+func (UnimplementedV2Server) PostAttributeSearch(context.Context, *PostAttributeSearchRequest) (*MultiSearchResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAttributeSearch not implemented")
+}
 func (UnimplementedV2Server) ListAnnotationFilters(context.Context, *ListAnnotationFiltersRequest) (*MultiAnnotationFilterResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotationFilters not implemented")
 }
@@ -2998,11 +5285,128 @@ func (UnimplementedV2Server) PatchAnnotationFilters(context.Context, *PatchAnnot
 func (UnimplementedV2Server) DeleteAnnotationFilters(context.Context, *DeleteAnnotationFiltersRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotationFilters not implemented")
 }
+func (UnimplementedV2Server) ListClusters(context.Context, *ListClustersRequest) (*MultiClusterResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListClusters not implemented")
+}
+func (UnimplementedV2Server) ListAnnotationsForCluster(context.Context, *ListAnnotationsForClusterRequest) (*MultiAnnotationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotationsForCluster not implemented")
+}
+func (UnimplementedV2Server) PostClustersSearches(context.Context, *PostClustersSearchesRequest) (*MultiClusterResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostClustersSearches not implemented")
+}
+func (UnimplementedV2Server) PostVerifyEmail(context.Context, *PostVerifyEmailRequest) (*SingleVerifyEmailResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostVerifyEmail not implemented")
+}
+func (UnimplementedV2Server) PostRequestResetPassword(context.Context, *RequestResetPasswordRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostRequestResetPassword not implemented")
+}
+func (UnimplementedV2Server) PostCompleteResetPassword(context.Context, *CompleteResetPasswordRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostCompleteResetPassword not implemented")
+}
+func (UnimplementedV2Server) PostLogin(context.Context, *PostLoginRequest) (*SingleLoginResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostLogin not implemented")
+}
+func (UnimplementedV2Server) PostSignup(context.Context, *PostSignupRequest) (*SingleLoginResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostSignup not implemented")
+}
+func (UnimplementedV2Server) PostLogout(context.Context, *PostLogoutRequest) (*SingleLogoutResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostLogout not implemented")
+}
+func (UnimplementedV2Server) ListAuthMethods(context.Context, *ListAuthMethodsRequest) (*ListAuthMethodsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListAuthMethods not implemented")
+}
+func (UnimplementedV2Server) ListOrgAuthMethods(context.Context, *ListAuthMethodsRequest) (*ListAuthMethodsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListOrgAuthMethods not implemented")
+}
+func (UnimplementedV2Server) PostIdLoginFinalizer(context.Context, *PostIdLoginFinalizerRequest) (*PostIdLoginFinalizerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostIdLoginFinalizer not implemented")
+}
+func (UnimplementedV2Server) PostLinkIdpUser(context.Context, *PostLinkIdpUserRequest) (*PostLinkIdpUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostLinkIdpUser not implemented")
+}
+func (UnimplementedV2Server) GetLoginInfo(context.Context, *GetLoginInfoRequest) (*GetLoginInfoResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetLoginInfo not implemented")
+}
+func (UnimplementedV2Server) ListAuth2FAMethods(context.Context, *List2FAMethodsRequest) (*List2FAMethodsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListAuth2FAMethods not implemented")
+}
+func (UnimplementedV2Server) PostAuth2FATotpRegisterEnable(context.Context, *PostAuth2FATotpRegisterEnableRequest) (*PostAuth2FATotpRegisterEnableResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAuth2FATotpRegisterEnable not implemented")
+}
+func (UnimplementedV2Server) PostAuth2FATotpRegisterVerify(context.Context, *PostAuth2FATotpRegisterVerifyRequest) (*PostAuth2FATotpRegisterVerifyResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAuth2FATotpRegisterVerify not implemented")
+}
+func (UnimplementedV2Server) PostAuth2FATotpDisable(context.Context, *PostAuth2FATotpDisableRequest) (*PostAuth2FATotpDisableResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAuth2FATotpDisable not implemented")
+}
+func (UnimplementedV2Server) PostAuth2FATotpLogin(context.Context, *PostAuth2FATotpLoginRequest) (*SingleLoginResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAuth2FATotpLogin not implemented")
+}
+func (UnimplementedV2Server) PostAuth2FATotpRecover(context.Context, *PostAuth2FATotpRecoverRequest) (*PostAuth2FATotpRecoverResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAuth2FATotpRecover not implemented")
+}
+func (UnimplementedV2Server) GetAuth2FATotpRecoverConfirm(context.Context, *GetAuth2FATotpRecoverConfirmRequest) (*GetAuth2FATotpRecoverConfirmResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetAuth2FATotpRecoverConfirm not implemented")
+}
+func (UnimplementedV2Server) GetSubscription(context.Context, *GetSubscriptionRequest) (*SingleSubscriptionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetSubscription not implemented")
+}
+func (UnimplementedV2Server) PostSubscription(context.Context, *PostSubscriptionRequest) (*SingleSubscriptionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostSubscription not implemented")
+}
+func (UnimplementedV2Server) ListCreditCards(context.Context, *ListCreditCardsRequest) (*MultipleCreditCardResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListCreditCards not implemented")
+}
+func (UnimplementedV2Server) PostCreditCard(context.Context, *PostCreditCardRequest) (*SingleCreditCardResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostCreditCard not implemented")
+}
+func (UnimplementedV2Server) DeleteCreditCard(context.Context, *DeleteCreditCardRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteCreditCard not implemented")
+}
+func (UnimplementedV2Server) PatchCreditCards(context.Context, *PatchCreditCardsRequest) (*MultipleCreditCardResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchCreditCards not implemented")
+}
+func (UnimplementedV2Server) GetShippingAddress(context.Context, *GetShippingAddressRequest) (*SingleShippingAddressResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetShippingAddress not implemented")
+}
+func (UnimplementedV2Server) PutShippingAddress(context.Context, *PutShippingAddressRequest) (*SingleShippingAddressResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PutShippingAddress not implemented")
+}
+func (UnimplementedV2Server) ListPlans(context.Context, *ListPlansRequest) (*MultiPlanResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPlans not implemented")
+}
 func (UnimplementedV2Server) ListStatusCodes(context.Context, *ListStatusCodesRequest) (*MultiStatusCodeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListStatusCodes not implemented")
 }
 func (UnimplementedV2Server) GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetStatusCode not implemented")
+}
+func (UnimplementedV2Server) GetHealthz(context.Context, *GetHealthzRequest) (*GetHealthzResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetHealthz not implemented")
+}
+func (UnimplementedV2Server) ListUserBillingCycles(context.Context, *ListUserBillingCyclesRequest) (*ListUserBillingCyclesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUserBillingCycles not implemented")
+}
+func (UnimplementedV2Server) ListUserCycles(context.Context, *ListUserCyclesRequest) (*ListUserCyclesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUserCycles not implemented")
+}
+func (UnimplementedV2Server) GetBillingUsage(context.Context, *GetBillingUsageRequest) (*GetBillingUsageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetBillingUsage not implemented")
+}
+func (UnimplementedV2Server) PostHistoricalUsage(context.Context, *PostHistoricalUsageRequest) (*PostHistoricalUsageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostHistoricalUsage not implemented")
+}
+func (UnimplementedV2Server) GetHistoricalUsage(context.Context, *GetHistoricalUsageRequest) (*GetHistoricalUsageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetHistoricalUsage not implemented")
+}
+func (UnimplementedV2Server) ListUsageIntervals(context.Context, *ListUsageIntervalsRequest) (*ListUsageIntervalsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListUsageIntervals not implemented")
+}
+func (UnimplementedV2Server) GetRealtimeUsage(context.Context, *GetRealtimeUsageRequest) (*GetRealtimeUsageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetRealtimeUsage not implemented")
+}
+func (UnimplementedV2Server) PostUsage(context.Context, *PostUsageRequest) (*PostUsageResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostUsage not implemented")
 }
 func (UnimplementedV2Server) ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListCollaborators not implemented")
@@ -3018,6 +5422,18 @@ func (UnimplementedV2Server) DeleteCollaborators(context.Context, *DeleteCollabo
 }
 func (UnimplementedV2Server) ListCollaborations(context.Context, *ListCollaborationsRequest) (*MultiCollaborationsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListCollaborations not implemented")
+}
+func (UnimplementedV2Server) FetchLicense(context.Context, *FetchLicenseRequest) (*FetchLicenseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method FetchLicense not implemented")
+}
+func (UnimplementedV2Server) ListLicenses(context.Context, *ListLicensesRequest) (*MultipleLicensesResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListLicenses not implemented")
+}
+func (UnimplementedV2Server) GetLicense(context.Context, *GetLicenseRequest) (*SingleLicenseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetLicense not implemented")
+}
+func (UnimplementedV2Server) ValidateLicense(context.Context, *ValidateLicenseRequest) (*ValidateLicenseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ValidateLicense not implemented")
 }
 func (UnimplementedV2Server) PostAppDuplications(context.Context, *PostAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAppDuplications not implemented")
@@ -3048,6 +5464,9 @@ func (UnimplementedV2Server) PatchTasks(context.Context, *PatchTasksRequest) (*M
 }
 func (UnimplementedV2Server) DeleteTasks(context.Context, *DeleteTasksRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteTasks not implemented")
+}
+func (UnimplementedV2Server) PatchAnnotationCountsRollup(context.Context, *PatchAnnotationCountsRollupRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotationCountsRollup not implemented")
 }
 func (UnimplementedV2Server) PostLabelOrders(context.Context, *PostLabelOrdersRequest) (*MultiLabelOrderResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostLabelOrders not implemented")
@@ -3085,11 +5504,47 @@ func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequ
 func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValuesAggregate not implemented")
 }
+func (UnimplementedV2Server) PostAnalytics(context.Context, *PostAnalyticsRequest) (*PostAnalyticsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAnalytics not implemented")
+}
+func (UnimplementedV2Server) PostSDKBilling(context.Context, *PostSDKBillingRequest) (*PostSDKBillingResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostSDKBilling not implemented")
+}
+func (UnimplementedV2Server) PostFindDuplicateAnnotationsJobs(context.Context, *PostFindDuplicateAnnotationsJobsRequest) (*MultiFindDuplicateAnnotationsJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostFindDuplicateAnnotationsJobs not implemented")
+}
+func (UnimplementedV2Server) GetFindDuplicateAnnotationsJob(context.Context, *GetFindDuplicateAnnotationsJobRequest) (*SingleFindDuplicateAnnotationsJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetFindDuplicateAnnotationsJob not implemented")
+}
+func (UnimplementedV2Server) ListFindDuplicateAnnotationsJobs(context.Context, *ListFindDuplicateAnnotationsJobsRequest) (*MultiFindDuplicateAnnotationsJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListFindDuplicateAnnotationsJobs not implemented")
+}
+func (UnimplementedV2Server) DeleteFindDuplicateAnnotationsJobs(context.Context, *DeleteFindDuplicateAnnotationsJobsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteFindDuplicateAnnotationsJobs not implemented")
+}
 func (UnimplementedV2Server) PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostTrendingMetricsView not implemented")
 }
 func (UnimplementedV2Server) ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListTrendingMetricsViews not implemented")
+}
+func (UnimplementedV2Server) PostIdValidation(context.Context, *PostIdValidationRequest) (*MultiIdValidationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostIdValidation not implemented")
+}
+func (UnimplementedV2Server) ListTagCategories(context.Context, *ListTagCategoriesRequest) (*MultiTagCategoryResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListTagCategories not implemented")
+}
+func (UnimplementedV2Server) ListWebNotifications(context.Context, *ListWebNotificationsRequest) (*MultiWebNotificationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWebNotifications not implemented")
+}
+func (UnimplementedV2Server) GetWebNotification(context.Context, *GetWebNotificationRequest) (*SingleWebNotificationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetWebNotification not implemented")
+}
+func (UnimplementedV2Server) PatchWebNotifications(context.Context, *PatchWebNotificationsRequest) (*MultiWebNotificationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchWebNotifications not implemented")
+}
+func (UnimplementedV2Server) DeleteWebNotifications(context.Context, *DeleteWebNotificationsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteWebNotifications not implemented")
 }
 func (UnimplementedV2Server) GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModule not implemented")
@@ -3151,11 +5606,29 @@ func (UnimplementedV2Server) DeleteBulkOperations(context.Context, *DeleteBulkOp
 func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
 }
+func (UnimplementedV2Server) ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListNextTaskAssignments not implemented")
+}
+func (UnimplementedV2Server) PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PutTaskAssignments not implemented")
+}
+func (UnimplementedV2Server) PostWaitlistEmails(context.Context, *PostWaitlistEmailsRequest) (*MultiWaitlistEmailResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostWaitlistEmails not implemented")
+}
+func (UnimplementedV2Server) GetSampledPredictMetrics(context.Context, *GetSampledPredictMetricsRequest) (*MultiSampledPredictMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetSampledPredictMetrics not implemented")
+}
+func (UnimplementedV2Server) PostInputsAddJobs(context.Context, *PostInputsAddJobsRequest) (*MultiInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsAddJobs not implemented")
+}
 func (UnimplementedV2Server) ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInputsAddJobs not implemented")
 }
 func (UnimplementedV2Server) GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInputsAddJob not implemented")
+}
+func (UnimplementedV2Server) CancelInputsAddJob(context.Context, *CancelInputsAddJobRequest) (*SingleInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method CancelInputsAddJob not implemented")
 }
 func (UnimplementedV2Server) PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostUploads not implemented")
@@ -3183,6 +5656,24 @@ type UnsafeV2Server interface {
 
 func RegisterV2Server(s grpc.ServiceRegistrar, srv V2Server) {
 	s.RegisterService(&V2_ServiceDesc, srv)
+}
+
+func _V2_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).Echo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/Echo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).Echo(ctx, req.(*TestMessage))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _V2_ListConceptRelations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -3365,6 +5856,186 @@ func _V2_PatchConcepts_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetVocab_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVocabRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetVocab(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetVocab",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetVocab(ctx, req.(*GetVocabRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListVocabs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVocabsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListVocabs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListVocabs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListVocabs(ctx, req.(*ListVocabsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostVocabs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostVocabsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostVocabs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostVocabs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostVocabs(ctx, req.(*PostVocabsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchVocabs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchVocabsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchVocabs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchVocabs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchVocabs(ctx, req.(*PatchVocabsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteVocab_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVocabRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteVocab(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteVocab",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteVocab(ctx, req.(*DeleteVocabRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteVocabs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVocabsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteVocabs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteVocabs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteVocabs(ctx, req.(*DeleteVocabsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListVocabConcepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVocabConceptsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListVocabConcepts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListVocabConcepts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListVocabConcepts(ctx, req.(*ListVocabConceptsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostVocabConcepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostVocabConceptsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostVocabConcepts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostVocabConcepts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostVocabConcepts(ctx, req.(*PostVocabConceptsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteVocabConcept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVocabConceptRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteVocabConcept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteVocabConcept",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteVocabConcept(ctx, req.(*DeleteVocabConceptRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteVocabConcepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVocabConceptsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteVocabConcepts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteVocabConcepts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteVocabConcepts(ctx, req.(*DeleteVocabConceptsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetConceptLanguage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetConceptLanguageRequest)
 	if err := dec(in); err != nil {
@@ -3437,6 +6108,24 @@ func _V2_PatchConceptLanguages_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListConceptReferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListConceptReferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListConceptReferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListConceptReferences",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListConceptReferences(ctx, req.(*ListConceptReferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListKnowledgeGraphs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListKnowledgeGraphsRequest)
 	if err := dec(in); err != nil {
@@ -3487,6 +6176,42 @@ func _V2_PostConceptMappingJobs_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostConceptMappingJobs(ctx, req.(*PostConceptMappingJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListConceptMappings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListConceptMappingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListConceptMappings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListConceptMappings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListConceptMappings(ctx, req.(*ListConceptMappingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostConceptMappings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostConceptMappingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostConceptMappings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostConceptMappings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostConceptMappings(ctx, req.(*PostConceptMappingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3757,6 +6482,60 @@ func _V2_PostInputs_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostInputs(ctx, req.(*PostInputsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInputsFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInputsFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInputsFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInputsFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInputsFile(ctx, req.(*PostInputsFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInputsNiFi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInputsNiFiRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInputsNiFi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInputsNiFi",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInputsNiFi(ctx, req.(*PostInputsNiFiRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInputsDocument_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInputsDocumentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInputsDocument(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInputsDocument",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInputsDocument(ctx, req.(*PostInputsDocumentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4697,6 +7476,42 @@ func _V2_ListModelReferences_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostModelReferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelReferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelReferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelReferences",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelReferences(ctx, req.(*PostModelReferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteModelReferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelReferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteModelReferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteModelReferences",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteModelReferences(ctx, req.(*DeleteModelReferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetModelVersionInputExample_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetModelVersionInputExampleRequest)
 	if err := dec(in); err != nil {
@@ -4733,6 +7548,186 @@ func _V2_ListModelVersionInputExamples_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostModelVersionInputExamples_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelVersionInputExamplesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelVersionInputExamples(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelVersionInputExamples",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelVersionInputExamples(ctx, req.(*PostModelVersionInputExamplesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteModelVersionInputExamples_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelVersionInputExamplesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteModelVersionInputExamples(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteModelVersionInputExamples",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteModelVersionInputExamples(ctx, req.(*DeleteModelVersionInputExamplesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostModelStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelStars(ctx, req.(*PostModelStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteModelStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteModelStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteModelStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteModelStars(ctx, req.(*DeleteModelStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostUserStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostUserStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostUserStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostUserStars(ctx, req.(*PostUserStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteUserStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteUserStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteUserStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteUserStars(ctx, req.(*DeleteUserStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostWorkflowStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostWorkflowStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostWorkflowStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostWorkflowStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostWorkflowStars(ctx, req.(*PostWorkflowStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteWorkflowStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWorkflowStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteWorkflowStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteWorkflowStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteWorkflowStars(ctx, req.(*DeleteWorkflowStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAppStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAppStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAppStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAppStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAppStars(ctx, req.(*PostAppStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteAppStars_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAppStarsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteAppStars(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteAppStars",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteAppStars(ctx, req.(*DeleteAppStarsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetWorkflowRequest)
 	if err := dec(in); err != nil {
@@ -4765,6 +7760,24 @@ func _V2_ListWorkflows_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListWorkflows(ctx, req.(*ListWorkflowsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPublicWorkflows_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPublicWorkflowsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPublicWorkflows(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListPublicWorkflows",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPublicWorkflows(ctx, req.(*ListPublicWorkflowsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4963,6 +7976,96 @@ func _V2_PatchWorkflowVersions_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PatchWorkflowVersions(ctx, req.(*PatchWorkflowVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostWorkflowMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostWorkflowMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostWorkflowMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostWorkflowMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostWorkflowMetrics(ctx, req.(*PostWorkflowMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetWorkflowMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkflowMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetWorkflowMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetWorkflowMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetWorkflowMetrics(ctx, req.(*GetWorkflowMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetWorkflowNodeMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkflowNodeMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetWorkflowNodeMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetWorkflowNodeMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetWorkflowNodeMetrics(ctx, req.(*GetWorkflowNodeMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListWorkflowMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWorkflowMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListWorkflowMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWorkflowMetrics(ctx, req.(*ListWorkflowMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteWorkflowMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWorkflowMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteWorkflowMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteWorkflowMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteWorkflowMetrics(ctx, req.(*DeleteWorkflowMetricsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5273,6 +8376,24 @@ func _V2_PatchApp_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchAppOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAppOwnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAppOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchAppOwner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAppOwner(ctx, req.(*PatchAppOwnerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostAppsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostAppsSearchesRequest)
 	if err := dec(in); err != nil {
@@ -5291,6 +8412,204 @@ func _V2_PostAppsSearches_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUsers(ctx, req.(*ListUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostUserConsent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserConsentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostUserConsent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostUserConsent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostUserConsent(ctx, req.(*PostUserConsentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchUser(ctx, req.(*PatchUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostUserAccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostUserAccess(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostUserAccess",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostUserAccess(ctx, req.(*PostUserAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetUserAccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetUserAccess(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetUserAccess",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetUserAccess(ctx, req.(*GetUserAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostEmailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostEmails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostEmails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostEmails(ctx, req.(*PostEmailsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEmailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListEmails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListEmails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListEmails(ctx, req.(*ListEmailsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostResendVerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostResendVerifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostResendVerifyEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostResendVerifyEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostResendVerifyEmail(ctx, req.(*PostResendVerifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteEmail(ctx, req.(*DeleteEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPrimaryEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPrimaryEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPrimaryEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostPrimaryEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPrimaryEmail(ctx, req.(*PostPrimaryEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostValidatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostValidatePasswordRequest)
 	if err := dec(in); err != nil {
@@ -5305,6 +8624,780 @@ func _V2_PostValidatePassword_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostValidatePassword(ctx, req.(*PostValidatePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListGlobalPasswordPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGlobalPasswordPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListGlobalPasswordPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListGlobalPasswordPolicies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListGlobalPasswordPolicies(ctx, req.(*ListGlobalPasswordPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPasswordPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPasswordPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPasswordPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListPasswordPolicies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPasswordPolicies(ctx, req.(*ListPasswordPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPasswordPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPasswordPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPasswordPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostPasswordPolicies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPasswordPolicies(ctx, req.(*PostPasswordPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchPasswordPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchPasswordPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchPasswordPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchPasswordPolicies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchPasswordPolicies(ctx, req.(*PatchPasswordPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeletePasswordPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePasswordPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeletePasswordPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeletePasswordPolicies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeletePasswordPolicies(ctx, req.(*DeletePasswordPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetUserFeatureConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserFeatureConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetUserFeatureConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetUserFeatureConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetUserFeatureConfig(ctx, req.(*UserFeatureConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostOrganizationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostOrganizations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostOrganizations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostOrganizations(ctx, req.(*PostOrganizationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUsersOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersOrganizationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUsersOrganizations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUsersOrganizations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUsersOrganizations(ctx, req.(*ListUsersOrganizationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOrganizations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOrganizations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetOrganization",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetOrganization(ctx, req.(*GetOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchOrganization",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchOrganization(ctx, req.(*PatchOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteOrganization",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteOrganization(ctx, req.(*DeleteOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOrganizationMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOrganizationMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOrganizationMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOrganizationMembers(ctx, req.(*ListOrganizationMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOrganizationAppMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationAppMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOrganizationAppMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOrganizationAppMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOrganizationAppMembers(ctx, req.(*ListOrganizationAppMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostOrganizationMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostOrganizationMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostOrganizationMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostOrganizationMember",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostOrganizationMember(ctx, req.(*PostOrganizationMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchOrganizationMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchOrganizationMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchOrganizationMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchOrganizationMember",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchOrganizationMember(ctx, req.(*PatchOrganizationMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteOrganizationMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteOrganizationMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteOrganizationMember",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteOrganizationMember(ctx, req.(*DeleteOrganizationMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostOrganizationInvitations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostOrganizationInvitationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostOrganizationInvitations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostOrganizationInvitations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostOrganizationInvitations(ctx, req.(*PostOrganizationInvitationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchOrganizationInvitations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchOrganizationInvitationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchOrganizationInvitations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchOrganizationInvitations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchOrganizationInvitations(ctx, req.(*PatchOrganizationInvitationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOrganizationInvitations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationInvitationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOrganizationInvitations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOrganizationInvitations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOrganizationInvitations(ctx, req.(*ListOrganizationInvitationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetOrganizationInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationInvitationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetOrganizationInvitation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetOrganizationInvitation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetOrganizationInvitation(ctx, req.(*GetOrganizationInvitationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostDeclineOrganizationInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostDeclineOrganizationInvitationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostDeclineOrganizationInvitation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostDeclineOrganizationInvitation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostDeclineOrganizationInvitation(ctx, req.(*PostDeclineOrganizationInvitationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAcceptOrganizationInvitation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAcceptOrganizationInvitationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAcceptOrganizationInvitation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAcceptOrganizationInvitation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAcceptOrganizationInvitation(ctx, req.(*PostAcceptOrganizationInvitationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetOrganizationInvitationPublic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationInvitationPublicRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetOrganizationInvitationPublic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetOrganizationInvitationPublic",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetOrganizationInvitationPublic(ctx, req.(*GetOrganizationInvitationPublicRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteRequestingUserFromOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequestingUserFromOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteRequestingUserFromOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteRequestingUserFromOrganization",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteRequestingUserFromOrganization(ctx, req.(*DeleteRequestingUserFromOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostIdentityProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostIdentityProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostIdentityProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostIdentityProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostIdentityProviders(ctx, req.(*PostIdentityProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListIdentityProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIdentityProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListIdentityProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListIdentityProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListIdentityProviders(ctx, req.(*ListIdentityProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetIdentityProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetIdentityProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetIdentityProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetIdentityProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetIdentityProvider(ctx, req.(*GetIdentityProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchIdentityProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchIdentityProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchIdentityProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchIdentityProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchIdentityProviders(ctx, req.(*PatchIdentityProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteIdentityProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteIdentityProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteIdentityProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteIdentityProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteIdentityProviders(ctx, req.(*DeleteIdentityProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostTeams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostTeamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostTeams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostTeams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostTeams(ctx, req.(*PostTeamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListTeams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTeamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTeams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTeams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTeams(ctx, req.(*ListTeamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetTeam_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTeamRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetTeam(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetTeam",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetTeam(ctx, req.(*GetTeamRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchTeams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchTeamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchTeams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchTeams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchTeams(ctx, req.(*PatchTeamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteTeams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTeamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteTeams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteTeams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteTeams(ctx, req.(*DeleteTeamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostTeamUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostTeamUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostTeamUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostTeamUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostTeamUsers(ctx, req.(*PostTeamUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListTeamUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTeamUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTeamUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTeamUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTeamUsers(ctx, req.(*ListTeamUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteTeamUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTeamUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteTeamUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteTeamUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteTeamUsers(ctx, req.(*DeleteTeamUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostTeamApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostTeamAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostTeamApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostTeamApps",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostTeamApps(ctx, req.(*PostTeamAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListTeamApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTeamAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTeamApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTeamApps",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTeamApps(ctx, req.(*ListTeamAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteTeamApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTeamAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteTeamApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteTeamApps",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteTeamApps(ctx, req.(*DeleteTeamAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListRoles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListRoles(ctx, req.(*ListRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetRole",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetRole(ctx, req.(*GetRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5489,6 +9582,24 @@ func _V2_DeleteSearch_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostAttributeSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAttributeSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAttributeSearch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAttributeSearch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAttributeSearch(ctx, req.(*PostAttributeSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListAnnotationFilters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAnnotationFiltersRequest)
 	if err := dec(in); err != nil {
@@ -5579,6 +9690,546 @@ func _V2_DeleteAnnotationFilters_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListClusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListClustersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListClusters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListClusters",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListClusters(ctx, req.(*ListClustersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListAnnotationsForCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAnnotationsForClusterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListAnnotationsForCluster(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListAnnotationsForCluster",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListAnnotationsForCluster(ctx, req.(*ListAnnotationsForClusterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostClustersSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostClustersSearchesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostClustersSearches(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostClustersSearches",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostClustersSearches(ctx, req.(*PostClustersSearchesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostVerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostVerifyEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostVerifyEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostVerifyEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostVerifyEmail(ctx, req.(*PostVerifyEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostRequestResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostRequestResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostRequestResetPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostRequestResetPassword(ctx, req.(*RequestResetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostCompleteResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostCompleteResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostCompleteResetPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostCompleteResetPassword(ctx, req.(*CompleteResetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostLogin(ctx, req.(*PostLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostSignupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostSignup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostSignup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostSignup(ctx, req.(*PostSignupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostLogout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostLogout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostLogout(ctx, req.(*PostLogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListAuthMethods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthMethodsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListAuthMethods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListAuthMethods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListAuthMethods(ctx, req.(*ListAuthMethodsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListOrgAuthMethods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthMethodsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListOrgAuthMethods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListOrgAuthMethods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListOrgAuthMethods(ctx, req.(*ListAuthMethodsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostIdLoginFinalizer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostIdLoginFinalizerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostIdLoginFinalizer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostIdLoginFinalizer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostIdLoginFinalizer(ctx, req.(*PostIdLoginFinalizerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostLinkIdpUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLinkIdpUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostLinkIdpUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostLinkIdpUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostLinkIdpUser(ctx, req.(*PostLinkIdpUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetLoginInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLoginInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetLoginInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetLoginInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetLoginInfo(ctx, req.(*GetLoginInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListAuth2FAMethods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(List2FAMethodsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListAuth2FAMethods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListAuth2FAMethods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListAuth2FAMethods(ctx, req.(*List2FAMethodsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAuth2FATotpRegisterEnable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuth2FATotpRegisterEnableRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAuth2FATotpRegisterEnable(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAuth2FATotpRegisterEnable",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAuth2FATotpRegisterEnable(ctx, req.(*PostAuth2FATotpRegisterEnableRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAuth2FATotpRegisterVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuth2FATotpRegisterVerifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAuth2FATotpRegisterVerify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAuth2FATotpRegisterVerify",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAuth2FATotpRegisterVerify(ctx, req.(*PostAuth2FATotpRegisterVerifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAuth2FATotpDisable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuth2FATotpDisableRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAuth2FATotpDisable(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAuth2FATotpDisable",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAuth2FATotpDisable(ctx, req.(*PostAuth2FATotpDisableRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAuth2FATotpLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuth2FATotpLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAuth2FATotpLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAuth2FATotpLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAuth2FATotpLogin(ctx, req.(*PostAuth2FATotpLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAuth2FATotpRecover_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuth2FATotpRecoverRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAuth2FATotpRecover(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAuth2FATotpRecover",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAuth2FATotpRecover(ctx, req.(*PostAuth2FATotpRecoverRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetAuth2FATotpRecoverConfirm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuth2FATotpRecoverConfirmRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetAuth2FATotpRecoverConfirm(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetAuth2FATotpRecoverConfirm",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetAuth2FATotpRecoverConfirm(ctx, req.(*GetAuth2FATotpRecoverConfirmRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSubscriptionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetSubscription(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetSubscription",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetSubscription(ctx, req.(*GetSubscriptionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostSubscriptionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostSubscription(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostSubscription",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostSubscription(ctx, req.(*PostSubscriptionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListCreditCards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCreditCardsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListCreditCards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListCreditCards",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListCreditCards(ctx, req.(*ListCreditCardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostCreditCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostCreditCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostCreditCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostCreditCard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostCreditCard(ctx, req.(*PostCreditCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteCreditCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCreditCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteCreditCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteCreditCard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteCreditCard(ctx, req.(*DeleteCreditCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchCreditCards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchCreditCardsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchCreditCards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchCreditCards",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchCreditCards(ctx, req.(*PatchCreditCardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetShippingAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetShippingAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetShippingAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetShippingAddress(ctx, req.(*GetShippingAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PutShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutShippingAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PutShippingAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PutShippingAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PutShippingAddress(ctx, req.(*PutShippingAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPlans_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPlansRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPlans(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListPlans",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPlans(ctx, req.(*ListPlansRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListStatusCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListStatusCodesRequest)
 	if err := dec(in); err != nil {
@@ -5611,6 +10262,168 @@ func _V2_GetStatusCode_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetStatusCode(ctx, req.(*GetStatusCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetHealthz_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHealthzRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetHealthz(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetHealthz",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetHealthz(ctx, req.(*GetHealthzRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUserBillingCycles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserBillingCyclesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUserBillingCycles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUserBillingCycles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUserBillingCycles(ctx, req.(*ListUserBillingCyclesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUserCycles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserCyclesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUserCycles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUserCycles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUserCycles(ctx, req.(*ListUserCyclesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetBillingUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBillingUsageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetBillingUsage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetBillingUsage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetBillingUsage(ctx, req.(*GetBillingUsageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostHistoricalUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostHistoricalUsageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostHistoricalUsage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostHistoricalUsage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostHistoricalUsage(ctx, req.(*PostHistoricalUsageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetHistoricalUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHistoricalUsageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetHistoricalUsage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetHistoricalUsage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetHistoricalUsage(ctx, req.(*GetHistoricalUsageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListUsageIntervals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsageIntervalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListUsageIntervals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListUsageIntervals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListUsageIntervals(ctx, req.(*ListUsageIntervalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetRealtimeUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRealtimeUsageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetRealtimeUsage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetRealtimeUsage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetRealtimeUsage(ctx, req.(*GetRealtimeUsageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUsageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostUsage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostUsage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostUsage(ctx, req.(*PostUsageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5701,6 +10514,78 @@ func _V2_ListCollaborations_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListCollaborations(ctx, req.(*ListCollaborationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_FetchLicense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FetchLicenseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).FetchLicense(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/FetchLicense",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).FetchLicense(ctx, req.(*FetchLicenseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListLicenses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLicensesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListLicenses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListLicenses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListLicenses(ctx, req.(*ListLicensesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetLicense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLicenseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetLicense(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetLicense",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetLicense(ctx, req.(*GetLicenseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ValidateLicense_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateLicenseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ValidateLicense(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ValidateLicense",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ValidateLicense(ctx, req.(*ValidateLicenseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5881,6 +10766,24 @@ func _V2_DeleteTasks_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeleteTasks(ctx, req.(*DeleteTasksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchAnnotationCountsRollup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAnnotationCountsRollupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAnnotationCountsRollup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchAnnotationCountsRollup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAnnotationCountsRollup(ctx, req.(*PatchAnnotationCountsRollupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6101,6 +11004,114 @@ func _V2_PostStatValuesAggregate_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostAnalytics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAnalyticsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAnalytics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostAnalytics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAnalytics(ctx, req.(*PostAnalyticsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostSDKBilling_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostSDKBillingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostSDKBilling(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostSDKBilling",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostSDKBilling(ctx, req.(*PostSDKBillingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostFindDuplicateAnnotationsJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostFindDuplicateAnnotationsJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostFindDuplicateAnnotationsJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostFindDuplicateAnnotationsJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostFindDuplicateAnnotationsJobs(ctx, req.(*PostFindDuplicateAnnotationsJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetFindDuplicateAnnotationsJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFindDuplicateAnnotationsJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetFindDuplicateAnnotationsJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetFindDuplicateAnnotationsJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetFindDuplicateAnnotationsJob(ctx, req.(*GetFindDuplicateAnnotationsJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListFindDuplicateAnnotationsJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFindDuplicateAnnotationsJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListFindDuplicateAnnotationsJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListFindDuplicateAnnotationsJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListFindDuplicateAnnotationsJobs(ctx, req.(*ListFindDuplicateAnnotationsJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteFindDuplicateAnnotationsJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFindDuplicateAnnotationsJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteFindDuplicateAnnotationsJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteFindDuplicateAnnotationsJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteFindDuplicateAnnotationsJobs(ctx, req.(*DeleteFindDuplicateAnnotationsJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostTrendingMetricsView_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostTrendingMetricsViewRequest)
 	if err := dec(in); err != nil {
@@ -6133,6 +11144,114 @@ func _V2_ListTrendingMetricsViews_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListTrendingMetricsViews(ctx, req.(*ListTrendingMetricsViewsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostIdValidation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostIdValidationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostIdValidation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostIdValidation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostIdValidation(ctx, req.(*PostIdValidationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListTagCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTagCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListTagCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListTagCategories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListTagCategories(ctx, req.(*ListTagCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListWebNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWebNotificationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWebNotifications(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListWebNotifications",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWebNotifications(ctx, req.(*ListWebNotificationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetWebNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWebNotificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetWebNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetWebNotification",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetWebNotification(ctx, req.(*GetWebNotificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchWebNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchWebNotificationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchWebNotifications(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchWebNotifications",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchWebNotifications(ctx, req.(*PatchWebNotificationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteWebNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWebNotificationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteWebNotifications(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteWebNotifications",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteWebNotifications(ctx, req.(*DeleteWebNotificationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6497,6 +11616,96 @@ func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListNextTaskAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNextTaskAssignmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListNextTaskAssignments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListNextTaskAssignments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListNextTaskAssignments(ctx, req.(*ListNextTaskAssignmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PutTaskAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutTaskAssignmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PutTaskAssignments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PutTaskAssignments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PutTaskAssignments(ctx, req.(*PutTaskAssignmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostWaitlistEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostWaitlistEmailsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostWaitlistEmails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostWaitlistEmails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostWaitlistEmails(ctx, req.(*PostWaitlistEmailsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetSampledPredictMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSampledPredictMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetSampledPredictMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetSampledPredictMetrics",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetSampledPredictMetrics(ctx, req.(*GetSampledPredictMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInputsAddJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInputsAddJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInputsAddJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInputsAddJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInputsAddJobs(ctx, req.(*PostInputsAddJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListInputsAddJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListInputsAddJobsRequest)
 	if err := dec(in); err != nil {
@@ -6529,6 +11738,24 @@ func _V2_GetInputsAddJob_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetInputsAddJob(ctx, req.(*GetInputsAddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_CancelInputsAddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelInputsAddJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).CancelInputsAddJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/CancelInputsAddJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).CancelInputsAddJob(ctx, req.(*CancelInputsAddJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6631,6 +11858,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*V2Server)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Echo",
+			Handler:    _V2_Echo_Handler,
+		},
+		{
 			MethodName: "ListConceptRelations",
 			Handler:    _V2_ListConceptRelations_Handler,
 		},
@@ -6671,6 +11902,46 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchConcepts_Handler,
 		},
 		{
+			MethodName: "GetVocab",
+			Handler:    _V2_GetVocab_Handler,
+		},
+		{
+			MethodName: "ListVocabs",
+			Handler:    _V2_ListVocabs_Handler,
+		},
+		{
+			MethodName: "PostVocabs",
+			Handler:    _V2_PostVocabs_Handler,
+		},
+		{
+			MethodName: "PatchVocabs",
+			Handler:    _V2_PatchVocabs_Handler,
+		},
+		{
+			MethodName: "DeleteVocab",
+			Handler:    _V2_DeleteVocab_Handler,
+		},
+		{
+			MethodName: "DeleteVocabs",
+			Handler:    _V2_DeleteVocabs_Handler,
+		},
+		{
+			MethodName: "ListVocabConcepts",
+			Handler:    _V2_ListVocabConcepts_Handler,
+		},
+		{
+			MethodName: "PostVocabConcepts",
+			Handler:    _V2_PostVocabConcepts_Handler,
+		},
+		{
+			MethodName: "DeleteVocabConcept",
+			Handler:    _V2_DeleteVocabConcept_Handler,
+		},
+		{
+			MethodName: "DeleteVocabConcepts",
+			Handler:    _V2_DeleteVocabConcepts_Handler,
+		},
+		{
 			MethodName: "GetConceptLanguage",
 			Handler:    _V2_GetConceptLanguage_Handler,
 		},
@@ -6687,6 +11958,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchConceptLanguages_Handler,
 		},
 		{
+			MethodName: "ListConceptReferences",
+			Handler:    _V2_ListConceptReferences_Handler,
+		},
+		{
 			MethodName: "ListKnowledgeGraphs",
 			Handler:    _V2_ListKnowledgeGraphs_Handler,
 		},
@@ -6697,6 +11972,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostConceptMappingJobs",
 			Handler:    _V2_PostConceptMappingJobs_Handler,
+		},
+		{
+			MethodName: "ListConceptMappings",
+			Handler:    _V2_ListConceptMappings_Handler,
+		},
+		{
+			MethodName: "PostConceptMappings",
+			Handler:    _V2_PostConceptMappings_Handler,
 		},
 		{
 			MethodName: "GetAnnotation",
@@ -6757,6 +12040,18 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostInputs",
 			Handler:    _V2_PostInputs_Handler,
+		},
+		{
+			MethodName: "PostInputsFile",
+			Handler:    _V2_PostInputsFile_Handler,
+		},
+		{
+			MethodName: "PostInputsNiFi",
+			Handler:    _V2_PostInputsNiFi_Handler,
+		},
+		{
+			MethodName: "PostInputsDocument",
+			Handler:    _V2_PostInputsDocument_Handler,
 		},
 		{
 			MethodName: "PatchInputs",
@@ -6967,6 +12262,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_ListModelReferences_Handler,
 		},
 		{
+			MethodName: "PostModelReferences",
+			Handler:    _V2_PostModelReferences_Handler,
+		},
+		{
+			MethodName: "DeleteModelReferences",
+			Handler:    _V2_DeleteModelReferences_Handler,
+		},
+		{
 			MethodName: "GetModelVersionInputExample",
 			Handler:    _V2_GetModelVersionInputExample_Handler,
 		},
@@ -6975,12 +12278,56 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_ListModelVersionInputExamples_Handler,
 		},
 		{
+			MethodName: "PostModelVersionInputExamples",
+			Handler:    _V2_PostModelVersionInputExamples_Handler,
+		},
+		{
+			MethodName: "DeleteModelVersionInputExamples",
+			Handler:    _V2_DeleteModelVersionInputExamples_Handler,
+		},
+		{
+			MethodName: "PostModelStars",
+			Handler:    _V2_PostModelStars_Handler,
+		},
+		{
+			MethodName: "DeleteModelStars",
+			Handler:    _V2_DeleteModelStars_Handler,
+		},
+		{
+			MethodName: "PostUserStars",
+			Handler:    _V2_PostUserStars_Handler,
+		},
+		{
+			MethodName: "DeleteUserStars",
+			Handler:    _V2_DeleteUserStars_Handler,
+		},
+		{
+			MethodName: "PostWorkflowStars",
+			Handler:    _V2_PostWorkflowStars_Handler,
+		},
+		{
+			MethodName: "DeleteWorkflowStars",
+			Handler:    _V2_DeleteWorkflowStars_Handler,
+		},
+		{
+			MethodName: "PostAppStars",
+			Handler:    _V2_PostAppStars_Handler,
+		},
+		{
+			MethodName: "DeleteAppStars",
+			Handler:    _V2_DeleteAppStars_Handler,
+		},
+		{
 			MethodName: "GetWorkflow",
 			Handler:    _V2_GetWorkflow_Handler,
 		},
 		{
 			MethodName: "ListWorkflows",
 			Handler:    _V2_ListWorkflows_Handler,
+		},
+		{
+			MethodName: "ListPublicWorkflows",
+			Handler:    _V2_ListPublicWorkflows_Handler,
 		},
 		{
 			MethodName: "PostWorkflows",
@@ -7025,6 +12372,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PatchWorkflowVersions",
 			Handler:    _V2_PatchWorkflowVersions_Handler,
+		},
+		{
+			MethodName: "PostWorkflowMetrics",
+			Handler:    _V2_PostWorkflowMetrics_Handler,
+		},
+		{
+			MethodName: "GetWorkflowMetrics",
+			Handler:    _V2_GetWorkflowMetrics_Handler,
+		},
+		{
+			MethodName: "GetWorkflowNodeMetrics",
+			Handler:    _V2_GetWorkflowNodeMetrics_Handler,
+		},
+		{
+			MethodName: "ListWorkflowMetrics",
+			Handler:    _V2_ListWorkflowMetrics_Handler,
+		},
+		{
+			MethodName: "DeleteWorkflowMetrics",
+			Handler:    _V2_DeleteWorkflowMetrics_Handler,
 		},
 		{
 			MethodName: "GetKey",
@@ -7095,12 +12462,232 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchApp_Handler,
 		},
 		{
+			MethodName: "PatchAppOwner",
+			Handler:    _V2_PatchAppOwner_Handler,
+		},
+		{
 			MethodName: "PostAppsSearches",
 			Handler:    _V2_PostAppsSearches_Handler,
 		},
 		{
+			MethodName: "GetUser",
+			Handler:    _V2_GetUser_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _V2_ListUsers_Handler,
+		},
+		{
+			MethodName: "PostUserConsent",
+			Handler:    _V2_PostUserConsent_Handler,
+		},
+		{
+			MethodName: "PatchUser",
+			Handler:    _V2_PatchUser_Handler,
+		},
+		{
+			MethodName: "PostUserAccess",
+			Handler:    _V2_PostUserAccess_Handler,
+		},
+		{
+			MethodName: "GetUserAccess",
+			Handler:    _V2_GetUserAccess_Handler,
+		},
+		{
+			MethodName: "PostEmails",
+			Handler:    _V2_PostEmails_Handler,
+		},
+		{
+			MethodName: "ListEmails",
+			Handler:    _V2_ListEmails_Handler,
+		},
+		{
+			MethodName: "PostResendVerifyEmail",
+			Handler:    _V2_PostResendVerifyEmail_Handler,
+		},
+		{
+			MethodName: "DeleteEmail",
+			Handler:    _V2_DeleteEmail_Handler,
+		},
+		{
+			MethodName: "PostPrimaryEmail",
+			Handler:    _V2_PostPrimaryEmail_Handler,
+		},
+		{
 			MethodName: "PostValidatePassword",
 			Handler:    _V2_PostValidatePassword_Handler,
+		},
+		{
+			MethodName: "ListGlobalPasswordPolicies",
+			Handler:    _V2_ListGlobalPasswordPolicies_Handler,
+		},
+		{
+			MethodName: "ListPasswordPolicies",
+			Handler:    _V2_ListPasswordPolicies_Handler,
+		},
+		{
+			MethodName: "PostPasswordPolicies",
+			Handler:    _V2_PostPasswordPolicies_Handler,
+		},
+		{
+			MethodName: "PatchPasswordPolicies",
+			Handler:    _V2_PatchPasswordPolicies_Handler,
+		},
+		{
+			MethodName: "DeletePasswordPolicies",
+			Handler:    _V2_DeletePasswordPolicies_Handler,
+		},
+		{
+			MethodName: "GetUserFeatureConfig",
+			Handler:    _V2_GetUserFeatureConfig_Handler,
+		},
+		{
+			MethodName: "PostOrganizations",
+			Handler:    _V2_PostOrganizations_Handler,
+		},
+		{
+			MethodName: "ListUsersOrganizations",
+			Handler:    _V2_ListUsersOrganizations_Handler,
+		},
+		{
+			MethodName: "ListOrganizations",
+			Handler:    _V2_ListOrganizations_Handler,
+		},
+		{
+			MethodName: "GetOrganization",
+			Handler:    _V2_GetOrganization_Handler,
+		},
+		{
+			MethodName: "PatchOrganization",
+			Handler:    _V2_PatchOrganization_Handler,
+		},
+		{
+			MethodName: "DeleteOrganization",
+			Handler:    _V2_DeleteOrganization_Handler,
+		},
+		{
+			MethodName: "ListOrganizationMembers",
+			Handler:    _V2_ListOrganizationMembers_Handler,
+		},
+		{
+			MethodName: "ListOrganizationAppMembers",
+			Handler:    _V2_ListOrganizationAppMembers_Handler,
+		},
+		{
+			MethodName: "PostOrganizationMember",
+			Handler:    _V2_PostOrganizationMember_Handler,
+		},
+		{
+			MethodName: "PatchOrganizationMember",
+			Handler:    _V2_PatchOrganizationMember_Handler,
+		},
+		{
+			MethodName: "DeleteOrganizationMember",
+			Handler:    _V2_DeleteOrganizationMember_Handler,
+		},
+		{
+			MethodName: "PostOrganizationInvitations",
+			Handler:    _V2_PostOrganizationInvitations_Handler,
+		},
+		{
+			MethodName: "PatchOrganizationInvitations",
+			Handler:    _V2_PatchOrganizationInvitations_Handler,
+		},
+		{
+			MethodName: "ListOrganizationInvitations",
+			Handler:    _V2_ListOrganizationInvitations_Handler,
+		},
+		{
+			MethodName: "GetOrganizationInvitation",
+			Handler:    _V2_GetOrganizationInvitation_Handler,
+		},
+		{
+			MethodName: "PostDeclineOrganizationInvitation",
+			Handler:    _V2_PostDeclineOrganizationInvitation_Handler,
+		},
+		{
+			MethodName: "PostAcceptOrganizationInvitation",
+			Handler:    _V2_PostAcceptOrganizationInvitation_Handler,
+		},
+		{
+			MethodName: "GetOrganizationInvitationPublic",
+			Handler:    _V2_GetOrganizationInvitationPublic_Handler,
+		},
+		{
+			MethodName: "DeleteRequestingUserFromOrganization",
+			Handler:    _V2_DeleteRequestingUserFromOrganization_Handler,
+		},
+		{
+			MethodName: "PostIdentityProviders",
+			Handler:    _V2_PostIdentityProviders_Handler,
+		},
+		{
+			MethodName: "ListIdentityProviders",
+			Handler:    _V2_ListIdentityProviders_Handler,
+		},
+		{
+			MethodName: "GetIdentityProvider",
+			Handler:    _V2_GetIdentityProvider_Handler,
+		},
+		{
+			MethodName: "PatchIdentityProviders",
+			Handler:    _V2_PatchIdentityProviders_Handler,
+		},
+		{
+			MethodName: "DeleteIdentityProviders",
+			Handler:    _V2_DeleteIdentityProviders_Handler,
+		},
+		{
+			MethodName: "PostTeams",
+			Handler:    _V2_PostTeams_Handler,
+		},
+		{
+			MethodName: "ListTeams",
+			Handler:    _V2_ListTeams_Handler,
+		},
+		{
+			MethodName: "GetTeam",
+			Handler:    _V2_GetTeam_Handler,
+		},
+		{
+			MethodName: "PatchTeams",
+			Handler:    _V2_PatchTeams_Handler,
+		},
+		{
+			MethodName: "DeleteTeams",
+			Handler:    _V2_DeleteTeams_Handler,
+		},
+		{
+			MethodName: "PostTeamUsers",
+			Handler:    _V2_PostTeamUsers_Handler,
+		},
+		{
+			MethodName: "ListTeamUsers",
+			Handler:    _V2_ListTeamUsers_Handler,
+		},
+		{
+			MethodName: "DeleteTeamUsers",
+			Handler:    _V2_DeleteTeamUsers_Handler,
+		},
+		{
+			MethodName: "PostTeamApps",
+			Handler:    _V2_PostTeamApps_Handler,
+		},
+		{
+			MethodName: "ListTeamApps",
+			Handler:    _V2_ListTeamApps_Handler,
+		},
+		{
+			MethodName: "DeleteTeamApps",
+			Handler:    _V2_DeleteTeamApps_Handler,
+		},
+		{
+			MethodName: "ListRoles",
+			Handler:    _V2_ListRoles_Handler,
+		},
+		{
+			MethodName: "GetRole",
+			Handler:    _V2_GetRole_Handler,
 		},
 		{
 			MethodName: "GetSearch",
@@ -7143,6 +12730,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteSearch_Handler,
 		},
 		{
+			MethodName: "PostAttributeSearch",
+			Handler:    _V2_PostAttributeSearch_Handler,
+		},
+		{
 			MethodName: "ListAnnotationFilters",
 			Handler:    _V2_ListAnnotationFilters_Handler,
 		},
@@ -7163,12 +12754,168 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteAnnotationFilters_Handler,
 		},
 		{
+			MethodName: "ListClusters",
+			Handler:    _V2_ListClusters_Handler,
+		},
+		{
+			MethodName: "ListAnnotationsForCluster",
+			Handler:    _V2_ListAnnotationsForCluster_Handler,
+		},
+		{
+			MethodName: "PostClustersSearches",
+			Handler:    _V2_PostClustersSearches_Handler,
+		},
+		{
+			MethodName: "PostVerifyEmail",
+			Handler:    _V2_PostVerifyEmail_Handler,
+		},
+		{
+			MethodName: "PostRequestResetPassword",
+			Handler:    _V2_PostRequestResetPassword_Handler,
+		},
+		{
+			MethodName: "PostCompleteResetPassword",
+			Handler:    _V2_PostCompleteResetPassword_Handler,
+		},
+		{
+			MethodName: "PostLogin",
+			Handler:    _V2_PostLogin_Handler,
+		},
+		{
+			MethodName: "PostSignup",
+			Handler:    _V2_PostSignup_Handler,
+		},
+		{
+			MethodName: "PostLogout",
+			Handler:    _V2_PostLogout_Handler,
+		},
+		{
+			MethodName: "ListAuthMethods",
+			Handler:    _V2_ListAuthMethods_Handler,
+		},
+		{
+			MethodName: "ListOrgAuthMethods",
+			Handler:    _V2_ListOrgAuthMethods_Handler,
+		},
+		{
+			MethodName: "PostIdLoginFinalizer",
+			Handler:    _V2_PostIdLoginFinalizer_Handler,
+		},
+		{
+			MethodName: "PostLinkIdpUser",
+			Handler:    _V2_PostLinkIdpUser_Handler,
+		},
+		{
+			MethodName: "GetLoginInfo",
+			Handler:    _V2_GetLoginInfo_Handler,
+		},
+		{
+			MethodName: "ListAuth2FAMethods",
+			Handler:    _V2_ListAuth2FAMethods_Handler,
+		},
+		{
+			MethodName: "PostAuth2FATotpRegisterEnable",
+			Handler:    _V2_PostAuth2FATotpRegisterEnable_Handler,
+		},
+		{
+			MethodName: "PostAuth2FATotpRegisterVerify",
+			Handler:    _V2_PostAuth2FATotpRegisterVerify_Handler,
+		},
+		{
+			MethodName: "PostAuth2FATotpDisable",
+			Handler:    _V2_PostAuth2FATotpDisable_Handler,
+		},
+		{
+			MethodName: "PostAuth2FATotpLogin",
+			Handler:    _V2_PostAuth2FATotpLogin_Handler,
+		},
+		{
+			MethodName: "PostAuth2FATotpRecover",
+			Handler:    _V2_PostAuth2FATotpRecover_Handler,
+		},
+		{
+			MethodName: "GetAuth2FATotpRecoverConfirm",
+			Handler:    _V2_GetAuth2FATotpRecoverConfirm_Handler,
+		},
+		{
+			MethodName: "GetSubscription",
+			Handler:    _V2_GetSubscription_Handler,
+		},
+		{
+			MethodName: "PostSubscription",
+			Handler:    _V2_PostSubscription_Handler,
+		},
+		{
+			MethodName: "ListCreditCards",
+			Handler:    _V2_ListCreditCards_Handler,
+		},
+		{
+			MethodName: "PostCreditCard",
+			Handler:    _V2_PostCreditCard_Handler,
+		},
+		{
+			MethodName: "DeleteCreditCard",
+			Handler:    _V2_DeleteCreditCard_Handler,
+		},
+		{
+			MethodName: "PatchCreditCards",
+			Handler:    _V2_PatchCreditCards_Handler,
+		},
+		{
+			MethodName: "GetShippingAddress",
+			Handler:    _V2_GetShippingAddress_Handler,
+		},
+		{
+			MethodName: "PutShippingAddress",
+			Handler:    _V2_PutShippingAddress_Handler,
+		},
+		{
+			MethodName: "ListPlans",
+			Handler:    _V2_ListPlans_Handler,
+		},
+		{
 			MethodName: "ListStatusCodes",
 			Handler:    _V2_ListStatusCodes_Handler,
 		},
 		{
 			MethodName: "GetStatusCode",
 			Handler:    _V2_GetStatusCode_Handler,
+		},
+		{
+			MethodName: "GetHealthz",
+			Handler:    _V2_GetHealthz_Handler,
+		},
+		{
+			MethodName: "ListUserBillingCycles",
+			Handler:    _V2_ListUserBillingCycles_Handler,
+		},
+		{
+			MethodName: "ListUserCycles",
+			Handler:    _V2_ListUserCycles_Handler,
+		},
+		{
+			MethodName: "GetBillingUsage",
+			Handler:    _V2_GetBillingUsage_Handler,
+		},
+		{
+			MethodName: "PostHistoricalUsage",
+			Handler:    _V2_PostHistoricalUsage_Handler,
+		},
+		{
+			MethodName: "GetHistoricalUsage",
+			Handler:    _V2_GetHistoricalUsage_Handler,
+		},
+		{
+			MethodName: "ListUsageIntervals",
+			Handler:    _V2_ListUsageIntervals_Handler,
+		},
+		{
+			MethodName: "GetRealtimeUsage",
+			Handler:    _V2_GetRealtimeUsage_Handler,
+		},
+		{
+			MethodName: "PostUsage",
+			Handler:    _V2_PostUsage_Handler,
 		},
 		{
 			MethodName: "ListCollaborators",
@@ -7189,6 +12936,22 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCollaborations",
 			Handler:    _V2_ListCollaborations_Handler,
+		},
+		{
+			MethodName: "FetchLicense",
+			Handler:    _V2_FetchLicense_Handler,
+		},
+		{
+			MethodName: "ListLicenses",
+			Handler:    _V2_ListLicenses_Handler,
+		},
+		{
+			MethodName: "GetLicense",
+			Handler:    _V2_GetLicense_Handler,
+		},
+		{
+			MethodName: "ValidateLicense",
+			Handler:    _V2_ValidateLicense_Handler,
 		},
 		{
 			MethodName: "PostAppDuplications",
@@ -7229,6 +12992,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTasks",
 			Handler:    _V2_DeleteTasks_Handler,
+		},
+		{
+			MethodName: "PatchAnnotationCountsRollup",
+			Handler:    _V2_PatchAnnotationCountsRollup_Handler,
 		},
 		{
 			MethodName: "PostLabelOrders",
@@ -7279,12 +13046,60 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostStatValuesAggregate_Handler,
 		},
 		{
+			MethodName: "PostAnalytics",
+			Handler:    _V2_PostAnalytics_Handler,
+		},
+		{
+			MethodName: "PostSDKBilling",
+			Handler:    _V2_PostSDKBilling_Handler,
+		},
+		{
+			MethodName: "PostFindDuplicateAnnotationsJobs",
+			Handler:    _V2_PostFindDuplicateAnnotationsJobs_Handler,
+		},
+		{
+			MethodName: "GetFindDuplicateAnnotationsJob",
+			Handler:    _V2_GetFindDuplicateAnnotationsJob_Handler,
+		},
+		{
+			MethodName: "ListFindDuplicateAnnotationsJobs",
+			Handler:    _V2_ListFindDuplicateAnnotationsJobs_Handler,
+		},
+		{
+			MethodName: "DeleteFindDuplicateAnnotationsJobs",
+			Handler:    _V2_DeleteFindDuplicateAnnotationsJobs_Handler,
+		},
+		{
 			MethodName: "PostTrendingMetricsView",
 			Handler:    _V2_PostTrendingMetricsView_Handler,
 		},
 		{
 			MethodName: "ListTrendingMetricsViews",
 			Handler:    _V2_ListTrendingMetricsViews_Handler,
+		},
+		{
+			MethodName: "PostIdValidation",
+			Handler:    _V2_PostIdValidation_Handler,
+		},
+		{
+			MethodName: "ListTagCategories",
+			Handler:    _V2_ListTagCategories_Handler,
+		},
+		{
+			MethodName: "ListWebNotifications",
+			Handler:    _V2_ListWebNotifications_Handler,
+		},
+		{
+			MethodName: "GetWebNotification",
+			Handler:    _V2_GetWebNotification_Handler,
+		},
+		{
+			MethodName: "PatchWebNotifications",
+			Handler:    _V2_PatchWebNotifications_Handler,
+		},
+		{
+			MethodName: "DeleteWebNotifications",
+			Handler:    _V2_DeleteWebNotifications_Handler,
 		},
 		{
 			MethodName: "GetModule",
@@ -7367,12 +13182,36 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
 		},
 		{
+			MethodName: "ListNextTaskAssignments",
+			Handler:    _V2_ListNextTaskAssignments_Handler,
+		},
+		{
+			MethodName: "PutTaskAssignments",
+			Handler:    _V2_PutTaskAssignments_Handler,
+		},
+		{
+			MethodName: "PostWaitlistEmails",
+			Handler:    _V2_PostWaitlistEmails_Handler,
+		},
+		{
+			MethodName: "GetSampledPredictMetrics",
+			Handler:    _V2_GetSampledPredictMetrics_Handler,
+		},
+		{
+			MethodName: "PostInputsAddJobs",
+			Handler:    _V2_PostInputsAddJobs_Handler,
+		},
+		{
 			MethodName: "ListInputsAddJobs",
 			Handler:    _V2_ListInputsAddJobs_Handler,
 		},
 		{
 			MethodName: "GetInputsAddJob",
 			Handler:    _V2_GetInputsAddJob_Handler,
+		},
+		{
+			MethodName: "CancelInputsAddJob",
+			Handler:    _V2_CancelInputsAddJob_Handler,
 		},
 		{
 			MethodName: "PostUploads",
