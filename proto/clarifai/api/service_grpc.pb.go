@@ -293,7 +293,10 @@ type V2Client interface {
 	ListSearches(ctx context.Context, in *ListSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Patch saved legacy searches by ids.
 	PatchSearches(ctx context.Context, in *PatchSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// Deprecated: Do not use.
 	// Execute a new search and optionally save it.
+	//
+	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
 	PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(ctx context.Context, in *PostSearchesByIDRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
@@ -1540,6 +1543,7 @@ func (c *v2Client) PatchSearches(ctx context.Context, in *PatchSearchesRequest, 
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
 	out := new(MultiSearchResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostSearches", in, out, opts...)
@@ -2444,7 +2448,10 @@ type V2Server interface {
 	ListSearches(context.Context, *ListSearchesRequest) (*MultiSearchResponse, error)
 	// Patch saved legacy searches by ids.
 	PatchSearches(context.Context, *PatchSearchesRequest) (*MultiSearchResponse, error)
+	// Deprecated: Do not use.
 	// Execute a new search and optionally save it.
+	//
+	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
 	PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error)
