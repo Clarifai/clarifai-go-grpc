@@ -207,10 +207,17 @@ type V2Client interface {
 	PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(ctx context.Context, in *DeleteModelVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Deprecated: Use GetModelVersionEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
+	// Deprecated, use PostModelVersionEvaluations instead
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
+	PostModelVersionEvaluations(ctx context.Context, in *PostModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	// List the evaluation metrics for a model version.
+	ListModelVersionEvaluations(ctx context.Context, in *ListModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	// Get an evaluation metrics for a model version.
+	GetModelVersionEvaluation(ctx context.Context, in *GetModelVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
 	// GetModelVersionInputExample
@@ -1200,6 +1207,33 @@ func (c *v2Client) GetModelVersionMetrics(ctx context.Context, in *GetModelVersi
 func (c *v2Client) PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error) {
 	out := new(SingleModelVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionMetrics", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostModelVersionEvaluations(ctx context.Context, in *PostModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error) {
+	out := new(MultiEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionEvaluations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListModelVersionEvaluations(ctx context.Context, in *ListModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error) {
+	out := new(MultiEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelVersionEvaluations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetModelVersionEvaluation(ctx context.Context, in *GetModelVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error) {
+	out := new(SingleEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelVersionEvaluation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2394,10 +2428,17 @@ type V2Server interface {
 	PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error)
+	// Deprecated: Use GetModelVersionEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
+	// Deprecated, use PostModelVersionEvaluations instead
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
+	PostModelVersionEvaluations(context.Context, *PostModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	// List the evaluation metrics for a model version.
+	ListModelVersionEvaluations(context.Context, *ListModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	// Get an evaluation metrics for a model version.
+	GetModelVersionEvaluation(context.Context, *GetModelVersionEvaluationRequest) (*SingleEvalMetricsResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error)
 	// GetModelVersionInputExample
@@ -2891,6 +2932,15 @@ func (UnimplementedV2Server) GetModelVersionMetrics(context.Context, *GetModelVe
 }
 func (UnimplementedV2Server) PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionMetrics not implemented")
+}
+func (UnimplementedV2Server) PostModelVersionEvaluations(context.Context, *PostModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionEvaluations not implemented")
+}
+func (UnimplementedV2Server) ListModelVersionEvaluations(context.Context, *ListModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListModelVersionEvaluations not implemented")
+}
+func (UnimplementedV2Server) GetModelVersionEvaluation(context.Context, *GetModelVersionEvaluationRequest) (*SingleEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetModelVersionEvaluation not implemented")
 }
 func (UnimplementedV2Server) ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelReferences not implemented")
@@ -4728,6 +4778,60 @@ func _V2_PostModelVersionMetrics_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostModelVersionMetrics(ctx, req.(*PostModelVersionMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostModelVersionEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelVersionEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelVersionEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelVersionEvaluations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelVersionEvaluations(ctx, req.(*PostModelVersionEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListModelVersionEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListModelVersionEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListModelVersionEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListModelVersionEvaluations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListModelVersionEvaluations(ctx, req.(*ListModelVersionEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetModelVersionEvaluation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetModelVersionEvaluationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetModelVersionEvaluation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetModelVersionEvaluation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetModelVersionEvaluation(ctx, req.(*GetModelVersionEvaluationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7068,6 +7172,18 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelVersionMetrics",
 			Handler:    _V2_PostModelVersionMetrics_Handler,
+		},
+		{
+			MethodName: "PostModelVersionEvaluations",
+			Handler:    _V2_PostModelVersionEvaluations_Handler,
+		},
+		{
+			MethodName: "ListModelVersionEvaluations",
+			Handler:    _V2_ListModelVersionEvaluations_Handler,
+		},
+		{
+			MethodName: "GetModelVersionEvaluation",
+			Handler:    _V2_GetModelVersionEvaluation_Handler,
 		},
 		{
 			MethodName: "ListModelReferences",
