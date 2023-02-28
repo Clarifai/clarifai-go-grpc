@@ -234,9 +234,10 @@ func TestPostPatchAndDeleteInput(t *testing.T) {
 func makeClient() api.V2Client {
 	grpcBaseUrl := os.Getenv("CLARIFAI_GRPC_BASE")
 	if len(grpcBaseUrl) == 0 {
-		grpcBaseUrl = "api.clarifai.com:443"
+		grpcBaseUrl = "api.clarifai.com"
 	}
-	conn, err := grpc.Dial(grpcBaseUrl, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
+	port := "443"
+	conn, err := grpc.Dial(grpcBaseUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	check(err)
 	return api.NewV2Client(conn)
 }
