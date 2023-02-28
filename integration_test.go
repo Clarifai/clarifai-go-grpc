@@ -2,15 +2,16 @@ package tests
 
 import (
 	"context"
+	"io/ioutil"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api"
 	"github.com/Clarifai/clarifai-go-grpc/proto/clarifai/api/status"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
-	"io/ioutil"
-	"os"
-	"testing"
-	"time"
 )
 
 var GeneralModelId = "aaa03c23b3724a16a56b629203edc62c"
@@ -232,9 +233,10 @@ func TestPostPatchAndDeleteInput(t *testing.T) {
 
 func makeClient() api.V2Client {
 	grpcBaseUrl := os.Getenv("CLARIFAI_GRPC_BASE")
-	port := "443"
-
-	conn, err := grpc.Dial(grpcBaseUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
+	if len(grpcBaseUrl) == 0 {
+		grpcBaseUrl = "api.clarifai.com:443"
+	}
+	conn, err := grpc.Dial(grpcBaseUrl, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	check(err)
 	return api.NewV2Client(conn)
 }
