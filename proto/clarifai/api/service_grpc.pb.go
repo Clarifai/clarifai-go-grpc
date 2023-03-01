@@ -456,6 +456,8 @@ type V2Client interface {
 	GetInputsExtractionJob(ctx context.Context, in *GetInputsExtractionJobRequest, opts ...grpc.CallOption) (*SingleInputsExtractionJobResponse, error)
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(ctx context.Context, in *ListInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
+	CancelInputsExtractionJobs(ctx context.Context, in *CancelInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
+	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 }
 
 type v2Client struct {
@@ -2240,6 +2242,24 @@ func (c *v2Client) ListInputsExtractionJobs(ctx context.Context, in *ListInputsE
 	return out, nil
 }
 
+func (c *v2Client) CancelInputsExtractionJobs(ctx context.Context, in *CancelInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error) {
+	out := new(MultiInputsExtractionJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/CancelInputsExtractionJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error) {
+	out := new(MultiInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostInputsUploads", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -2677,6 +2697,8 @@ type V2Server interface {
 	GetInputsExtractionJob(context.Context, *GetInputsExtractionJobRequest) (*SingleInputsExtractionJobResponse, error)
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(context.Context, *ListInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
+	CancelInputsExtractionJobs(context.Context, *CancelInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
+	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -3274,6 +3296,12 @@ func (UnimplementedV2Server) GetInputsExtractionJob(context.Context, *GetInputsE
 }
 func (UnimplementedV2Server) ListInputsExtractionJobs(context.Context, *ListInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInputsExtractionJobs not implemented")
+}
+func (UnimplementedV2Server) CancelInputsExtractionJobs(context.Context, *CancelInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method CancelInputsExtractionJobs not implemented")
+}
+func (UnimplementedV2Server) PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsUploads not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -6834,6 +6862,42 @@ func _V2_ListInputsExtractionJobs_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_CancelInputsExtractionJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelInputsExtractionJobsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).CancelInputsExtractionJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/CancelInputsExtractionJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).CancelInputsExtractionJobs(ctx, req.(*CancelInputsExtractionJobsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostInputsUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostInputsUploadsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostInputsUploads(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostInputsUploads",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostInputsUploads(ctx, req.(*PostInputsUploadsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -7628,6 +7692,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListInputsExtractionJobs",
 			Handler:    _V2_ListInputsExtractionJobs_Handler,
+		},
+		{
+			MethodName: "CancelInputsExtractionJobs",
+			Handler:    _V2_CancelInputsExtractionJobs_Handler,
+		},
+		{
+			MethodName: "PostInputsUploads",
+			Handler:    _V2_PostInputsUploads_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
