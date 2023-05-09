@@ -292,6 +292,8 @@ type V2Client interface {
 	PatchApp(ctx context.Context, in *PatchAppRequest, opts ...grpc.CallOption) (*SingleAppResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(ctx context.Context, in *PostAppsSearchesRequest, opts ...grpc.CallOption) (*MultiAppResponse, error)
+	// Get user information
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(ctx context.Context, in *PostValidatePasswordRequest, opts ...grpc.CallOption) (*SinglePasswordValidationResponse, error)
 	// Get a saved legacy search.
@@ -442,21 +444,45 @@ type V2Client interface {
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List next non-labeled and unassigned inputs from task's dataset
+	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
+	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
 	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
+	// Upload a part of a multipart upload.
+	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
 	PutUploadContentParts(ctx context.Context, in *PutUploadContentPartsRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
 	GetUpload(ctx context.Context, in *GetUploadRequest, opts ...grpc.CallOption) (*SingleUploadResponse, error)
 	ListUploads(ctx context.Context, in *ListUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
 	DeleteUploads(ctx context.Context, in *DeleteUploadsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Initiates retrieval of inputs from cloud storage from a user provided data source.
+	// Will create and return an inputs-add-job for tracking progress.
+	// Archives will be extracted and their contents will be processed as inputs.
+	//
+	// The cloud URL will be treated as a filter prefix. For example s3:/bucket/images_folder/abc will process
+	// files in the images_folder beginning with abc or in a subfolder beginning with abc.
+	// For example:
+	// bucket/images_folder/abcImage.png
+	// bucket/images_folder/abc-1/Data.zip
+	//
+	// If given URL is for a private bucket or file, then credentials should be provided to access the bucket.
+	// Credentials should include rights to list the objects in the bucket, except when pointed directly at a file archive,
+	// in which case it only requires rights to access that particular file.
 	PostInputsDataSources(ctx context.Context, in *PostInputsDataSourcesRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// Get the input extraction job details by ID
 	GetInputsExtractionJob(ctx context.Context, in *GetInputsExtractionJobRequest, opts ...grpc.CallOption) (*SingleInputsExtractionJobResponse, error)
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(ctx context.Context, in *ListInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
 	CancelInputsExtractionJobs(ctx context.Context, in *CancelInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
+	// Start uploading a file archive containing inputs.
+	// Will create and return an inputs-add-job for tracking progress.
+	//
+	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
+	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 }
 
@@ -1548,6 +1574,15 @@ func (c *v2Client) PostAppsSearches(ctx context.Context, in *PostAppsSearchesReq
 	return out, nil
 }
 
+func (c *v2Client) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*SingleUserResponse, error) {
+	out := new(SingleUserResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostValidatePassword(ctx context.Context, in *PostValidatePasswordRequest, opts ...grpc.CallOption) (*SinglePasswordValidationResponse, error) {
 	out := new(SinglePasswordValidationResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostValidatePassword", in, out, opts...)
@@ -2152,6 +2187,24 @@ func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetData
 	return out, nil
 }
 
+func (c *v2Client) ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
+	out := new(MultiInputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListNextTaskAssignments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PutTaskAssignments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error) {
 	out := new(MultiInputsAddJobResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListInputsAddJobs", in, out, opts...)
@@ -2533,6 +2586,8 @@ type V2Server interface {
 	PatchApp(context.Context, *PatchAppRequest) (*SingleAppResponse, error)
 	// Search over the applications to find one or more you're looking for.
 	PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error)
+	// Get user information
+	GetUser(context.Context, *GetUserRequest) (*SingleUserResponse, error)
 	// Validate new password in real-time for a user
 	PostValidatePassword(context.Context, *PostValidatePasswordRequest) (*SinglePasswordValidationResponse, error)
 	// Get a saved legacy search.
@@ -2683,21 +2738,45 @@ type V2Server interface {
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
 	// Get a specific job.
 	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
+	// List next non-labeled and unassigned inputs from task's dataset
+	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
+	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*status.BaseResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
 	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
+	// Upload a part of a multipart upload.
+	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
 	PutUploadContentParts(context.Context, *PutUploadContentPartsRequest) (*SingleUploadResponse, error)
 	GetUpload(context.Context, *GetUploadRequest) (*SingleUploadResponse, error)
 	ListUploads(context.Context, *ListUploadsRequest) (*MultiUploadResponse, error)
 	DeleteUploads(context.Context, *DeleteUploadsRequest) (*status.BaseResponse, error)
+	// Initiates retrieval of inputs from cloud storage from a user provided data source.
+	// Will create and return an inputs-add-job for tracking progress.
+	// Archives will be extracted and their contents will be processed as inputs.
+	//
+	// The cloud URL will be treated as a filter prefix. For example s3:/bucket/images_folder/abc will process
+	// files in the images_folder beginning with abc or in a subfolder beginning with abc.
+	// For example:
+	// bucket/images_folder/abcImage.png
+	// bucket/images_folder/abc-1/Data.zip
+	//
+	// If given URL is for a private bucket or file, then credentials should be provided to access the bucket.
+	// Credentials should include rights to list the objects in the bucket, except when pointed directly at a file archive,
+	// in which case it only requires rights to access that particular file.
 	PostInputsDataSources(context.Context, *PostInputsDataSourcesRequest) (*MultiInputsAddJobResponse, error)
 	// Get the input extraction job details by ID
 	GetInputsExtractionJob(context.Context, *GetInputsExtractionJobRequest) (*SingleInputsExtractionJobResponse, error)
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(context.Context, *ListInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
 	CancelInputsExtractionJobs(context.Context, *CancelInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
+	// Start uploading a file archive containing inputs.
+	// Will create and return an inputs-add-job for tracking progress.
+	//
+	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
+	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
@@ -3066,6 +3145,9 @@ func (UnimplementedV2Server) PatchApp(context.Context, *PatchAppRequest) (*Singl
 func (UnimplementedV2Server) PostAppsSearches(context.Context, *PostAppsSearchesRequest) (*MultiAppResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAppsSearches not implemented")
 }
+func (UnimplementedV2Server) GetUser(context.Context, *GetUserRequest) (*SingleUserResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
 func (UnimplementedV2Server) PostValidatePassword(context.Context, *PostValidatePasswordRequest) (*SinglePasswordValidationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostValidatePassword not implemented")
 }
@@ -3266,6 +3348,12 @@ func (UnimplementedV2Server) DeleteBulkOperations(context.Context, *DeleteBulkOp
 }
 func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
+}
+func (UnimplementedV2Server) ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListNextTaskAssignments not implemented")
+}
+func (UnimplementedV2Server) PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PutTaskAssignments not implemented")
 }
 func (UnimplementedV2Server) ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInputsAddJobs not implemented")
@@ -5476,6 +5564,24 @@ func _V2_PostAppsSearches_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostValidatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostValidatePasswordRequest)
 	if err := dec(in); err != nil {
@@ -6682,6 +6788,42 @@ func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListNextTaskAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNextTaskAssignmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListNextTaskAssignments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListNextTaskAssignments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListNextTaskAssignments(ctx, req.(*ListNextTaskAssignmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PutTaskAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutTaskAssignmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PutTaskAssignments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PutTaskAssignments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PutTaskAssignments(ctx, req.(*PutTaskAssignmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListInputsAddJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListInputsAddJobsRequest)
 	if err := dec(in); err != nil {
@@ -7386,6 +7528,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostAppsSearches_Handler,
 		},
 		{
+			MethodName: "GetUser",
+			Handler:    _V2_GetUser_Handler,
+		},
+		{
 			MethodName: "PostValidatePassword",
 			Handler:    _V2_PostValidatePassword_Handler,
 		},
@@ -7652,6 +7798,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDatasetInputsSearchAddJob",
 			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
+		},
+		{
+			MethodName: "ListNextTaskAssignments",
+			Handler:    _V2_ListNextTaskAssignments_Handler,
+		},
+		{
+			MethodName: "PutTaskAssignments",
+			Handler:    _V2_PutTaskAssignments_Handler,
 		},
 		{
 			MethodName: "ListInputsAddJobs",
