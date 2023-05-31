@@ -88,11 +88,12 @@ type V2Client interface {
 	GetInputSamples(ctx context.Context, in *GetInputSamplesRequest, opts ...grpc.CallOption) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(ctx context.Context, in *GetInputRequest, opts ...grpc.CallOption) (*SingleInputResponse, error)
+	// Get a video input manifest.
+	GetInputVideoManifest(ctx context.Context, in *GetVideoManifestRequest, opts ...grpc.CallOption) (*GetVideoManifestResponse, error)
 	// List all the inputs.
 	ListInputs(ctx context.Context, in *ListInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// Add an input (or set of inputs) to an app.
-	// This call is synchronous if the PostInputsRequest contains exactly one image input. Otherwise,
-	// it is asynchronous.
+	// Add 1 or more input to an app.
+	// The actual inputs processing is asynchronous.
 	PostInputs(ctx context.Context, in *PostInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(ctx context.Context, in *PatchInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
@@ -758,6 +759,15 @@ func (c *v2Client) GetInputSamples(ctx context.Context, in *GetInputSamplesReque
 func (c *v2Client) GetInput(ctx context.Context, in *GetInputRequest, opts ...grpc.CallOption) (*SingleInputResponse, error) {
 	out := new(SingleInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInput", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetInputVideoManifest(ctx context.Context, in *GetVideoManifestRequest, opts ...grpc.CallOption) (*GetVideoManifestResponse, error) {
+	out := new(GetVideoManifestResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInputVideoManifest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2382,11 +2392,12 @@ type V2Server interface {
 	GetInputSamples(context.Context, *GetInputSamplesRequest) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error)
+	// Get a video input manifest.
+	GetInputVideoManifest(context.Context, *GetVideoManifestRequest) (*GetVideoManifestResponse, error)
 	// List all the inputs.
 	ListInputs(context.Context, *ListInputsRequest) (*MultiInputResponse, error)
-	// Add an input (or set of inputs) to an app.
-	// This call is synchronous if the PostInputsRequest contains exactly one image input. Otherwise,
-	// it is asynchronous.
+	// Add 1 or more input to an app.
+	// The actual inputs processing is asynchronous.
 	PostInputs(context.Context, *PostInputsRequest) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(context.Context, *PatchInputsRequest) (*MultiInputResponse, error)
@@ -2874,6 +2885,9 @@ func (UnimplementedV2Server) GetInputSamples(context.Context, *GetInputSamplesRe
 }
 func (UnimplementedV2Server) GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInput not implemented")
+}
+func (UnimplementedV2Server) GetInputVideoManifest(context.Context, *GetVideoManifestRequest) (*GetVideoManifestResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetInputVideoManifest not implemented")
 }
 func (UnimplementedV2Server) ListInputs(context.Context, *ListInputsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInputs not implemented")
@@ -3940,6 +3954,24 @@ func _V2_GetInput_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetInput(ctx, req.(*GetInputRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetInputVideoManifest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVideoManifestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetInputVideoManifest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetInputVideoManifest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetInputVideoManifest(ctx, req.(*GetVideoManifestRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7166,6 +7198,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetInput",
 			Handler:    _V2_GetInput_Handler,
+		},
+		{
+			MethodName: "GetInputVideoManifest",
+			Handler:    _V2_GetInputVideoManifest_Handler,
 		},
 		{
 			MethodName: "ListInputs",
