@@ -122,8 +122,6 @@ type V2Client interface {
 	// If there is an error for one dataset,
 	// the process will stop, revert the transaction and return the error.
 	PatchDatasets(ctx context.Context, in *PatchDatasetsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error)
-	// Patch one or more dataset ids.
-	PatchDatasetIds(ctx context.Context, in *PatchDatasetIdsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error)
 	// Delete one or more datasets in a single request.
 	DeleteDatasets(ctx context.Context, in *DeleteDatasetsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all the dataset inputs in a dataset.
@@ -168,6 +166,8 @@ type V2Client interface {
 	GetModelOutputInfo(ctx context.Context, in *GetModelRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// List all the models.
 	ListModels(ctx context.Context, in *ListModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error)
+	// List the resource counts for the app.
+	GetResourceCounts(ctx context.Context, in *GetResourceCountsRequest, opts ...grpc.CallOption) (*GetResourceCountsResponse, error)
 	// Search over the models to find one or more you're looking for.
 	// This leverage the "body" parameter because we also have page and
 	// per_page as url query param variables in this request.
@@ -208,17 +208,23 @@ type V2Client interface {
 	PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(ctx context.Context, in *DeleteModelVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Deprecated: Use GetModelVersionEvaluation instead
+	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
-	// Deprecated, use PostModelVersionEvaluations instead
+	// Deprecated, use PostEvaluations instead
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(ctx context.Context, in *PostModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
+	// Deprecated, use PostEvaluations instead
 	PostModelVersionEvaluations(ctx context.Context, in *PostModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	// Deprecated, use GetEvaluation instead
 	// List the evaluation metrics for a model version.
 	ListModelVersionEvaluations(ctx context.Context, in *ListModelVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	// Deprecated, use GetEvaluation instead
 	// Get an evaluation metrics for a model version.
 	GetModelVersionEvaluation(ctx context.Context, in *GetModelVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error)
+	PostEvaluations(ctx context.Context, in *PostEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	ListEvaluations(ctx context.Context, in *ListEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error)
+	GetEvaluation(ctx context.Context, in *GetEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(ctx context.Context, in *ListModelReferencesRequest, opts ...grpc.CallOption) (*MultiModelReferenceResponse, error)
 	// GetModelVersionInputExample
@@ -453,6 +459,8 @@ type V2Client interface {
 	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
+	// cancel the input add job by ID
+	CancelInputsAddJob(ctx context.Context, in *CancelInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
 	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
 	// Upload a part of a multipart upload.
 	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
@@ -882,15 +890,6 @@ func (c *v2Client) PatchDatasets(ctx context.Context, in *PatchDatasetsRequest, 
 	return out, nil
 }
 
-func (c *v2Client) PatchDatasetIds(ctx context.Context, in *PatchDatasetIdsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error) {
-	out := new(MultiDatasetResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchDatasetIds", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) DeleteDatasets(ctx context.Context, in *DeleteDatasetsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteDatasets", in, out, opts...)
@@ -1047,6 +1046,15 @@ func (c *v2Client) GetModelOutputInfo(ctx context.Context, in *GetModelRequest, 
 func (c *v2Client) ListModels(ctx context.Context, in *ListModelsRequest, opts ...grpc.CallOption) (*MultiModelResponse, error) {
 	out := new(MultiModelResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModels", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetResourceCounts(ctx context.Context, in *GetResourceCountsRequest, opts ...grpc.CallOption) (*GetResourceCountsResponse, error) {
+	out := new(GetResourceCountsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetResourceCounts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1272,6 +1280,33 @@ func (c *v2Client) ListModelVersionEvaluations(ctx context.Context, in *ListMode
 func (c *v2Client) GetModelVersionEvaluation(ctx context.Context, in *GetModelVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error) {
 	out := new(SingleEvalMetricsResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelVersionEvaluation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostEvaluations(ctx context.Context, in *PostEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error) {
+	out := new(MultiEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostEvaluations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListEvaluations(ctx context.Context, in *ListEvaluationsRequest, opts ...grpc.CallOption) (*MultiEvalMetricsResponse, error) {
+	out := new(MultiEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListEvaluations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetEvaluation(ctx context.Context, in *GetEvaluationRequest, opts ...grpc.CallOption) (*SingleEvalMetricsResponse, error) {
+	out := new(SingleEvalMetricsResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetEvaluation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2233,6 +2268,15 @@ func (c *v2Client) GetInputsAddJob(ctx context.Context, in *GetInputsAddJobReque
 	return out, nil
 }
 
+func (c *v2Client) CancelInputsAddJob(ctx context.Context, in *CancelInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error) {
+	out := new(SingleInputsAddJobResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/CancelInputsAddJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error) {
 	out := new(MultiUploadResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostUploads", in, out, opts...)
@@ -2426,8 +2470,6 @@ type V2Server interface {
 	// If there is an error for one dataset,
 	// the process will stop, revert the transaction and return the error.
 	PatchDatasets(context.Context, *PatchDatasetsRequest) (*MultiDatasetResponse, error)
-	// Patch one or more dataset ids.
-	PatchDatasetIds(context.Context, *PatchDatasetIdsRequest) (*MultiDatasetResponse, error)
 	// Delete one or more datasets in a single request.
 	DeleteDatasets(context.Context, *DeleteDatasetsRequest) (*status.BaseResponse, error)
 	// List all the dataset inputs in a dataset.
@@ -2472,6 +2514,8 @@ type V2Server interface {
 	GetModelOutputInfo(context.Context, *GetModelRequest) (*SingleModelResponse, error)
 	// List all the models.
 	ListModels(context.Context, *ListModelsRequest) (*MultiModelResponse, error)
+	// List the resource counts for the app.
+	GetResourceCounts(context.Context, *GetResourceCountsRequest) (*GetResourceCountsResponse, error)
 	// Search over the models to find one or more you're looking for.
 	// This leverage the "body" parameter because we also have page and
 	// per_page as url query param variables in this request.
@@ -2512,17 +2556,23 @@ type V2Server interface {
 	PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error)
-	// Deprecated: Use GetModelVersionEvaluation instead
+	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
-	// Deprecated, use PostModelVersionEvaluations instead
+	// Deprecated, use PostEvaluations instead
 	// Run the evaluation metrics for a model version.
 	PostModelVersionMetrics(context.Context, *PostModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
+	// Deprecated, use PostEvaluations instead
 	PostModelVersionEvaluations(context.Context, *PostModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	// Deprecated, use GetEvaluation instead
 	// List the evaluation metrics for a model version.
 	ListModelVersionEvaluations(context.Context, *ListModelVersionEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	// Deprecated, use GetEvaluation instead
 	// Get an evaluation metrics for a model version.
 	GetModelVersionEvaluation(context.Context, *GetModelVersionEvaluationRequest) (*SingleEvalMetricsResponse, error)
+	PostEvaluations(context.Context, *PostEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	ListEvaluations(context.Context, *ListEvaluationsRequest) (*MultiEvalMetricsResponse, error)
+	GetEvaluation(context.Context, *GetEvaluationRequest) (*SingleEvalMetricsResponse, error)
 	// Lists model references tied to a particular model id.
 	ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error)
 	// GetModelVersionInputExample
@@ -2757,6 +2807,8 @@ type V2Server interface {
 	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
 	// Get the input add job details by ID
 	GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
+	// cancel the input add job by ID
+	CancelInputsAddJob(context.Context, *CancelInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
 	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
 	// Upload a part of a multipart upload.
 	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
@@ -2925,9 +2977,6 @@ func (UnimplementedV2Server) PostDatasets(context.Context, *PostDatasetsRequest)
 func (UnimplementedV2Server) PatchDatasets(context.Context, *PatchDatasetsRequest) (*MultiDatasetResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchDatasets not implemented")
 }
-func (UnimplementedV2Server) PatchDatasetIds(context.Context, *PatchDatasetIdsRequest) (*MultiDatasetResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PatchDatasetIds not implemented")
-}
 func (UnimplementedV2Server) DeleteDatasets(context.Context, *DeleteDatasetsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteDatasets not implemented")
 }
@@ -2981,6 +3030,9 @@ func (UnimplementedV2Server) GetModelOutputInfo(context.Context, *GetModelReques
 }
 func (UnimplementedV2Server) ListModels(context.Context, *ListModelsRequest) (*MultiModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModels not implemented")
+}
+func (UnimplementedV2Server) GetResourceCounts(context.Context, *GetResourceCountsRequest) (*GetResourceCountsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetResourceCounts not implemented")
 }
 func (UnimplementedV2Server) PostModelsSearches(context.Context, *PostModelsSearchesRequest) (*MultiModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelsSearches not implemented")
@@ -3056,6 +3108,15 @@ func (UnimplementedV2Server) ListModelVersionEvaluations(context.Context, *ListM
 }
 func (UnimplementedV2Server) GetModelVersionEvaluation(context.Context, *GetModelVersionEvaluationRequest) (*SingleEvalMetricsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelVersionEvaluation not implemented")
+}
+func (UnimplementedV2Server) PostEvaluations(context.Context, *PostEvaluationsRequest) (*MultiEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostEvaluations not implemented")
+}
+func (UnimplementedV2Server) ListEvaluations(context.Context, *ListEvaluationsRequest) (*MultiEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListEvaluations not implemented")
+}
+func (UnimplementedV2Server) GetEvaluation(context.Context, *GetEvaluationRequest) (*SingleEvalMetricsResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetEvaluation not implemented")
 }
 func (UnimplementedV2Server) ListModelReferences(context.Context, *ListModelReferencesRequest) (*MultiModelReferenceResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListModelReferences not implemented")
@@ -3374,6 +3435,9 @@ func (UnimplementedV2Server) ListInputsAddJobs(context.Context, *ListInputsAddJo
 }
 func (UnimplementedV2Server) GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInputsAddJob not implemented")
+}
+func (UnimplementedV2Server) CancelInputsAddJob(context.Context, *CancelInputsAddJobRequest) (*SingleInputsAddJobResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method CancelInputsAddJob not implemented")
 }
 func (UnimplementedV2Server) PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostUploads not implemented")
@@ -4192,24 +4256,6 @@ func _V2_PatchDatasets_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_PatchDatasetIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PatchDatasetIdsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PatchDatasetIds(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/PatchDatasetIds",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PatchDatasetIds(ctx, req.(*PatchDatasetIdsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_DeleteDatasets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteDatasetsRequest)
 	if err := dec(in); err != nil {
@@ -4530,6 +4576,24 @@ func _V2_ListModels_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListModels(ctx, req.(*ListModelsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetResourceCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourceCountsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetResourceCounts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetResourceCounts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetResourceCounts(ctx, req.(*GetResourceCountsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4980,6 +5044,60 @@ func _V2_GetModelVersionEvaluation_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetModelVersionEvaluation(ctx, req.(*GetModelVersionEvaluationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostEvaluations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostEvaluations(ctx, req.(*PostEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListEvaluations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListEvaluations(ctx, req.(*ListEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetEvaluation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEvaluationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetEvaluation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetEvaluation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetEvaluation(ctx, req.(*GetEvaluationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6892,6 +7010,24 @@ func _V2_GetInputsAddJob_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_CancelInputsAddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelInputsAddJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).CancelInputsAddJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/CancelInputsAddJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).CancelInputsAddJob(ctx, req.(*CancelInputsAddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostUploads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostUploadsRequest)
 	if err := dec(in); err != nil {
@@ -7252,10 +7388,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchDatasets_Handler,
 		},
 		{
-			MethodName: "PatchDatasetIds",
-			Handler:    _V2_PatchDatasetIds_Handler,
-		},
-		{
 			MethodName: "DeleteDatasets",
 			Handler:    _V2_DeleteDatasets_Handler,
 		},
@@ -7326,6 +7458,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListModels",
 			Handler:    _V2_ListModels_Handler,
+		},
+		{
+			MethodName: "GetResourceCounts",
+			Handler:    _V2_GetResourceCounts_Handler,
 		},
 		{
 			MethodName: "PostModelsSearches",
@@ -7426,6 +7562,18 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetModelVersionEvaluation",
 			Handler:    _V2_GetModelVersionEvaluation_Handler,
+		},
+		{
+			MethodName: "PostEvaluations",
+			Handler:    _V2_PostEvaluations_Handler,
+		},
+		{
+			MethodName: "ListEvaluations",
+			Handler:    _V2_ListEvaluations_Handler,
+		},
+		{
+			MethodName: "GetEvaluation",
+			Handler:    _V2_GetEvaluation_Handler,
 		},
 		{
 			MethodName: "ListModelReferences",
@@ -7850,6 +7998,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetInputsAddJob",
 			Handler:    _V2_GetInputsAddJob_Handler,
+		},
+		{
+			MethodName: "CancelInputsAddJob",
+			Handler:    _V2_CancelInputsAddJob_Handler,
 		},
 		{
 			MethodName: "PostUploads",
