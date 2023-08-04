@@ -493,6 +493,18 @@ type V2Client interface {
 	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
+	// Get a specific runner from an app.
+	GetRunner(ctx context.Context, in *GetRunnerRequest, opts ...grpc.CallOption) (*SingleRunnerResponse, error)
+	// List all the runners in community, by user or by app.
+	ListRunners(ctx context.Context, in *ListRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
+	// Add a runners to an app.
+	PostRunners(ctx context.Context, in *PostRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
+	// Delete multiple runners in one request.
+	DeleteRunners(ctx context.Context, in *DeleteRunnersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List items for the remote runner to work on.
+	ListRunnerItems(ctx context.Context, in *ListRunnerItemsRequest, opts ...grpc.CallOption) (*MultiRunnerItemResponse, error)
+	// Post back outputs from remote runners
+	PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItemOutputsRequest, opts ...grpc.CallOption) (*MultiRunnerItemOutputResponse, error)
 }
 
 type v2Client struct {
@@ -2367,6 +2379,60 @@ func (c *v2Client) PostInputsUploads(ctx context.Context, in *PostInputsUploadsR
 	return out, nil
 }
 
+func (c *v2Client) GetRunner(ctx context.Context, in *GetRunnerRequest, opts ...grpc.CallOption) (*SingleRunnerResponse, error) {
+	out := new(SingleRunnerResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetRunner", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListRunners(ctx context.Context, in *ListRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error) {
+	out := new(MultiRunnerResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListRunners", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostRunners(ctx context.Context, in *PostRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error) {
+	out := new(MultiRunnerResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostRunners", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteRunners(ctx context.Context, in *DeleteRunnersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteRunners", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListRunnerItems(ctx context.Context, in *ListRunnerItemsRequest, opts ...grpc.CallOption) (*MultiRunnerItemResponse, error) {
+	out := new(MultiRunnerItemResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListRunnerItems", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItemOutputsRequest, opts ...grpc.CallOption) (*MultiRunnerItemOutputResponse, error) {
+	out := new(MultiRunnerItemOutputResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostRunnerItemOutputs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -2841,6 +2907,18 @@ type V2Server interface {
 	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
+	// Get a specific runner from an app.
+	GetRunner(context.Context, *GetRunnerRequest) (*SingleRunnerResponse, error)
+	// List all the runners in community, by user or by app.
+	ListRunners(context.Context, *ListRunnersRequest) (*MultiRunnerResponse, error)
+	// Add a runners to an app.
+	PostRunners(context.Context, *PostRunnersRequest) (*MultiRunnerResponse, error)
+	// Delete multiple runners in one request.
+	DeleteRunners(context.Context, *DeleteRunnersRequest) (*status.BaseResponse, error)
+	// List items for the remote runner to work on.
+	ListRunnerItems(context.Context, *ListRunnerItemsRequest) (*MultiRunnerItemResponse, error)
+	// Post back outputs from remote runners
+	PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -3468,6 +3546,24 @@ func (UnimplementedV2Server) CancelInputsExtractionJobs(context.Context, *Cancel
 }
 func (UnimplementedV2Server) PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsUploads not implemented")
+}
+func (UnimplementedV2Server) GetRunner(context.Context, *GetRunnerRequest) (*SingleRunnerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetRunner not implemented")
+}
+func (UnimplementedV2Server) ListRunners(context.Context, *ListRunnersRequest) (*MultiRunnerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListRunners not implemented")
+}
+func (UnimplementedV2Server) PostRunners(context.Context, *PostRunnersRequest) (*MultiRunnerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostRunners not implemented")
+}
+func (UnimplementedV2Server) DeleteRunners(context.Context, *DeleteRunnersRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteRunners not implemented")
+}
+func (UnimplementedV2Server) ListRunnerItems(context.Context, *ListRunnerItemsRequest) (*MultiRunnerItemResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListRunnerItems not implemented")
+}
+func (UnimplementedV2Server) PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostRunnerItemOutputs not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -7208,6 +7304,114 @@ func _V2_PostInputsUploads_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetRunner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRunnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetRunner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetRunner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetRunner(ctx, req.(*GetRunnerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListRunners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRunnersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListRunners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListRunners",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListRunners(ctx, req.(*ListRunnersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostRunners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostRunnersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostRunners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostRunners",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostRunners(ctx, req.(*PostRunnersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteRunners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRunnersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteRunners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteRunners",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteRunners(ctx, req.(*DeleteRunnersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListRunnerItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRunnerItemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListRunnerItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListRunnerItems",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListRunnerItems(ctx, req.(*ListRunnerItemsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostRunnerItemOutputs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostRunnerItemOutputsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostRunnerItemOutputs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostRunnerItemOutputs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostRunnerItemOutputs(ctx, req.(*PostRunnerItemOutputsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -8042,6 +8246,30 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostInputsUploads",
 			Handler:    _V2_PostInputsUploads_Handler,
+		},
+		{
+			MethodName: "GetRunner",
+			Handler:    _V2_GetRunner_Handler,
+		},
+		{
+			MethodName: "ListRunners",
+			Handler:    _V2_ListRunners_Handler,
+		},
+		{
+			MethodName: "PostRunners",
+			Handler:    _V2_PostRunners_Handler,
+		},
+		{
+			MethodName: "DeleteRunners",
+			Handler:    _V2_DeleteRunners_Handler,
+		},
+		{
+			MethodName: "ListRunnerItems",
+			Handler:    _V2_ListRunnerItems_Handler,
+		},
+		{
+			MethodName: "PostRunnerItemOutputs",
+			Handler:    _V2_PostRunnerItemOutputs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
