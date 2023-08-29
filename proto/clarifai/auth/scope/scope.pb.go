@@ -30,7 +30,6 @@ const (
 // cannot make a key that would be useless. Beyond the key creation they are not enforced
 // but rather the scopes are enforce when data is accessed.
 //
-//
 // There is the following conventions in place, make sure you add them to the scopes for all new
 // resource types:
 //
@@ -48,7 +47,6 @@ const (
 // can do model predictions, get concepts, etc. so that you don't have a collector that would be
 // useless at the end of that API handler but below you can see that the dependencies of Collector
 // scopes are only on other Collector scopes.
-//
 type S int32
 
 const (

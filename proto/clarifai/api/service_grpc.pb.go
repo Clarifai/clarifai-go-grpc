@@ -134,6 +134,7 @@ type V2Client interface {
 	//   - SUCCESS if all dataset inputs were added,
 	//   - MIXED_STATUS if only some dataset inputs were added, and
 	//   - FAILURE if no dataset inputs were added.
+	//
 	// Each individual dataset input in the response has the status set to
 	// indicate if it was successful or if there was an error.
 	PostDatasetInputs(ctx context.Context, in *PostDatasetInputsRequest, opts ...grpc.CallOption) (*MultiDatasetInputResponse, error)
@@ -2548,6 +2549,7 @@ type V2Server interface {
 	//   - SUCCESS if all dataset inputs were added,
 	//   - MIXED_STATUS if only some dataset inputs were added, and
 	//   - FAILURE if no dataset inputs were added.
+	//
 	// Each individual dataset input in the response has the status set to
 	// indicate if it was successful or if there was an error.
 	PostDatasetInputs(context.Context, *PostDatasetInputsRequest) (*MultiDatasetInputResponse, error)
