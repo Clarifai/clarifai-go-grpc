@@ -80,6 +80,9 @@ type V2Client interface {
 	PatchAnnotationsSearches(ctx context.Context, in *PatchAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a search over annotations
 	PostAnnotationsSearches(ctx context.Context, in *PostAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
+	// ListAnnotationWorkers lists users, models, and workflows (collectively
+	// known as "workers") that have added annotations to the application.
+	ListAnnotationWorkers(ctx context.Context, in *ListAnnotationWorkersRequest, opts ...grpc.CallOption) (*MultiWorkerResponse, error)
 	// Get input count per status.
 	GetInputCount(ctx context.Context, in *GetInputCountRequest, opts ...grpc.CallOption) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
@@ -744,6 +747,15 @@ func (c *v2Client) PatchAnnotationsSearches(ctx context.Context, in *PatchAnnota
 func (c *v2Client) PostAnnotationsSearches(ctx context.Context, in *PostAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error) {
 	out := new(MultiSearchResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostAnnotationsSearches", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListAnnotationWorkers(ctx context.Context, in *ListAnnotationWorkersRequest, opts ...grpc.CallOption) (*MultiWorkerResponse, error) {
+	out := new(MultiWorkerResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListAnnotationWorkers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2495,6 +2507,9 @@ type V2Server interface {
 	PatchAnnotationsSearches(context.Context, *PatchAnnotationsSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a search over annotations
 	PostAnnotationsSearches(context.Context, *PostAnnotationsSearchesRequest) (*MultiSearchResponse, error)
+	// ListAnnotationWorkers lists users, models, and workflows (collectively
+	// known as "workers") that have added annotations to the application.
+	ListAnnotationWorkers(context.Context, *ListAnnotationWorkersRequest) (*MultiWorkerResponse, error)
 	// Get input count per status.
 	GetInputCount(context.Context, *GetInputCountRequest) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
@@ -3005,6 +3020,9 @@ func (UnimplementedV2Server) PatchAnnotationsSearches(context.Context, *PatchAnn
 }
 func (UnimplementedV2Server) PostAnnotationsSearches(context.Context, *PostAnnotationsSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotationsSearches not implemented")
+}
+func (UnimplementedV2Server) ListAnnotationWorkers(context.Context, *ListAnnotationWorkersRequest) (*MultiWorkerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotationWorkers not implemented")
 }
 func (UnimplementedV2Server) GetInputCount(context.Context, *GetInputCountRequest) (*SingleInputCountResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInputCount not implemented")
@@ -4044,6 +4062,24 @@ func _V2_PostAnnotationsSearches_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostAnnotationsSearches(ctx, req.(*PostAnnotationsSearchesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListAnnotationWorkers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAnnotationWorkersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListAnnotationWorkers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListAnnotationWorkers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListAnnotationWorkers(ctx, req.(*ListAnnotationWorkersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7524,6 +7560,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostAnnotationsSearches",
 			Handler:    _V2_PostAnnotationsSearches_Handler,
+		},
+		{
+			MethodName: "ListAnnotationWorkers",
+			Handler:    _V2_ListAnnotationWorkers_Handler,
 		},
 		{
 			MethodName: "GetInputCount",
