@@ -121,8 +121,8 @@ func TestFailedPostModelOutputs(t *testing.T) {
 		},
 	)
 	check(err)
-	if response.Status.Code != status.StatusCode_FAILURE {
-		t.Errorf("Expected FAILURE response, got: %s\n", response.Status)
+	if response.Status.Code != status.StatusCode_INPUT_DOWNLOAD_FAILED {
+		t.Errorf("Expected INPUT_DOWNLOAD_FAILED response, got: %s\n", response.Status)
 	}
 	if response.Outputs[0].Status.Code != status.StatusCode_INPUT_DOWNLOAD_FAILED {
 		t.Errorf("Expected INPUT_DOWNLOAD_FAILED response, got: %s\n", response.Status)
