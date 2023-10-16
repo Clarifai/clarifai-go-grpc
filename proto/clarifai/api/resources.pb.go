@@ -11373,6 +11373,7 @@ type Filter struct {
 	//   - model_version_id
 	//   - status.code
 	//   - task_id
+	//   - trusted
 	//   - user_id
 	//   - workflow_version_id
 	Annotation *Annotation `protobuf:"bytes,4,opt,name=annotation,proto3" json:"annotation,omitempty"`
