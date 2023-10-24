@@ -509,6 +509,7 @@ type V2Client interface {
 	ListRunnerItems(ctx context.Context, in *ListRunnerItemsRequest, opts ...grpc.CallOption) (*MultiRunnerItemResponse, error)
 	// Post back outputs from remote runners
 	PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItemOutputsRequest, opts ...grpc.CallOption) (*MultiRunnerItemOutputResponse, error)
+	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
 }
 
 type v2Client struct {
@@ -2446,6 +2447,15 @@ func (c *v2Client) PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItem
 	return out, nil
 }
 
+func (c *v2Client) PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error) {
+	out := new(MultiTrainingTimeEstimateResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionsTrainingTimeEstimate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -2936,6 +2946,7 @@ type V2Server interface {
 	ListRunnerItems(context.Context, *ListRunnerItemsRequest) (*MultiRunnerItemResponse, error)
 	// Post back outputs from remote runners
 	PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error)
+	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -3584,6 +3595,9 @@ func (UnimplementedV2Server) ListRunnerItems(context.Context, *ListRunnerItemsRe
 }
 func (UnimplementedV2Server) PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostRunnerItemOutputs not implemented")
+}
+func (UnimplementedV2Server) PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsTrainingTimeEstimate not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -7450,6 +7464,24 @@ func _V2_PostRunnerItemOutputs_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostModelVersionsTrainingTimeEstimate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelVersionsTrainingTimeEstimateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelVersionsTrainingTimeEstimate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostModelVersionsTrainingTimeEstimate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelVersionsTrainingTimeEstimate(ctx, req.(*PostModelVersionsTrainingTimeEstimateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -8312,6 +8344,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostRunnerItemOutputs",
 			Handler:    _V2_PostRunnerItemOutputs_Handler,
+		},
+		{
+			MethodName: "PostModelVersionsTrainingTimeEstimate",
+			Handler:    _V2_PostModelVersionsTrainingTimeEstimate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
