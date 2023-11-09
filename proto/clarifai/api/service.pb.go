@@ -1445,7 +1445,10 @@ type PatchAppsRequest struct {
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	Apps      []*App        `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	// The action to perform on the patched App objects except App.Metadata
-	// For now only action 'overwrite' is supported
+	// Supported values: 'overwrite' and 'remove'.
+	//
+	// Note that 'remove' can only be used to remove the app image by setting
+	// 'image.url' in the request to the current value returned for that app.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 	// The action to perform on the patched App.Metadata
 	MetadataAction *PatchAction `protobuf:"bytes,4,opt,name=metadata_action,json=metadataAction,proto3" json:"metadata_action,omitempty"`
@@ -1529,7 +1532,10 @@ type PatchAppRequest struct {
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	App       *App          `protobuf:"bytes,2,opt,name=app,proto3" json:"app,omitempty"`
 	// The action to perform on the patched App object except App.Metadata
-	// For now only action 'overwrite' is supported
+	// Supported values: 'overwrite' and 'remove'.
+	//
+	// Note that 'remove' can only be used to remove the app image by setting
+	// 'image.url' in the request to the current value returned for the app.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 	// The action to perform on the patched App.Metadata
 	MetadataAction *PatchAction `protobuf:"bytes,4,opt,name=metadata_action,json=metadataAction,proto3" json:"metadata_action,omitempty"`
@@ -5477,7 +5483,10 @@ type PatchDatasetsRequest struct {
 	// List of datasets that are requested to be updated.
 	Datasets []*Dataset `protobuf:"bytes,2,rep,name=datasets,proto3" json:"datasets,omitempty"`
 	// The action to perform on the patched objects
-	// Supported values: 'overwrite' and 'merge'
+	// Supported values: 'overwrite', 'merge', and 'remove'.
+	//
+	// Note that 'remove' can only be used to remove the dataset image by setting
+	// 'image.url' in the request to the current value returned for that dataset.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 }
 
@@ -8816,6 +8825,10 @@ type PatchModelsRequest struct {
 	Models    []*Model      `protobuf:"bytes,2,rep,name=models,proto3" json:"models,omitempty"`
 	// The action to perform on the patched objects
 	// For now actions 'merge', 'overwrite', and 'remove' are supported
+	//
+	// Note that 'remove' can be used to remove the model image by setting
+	// 'image.url' in the request to the current value returned for that model.
+	// This cannot be used in a request that is patching other fields as well.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 }
 
@@ -14729,6 +14742,10 @@ type PatchWorkflowsRequest struct {
 	Workflows []*Workflow   `protobuf:"bytes,2,rep,name=workflows,proto3" json:"workflows,omitempty"`
 	// The action to perform on the patched objects
 	// For now actions 'merge', 'overwrite', and 'remove' are supported
+	//
+	// Note that 'remove' can be used to remove the workflow image by setting
+	// 'image.url' in the request to the current value returned for that workflow.
+	// This cannot be used in a request that is patching other fields as well.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 }
 
@@ -18358,7 +18375,10 @@ type PatchModulesRequest struct {
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	Modules   []*Module     `protobuf:"bytes,2,rep,name=modules,proto3" json:"modules,omitempty"`
 	// The action to perform on the patched objects
-	// For now actions 'merge', 'overwrite', and 'remove' are supported
+	// Supported values: 'overwrite' and 'remove'.
+	//
+	// Note that 'remove' can only be used to remove the module image by setting
+	// 'image.url' in the request to the current value returned for that module.
 	Action string `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`
 }
 
