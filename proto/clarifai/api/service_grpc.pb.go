@@ -453,8 +453,6 @@ type V2Client interface {
 	CancelBulkOperations(ctx context.Context, in *CancelBulkOperationRequest, opts ...grpc.CallOption) (*MultiBulkOperationsResponse, error)
 	// delete one or more terminated bulk operations
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Get a specific job.
-	GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error)
 	// List next non-labeled and unassigned inputs from task's dataset
 	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
@@ -2249,15 +2247,6 @@ func (c *v2Client) DeleteBulkOperations(ctx context.Context, in *DeleteBulkOpera
 	return out, nil
 }
 
-func (c *v2Client) GetDatasetInputsSearchAddJob(ctx context.Context, in *GetDatasetInputsSearchAddJobRequest, opts ...grpc.CallOption) (*SingleDatasetInputsSearchAddJobResponse, error) {
-	out := new(SingleDatasetInputsSearchAddJobResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetDatasetInputsSearchAddJob", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
 	out := new(MultiInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListNextTaskAssignments", in, out, opts...)
@@ -2890,8 +2879,6 @@ type V2Server interface {
 	CancelBulkOperations(context.Context, *CancelBulkOperationRequest) (*MultiBulkOperationsResponse, error)
 	// delete one or more terminated bulk operations
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
-	// Get a specific job.
-	GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error)
 	// List next non-labeled and unassigned inputs from task's dataset
 	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
 	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
@@ -3529,9 +3516,6 @@ func (UnimplementedV2Server) CancelBulkOperations(context.Context, *CancelBulkOp
 }
 func (UnimplementedV2Server) DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteBulkOperations not implemented")
-}
-func (UnimplementedV2Server) GetDatasetInputsSearchAddJob(context.Context, *GetDatasetInputsSearchAddJobRequest) (*SingleDatasetInputsSearchAddJobResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetDatasetInputsSearchAddJob not implemented")
 }
 func (UnimplementedV2Server) ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListNextTaskAssignments not implemented")
@@ -7068,24 +7052,6 @@ func _V2_DeleteBulkOperations_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_GetDatasetInputsSearchAddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDatasetInputsSearchAddJobRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetDatasetInputsSearchAddJob(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/GetDatasetInputsSearchAddJob",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetDatasetInputsSearchAddJob(ctx, req.(*GetDatasetInputsSearchAddJobRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_ListNextTaskAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListNextTaskAssignmentsRequest)
 	if err := dec(in); err != nil {
@@ -8256,10 +8222,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteBulkOperations",
 			Handler:    _V2_DeleteBulkOperations_Handler,
-		},
-		{
-			MethodName: "GetDatasetInputsSearchAddJob",
-			Handler:    _V2_GetDatasetInputsSearchAddJob_Handler,
 		},
 		{
 			MethodName: "ListNextTaskAssignments",
