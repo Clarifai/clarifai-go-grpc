@@ -28,9 +28,11 @@ type Status struct {
 
 	// Status code from internal codes.
 	Code StatusCode `protobuf:"varint,1,opt,name=code,proto3,enum=clarifai.api.status.StatusCode" json:"code,omitempty"`
-	// A longer description of the error.
+	// A short description of the error.
 	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	// More details of the given error.
+	// These details may be exposed to non-technical users.
+	// For technical details, try to use developer_notes field.
 	Details string `protobuf:"bytes,3,opt,name=details,proto3" json:"details,omitempty"`
 	// For some environment we may return a stack trace to help debug
 	// any issues.
@@ -39,13 +41,15 @@ type Status struct {
 	PercentCompleted uint32 `protobuf:"varint,5,opt,name=percent_completed,json=percentCompleted,proto3" json:"percent_completed,omitempty"`
 	// if status is pending, how much time is remaining (in seconds)
 	TimeRemaining uint32 `protobuf:"varint,6,opt,name=time_remaining,json=timeRemaining,proto3" json:"time_remaining,omitempty"`
-	// If we want to return a request id in the base status field
+	// A request ID may be present, to help monitoring and tracking requests
 	ReqId string `protobuf:"bytes,7,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
 	// Internal Annotation (do not set in production, for internal Clarifai use only).
 	InternalDetails string `protobuf:"bytes,8,opt,name=internal_details,json=internalDetails,proto3" json:"internal_details,omitempty"`
 	// Resource location info for redirect, when resource location has been changed.
 	RedirectInfo *RedirectInfo `protobuf:"bytes,9,opt,name=redirect_info,json=redirectInfo,proto3" json:"redirect_info,omitempty"`
 	// Notes for developer.
+	// These notes are rather technical details for developers how to interpret the status,
+	// e.g. why an error occurred and how to avoid getting the error.
 	DeveloperNotes string `protobuf:"bytes,10,opt,name=developer_notes,json=developerNotes,proto3" json:"developer_notes,omitempty"`
 }
 
