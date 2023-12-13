@@ -15809,12 +15809,13 @@ func (x *SingleWorkflowVersionResponse) GetWorkflowVersion() *WorkflowVersion {
 	return nil
 }
 
-// Request to start a app duplication process
+// Request to start app duplication jobs.
 type PostAppDuplicationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The user and application ID of the source application to duplicate.
 	UserAppId       *UserAppIDSet     `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	AppDuplications []*AppDuplication `protobuf:"bytes,2,rep,name=app_duplications,json=appDuplications,proto3" json:"app_duplications,omitempty"`
 }
@@ -15865,15 +15866,15 @@ func (x *PostAppDuplicationsRequest) GetAppDuplications() []*AppDuplication {
 	return nil
 }
 
-// Request to check app duplication status
+// Request to get an app duplication job.
 type GetAppDuplicationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
-	// The app duplication id
-	AppDuplicationId string `protobuf:"bytes,2,opt,name=app_duplication_id,json=appDuplicationId,proto3" json:"app_duplication_id,omitempty"`
+	// The ID of the user that created the app duplication job.
+	UserAppId        *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
+	AppDuplicationId string        `protobuf:"bytes,2,opt,name=app_duplication_id,json=appDuplicationId,proto3" json:"app_duplication_id,omitempty"`
 }
 
 func (x *GetAppDuplicationRequest) Reset() {
@@ -15922,12 +15923,13 @@ func (x *GetAppDuplicationRequest) GetAppDuplicationId() string {
 	return ""
 }
 
-// Request to list all the app duplication that user triggered.
+// Request to list all the app duplication jobs that a user created.
 type ListAppDuplicationsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The ID of the user whose app duplication jobs to list.
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	// (optional URL parameter) The page number. Pagination is used to split the results into chunks.
 	// Defaults to 1.

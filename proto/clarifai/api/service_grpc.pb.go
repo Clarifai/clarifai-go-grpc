@@ -354,12 +354,21 @@ type V2Client interface {
 	DeleteCollaborators(ctx context.Context, in *DeleteCollaboratorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(ctx context.Context, in *ListCollaborationsRequest, opts ...grpc.CallOption) (*MultiCollaborationsResponse, error)
-	// start to duplicate an app which copies all the inputs, annotations, models, concepts etc. to a new app.
-	// this is an async process, you should use ListAppDuplications or GetAppDuplication to check the status.
+	// PostAppDuplications starts async app duplication jobs which copy resources
+	// (inputs, annotations, models etc) from one application to another. It can
+	// also create the destination application if it does not exist, with fields
+	// (description, metadata etc) copied from the source application.
+	//
+	// A duplication job can be started by any user that can read from the source
+	// application (the target of this call) and can create and write to the
+	// destination application. The duplication is associated with the user that
+	// created it, so in order to read the status and progress of the job, that
+	// user's ID has to be used in the call to GetAppDuplication, which might be
+	// different to the source application owner ID in this call.
 	PostAppDuplications(ctx context.Context, in *PostAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error)
-	// list all the app duplications user triggers
+	// ListAppDuplications lists all app duplication jobs created by the user.
 	ListAppDuplications(ctx context.Context, in *ListAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error)
-	// get the app duplication status
+	// GetAppDuplication returns an app duplication job created by the user.
 	GetAppDuplication(ctx context.Context, in *GetAppDuplicationRequest, opts ...grpc.CallOption) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
 	PostTasks(ctx context.Context, in *PostTasksRequest, opts ...grpc.CallOption) (*MultiTaskResponse, error)
@@ -2780,12 +2789,21 @@ type V2Server interface {
 	DeleteCollaborators(context.Context, *DeleteCollaboratorsRequest) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(context.Context, *ListCollaborationsRequest) (*MultiCollaborationsResponse, error)
-	// start to duplicate an app which copies all the inputs, annotations, models, concepts etc. to a new app.
-	// this is an async process, you should use ListAppDuplications or GetAppDuplication to check the status.
+	// PostAppDuplications starts async app duplication jobs which copy resources
+	// (inputs, annotations, models etc) from one application to another. It can
+	// also create the destination application if it does not exist, with fields
+	// (description, metadata etc) copied from the source application.
+	//
+	// A duplication job can be started by any user that can read from the source
+	// application (the target of this call) and can create and write to the
+	// destination application. The duplication is associated with the user that
+	// created it, so in order to read the status and progress of the job, that
+	// user's ID has to be used in the call to GetAppDuplication, which might be
+	// different to the source application owner ID in this call.
 	PostAppDuplications(context.Context, *PostAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error)
-	// list all the app duplications user triggers
+	// ListAppDuplications lists all app duplication jobs created by the user.
 	ListAppDuplications(context.Context, *ListAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error)
-	// get the app duplication status
+	// GetAppDuplication returns an app duplication job created by the user.
 	GetAppDuplication(context.Context, *GetAppDuplicationRequest) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
 	PostTasks(context.Context, *PostTasksRequest) (*MultiTaskResponse, error)
