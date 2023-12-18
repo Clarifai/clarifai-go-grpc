@@ -437,6 +437,8 @@ type V2Client interface {
 	PostModuleVersions(ctx context.Context, in *PostModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Get usage count for specific module version.
+	GetModuleVersionUsageCount(ctx context.Context, in *GetModuleVersionUsageCountRequest, opts ...grpc.CallOption) (*SingleModuleVersionUsageCountResponse, error)
 	// Get installed modules vesrions for an app.
 	GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error)
 	// List installed modules vesrions for an app.
@@ -2166,6 +2168,15 @@ func (c *v2Client) DeleteModuleVersions(ctx context.Context, in *DeleteModuleVer
 	return out, nil
 }
 
+func (c *v2Client) GetModuleVersionUsageCount(ctx context.Context, in *GetModuleVersionUsageCountRequest, opts ...grpc.CallOption) (*SingleModuleVersionUsageCountResponse, error) {
+	out := new(SingleModuleVersionUsageCountResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModuleVersionUsageCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error) {
 	out := new(SingleInstalledModuleVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetInstalledModuleVersion", in, out, opts...)
@@ -2872,6 +2883,8 @@ type V2Server interface {
 	PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error)
+	// Get usage count for specific module version.
+	GetModuleVersionUsageCount(context.Context, *GetModuleVersionUsageCountRequest) (*SingleModuleVersionUsageCountResponse, error)
 	// Get installed modules vesrions for an app.
 	GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error)
 	// List installed modules vesrions for an app.
@@ -3504,6 +3517,9 @@ func (UnimplementedV2Server) PostModuleVersions(context.Context, *PostModuleVers
 }
 func (UnimplementedV2Server) DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModuleVersions not implemented")
+}
+func (UnimplementedV2Server) GetModuleVersionUsageCount(context.Context, *GetModuleVersionUsageCountRequest) (*SingleModuleVersionUsageCountResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetModuleVersionUsageCount not implemented")
 }
 func (UnimplementedV2Server) GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetInstalledModuleVersion not implemented")
@@ -6890,6 +6906,24 @@ func _V2_DeleteModuleVersions_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetModuleVersionUsageCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetModuleVersionUsageCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetModuleVersionUsageCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetModuleVersionUsageCount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetModuleVersionUsageCount(ctx, req.(*GetModuleVersionUsageCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetInstalledModuleVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetInstalledModuleVersionRequest)
 	if err := dec(in); err != nil {
@@ -8200,6 +8234,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteModuleVersions",
 			Handler:    _V2_DeleteModuleVersions_Handler,
+		},
+		{
+			MethodName: "GetModuleVersionUsageCount",
+			Handler:    _V2_GetModuleVersionUsageCount_Handler,
 		},
 		{
 			MethodName: "GetInstalledModuleVersion",
