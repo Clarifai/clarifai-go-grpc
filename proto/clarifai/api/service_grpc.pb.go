@@ -194,7 +194,8 @@ type V2Client interface {
 	PatchModelUseCases(ctx context.Context, in *PatchModelUseCasesRequest, opts ...grpc.CallOption) (*MultiModelUseCaseResponse, error)
 	// Update model languages tags
 	PatchModelLanguages(ctx context.Context, in *PatchModelLanguagesRequest, opts ...grpc.CallOption) (*MultiModelLanguageResponse, error)
-	// List all the inputs.
+	// Deprecated: Do not use.
+	// Deprecated: Unmaintained and ideally replaced with usage of datasets
 	ListModelInputs(ctx context.Context, in *ListModelInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Get a specific model from an app.
 	GetModelVersion(ctx context.Context, in *GetModelVersionRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
@@ -1186,6 +1187,7 @@ func (c *v2Client) PatchModelLanguages(ctx context.Context, in *PatchModelLangua
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) ListModelInputs(ctx context.Context, in *ListModelInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error) {
 	out := new(MultiInputResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListModelInputs", in, out, opts...)
@@ -2640,7 +2642,8 @@ type V2Server interface {
 	PatchModelUseCases(context.Context, *PatchModelUseCasesRequest) (*MultiModelUseCaseResponse, error)
 	// Update model languages tags
 	PatchModelLanguages(context.Context, *PatchModelLanguagesRequest) (*MultiModelLanguageResponse, error)
-	// List all the inputs.
+	// Deprecated: Do not use.
+	// Deprecated: Unmaintained and ideally replaced with usage of datasets
 	ListModelInputs(context.Context, *ListModelInputsRequest) (*MultiInputResponse, error)
 	// Get a specific model from an app.
 	GetModelVersion(context.Context, *GetModelVersionRequest) (*SingleModelVersionResponse, error)
