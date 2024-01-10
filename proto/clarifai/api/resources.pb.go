@@ -8041,27 +8041,23 @@ func (x *OutputConfig) GetModelMetadata() *structpb.Struct {
 	return nil
 }
 
-// ModelSpec is a definition of a Model type. This is used in model mode of portal
-// to list out the possible models that can be created and can be used to understand more about
-// the possible models in our platform.
+// ModelType is a definition of a set of models that generally have the same input and output fields.
+// This is used to understand more about the possible models in our platform.
 type ModelType struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// A unique identifies for this model type. This is differnt than the 'type' field below because
-	// the 'type' can be re-used for differnet input and output combinations whereas 'id' is always
-	// unique.
+	// A unique identifier for this model type.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// title for this model in model gallery
+	// A display title for this model.
 	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	// Description of this model type.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// The list of input fields that this model accepts. These are the keys of the Model's
-	// InputInfo.fields_map
+	// The list of input fields that this model expects as inputs.
+	// Used to validate that request input data has the expected fields.
 	InputFields []string `protobuf:"bytes,5,rep,name=input_fields,json=inputFields,proto3" json:"input_fields,omitempty"`
-	// The list of output fields that this model accepts. These are the keys of the Model's
-	// OutputInfo.fields_map
+	// The list of output fields that this model accepts.
 	OutputFields []string `protobuf:"bytes,6,rep,name=output_fields,json=outputFields,proto3" json:"output_fields,omitempty"`
 	// Is this model trainable in our platform.
 	Trainable bool `protobuf:"varint,8,opt,name=trainable,proto3" json:"trainable,omitempty"`
@@ -8071,19 +8067,16 @@ type ModelType struct {
 	// Is this model type only for internal users at this time.
 	InternalOnly bool `protobuf:"varint,10,opt,name=internal_only,json=internalOnly,proto3" json:"internal_only,omitempty"`
 	// The remaining fields are definitions of the configurable fields that exist.
-	// Each field has path into the Model object such as "name" as a top level or "output_info.data"
-	// if it's the Data object within the OutputInfo object. We decided to not break these up
-	// into input_info, train_info and output_info related parameters and instead use the path
-	// so that they are most flexible.
 	ModelTypeFields []*ModelTypeField `protobuf:"bytes,11,rep,name=model_type_fields,json=modelTypeFields,proto3" json:"model_type_fields,omitempty"`
 	// For sequence models we need to know when processing that they require temporal time frames
 	// in sequential order. This will be true for model types like trackers as an example.
 	RequiresSequentialFrames bool `protobuf:"varint,12,opt,name=requires_sequential_frames,json=requiresSequentialFrames,proto3" json:"requires_sequential_frames,omitempty"`
-	// Expected input layers of an uploaded model
+	// Expected input layers of an uploaded model.
 	ExpectedInputLayers []*ModelLayerInfo `protobuf:"bytes,16,rep,name=expected_input_layers,json=expectedInputLayers,proto3" json:"expected_input_layers,omitempty"`
 	// Expected output layers of an uploaded model
 	ExpectedOutputLayers []*ModelLayerInfo `protobuf:"bytes,17,rep,name=expected_output_layers,json=expectedOutputLayers,proto3" json:"expected_output_layers,omitempty"`
-	EvaluationType       EvaluationType    `protobuf:"varint,18,opt,name=evaluation_type,json=evaluationType,proto3,enum=clarifai.api.EvaluationType" json:"evaluation_type,omitempty"`
+	// What type of evaluation is supported for this model type.
+	EvaluationType EvaluationType `protobuf:"varint,18,opt,name=evaluation_type,json=evaluationType,proto3,enum=clarifai.api.EvaluationType" json:"evaluation_type,omitempty"`
 }
 
 func (x *ModelType) Reset() {
@@ -8421,7 +8414,7 @@ type ModelTypeField struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The path where the value of the field will be stored.
+	// The path where the value of the field will be stored in the model version object.
 	// Example:
 	// "output_info.data" would be the Data message in the OutputInfo message.
 	// "output_info.output_config.language" is in the OutputConfig message within OutputInfo
@@ -8864,11 +8857,14 @@ type ModelVersion struct {
 	// https://github.com/google/protobuf/blob/master/src/google/protobuf/struct.proto
 	Metadata *structpb.Struct `protobuf:"bytes,16,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	License  string           `protobuf:"bytes,17,opt,name=license,proto3" json:"license,omitempty"`
-	// Info about the model's output and configuration.
+	// Info about the model's output. Besides `output_info.data`, these fields should
+	// be reserved for parameters that affect the models outputs when inferencing.
+	// `output_info.data` is used to specify the training concepts for this model version.
 	OutputInfo *OutputInfo `protobuf:"bytes,19,opt,name=output_info,json=outputInfo,proto3" json:"output_info,omitempty"`
-	// Info about the models' input and configuration of them.
+	// Info about preprocessing the models inputs, before they are sent to this model for training or inferencing.
+	// E.g.: `input_info.base_embed_model` lets us know inputs should be ran through a base model before being sent to an embedding-classifier.
 	InputInfo *InputInfo `protobuf:"bytes,20,opt,name=input_info,json=inputInfo,proto3" json:"input_info,omitempty"`
-	// Configuration for the training process of this model.
+	// Configuration for the training process of this model version.
 	TrainInfo *TrainInfo `protobuf:"bytes,21,opt,name=train_info,json=trainInfo,proto3" json:"train_info,omitempty"`
 	// Configuration used to import model from third-party toolkits
 	ImportInfo *ImportInfo `protobuf:"bytes,22,opt,name=import_info,json=importInfo,proto3" json:"import_info,omitempty"`
