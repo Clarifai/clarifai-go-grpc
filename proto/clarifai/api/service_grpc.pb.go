@@ -436,6 +436,8 @@ type V2Client interface {
 	ListModuleVersions(ctx context.Context, in *ListModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
 	// Create a new module version to trigger training of the module.
 	PostModuleVersions(ctx context.Context, in *PostModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
+	// Modify details of an existing module version.
+	PatchModuleVersions(ctx context.Context, in *PatchModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Get usage count for specific module version.
@@ -2161,6 +2163,15 @@ func (c *v2Client) PostModuleVersions(ctx context.Context, in *PostModuleVersion
 	return out, nil
 }
 
+func (c *v2Client) PatchModuleVersions(ctx context.Context, in *PatchModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error) {
+	out := new(MultiModuleVersionResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchModuleVersions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteModuleVersions", in, out, opts...)
@@ -2884,6 +2895,8 @@ type V2Server interface {
 	ListModuleVersions(context.Context, *ListModuleVersionsRequest) (*MultiModuleVersionResponse, error)
 	// Create a new module version to trigger training of the module.
 	PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error)
+	// Modify details of an existing module version.
+	PatchModuleVersions(context.Context, *PatchModuleVersionsRequest) (*MultiModuleVersionResponse, error)
 	// Delete a multiple module version.
 	DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error)
 	// Get usage count for specific module version.
@@ -3517,6 +3530,9 @@ func (UnimplementedV2Server) ListModuleVersions(context.Context, *ListModuleVers
 }
 func (UnimplementedV2Server) PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModuleVersions not implemented")
+}
+func (UnimplementedV2Server) PatchModuleVersions(context.Context, *PatchModuleVersionsRequest) (*MultiModuleVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchModuleVersions not implemented")
 }
 func (UnimplementedV2Server) DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModuleVersions not implemented")
@@ -6891,6 +6907,24 @@ func _V2_PostModuleVersions_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchModuleVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchModuleVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchModuleVersions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchModuleVersions(ctx, req.(*PatchModuleVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_DeleteModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteModuleVersionsRequest)
 	if err := dec(in); err != nil {
@@ -8233,6 +8267,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModuleVersions",
 			Handler:    _V2_PostModuleVersions_Handler,
+		},
+		{
+			MethodName: "PatchModuleVersions",
+			Handler:    _V2_PatchModuleVersions_Handler,
 		},
 		{
 			MethodName: "DeleteModuleVersions",
