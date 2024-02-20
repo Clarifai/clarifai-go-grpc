@@ -16169,7 +16169,7 @@ type GetTaskRequest struct {
 	UserAppId *UserAppIDSet `protobuf:"bytes,1,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
 	TaskId    string        `protobuf:"bytes,2,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
 	// (optional URL parameter) List of additional fields to be included in the response.
-	// Currently supported: all, worker.users, review.users.
+	// Currently supported: all, worker.users, review.users, metrics.estimated_labeled_inputs_count.
 	AdditionalFields []string `protobuf:"bytes,3,rep,name=additional_fields,json=additionalFields,proto3" json:"additional_fields,omitempty"`
 }
 
@@ -16249,7 +16249,7 @@ type ListTasksRequest struct {
 	// It is automatically set to true if label_order_ids is set.
 	IncludingLabelOrderTasks bool `protobuf:"varint,6,opt,name=including_label_order_tasks,json=includingLabelOrderTasks,proto3" json:"including_label_order_tasks,omitempty"`
 	// (optional URL parameter) List of additional fields to be included in the response.
-	// Currently supported: all, worker.users, review.users.
+	// Currently supported: all, worker.users, review.users, metrics.estimated_labeled_inputs_count.
 	AdditionalFields []string `protobuf:"bytes,7,rep,name=additional_fields,json=additionalFields,proto3" json:"additional_fields,omitempty"`
 	// (optional) task IDs to filter on
 	Ids []string `protobuf:"bytes,9,rep,name=ids,proto3" json:"ids,omitempty"`
