@@ -11970,8 +11970,9 @@ type MultiOutputResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status  *status.Status `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	Outputs []*Output      `protobuf:"bytes,2,rep,name=outputs,proto3" json:"outputs,omitempty"`
+	Status *status.Status `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	// For each input processed during model prediction we create one output.
+	Outputs []*Output `protobuf:"bytes,2,rep,name=outputs,proto3" json:"outputs,omitempty"`
 }
 
 func (x *MultiOutputResponse) Reset() {

@@ -241,6 +241,11 @@ type V2Client interface {
 	// List all the workflows.
 	ListWorkflows(ctx context.Context, in *ListWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Add a workflow to an app.
+	// Note(zeiler): the order of the workflows that are returned from this endpoint
+	// may be different than the order in which the user provides them. This is because
+	// we reorder by a sort that optimizes for performance of the graph and its dependencies.
+	// When using the workflow in any future call the order returned by this endpoint
+	// will be used.
 	PostWorkflows(ctx context.Context, in *PostWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
 	PatchWorkflows(ctx context.Context, in *PatchWorkflowsRequest, opts ...grpc.CallOption) (*MultiWorkflowResponse, error)
@@ -2700,6 +2705,11 @@ type V2Server interface {
 	// List all the workflows.
 	ListWorkflows(context.Context, *ListWorkflowsRequest) (*MultiWorkflowResponse, error)
 	// Add a workflow to an app.
+	// Note(zeiler): the order of the workflows that are returned from this endpoint
+	// may be different than the order in which the user provides them. This is because
+	// we reorder by a sort that optimizes for performance of the graph and its dependencies.
+	// When using the workflow in any future call the order returned by this endpoint
+	// will be used.
 	PostWorkflows(context.Context, *PostWorkflowsRequest) (*MultiWorkflowResponse, error)
 	// Patch one or more workflows.
 	PatchWorkflows(context.Context, *PatchWorkflowsRequest) (*MultiWorkflowResponse, error)
