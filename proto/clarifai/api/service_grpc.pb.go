@@ -213,6 +213,12 @@ type V2Client interface {
 	PatchModelVersions(ctx context.Context, in *PatchModelVersionsRequest, opts ...grpc.CallOption) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(ctx context.Context, in *DeleteModelVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the model_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the model_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the model_version_id specified for your model_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the model_bytes.
+	PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error)
 	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
@@ -350,6 +356,7 @@ type V2Client interface {
 	ListStatusCodes(ctx context.Context, in *ListStatusCodesRequest, opts ...grpc.CallOption) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, opts ...grpc.CallOption) (*SingleStatusCodeResponse, error)
+	GetResourcePrice(ctx context.Context, in *GetResourcePriceRequest, opts ...grpc.CallOption) (*GetResourcePriceResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(ctx context.Context, in *ListCollaboratorsRequest, opts ...grpc.CallOption) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -1285,6 +1292,37 @@ func (c *v2Client) DeleteModelVersion(ctx context.Context, in *DeleteModelVersio
 	return out, nil
 }
 
+func (c *v2Client) PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], "/clarifai.api.V2/PostModelVersionsUpload", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2PostModelVersionsUploadClient{stream}
+	return x, nil
+}
+
+type V2_PostModelVersionsUploadClient interface {
+	Send(*PostModelVersionsUploadRequest) error
+	Recv() (*PostModelVersionsUploadResponse, error)
+	grpc.ClientStream
+}
+
+type v2PostModelVersionsUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2PostModelVersionsUploadClient) Send(m *PostModelVersionsUploadRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *v2PostModelVersionsUploadClient) Recv() (*PostModelVersionsUploadResponse, error) {
+	m := new(PostModelVersionsUploadResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *v2Client) GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error) {
 	out := new(SingleModelVersionResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetModelVersionMetrics", in, out, opts...)
@@ -1829,6 +1867,15 @@ func (c *v2Client) ListStatusCodes(ctx context.Context, in *ListStatusCodesReque
 func (c *v2Client) GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, opts ...grpc.CallOption) (*SingleStatusCodeResponse, error) {
 	out := new(SingleStatusCodeResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetStatusCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetResourcePrice(ctx context.Context, in *GetResourcePriceRequest, opts ...grpc.CallOption) (*GetResourcePriceResponse, error) {
+	out := new(GetResourcePriceResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetResourcePrice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2677,6 +2724,12 @@ type V2Server interface {
 	PatchModelVersions(context.Context, *PatchModelVersionsRequest) (*MultiModelVersionResponse, error)
 	// Delete a single model.
 	DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the model_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the model_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the model_version_id specified for your model_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the model_bytes.
+	PostModelVersionsUpload(V2_PostModelVersionsUploadServer) error
 	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
 	GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
@@ -2814,6 +2867,7 @@ type V2Server interface {
 	ListStatusCodes(context.Context, *ListStatusCodesRequest) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error)
+	GetResourcePrice(context.Context, *GetResourcePriceRequest) (*GetResourcePriceResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -3247,6 +3301,9 @@ func (UnimplementedV2Server) PatchModelVersions(context.Context, *PatchModelVers
 func (UnimplementedV2Server) DeleteModelVersion(context.Context, *DeleteModelVersionRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelVersion not implemented")
 }
+func (UnimplementedV2Server) PostModelVersionsUpload(V2_PostModelVersionsUploadServer) error {
+	return status1.Errorf(codes.Unimplemented, "method PostModelVersionsUpload not implemented")
+}
 func (UnimplementedV2Server) GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModelVersionMetrics not implemented")
 }
@@ -3429,6 +3486,9 @@ func (UnimplementedV2Server) ListStatusCodes(context.Context, *ListStatusCodesRe
 }
 func (UnimplementedV2Server) GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetStatusCode not implemented")
+}
+func (UnimplementedV2Server) GetResourcePrice(context.Context, *GetResourcePriceRequest) (*GetResourcePriceResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetResourcePrice not implemented")
 }
 func (UnimplementedV2Server) ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListCollaborators not implemented")
@@ -5153,6 +5213,32 @@ func _V2_DeleteModelVersion_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostModelVersionsUpload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(V2Server).PostModelVersionsUpload(&v2PostModelVersionsUploadServer{stream})
+}
+
+type V2_PostModelVersionsUploadServer interface {
+	Send(*PostModelVersionsUploadResponse) error
+	Recv() (*PostModelVersionsUploadRequest, error)
+	grpc.ServerStream
+}
+
+type v2PostModelVersionsUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2PostModelVersionsUploadServer) Send(m *PostModelVersionsUploadResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *v2PostModelVersionsUploadServer) Recv() (*PostModelVersionsUploadRequest, error) {
+	m := new(PostModelVersionsUploadRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func _V2_GetModelVersionMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetModelVersionMetricsRequest)
 	if err := dec(in); err != nil {
@@ -6247,6 +6333,24 @@ func _V2_GetStatusCode_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetStatusCode(ctx, req.(*GetStatusCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetResourcePrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourcePriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetResourcePrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetResourcePrice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetResourcePrice(ctx, req.(*GetResourcePriceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8131,6 +8235,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_GetStatusCode_Handler,
 		},
 		{
+			MethodName: "GetResourcePrice",
+			Handler:    _V2_GetResourcePrice_Handler,
+		},
+		{
 			MethodName: "ListCollaborators",
 			Handler:    _V2_ListCollaborators_Handler,
 		},
@@ -8419,6 +8527,13 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostModelVersionsTrainingTimeEstimate_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "PostModelVersionsUpload",
+			Handler:       _V2_PostModelVersionsUpload_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/clarifai/api/service.proto",
 }
