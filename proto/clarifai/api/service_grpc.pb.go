@@ -360,7 +360,6 @@ type V2Client interface {
 	ListStatusCodes(ctx context.Context, in *ListStatusCodesRequest, opts ...grpc.CallOption) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, opts ...grpc.CallOption) (*SingleStatusCodeResponse, error)
-	GetResourcePrice(ctx context.Context, in *GetResourcePriceRequest, opts ...grpc.CallOption) (*GetResourcePriceResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(ctx context.Context, in *ListCollaboratorsRequest, opts ...grpc.CallOption) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -485,7 +484,9 @@ type V2Client interface {
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List next non-labeled and unassigned inputs from task's dataset
 	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	// PutTaskAssignments performs an action for the task assignments in given task.
+	// All the actions are theoretically idempotent, but practically, in the current implementation,
+	// the REVIEW_START action is not idempotent. See PutTaskAssignmentsRequestAction for more details.
 	PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiTaskAssignmentResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
@@ -525,17 +526,20 @@ type V2Client interface {
 	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
-	// Get a specific runner from an app.
+	// Get a specific runner.
+	// TODO(zeiler): runner_id is a UUID so can list globally as well.
 	GetRunner(ctx context.Context, in *GetRunnerRequest, opts ...grpc.CallOption) (*SingleRunnerResponse, error)
-	// List all the runners in community, by user or by app.
+	// List all the runners for the user.
 	ListRunners(ctx context.Context, in *ListRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
-	// Add a runners to an app.
+	// Add a runners to a user.
 	PostRunners(ctx context.Context, in *PostRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
 	// Delete multiple runners in one request.
 	DeleteRunners(ctx context.Context, in *DeleteRunnersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List items for the remote runner to work on.
+	// since the runner_id is a UUID we can access it directly too.
 	ListRunnerItems(ctx context.Context, in *ListRunnerItemsRequest, opts ...grpc.CallOption) (*MultiRunnerItemResponse, error)
 	// Post back outputs from remote runners
+	// since the runner_id is a UUID we can access it directly too.
 	PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItemOutputsRequest, opts ...grpc.CallOption) (*MultiRunnerItemOutputResponse, error)
 	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
 }
@@ -1895,15 +1899,6 @@ func (c *v2Client) GetStatusCode(ctx context.Context, in *GetStatusCodeRequest, 
 	return out, nil
 }
 
-func (c *v2Client) GetResourcePrice(ctx context.Context, in *GetResourcePriceRequest, opts ...grpc.CallOption) (*GetResourcePriceResponse, error) {
-	out := new(GetResourcePriceResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetResourcePrice", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) ListCollaborators(ctx context.Context, in *ListCollaboratorsRequest, opts ...grpc.CallOption) (*MultiCollaboratorsResponse, error) {
 	out := new(MultiCollaboratorsResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListCollaborators", in, out, opts...)
@@ -2893,7 +2888,6 @@ type V2Server interface {
 	ListStatusCodes(context.Context, *ListStatusCodesRequest) (*MultiStatusCodeResponse, error)
 	// Get more details for a status code.
 	GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error)
-	GetResourcePrice(context.Context, *GetResourcePriceRequest) (*GetResourcePriceResponse, error)
 	// owner list users who the app is shared with
 	ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error)
 	// add collaborators to an app.
@@ -3018,7 +3012,9 @@ type V2Server interface {
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
 	// List next non-labeled and unassigned inputs from task's dataset
 	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
-	// PutTaskAssignments evaluates all the annotations by labeler (authenticated user) for given task (task_id) and input (input_id).
+	// PutTaskAssignments performs an action for the task assignments in given task.
+	// All the actions are theoretically idempotent, but practically, in the current implementation,
+	// the REVIEW_START action is not idempotent. See PutTaskAssignmentsRequestAction for more details.
 	PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*MultiTaskAssignmentResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
@@ -3058,17 +3054,20 @@ type V2Server interface {
 	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
-	// Get a specific runner from an app.
+	// Get a specific runner.
+	// TODO(zeiler): runner_id is a UUID so can list globally as well.
 	GetRunner(context.Context, *GetRunnerRequest) (*SingleRunnerResponse, error)
-	// List all the runners in community, by user or by app.
+	// List all the runners for the user.
 	ListRunners(context.Context, *ListRunnersRequest) (*MultiRunnerResponse, error)
-	// Add a runners to an app.
+	// Add a runners to a user.
 	PostRunners(context.Context, *PostRunnersRequest) (*MultiRunnerResponse, error)
 	// Delete multiple runners in one request.
 	DeleteRunners(context.Context, *DeleteRunnersRequest) (*status.BaseResponse, error)
 	// List items for the remote runner to work on.
+	// since the runner_id is a UUID we can access it directly too.
 	ListRunnerItems(context.Context, *ListRunnerItemsRequest) (*MultiRunnerItemResponse, error)
 	// Post back outputs from remote runners
+	// since the runner_id is a UUID we can access it directly too.
 	PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error)
 	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
 	mustEmbedUnimplementedV2Server()
@@ -3518,9 +3517,6 @@ func (UnimplementedV2Server) ListStatusCodes(context.Context, *ListStatusCodesRe
 }
 func (UnimplementedV2Server) GetStatusCode(context.Context, *GetStatusCodeRequest) (*SingleStatusCodeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetStatusCode not implemented")
-}
-func (UnimplementedV2Server) GetResourcePrice(context.Context, *GetResourcePriceRequest) (*GetResourcePriceResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetResourcePrice not implemented")
 }
 func (UnimplementedV2Server) ListCollaborators(context.Context, *ListCollaboratorsRequest) (*MultiCollaboratorsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListCollaborators not implemented")
@@ -6405,24 +6401,6 @@ func _V2_GetStatusCode_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_GetResourcePrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetResourcePriceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetResourcePrice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/GetResourcePrice",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetResourcePrice(ctx, req.(*GetResourcePriceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_ListCollaborators_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListCollaboratorsRequest)
 	if err := dec(in); err != nil {
@@ -8309,10 +8287,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetStatusCode",
 			Handler:    _V2_GetStatusCode_Handler,
-		},
-		{
-			MethodName: "GetResourcePrice",
-			Handler:    _V2_GetResourcePrice_Handler,
 		},
 		{
 			MethodName: "ListCollaborators",
