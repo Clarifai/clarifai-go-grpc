@@ -71,6 +71,10 @@ type V2Client interface {
 	// Patch one or more annotations.
 	PatchAnnotations(ctx context.Context, in *PatchAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Patch annotations status by worker id and task id.
+	// Deprecated: Use PutTaskAssignments to update task annotations.
+	//
+	//	For example, you can use PutTaskAssignments with action REVIEW_APPROVE
+	//	to approve task assignments and associated annotations in bulk.
 	PatchAnnotationsStatus(ctx context.Context, in *PatchAnnotationsStatusRequest, opts ...grpc.CallOption) (*PatchAnnotationsStatusResponse, error)
 	// Delete a single annotation.
 	DeleteAnnotation(ctx context.Context, in *DeleteAnnotationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
@@ -111,6 +115,11 @@ type V2Client interface {
 	PostInputsSearches(ctx context.Context, in *PostInputsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Get predicted outputs from the model.
 	PostModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (*MultiOutputResponse, error)
+	// TODO(zeiler): will need to
+	// Single request but streaming resopnses.
+	GenerateModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (V2_GenerateModelOutputsClient, error)
+	// Stream of requests and stream of responses
+	StreamModelOutputs(ctx context.Context, opts ...grpc.CallOption) (V2_StreamModelOutputsClient, error)
 	// List all the datasets.
 	ListDatasets(ctx context.Context, in *ListDatasetsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error)
 	// Get a specific dataset.
@@ -196,6 +205,8 @@ type V2Client interface {
 	PatchModelLanguages(ctx context.Context, in *PatchModelLanguagesRequest, opts ...grpc.CallOption) (*MultiModelLanguageResponse, error)
 	// Deprecated: Do not use.
 	// Deprecated: Unmaintained and ideally replaced with usage of datasets
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	ListModelInputs(ctx context.Context, in *ListModelInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Get a specific model from an app.
 	GetModelVersion(ctx context.Context, in *GetModelVersionRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
@@ -223,8 +234,10 @@ type V2Client interface {
 	PutModelVersionExports(ctx context.Context, in *PutModelVersionExportsRequest, opts ...grpc.CallOption) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
 	GetModelVersionExport(ctx context.Context, in *GetModelVersionExportRequest, opts ...grpc.CallOption) (*SingleModelVersionExportResponse, error)
-	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
+	// Deprecated: Use GetEvaluation instead
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	GetModelVersionMetrics(ctx context.Context, in *GetModelVersionMetricsRequest, opts ...grpc.CallOption) (*SingleModelVersionResponse, error)
 	// Deprecated, use PostEvaluations instead
 	// Run the evaluation metrics for a model version.
@@ -333,6 +346,8 @@ type V2Client interface {
 	// Execute a new search and optionally save it.
 	//
 	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(ctx context.Context, in *PostSearchesByIDRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
@@ -482,7 +497,12 @@ type V2Client interface {
 	CancelBulkOperations(ctx context.Context, in *CancelBulkOperationRequest, opts ...grpc.CallOption) (*MultiBulkOperationsResponse, error)
 	// delete one or more terminated bulk operations
 	DeleteBulkOperations(ctx context.Context, in *DeleteBulkOperationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// List next non-labeled and unassigned inputs from task's dataset
+	// Deprecated: Use PutTaskAssignments with action=LABEL_START.
+	//
+	//	This endpoint has initially been designed as a GET request,
+	//	but has been re-designed to serve a PUT logic.
+	//	In order to clearly highlight that this endpoint serves a PUT request,
+	//	this endpoint has been deprecated and replaced by PutTaskAssignments with action=LABEL_START.
 	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// PutTaskAssignments performs an action for the task assignments in given task.
 	// All the actions are theoretically idempotent, but practically, in the current implementation,
@@ -541,6 +561,14 @@ type V2Client interface {
 	// Post back outputs from remote runners
 	// since the runner_id is a UUID we can access it directly too.
 	PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItemOutputsRequest, opts ...grpc.CallOption) (*MultiRunnerItemOutputResponse, error)
+	// This maintains a single request for asking the API if there is any work to be done, processing
+	// it and streaming back results.
+	// To do that first handshake the MultiRunnerItemOutputResponse will have RUNNER_STREAM_START
+	// status filled in so that the API knows to respond with a MultiRunnerItemResponse.
+	// For now there will only be one of those if the model prediction only has one request.
+	// NOTE(zeiler): downside of this is you can't use HTTP REST requests to do runner work.
+	ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error)
+	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
 }
 
@@ -910,6 +938,69 @@ func (c *v2Client) PostModelOutputs(ctx context.Context, in *PostModelOutputsReq
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *v2Client) GenerateModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (V2_GenerateModelOutputsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], "/clarifai.api.V2/GenerateModelOutputs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2GenerateModelOutputsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V2_GenerateModelOutputsClient interface {
+	Recv() (*MultiOutputResponse, error)
+	grpc.ClientStream
+}
+
+type v2GenerateModelOutputsClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2GenerateModelOutputsClient) Recv() (*MultiOutputResponse, error) {
+	m := new(MultiOutputResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *v2Client) StreamModelOutputs(ctx context.Context, opts ...grpc.CallOption) (V2_StreamModelOutputsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[1], "/clarifai.api.V2/StreamModelOutputs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2StreamModelOutputsClient{stream}
+	return x, nil
+}
+
+type V2_StreamModelOutputsClient interface {
+	Send(*PostModelOutputsRequest) error
+	Recv() (*MultiOutputResponse, error)
+	grpc.ClientStream
+}
+
+type v2StreamModelOutputsClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2StreamModelOutputsClient) Send(m *PostModelOutputsRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *v2StreamModelOutputsClient) Recv() (*MultiOutputResponse, error) {
+	m := new(MultiOutputResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *v2Client) ListDatasets(ctx context.Context, in *ListDatasetsRequest, opts ...grpc.CallOption) (*MultiDatasetResponse, error) {
@@ -1301,7 +1392,7 @@ func (c *v2Client) DeleteModelVersion(ctx context.Context, in *DeleteModelVersio
 }
 
 func (c *v2Client) PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error) {
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], "/clarifai.api.V2/PostModelVersionsUpload", opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[2], "/clarifai.api.V2/PostModelVersionsUpload", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2538,6 +2629,37 @@ func (c *v2Client) PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItem
 	return out, nil
 }
 
+func (c *v2Client) ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[3], "/clarifai.api.V2/ProcessRunnerItems", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2ProcessRunnerItemsClient{stream}
+	return x, nil
+}
+
+type V2_ProcessRunnerItemsClient interface {
+	Send(*PostRunnerItemOutputsRequest) error
+	Recv() (*MultiRunnerItemResponse, error)
+	grpc.ClientStream
+}
+
+type v2ProcessRunnerItemsClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2ProcessRunnerItemsClient) Send(m *PostRunnerItemOutputsRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *v2ProcessRunnerItemsClient) Recv() (*MultiRunnerItemResponse, error) {
+	m := new(MultiRunnerItemResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *v2Client) PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error) {
 	out := new(MultiTrainingTimeEstimateResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostModelVersionsTrainingTimeEstimate", in, out, opts...)
@@ -2599,6 +2721,10 @@ type V2Server interface {
 	// Patch one or more annotations.
 	PatchAnnotations(context.Context, *PatchAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// Patch annotations status by worker id and task id.
+	// Deprecated: Use PutTaskAssignments to update task annotations.
+	//
+	//	For example, you can use PutTaskAssignments with action REVIEW_APPROVE
+	//	to approve task assignments and associated annotations in bulk.
 	PatchAnnotationsStatus(context.Context, *PatchAnnotationsStatusRequest) (*PatchAnnotationsStatusResponse, error)
 	// Delete a single annotation.
 	DeleteAnnotation(context.Context, *DeleteAnnotationRequest) (*status.BaseResponse, error)
@@ -2639,6 +2765,11 @@ type V2Server interface {
 	PostInputsSearches(context.Context, *PostInputsSearchesRequest) (*MultiSearchResponse, error)
 	// Get predicted outputs from the model.
 	PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error)
+	// TODO(zeiler): will need to
+	// Single request but streaming resopnses.
+	GenerateModelOutputs(*PostModelOutputsRequest, V2_GenerateModelOutputsServer) error
+	// Stream of requests and stream of responses
+	StreamModelOutputs(V2_StreamModelOutputsServer) error
 	// List all the datasets.
 	ListDatasets(context.Context, *ListDatasetsRequest) (*MultiDatasetResponse, error)
 	// Get a specific dataset.
@@ -2724,6 +2855,8 @@ type V2Server interface {
 	PatchModelLanguages(context.Context, *PatchModelLanguagesRequest) (*MultiModelLanguageResponse, error)
 	// Deprecated: Do not use.
 	// Deprecated: Unmaintained and ideally replaced with usage of datasets
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	ListModelInputs(context.Context, *ListModelInputsRequest) (*MultiInputResponse, error)
 	// Get a specific model from an app.
 	GetModelVersion(context.Context, *GetModelVersionRequest) (*SingleModelVersionResponse, error)
@@ -2751,8 +2884,10 @@ type V2Server interface {
 	PutModelVersionExports(context.Context, *PutModelVersionExportsRequest) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
 	GetModelVersionExport(context.Context, *GetModelVersionExportRequest) (*SingleModelVersionExportResponse, error)
-	// Deprecated: Use GetEvaluation instead
 	// Get the evaluation metrics for a model version.
+	// Deprecated: Use GetEvaluation instead
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	GetModelVersionMetrics(context.Context, *GetModelVersionMetricsRequest) (*SingleModelVersionResponse, error)
 	// Deprecated, use PostEvaluations instead
 	// Run the evaluation metrics for a model version.
@@ -2861,6 +2996,8 @@ type V2Server interface {
 	// Execute a new search and optionally save it.
 	//
 	// Deprecated: Use PostInputsSearches or PostAnnotationsSearches instead.
+	//
+	//	The server may refuse to accept requests to this endpoint.
 	PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error)
@@ -3010,7 +3147,12 @@ type V2Server interface {
 	CancelBulkOperations(context.Context, *CancelBulkOperationRequest) (*MultiBulkOperationsResponse, error)
 	// delete one or more terminated bulk operations
 	DeleteBulkOperations(context.Context, *DeleteBulkOperationRequest) (*status.BaseResponse, error)
-	// List next non-labeled and unassigned inputs from task's dataset
+	// Deprecated: Use PutTaskAssignments with action=LABEL_START.
+	//
+	//	This endpoint has initially been designed as a GET request,
+	//	but has been re-designed to serve a PUT logic.
+	//	In order to clearly highlight that this endpoint serves a PUT request,
+	//	this endpoint has been deprecated and replaced by PutTaskAssignments with action=LABEL_START.
 	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
 	// PutTaskAssignments performs an action for the task assignments in given task.
 	// All the actions are theoretically idempotent, but practically, in the current implementation,
@@ -3069,6 +3211,14 @@ type V2Server interface {
 	// Post back outputs from remote runners
 	// since the runner_id is a UUID we can access it directly too.
 	PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error)
+	// This maintains a single request for asking the API if there is any work to be done, processing
+	// it and streaming back results.
+	// To do that first handshake the MultiRunnerItemOutputResponse will have RUNNER_STREAM_START
+	// status filled in so that the API knows to respond with a MultiRunnerItemResponse.
+	// For now there will only be one of those if the model prediction only has one request.
+	// NOTE(zeiler): downside of this is you can't use HTTP REST requests to do runner work.
+	ProcessRunnerItems(V2_ProcessRunnerItemsServer) error
+	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
@@ -3196,6 +3346,12 @@ func (UnimplementedV2Server) PostInputsSearches(context.Context, *PostInputsSear
 }
 func (UnimplementedV2Server) PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelOutputs not implemented")
+}
+func (UnimplementedV2Server) GenerateModelOutputs(*PostModelOutputsRequest, V2_GenerateModelOutputsServer) error {
+	return status1.Errorf(codes.Unimplemented, "method GenerateModelOutputs not implemented")
+}
+func (UnimplementedV2Server) StreamModelOutputs(V2_StreamModelOutputsServer) error {
+	return status1.Errorf(codes.Unimplemented, "method StreamModelOutputs not implemented")
 }
 func (UnimplementedV2Server) ListDatasets(context.Context, *ListDatasetsRequest) (*MultiDatasetResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListDatasets not implemented")
@@ -3730,6 +3886,9 @@ func (UnimplementedV2Server) ListRunnerItems(context.Context, *ListRunnerItemsRe
 }
 func (UnimplementedV2Server) PostRunnerItemOutputs(context.Context, *PostRunnerItemOutputsRequest) (*MultiRunnerItemOutputResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostRunnerItemOutputs not implemented")
+}
+func (UnimplementedV2Server) ProcessRunnerItems(V2_ProcessRunnerItemsServer) error {
+	return status1.Errorf(codes.Unimplemented, "method ProcessRunnerItems not implemented")
 }
 func (UnimplementedV2Server) PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsTrainingTimeEstimate not implemented")
@@ -4465,6 +4624,53 @@ func _V2_PostModelOutputs_Handler(srv interface{}, ctx context.Context, dec func
 		return srv.(V2Server).PostModelOutputs(ctx, req.(*PostModelOutputsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GenerateModelOutputs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PostModelOutputsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(V2Server).GenerateModelOutputs(m, &v2GenerateModelOutputsServer{stream})
+}
+
+type V2_GenerateModelOutputsServer interface {
+	Send(*MultiOutputResponse) error
+	grpc.ServerStream
+}
+
+type v2GenerateModelOutputsServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2GenerateModelOutputsServer) Send(m *MultiOutputResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _V2_StreamModelOutputs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(V2Server).StreamModelOutputs(&v2StreamModelOutputsServer{stream})
+}
+
+type V2_StreamModelOutputsServer interface {
+	Send(*MultiOutputResponse) error
+	Recv() (*PostModelOutputsRequest, error)
+	grpc.ServerStream
+}
+
+type v2StreamModelOutputsServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2StreamModelOutputsServer) Send(m *MultiOutputResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *v2StreamModelOutputsServer) Recv() (*PostModelOutputsRequest, error) {
+	m := new(PostModelOutputsRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func _V2_ListDatasets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -7679,6 +7885,32 @@ func _V2_PostRunnerItemOutputs_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ProcessRunnerItems_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(V2Server).ProcessRunnerItems(&v2ProcessRunnerItemsServer{stream})
+}
+
+type V2_ProcessRunnerItemsServer interface {
+	Send(*MultiRunnerItemResponse) error
+	Recv() (*PostRunnerItemOutputsRequest, error)
+	grpc.ServerStream
+}
+
+type v2ProcessRunnerItemsServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2ProcessRunnerItemsServer) Send(m *MultiRunnerItemResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *v2ProcessRunnerItemsServer) Recv() (*PostRunnerItemOutputsRequest, error) {
+	m := new(PostRunnerItemOutputsRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func _V2_PostModelVersionsTrainingTimeEstimate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostModelVersionsTrainingTimeEstimateRequest)
 	if err := dec(in); err != nil {
@@ -8579,8 +8811,25 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
+			StreamName:    "GenerateModelOutputs",
+			Handler:       _V2_GenerateModelOutputs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "StreamModelOutputs",
+			Handler:       _V2_StreamModelOutputs_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
 			StreamName:    "PostModelVersionsUpload",
 			Handler:       _V2_PostModelVersionsUpload_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "ProcessRunnerItems",
+			Handler:       _V2_ProcessRunnerItems_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
