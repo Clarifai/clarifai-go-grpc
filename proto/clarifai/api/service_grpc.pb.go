@@ -570,6 +570,13 @@ type V2Client interface {
 	ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error)
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
+	// Nodepools CRUD
+	GetNodepool(ctx context.Context, in *GetNodepoolRequest, opts ...grpc.CallOption) (*SingleNodepoolResponse, error)
+	ListNodepools(ctx context.Context, in *ListNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
+	PostNodepools(ctx context.Context, in *PostNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
+	PatchNodepools(ctx context.Context, in *PatchNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
+	// Delete multiple nodepools in one request.
+	DeleteNodepools(ctx context.Context, in *DeleteNodepoolsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 }
 
 type v2Client struct {
@@ -2669,6 +2676,51 @@ func (c *v2Client) PostModelVersionsTrainingTimeEstimate(ctx context.Context, in
 	return out, nil
 }
 
+func (c *v2Client) GetNodepool(ctx context.Context, in *GetNodepoolRequest, opts ...grpc.CallOption) (*SingleNodepoolResponse, error) {
+	out := new(SingleNodepoolResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetNodepool", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListNodepools(ctx context.Context, in *ListNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error) {
+	out := new(MultiNodepoolResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListNodepools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostNodepools(ctx context.Context, in *PostNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error) {
+	out := new(MultiNodepoolResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostNodepools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchNodepools(ctx context.Context, in *PatchNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error) {
+	out := new(MultiNodepoolResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchNodepools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteNodepools(ctx context.Context, in *DeleteNodepoolsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteNodepools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -3220,6 +3272,13 @@ type V2Server interface {
 	ProcessRunnerItems(V2_ProcessRunnerItemsServer) error
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
+	// Nodepools CRUD
+	GetNodepool(context.Context, *GetNodepoolRequest) (*SingleNodepoolResponse, error)
+	ListNodepools(context.Context, *ListNodepoolsRequest) (*MultiNodepoolResponse, error)
+	PostNodepools(context.Context, *PostNodepoolsRequest) (*MultiNodepoolResponse, error)
+	PatchNodepools(context.Context, *PatchNodepoolsRequest) (*MultiNodepoolResponse, error)
+	// Delete multiple nodepools in one request.
+	DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -3892,6 +3951,21 @@ func (UnimplementedV2Server) ProcessRunnerItems(V2_ProcessRunnerItemsServer) err
 }
 func (UnimplementedV2Server) PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsTrainingTimeEstimate not implemented")
+}
+func (UnimplementedV2Server) GetNodepool(context.Context, *GetNodepoolRequest) (*SingleNodepoolResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetNodepool not implemented")
+}
+func (UnimplementedV2Server) ListNodepools(context.Context, *ListNodepoolsRequest) (*MultiNodepoolResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListNodepools not implemented")
+}
+func (UnimplementedV2Server) PostNodepools(context.Context, *PostNodepoolsRequest) (*MultiNodepoolResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostNodepools not implemented")
+}
+func (UnimplementedV2Server) PatchNodepools(context.Context, *PatchNodepoolsRequest) (*MultiNodepoolResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchNodepools not implemented")
+}
+func (UnimplementedV2Server) DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteNodepools not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -7929,6 +8003,96 @@ func _V2_PostModelVersionsTrainingTimeEstimate_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetNodepool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNodepoolRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetNodepool(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetNodepool",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetNodepool(ctx, req.(*GetNodepoolRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListNodepools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNodepoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListNodepools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListNodepools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListNodepools(ctx, req.(*ListNodepoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostNodepools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostNodepoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostNodepools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostNodepools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostNodepools(ctx, req.(*PostNodepoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchNodepools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchNodepoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchNodepools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchNodepools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchNodepools(ctx, req.(*PatchNodepoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteNodepools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteNodepoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteNodepools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteNodepools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteNodepools(ctx, req.(*DeleteNodepoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -8807,6 +8971,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelVersionsTrainingTimeEstimate",
 			Handler:    _V2_PostModelVersionsTrainingTimeEstimate_Handler,
+		},
+		{
+			MethodName: "GetNodepool",
+			Handler:    _V2_GetNodepool_Handler,
+		},
+		{
+			MethodName: "ListNodepools",
+			Handler:    _V2_ListNodepools_Handler,
+		},
+		{
+			MethodName: "PostNodepools",
+			Handler:    _V2_PostNodepools_Handler,
+		},
+		{
+			MethodName: "PatchNodepools",
+			Handler:    _V2_PatchNodepools_Handler,
+		},
+		{
+			MethodName: "DeleteNodepools",
+			Handler:    _V2_DeleteNodepools_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
