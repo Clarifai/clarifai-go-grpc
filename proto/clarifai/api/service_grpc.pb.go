@@ -60,8 +60,6 @@ type V2Client interface {
 	ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
 	PostKnowledgeGraphs(ctx context.Context, in *PostKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error)
-	// Start concept mapping jobs.
-	PostConceptMappingJobs(ctx context.Context, in *PostConceptMappingJobsRequest, opts ...grpc.CallOption) (*MultiConceptMappingJobResponse, error)
 	// Get a specific annotation from an app.
 	GetAnnotation(ctx context.Context, in *GetAnnotationRequest, opts ...grpc.CallOption) (*SingleAnnotationResponse, error)
 	// List all the annotation.
@@ -583,6 +581,13 @@ type V2Client interface {
 	PatchNodepools(ctx context.Context, in *PatchNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
 	// Delete multiple nodepools in one request.
 	DeleteNodepools(ctx context.Context, in *DeleteNodepoolsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Deployments CRUD
+	GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*SingleDeploymentResponse, error)
+	ListDeployments(ctx context.Context, in *ListDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error)
+	PostDeployments(ctx context.Context, in *PostDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error)
+	PatchDeployments(ctx context.Context, in *PatchDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error)
+	// Delete multiple deployments in one request.
+	DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 }
 
 type v2Client struct {
@@ -731,15 +736,6 @@ func (c *v2Client) ListKnowledgeGraphs(ctx context.Context, in *ListKnowledgeGra
 func (c *v2Client) PostKnowledgeGraphs(ctx context.Context, in *PostKnowledgeGraphsRequest, opts ...grpc.CallOption) (*MultiKnowledgeGraphResponse, error) {
 	out := new(MultiKnowledgeGraphResponse)
 	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostKnowledgeGraphs", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostConceptMappingJobs(ctx context.Context, in *PostConceptMappingJobsRequest, opts ...grpc.CallOption) (*MultiConceptMappingJobResponse, error) {
-	out := new(MultiConceptMappingJobResponse)
-	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostConceptMappingJobs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2763,6 +2759,51 @@ func (c *v2Client) DeleteNodepools(ctx context.Context, in *DeleteNodepoolsReque
 	return out, nil
 }
 
+func (c *v2Client) GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*SingleDeploymentResponse, error) {
+	out := new(SingleDeploymentResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/GetDeployment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListDeployments(ctx context.Context, in *ListDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error) {
+	out := new(MultiDeploymentResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/ListDeployments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostDeployments(ctx context.Context, in *PostDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error) {
+	out := new(MultiDeploymentResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PostDeployments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchDeployments(ctx context.Context, in *PatchDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error) {
+	out := new(MultiDeploymentResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/PatchDeployments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, "/clarifai.api.V2/DeleteDeployments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -2804,8 +2845,6 @@ type V2Server interface {
 	ListKnowledgeGraphs(context.Context, *ListKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error)
 	// Post domain graphs.
 	PostKnowledgeGraphs(context.Context, *PostKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error)
-	// Start concept mapping jobs.
-	PostConceptMappingJobs(context.Context, *PostConceptMappingJobsRequest) (*MultiConceptMappingJobResponse, error)
 	// Get a specific annotation from an app.
 	GetAnnotation(context.Context, *GetAnnotationRequest) (*SingleAnnotationResponse, error)
 	// List all the annotation.
@@ -3327,6 +3366,13 @@ type V2Server interface {
 	PatchNodepools(context.Context, *PatchNodepoolsRequest) (*MultiNodepoolResponse, error)
 	// Delete multiple nodepools in one request.
 	DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error)
+	// Deployments CRUD
+	GetDeployment(context.Context, *GetDeploymentRequest) (*SingleDeploymentResponse, error)
+	ListDeployments(context.Context, *ListDeploymentsRequest) (*MultiDeploymentResponse, error)
+	PostDeployments(context.Context, *PostDeploymentsRequest) (*MultiDeploymentResponse, error)
+	PatchDeployments(context.Context, *PatchDeploymentsRequest) (*MultiDeploymentResponse, error)
+	// Delete multiple deployments in one request.
+	DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -3381,9 +3427,6 @@ func (UnimplementedV2Server) ListKnowledgeGraphs(context.Context, *ListKnowledge
 }
 func (UnimplementedV2Server) PostKnowledgeGraphs(context.Context, *PostKnowledgeGraphsRequest) (*MultiKnowledgeGraphResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostKnowledgeGraphs not implemented")
-}
-func (UnimplementedV2Server) PostConceptMappingJobs(context.Context, *PostConceptMappingJobsRequest) (*MultiConceptMappingJobResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostConceptMappingJobs not implemented")
 }
 func (UnimplementedV2Server) GetAnnotation(context.Context, *GetAnnotationRequest) (*SingleAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetAnnotation not implemented")
@@ -4027,6 +4070,21 @@ func (UnimplementedV2Server) PatchNodepools(context.Context, *PatchNodepoolsRequ
 func (UnimplementedV2Server) DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteNodepools not implemented")
 }
+func (UnimplementedV2Server) GetDeployment(context.Context, *GetDeploymentRequest) (*SingleDeploymentResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetDeployment not implemented")
+}
+func (UnimplementedV2Server) ListDeployments(context.Context, *ListDeploymentsRequest) (*MultiDeploymentResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListDeployments not implemented")
+}
+func (UnimplementedV2Server) PostDeployments(context.Context, *PostDeploymentsRequest) (*MultiDeploymentResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostDeployments not implemented")
+}
+func (UnimplementedV2Server) PatchDeployments(context.Context, *PatchDeploymentsRequest) (*MultiDeploymentResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchDeployments not implemented")
+}
+func (UnimplementedV2Server) DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteDeployments not implemented")
+}
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
 // UnsafeV2Server may be embedded to opt out of forward compatibility for this service.
@@ -4324,24 +4382,6 @@ func _V2_PostKnowledgeGraphs_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostKnowledgeGraphs(ctx, req.(*PostKnowledgeGraphsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostConceptMappingJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostConceptMappingJobsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostConceptMappingJobs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/clarifai.api.V2/PostConceptMappingJobs",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostConceptMappingJobs(ctx, req.(*PostConceptMappingJobsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -8225,6 +8265,96 @@ func _V2_DeleteNodepools_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_GetDeployment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeploymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetDeployment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/GetDeployment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetDeployment(ctx, req.(*GetDeploymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListDeployments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDeploymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListDeployments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/ListDeployments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListDeployments(ctx, req.(*ListDeploymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostDeployments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostDeploymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostDeployments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PostDeployments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostDeployments(ctx, req.(*PostDeploymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchDeployments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchDeploymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchDeployments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/PatchDeployments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchDeployments(ctx, req.(*PatchDeploymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteDeployments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeploymentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteDeployments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/clarifai.api.V2/DeleteDeployments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteDeployments(ctx, req.(*DeleteDeploymentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -8295,10 +8425,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostKnowledgeGraphs",
 			Handler:    _V2_PostKnowledgeGraphs_Handler,
-		},
-		{
-			MethodName: "PostConceptMappingJobs",
-			Handler:    _V2_PostConceptMappingJobs_Handler,
 		},
 		{
 			MethodName: "GetAnnotation",
@@ -9139,6 +9265,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteNodepools",
 			Handler:    _V2_DeleteNodepools_Handler,
+		},
+		{
+			MethodName: "GetDeployment",
+			Handler:    _V2_GetDeployment_Handler,
+		},
+		{
+			MethodName: "ListDeployments",
+			Handler:    _V2_ListDeployments_Handler,
+		},
+		{
+			MethodName: "PostDeployments",
+			Handler:    _V2_PostDeployments_Handler,
+		},
+		{
+			MethodName: "PatchDeployments",
+			Handler:    _V2_PatchDeployments_Handler,
+		},
+		{
+			MethodName: "DeleteDeployments",
+			Handler:    _V2_DeleteDeployments_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
