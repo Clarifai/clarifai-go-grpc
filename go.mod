@@ -3,7 +3,7 @@ module github.com/Clarifai/clarifai-go-grpc
 go 1.13
 
 require (
-	google.golang.org/genproto v0.0.0-20201106154455-f9bfe239b0ba
-	google.golang.org/grpc v1.51.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
+	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.28.1
 )
