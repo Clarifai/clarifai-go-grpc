@@ -7926,7 +7926,7 @@ func (x *ModelVersionInputExample) GetDescription() string {
 // our JSON REST APIs). This allows each ModelType to define the set of fields, their default values
 // and description of each field so that we can display those in Portal and make the creation of
 // Model's very extensible. The OutputConfig object will eventually go away in favor of
-// infer_params struct.
+// output_info.params struct.
 type OutputInfo struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7934,7 +7934,7 @@ type OutputInfo struct {
 
 	// List of concepts or other output related data for the model.
 	Data *Data `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// Model configuration...going away in favor of infer_params and train_params over time.
+	// Model configuration...going away in favor of output_info.params and train_params over time.
 	// TO BE DEPRECATED
 	OutputConfig *OutputConfig `protobuf:"bytes,2,opt,name=output_config,json=outputConfig,proto3" json:"output_config,omitempty"`
 	// For returning where to look for the Output info if not returning it.
@@ -8259,7 +8259,7 @@ func (x *ImportInfo) GetParams() *structpb.Struct {
 }
 
 // OutputConfig is a collection of parameters controlling either inference or training settings for
-// the given Model. This message will be deprecated over time in favor or infer_params and
+// the given Model. This message will be deprecated over time in favor or output_info.params and
 // train_params in OutputInfo which are cleaner and more extensible for many ModelTypes.
 type OutputConfig struct {
 	state         protoimpl.MessageState
