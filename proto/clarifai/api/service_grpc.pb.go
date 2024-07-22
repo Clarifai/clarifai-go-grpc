@@ -242,6 +242,7 @@ const (
 	V2_PostRunnerItemOutputs_FullMethodName                 = "/clarifai.api.V2/PostRunnerItemOutputs"
 	V2_ProcessRunnerItems_FullMethodName                    = "/clarifai.api.V2/ProcessRunnerItems"
 	V2_PostModelVersionsTrainingTimeEstimate_FullMethodName = "/clarifai.api.V2/PostModelVersionsTrainingTimeEstimate"
+	V2_ListInstanceTypes_FullMethodName                     = "/clarifai.api.V2/ListInstanceTypes"
 	V2_GetComputeCluster_FullMethodName                     = "/clarifai.api.V2/GetComputeCluster"
 	V2_ListComputeClusters_FullMethodName                   = "/clarifai.api.V2/ListComputeClusters"
 	V2_PostComputeClusters_FullMethodName                   = "/clarifai.api.V2/PostComputeClusters"
@@ -810,6 +811,8 @@ type V2Client interface {
 	ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error)
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
+	// Get InstanceTypes given Cloud Provider and Region
+	ListInstanceTypes(ctx context.Context, in *ListInstanceTypesRequest, opts ...grpc.CallOption) (*MultiInstanceTypeResponse, error)
 	// ComputeCluster CRUD
 	GetComputeCluster(ctx context.Context, in *GetComputeClusterRequest, opts ...grpc.CallOption) (*SingleComputeClusterResponse, error)
 	ListComputeClusters(ctx context.Context, in *ListComputeClustersRequest, opts ...grpc.CallOption) (*MultiComputeClusterResponse, error)
@@ -3151,6 +3154,16 @@ func (c *v2Client) PostModelVersionsTrainingTimeEstimate(ctx context.Context, in
 	return out, nil
 }
 
+func (c *v2Client) ListInstanceTypes(ctx context.Context, in *ListInstanceTypesRequest, opts ...grpc.CallOption) (*MultiInstanceTypeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiInstanceTypeResponse)
+	err := c.cc.Invoke(ctx, V2_ListInstanceTypes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetComputeCluster(ctx context.Context, in *GetComputeClusterRequest, opts ...grpc.CallOption) (*SingleComputeClusterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleComputeClusterResponse)
@@ -3843,6 +3856,8 @@ type V2Server interface {
 	ProcessRunnerItems(V2_ProcessRunnerItemsServer) error
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
+	// Get InstanceTypes given Cloud Provider and Region
+	ListInstanceTypes(context.Context, *ListInstanceTypesRequest) (*MultiInstanceTypeResponse, error)
 	// ComputeCluster CRUD
 	GetComputeCluster(context.Context, *GetComputeClusterRequest) (*SingleComputeClusterResponse, error)
 	ListComputeClusters(context.Context, *ListComputeClustersRequest) (*MultiComputeClusterResponse, error)
@@ -4535,6 +4550,9 @@ func (UnimplementedV2Server) ProcessRunnerItems(V2_ProcessRunnerItemsServer) err
 }
 func (UnimplementedV2Server) PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsTrainingTimeEstimate not implemented")
+}
+func (UnimplementedV2Server) ListInstanceTypes(context.Context, *ListInstanceTypesRequest) (*MultiInstanceTypeResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListInstanceTypes not implemented")
 }
 func (UnimplementedV2Server) GetComputeCluster(context.Context, *GetComputeClusterRequest) (*SingleComputeClusterResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetComputeCluster not implemented")
@@ -8614,6 +8632,24 @@ func _V2_PostModelVersionsTrainingTimeEstimate_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListInstanceTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListInstanceTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListInstanceTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListInstanceTypes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListInstanceTypes(ctx, req.(*ListInstanceTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetComputeCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetComputeClusterRequest)
 	if err := dec(in); err != nil {
@@ -9744,6 +9780,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelVersionsTrainingTimeEstimate",
 			Handler:    _V2_PostModelVersionsTrainingTimeEstimate_Handler,
+		},
+		{
+			MethodName: "ListInstanceTypes",
+			Handler:    _V2_ListInstanceTypes_Handler,
 		},
 		{
 			MethodName: "GetComputeCluster",
