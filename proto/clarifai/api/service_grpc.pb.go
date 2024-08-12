@@ -333,12 +333,21 @@ type V2Client interface {
 	GetInputSamples(ctx context.Context, in *GetInputSamplesRequest, opts ...grpc.CallOption) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(ctx context.Context, in *GetInputRequest, opts ...grpc.CallOption) (*SingleInputResponse, error)
-	// Get a video input manifest.
+	// Get a MPEG-DASH manifest for video-type inputs that were added via PostInputs and successfully processed
+	// Experimental. Manifest is used by browser and desktop clients that implement an efficient streaming playback
+	// This means client can switch between low-resolution and high-resolution video streams
+	// Depending on network bandwidth or user's preference
+	// This also means that reencoded video streams are reencoded in a uniform way, not relying on original format
+	// Alternative to MPEG-dash is to stream original file with byte-range header
 	GetInputVideoManifest(ctx context.Context, in *GetVideoManifestRequest, opts ...grpc.CallOption) (*GetVideoManifestResponse, error)
 	// List all the inputs.
 	ListInputs(ctx context.Context, in *ListInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// Add 1 or more input to an app.
-	// The actual inputs processing is asynchronous.
+	// PostInputs adds one or more inputs to the app.
+	// Takes a list of image/video/audio/text URLs, image/video/audio bytes or raw text
+	// Optionally, include concepts or dataset ids to link them
+	// Optionally, include metadata for search
+	// Note that inputs processing is asynchronous process
+	// See ListInputs, StreamInputs or PostInputSearches to list results
 	PostInputs(ctx context.Context, in *PostInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(ctx context.Context, in *PatchInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
@@ -755,6 +764,11 @@ type V2Client interface {
 	GetInputsAddJob(ctx context.Context, in *GetInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
 	// cancel the input add job by ID
 	CancelInputsAddJob(ctx context.Context, in *CancelInputsAddJobRequest, opts ...grpc.CallOption) (*SingleInputsAddJobResponse, error)
+	// PostUploads is used to upload files. Note that this does not create inputs.
+	// returns job with uploadID, job has UPLOAD_IN_PROGRESS status
+	// Actual upload content can be done in multiple calls with PutUploadContentParts
+	// You can get status of upload with GetUpload or ListUploads endpoints
+	// See also PostInputsUploads
 	PostUploads(ctx context.Context, in *PostUploadsRequest, opts ...grpc.CallOption) (*MultiUploadResponse, error)
 	// Upload a part of a multipart upload.
 	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
@@ -781,11 +795,12 @@ type V2Client interface {
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(ctx context.Context, in *ListInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
 	CancelInputsExtractionJobs(ctx context.Context, in *CancelInputsExtractionJobsRequest, opts ...grpc.CallOption) (*MultiInputsExtractionJobResponse, error)
-	// Start uploading a file archive containing inputs.
-	// Will create and return an inputs-add-job for tracking progress.
-	//
-	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
+	// Create new upload job with a file archive containing inputs (images, videos, text, audio)
+	// Actual file upload happens in next steps by calling `PutUploadContentParts` endpoint
+	// and providing the file content in the request body.
+	// This endpoint creates and return an inputs-add-job which contains an upload id needed for upload and further status tracking
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
+	// See also GetInputsAddJob and then GetInputsExtractionJob
 	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
 	// Get a specific runner.
 	// TODO(zeiler): runner_id is a UUID so can list globally as well.
@@ -3378,12 +3393,21 @@ type V2Server interface {
 	GetInputSamples(context.Context, *GetInputSamplesRequest) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error)
-	// Get a video input manifest.
+	// Get a MPEG-DASH manifest for video-type inputs that were added via PostInputs and successfully processed
+	// Experimental. Manifest is used by browser and desktop clients that implement an efficient streaming playback
+	// This means client can switch between low-resolution and high-resolution video streams
+	// Depending on network bandwidth or user's preference
+	// This also means that reencoded video streams are reencoded in a uniform way, not relying on original format
+	// Alternative to MPEG-dash is to stream original file with byte-range header
 	GetInputVideoManifest(context.Context, *GetVideoManifestRequest) (*GetVideoManifestResponse, error)
 	// List all the inputs.
 	ListInputs(context.Context, *ListInputsRequest) (*MultiInputResponse, error)
-	// Add 1 or more input to an app.
-	// The actual inputs processing is asynchronous.
+	// PostInputs adds one or more inputs to the app.
+	// Takes a list of image/video/audio/text URLs, image/video/audio bytes or raw text
+	// Optionally, include concepts or dataset ids to link them
+	// Optionally, include metadata for search
+	// Note that inputs processing is asynchronous process
+	// See ListInputs, StreamInputs or PostInputSearches to list results
 	PostInputs(context.Context, *PostInputsRequest) (*MultiInputResponse, error)
 	// Patch one or more inputs.
 	PatchInputs(context.Context, *PatchInputsRequest) (*MultiInputResponse, error)
@@ -3800,6 +3824,11 @@ type V2Server interface {
 	GetInputsAddJob(context.Context, *GetInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
 	// cancel the input add job by ID
 	CancelInputsAddJob(context.Context, *CancelInputsAddJobRequest) (*SingleInputsAddJobResponse, error)
+	// PostUploads is used to upload files. Note that this does not create inputs.
+	// returns job with uploadID, job has UPLOAD_IN_PROGRESS status
+	// Actual upload content can be done in multiple calls with PutUploadContentParts
+	// You can get status of upload with GetUpload or ListUploads endpoints
+	// See also PostInputsUploads
 	PostUploads(context.Context, *PostUploadsRequest) (*MultiUploadResponse, error)
 	// Upload a part of a multipart upload.
 	// Behaviour on completion depends on the endpoint that was used to initiate the upload.
@@ -3826,11 +3855,12 @@ type V2Server interface {
 	// List all the input extraction jobs
 	ListInputsExtractionJobs(context.Context, *ListInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
 	CancelInputsExtractionJobs(context.Context, *CancelInputsExtractionJobsRequest) (*MultiInputsExtractionJobResponse, error)
-	// Start uploading a file archive containing inputs.
-	// Will create and return an inputs-add-job for tracking progress.
-	//
-	// Associated inputs-add-job contains an upload id which should be completed through `PutUploadContentParts` endpoint.
+	// Create new upload job with a file archive containing inputs (images, videos, text, audio)
+	// Actual file upload happens in next steps by calling `PutUploadContentParts` endpoint
+	// and providing the file content in the request body.
+	// This endpoint creates and return an inputs-add-job which contains an upload id needed for upload and further status tracking
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
+	// See also GetInputsAddJob and then GetInputsExtractionJob
 	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
 	// Get a specific runner.
 	// TODO(zeiler): runner_id is a UUID so can list globally as well.
