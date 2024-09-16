@@ -126,7 +126,6 @@ const (
 	V2_DeleteWorkflow_FullMethodName                        = "/clarifai.api.V2/DeleteWorkflow"
 	V2_DeleteWorkflows_FullMethodName                       = "/clarifai.api.V2/DeleteWorkflows"
 	V2_PostWorkflowResults_FullMethodName                   = "/clarifai.api.V2/PostWorkflowResults"
-	V2_PostWorkflowResultsSimilarity_FullMethodName         = "/clarifai.api.V2/PostWorkflowResultsSimilarity"
 	V2_ListWorkflowVersions_FullMethodName                  = "/clarifai.api.V2/ListWorkflowVersions"
 	V2_GetWorkflowVersion_FullMethodName                    = "/clarifai.api.V2/GetWorkflowVersion"
 	V2_DeleteWorkflowVersions_FullMethodName                = "/clarifai.api.V2/DeleteWorkflowVersions"
@@ -528,8 +527,6 @@ type V2Client interface {
 	DeleteWorkflows(ctx context.Context, in *DeleteWorkflowsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Predict using a workflow.
 	PostWorkflowResults(ctx context.Context, in *PostWorkflowResultsRequest, opts ...grpc.CallOption) (*PostWorkflowResultsResponse, error)
-	// Compare embeddings distances using a workflow
-	PostWorkflowResultsSimilarity(ctx context.Context, in *PostWorkflowResultsSimilarityRequest, opts ...grpc.CallOption) (*PostWorkflowResultsSimilarityResponse, error)
 	// List workflow versions.
 	ListWorkflowVersions(ctx context.Context, in *ListWorkflowVersionsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionResponse, error)
 	// Get single workflow version.
@@ -849,7 +846,7 @@ type V2Client interface {
 	PatchDeployments(ctx context.Context, in *PatchDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error)
 	// Delete multiple deployments in one request.
 	DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogSearchResponse, error)
+	PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogEntryResponse, error)
 }
 
 type v2Client struct {
@@ -1982,16 +1979,6 @@ func (c *v2Client) PostWorkflowResults(ctx context.Context, in *PostWorkflowResu
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PostWorkflowResultsResponse)
 	err := c.cc.Invoke(ctx, V2_PostWorkflowResults_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostWorkflowResultsSimilarity(ctx context.Context, in *PostWorkflowResultsSimilarityRequest, opts ...grpc.CallOption) (*PostWorkflowResultsSimilarityResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PostWorkflowResultsSimilarityResponse)
-	err := c.cc.Invoke(ctx, V2_PostWorkflowResultsSimilarity_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3321,9 +3308,9 @@ func (c *v2Client) DeleteDeployments(ctx context.Context, in *DeleteDeploymentsR
 	return out, nil
 }
 
-func (c *v2Client) PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogSearchResponse, error) {
+func (c *v2Client) PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogEntryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiAuditLogSearchResponse)
+	out := new(MultiAuditLogEntryResponse)
 	err := c.cc.Invoke(ctx, V2_PostAuditLogSearches_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -3599,8 +3586,6 @@ type V2Server interface {
 	DeleteWorkflows(context.Context, *DeleteWorkflowsRequest) (*status.BaseResponse, error)
 	// Predict using a workflow.
 	PostWorkflowResults(context.Context, *PostWorkflowResultsRequest) (*PostWorkflowResultsResponse, error)
-	// Compare embeddings distances using a workflow
-	PostWorkflowResultsSimilarity(context.Context, *PostWorkflowResultsSimilarityRequest) (*PostWorkflowResultsSimilarityResponse, error)
 	// List workflow versions.
 	ListWorkflowVersions(context.Context, *ListWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error)
 	// Get single workflow version.
@@ -3920,7 +3905,7 @@ type V2Server interface {
 	PatchDeployments(context.Context, *PatchDeploymentsRequest) (*MultiDeploymentResponse, error)
 	// Delete multiple deployments in one request.
 	DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error)
-	PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogSearchResponse, error)
+	PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4245,9 +4230,6 @@ func (UnimplementedV2Server) DeleteWorkflows(context.Context, *DeleteWorkflowsRe
 }
 func (UnimplementedV2Server) PostWorkflowResults(context.Context, *PostWorkflowResultsRequest) (*PostWorkflowResultsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowResults not implemented")
-}
-func (UnimplementedV2Server) PostWorkflowResultsSimilarity(context.Context, *PostWorkflowResultsSimilarityRequest) (*PostWorkflowResultsSimilarityResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowResultsSimilarity not implemented")
 }
 func (UnimplementedV2Server) ListWorkflowVersions(context.Context, *ListWorkflowVersionsRequest) (*MultiWorkflowVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowVersions not implemented")
@@ -4639,7 +4621,7 @@ func (UnimplementedV2Server) PatchDeployments(context.Context, *PatchDeployments
 func (UnimplementedV2Server) DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteDeployments not implemented")
 }
-func (UnimplementedV2Server) PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogSearchResponse, error) {
+func (UnimplementedV2Server) PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAuditLogSearches not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
@@ -6578,24 +6560,6 @@ func _V2_PostWorkflowResults_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostWorkflowResults(ctx, req.(*PostWorkflowResultsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostWorkflowResultsSimilarity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostWorkflowResultsSimilarityRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostWorkflowResultsSimilarity(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostWorkflowResultsSimilarity_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostWorkflowResultsSimilarity(ctx, req.(*PostWorkflowResultsSimilarityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -9384,10 +9348,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostWorkflowResults",
 			Handler:    _V2_PostWorkflowResults_Handler,
-		},
-		{
-			MethodName: "PostWorkflowResultsSimilarity",
-			Handler:    _V2_PostWorkflowResultsSimilarity_Handler,
 		},
 		{
 			MethodName: "ListWorkflowVersions",
