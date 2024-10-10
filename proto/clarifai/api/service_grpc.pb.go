@@ -257,6 +257,7 @@ const (
 	V2_PatchDeployments_FullMethodName                      = "/clarifai.api.V2/PatchDeployments"
 	V2_DeleteDeployments_FullMethodName                     = "/clarifai.api.V2/DeleteDeployments"
 	V2_PostAuditLogSearches_FullMethodName                  = "/clarifai.api.V2/PostAuditLogSearches"
+	V2_ListWorkflowEvaluationTemplates_FullMethodName       = "/clarifai.api.V2/ListWorkflowEvaluationTemplates"
 )
 
 // V2Client is the client API for V2 service.
@@ -329,7 +330,6 @@ type V2Client interface {
 	GetInputCount(ctx context.Context, in *GetInputCountRequest, opts ...grpc.CallOption) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
 	StreamInputs(ctx context.Context, in *StreamInputsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// Get a specific input from an app.
 	GetInputSamples(ctx context.Context, in *GetInputSamplesRequest, opts ...grpc.CallOption) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(ctx context.Context, in *GetInputRequest, opts ...grpc.CallOption) (*SingleInputResponse, error)
@@ -752,9 +752,8 @@ type V2Client interface {
 	//	In order to clearly highlight that this endpoint serves a PUT request,
 	//	this endpoint has been deprecated and replaced by PutTaskAssignments with action=LABEL_START.
 	ListNextTaskAssignments(ctx context.Context, in *ListNextTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiInputResponse, error)
-	// PutTaskAssignments performs an action for the task assignments in given task.
-	// All the actions are theoretically idempotent, but practically, in the current implementation,
-	// the REVIEW_START action is not idempotent. See PutTaskAssignmentsRequestAction for more details.
+	// PutTaskAssignments performs an idempotent action for the task assignments in given task.
+	// See PutTaskAssignmentsRequestAction for more details about possible actions.
 	PutTaskAssignments(ctx context.Context, in *PutTaskAssignmentsRequest, opts ...grpc.CallOption) (*MultiTaskAssignmentResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(ctx context.Context, in *ListInputsAddJobsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
@@ -847,6 +846,7 @@ type V2Client interface {
 	// Delete multiple deployments in one request.
 	DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogEntryResponse, error)
+	ListWorkflowEvaluationTemplates(ctx context.Context, in *ListWorkflowEvaluationTemplatesRequest, opts ...grpc.CallOption) (*MultiWorkflowEvaluationTemplateResponse, error)
 }
 
 type v2Client struct {
@@ -3318,6 +3318,16 @@ func (c *v2Client) PostAuditLogSearches(ctx context.Context, in *PostAuditLogSea
 	return out, nil
 }
 
+func (c *v2Client) ListWorkflowEvaluationTemplates(ctx context.Context, in *ListWorkflowEvaluationTemplatesRequest, opts ...grpc.CallOption) (*MultiWorkflowEvaluationTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiWorkflowEvaluationTemplateResponse)
+	err := c.cc.Invoke(ctx, V2_ListWorkflowEvaluationTemplates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -3388,7 +3398,6 @@ type V2Server interface {
 	GetInputCount(context.Context, *GetInputCountRequest) (*SingleInputCountResponse, error)
 	// Streams all the inputs starting from oldest assets.
 	StreamInputs(context.Context, *StreamInputsRequest) (*MultiInputResponse, error)
-	// Get a specific input from an app.
 	GetInputSamples(context.Context, *GetInputSamplesRequest) (*MultiInputAnnotationResponse, error)
 	// Get a specific input from an app.
 	GetInput(context.Context, *GetInputRequest) (*SingleInputResponse, error)
@@ -3811,9 +3820,8 @@ type V2Server interface {
 	//	In order to clearly highlight that this endpoint serves a PUT request,
 	//	this endpoint has been deprecated and replaced by PutTaskAssignments with action=LABEL_START.
 	ListNextTaskAssignments(context.Context, *ListNextTaskAssignmentsRequest) (*MultiInputResponse, error)
-	// PutTaskAssignments performs an action for the task assignments in given task.
-	// All the actions are theoretically idempotent, but practically, in the current implementation,
-	// the REVIEW_START action is not idempotent. See PutTaskAssignmentsRequestAction for more details.
+	// PutTaskAssignments performs an idempotent action for the task assignments in given task.
+	// See PutTaskAssignmentsRequestAction for more details about possible actions.
 	PutTaskAssignments(context.Context, *PutTaskAssignmentsRequest) (*MultiTaskAssignmentResponse, error)
 	// List all the inputs add jobs
 	ListInputsAddJobs(context.Context, *ListInputsAddJobsRequest) (*MultiInputsAddJobResponse, error)
@@ -3906,6 +3914,7 @@ type V2Server interface {
 	// Delete multiple deployments in one request.
 	DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error)
 	PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error)
+	ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4623,6 +4632,9 @@ func (UnimplementedV2Server) DeleteDeployments(context.Context, *DeleteDeploymen
 }
 func (UnimplementedV2Server) PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAuditLogSearches not implemented")
+}
+func (UnimplementedV2Server) ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowEvaluationTemplates not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -8930,6 +8942,24 @@ func _V2_PostAuditLogSearches_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListWorkflowEvaluationTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowEvaluationTemplatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWorkflowEvaluationTemplates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListWorkflowEvaluationTemplates_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWorkflowEvaluationTemplates(ctx, req.(*ListWorkflowEvaluationTemplatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -9868,6 +9898,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostAuditLogSearches",
 			Handler:    _V2_PostAuditLogSearches_Handler,
+		},
+		{
+			MethodName: "ListWorkflowEvaluationTemplates",
+			Handler:    _V2_ListWorkflowEvaluationTemplates_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
