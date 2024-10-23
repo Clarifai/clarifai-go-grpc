@@ -128,13 +128,15 @@ const (
 	StatusCode_CONCEPT_MODIFY_PENDING StatusCode = 23151
 	StatusCode_CONCEPT_MODIFY_FAILED  StatusCode = 23152
 	// Annotation related 24xxx
-	StatusCode_ANNOTATION_SUCCESS                   StatusCode = 24150
-	StatusCode_ANNOTATION_PENDING                   StatusCode = 24151
-	StatusCode_ANNOTATION_FAILED                    StatusCode = 24152
-	StatusCode_ANNOTATION_UNKNOWN_STATUS            StatusCode = 24154
-	StatusCode_ANNOTATION_INVALID_ARGUMENT          StatusCode = 24155
-	StatusCode_ANNOTATION_PERMISSION_DENIED         StatusCode = 24156
-	StatusCode_ANNOTATION_AWAITING_REVIEW           StatusCode = 24157
+	StatusCode_ANNOTATION_SUCCESS           StatusCode = 24150
+	StatusCode_ANNOTATION_PENDING           StatusCode = 24151
+	StatusCode_ANNOTATION_FAILED            StatusCode = 24152
+	StatusCode_ANNOTATION_UNKNOWN_STATUS    StatusCode = 24154
+	StatusCode_ANNOTATION_INVALID_ARGUMENT  StatusCode = 24155
+	StatusCode_ANNOTATION_PERMISSION_DENIED StatusCode = 24156
+	// Annotation is awaiting review from task REVIEWERS.
+	StatusCode_ANNOTATION_AWAITING_REVIEW StatusCode = 24157
+	// Annotation is awaiting consensus review from task LABELERS.
 	StatusCode_ANNOTATION_AWAITING_CONSENSUS_REVIEW StatusCode = 24159
 	StatusCode_ANNOTATION_REVIEW_DENIED             StatusCode = 24158
 	StatusCode_ANNOTATION_MODIFY_SUCCESS            StatusCode = 24250
