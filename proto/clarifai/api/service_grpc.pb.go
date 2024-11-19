@@ -195,8 +195,6 @@ const (
 	V2_DeleteCollectors_FullMethodName                      = "/clarifai.api.V2/DeleteCollectors"
 	V2_PostStatValues_FullMethodName                        = "/clarifai.api.V2/PostStatValues"
 	V2_PostStatValuesAggregate_FullMethodName               = "/clarifai.api.V2/PostStatValuesAggregate"
-	V2_PostTrendingMetricsView_FullMethodName               = "/clarifai.api.V2/PostTrendingMetricsView"
-	V2_ListTrendingMetricsViews_FullMethodName              = "/clarifai.api.V2/ListTrendingMetricsViews"
 	V2_GetModule_FullMethodName                             = "/clarifai.api.V2/GetModule"
 	V2_ListModules_FullMethodName                           = "/clarifai.api.V2/ListModules"
 	V2_PostModules_FullMethodName                           = "/clarifai.api.V2/PostModules"
@@ -694,10 +692,6 @@ type V2Client interface {
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
-	// Increase the view metric for a detail view
-	PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// List the view metrics for a detail view
-	ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error)
 	// Get a specific module from an app.
 	GetModule(ctx context.Context, in *GetModuleRequest, opts ...grpc.CallOption) (*SingleModuleResponse, error)
 	// List all the modules in community, by user or by app.
@@ -2676,26 +2670,6 @@ func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValu
 	return out, nil
 }
 
-func (c *v2Client) PostTrendingMetricsView(ctx context.Context, in *PostTrendingMetricsViewRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_PostTrendingMetricsView_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListTrendingMetricsViews(ctx context.Context, in *ListTrendingMetricsViewsRequest, opts ...grpc.CallOption) (*MultiTrendingMetricsViewResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiTrendingMetricsViewResponse)
-	err := c.cc.Invoke(ctx, V2_ListTrendingMetricsViews_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) GetModule(ctx context.Context, in *GetModuleRequest, opts ...grpc.CallOption) (*SingleModuleResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleModuleResponse)
@@ -3762,10 +3736,6 @@ type V2Server interface {
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
-	// Increase the view metric for a detail view
-	PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error)
-	// List the view metrics for a detail view
-	ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error)
 	// Get a specific module from an app.
 	GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error)
 	// List all the modules in community, by user or by app.
@@ -4446,12 +4416,6 @@ func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequ
 }
 func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValuesAggregate not implemented")
-}
-func (UnimplementedV2Server) PostTrendingMetricsView(context.Context, *PostTrendingMetricsViewRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostTrendingMetricsView not implemented")
-}
-func (UnimplementedV2Server) ListTrendingMetricsViews(context.Context, *ListTrendingMetricsViewsRequest) (*MultiTrendingMetricsViewResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListTrendingMetricsViews not implemented")
 }
 func (UnimplementedV2Server) GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetModule not implemented")
@@ -7818,42 +7782,6 @@ func _V2_PostStatValuesAggregate_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_PostTrendingMetricsView_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostTrendingMetricsViewRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostTrendingMetricsView(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostTrendingMetricsView_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostTrendingMetricsView(ctx, req.(*PostTrendingMetricsViewRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListTrendingMetricsViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListTrendingMetricsViewsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListTrendingMetricsViews(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListTrendingMetricsViews_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListTrendingMetricsViews(ctx, req.(*ListTrendingMetricsViewsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_GetModule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetModuleRequest)
 	if err := dec(in); err != nil {
@@ -9654,14 +9582,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostStatValuesAggregate",
 			Handler:    _V2_PostStatValuesAggregate_Handler,
-		},
-		{
-			MethodName: "PostTrendingMetricsView",
-			Handler:    _V2_PostTrendingMetricsView_Handler,
-		},
-		{
-			MethodName: "ListTrendingMetricsViews",
-			Handler:    _V2_ListTrendingMetricsViews_Handler,
 		},
 		{
 			MethodName: "GetModule",
