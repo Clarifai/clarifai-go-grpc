@@ -239,6 +239,8 @@ const (
 	V2_PostRunnerItemOutputs_FullMethodName                 = "/clarifai.api.V2/PostRunnerItemOutputs"
 	V2_ProcessRunnerItems_FullMethodName                    = "/clarifai.api.V2/ProcessRunnerItems"
 	V2_PostModelVersionsTrainingTimeEstimate_FullMethodName = "/clarifai.api.V2/PostModelVersionsTrainingTimeEstimate"
+	V2_ListCloudProviders_FullMethodName                    = "/clarifai.api.V2/ListCloudProviders"
+	V2_ListCloudRegions_FullMethodName                      = "/clarifai.api.V2/ListCloudRegions"
 	V2_ListInstanceTypes_FullMethodName                     = "/clarifai.api.V2/ListInstanceTypes"
 	V2_GetComputeCluster_FullMethodName                     = "/clarifai.api.V2/GetComputeCluster"
 	V2_ListComputeClusters_FullMethodName                   = "/clarifai.api.V2/ListComputeClusters"
@@ -256,6 +258,7 @@ const (
 	V2_DeleteDeployments_FullMethodName                     = "/clarifai.api.V2/DeleteDeployments"
 	V2_PostAuditLogSearches_FullMethodName                  = "/clarifai.api.V2/PostAuditLogSearches"
 	V2_ListWorkflowEvaluationTemplates_FullMethodName       = "/clarifai.api.V2/ListWorkflowEvaluationTemplates"
+	V2_ListLogEntries_FullMethodName                        = "/clarifai.api.V2/ListLogEntries"
 )
 
 // V2Client is the client API for V2 service.
@@ -817,6 +820,10 @@ type V2Client interface {
 	ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error)
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(ctx context.Context, in *PostModelVersionsTrainingTimeEstimateRequest, opts ...grpc.CallOption) (*MultiTrainingTimeEstimateResponse, error)
+	// List Available Cloud Providers
+	ListCloudProviders(ctx context.Context, in *ListCloudProvidersRequest, opts ...grpc.CallOption) (*MultiCloudProviderResponse, error)
+	// List Regions for given Cloud Provider
+	ListCloudRegions(ctx context.Context, in *ListCloudRegionsRequest, opts ...grpc.CallOption) (*MultiCloudRegionResponse, error)
 	// Get InstanceTypes given Cloud Provider and Region
 	ListInstanceTypes(ctx context.Context, in *ListInstanceTypesRequest, opts ...grpc.CallOption) (*MultiInstanceTypeResponse, error)
 	// ComputeCluster CRUD
@@ -841,6 +848,7 @@ type V2Client interface {
 	DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogEntryResponse, error)
 	ListWorkflowEvaluationTemplates(ctx context.Context, in *ListWorkflowEvaluationTemplatesRequest, opts ...grpc.CallOption) (*MultiWorkflowEvaluationTemplateResponse, error)
+	ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error)
 }
 
 type v2Client struct {
@@ -3132,6 +3140,26 @@ func (c *v2Client) PostModelVersionsTrainingTimeEstimate(ctx context.Context, in
 	return out, nil
 }
 
+func (c *v2Client) ListCloudProviders(ctx context.Context, in *ListCloudProvidersRequest, opts ...grpc.CallOption) (*MultiCloudProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiCloudProviderResponse)
+	err := c.cc.Invoke(ctx, V2_ListCloudProviders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListCloudRegions(ctx context.Context, in *ListCloudRegionsRequest, opts ...grpc.CallOption) (*MultiCloudRegionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiCloudRegionResponse)
+	err := c.cc.Invoke(ctx, V2_ListCloudRegions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListInstanceTypes(ctx context.Context, in *ListInstanceTypesRequest, opts ...grpc.CallOption) (*MultiInstanceTypeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiInstanceTypeResponse)
@@ -3296,6 +3324,16 @@ func (c *v2Client) ListWorkflowEvaluationTemplates(ctx context.Context, in *List
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiWorkflowEvaluationTemplateResponse)
 	err := c.cc.Invoke(ctx, V2_ListWorkflowEvaluationTemplates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiLogEntryResponse)
+	err := c.cc.Invoke(ctx, V2_ListLogEntries_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3861,6 +3899,10 @@ type V2Server interface {
 	ProcessRunnerItems(V2_ProcessRunnerItemsServer) error
 	// Get the training time estimate based off train request and estimated input count.
 	PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error)
+	// List Available Cloud Providers
+	ListCloudProviders(context.Context, *ListCloudProvidersRequest) (*MultiCloudProviderResponse, error)
+	// List Regions for given Cloud Provider
+	ListCloudRegions(context.Context, *ListCloudRegionsRequest) (*MultiCloudRegionResponse, error)
 	// Get InstanceTypes given Cloud Provider and Region
 	ListInstanceTypes(context.Context, *ListInstanceTypesRequest) (*MultiInstanceTypeResponse, error)
 	// ComputeCluster CRUD
@@ -3885,6 +3927,7 @@ type V2Server interface {
 	DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error)
 	PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error)
 	ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error)
+	ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4549,6 +4592,12 @@ func (UnimplementedV2Server) ProcessRunnerItems(V2_ProcessRunnerItemsServer) err
 func (UnimplementedV2Server) PostModelVersionsTrainingTimeEstimate(context.Context, *PostModelVersionsTrainingTimeEstimateRequest) (*MultiTrainingTimeEstimateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelVersionsTrainingTimeEstimate not implemented")
 }
+func (UnimplementedV2Server) ListCloudProviders(context.Context, *ListCloudProvidersRequest) (*MultiCloudProviderResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListCloudProviders not implemented")
+}
+func (UnimplementedV2Server) ListCloudRegions(context.Context, *ListCloudRegionsRequest) (*MultiCloudRegionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListCloudRegions not implemented")
+}
 func (UnimplementedV2Server) ListInstanceTypes(context.Context, *ListInstanceTypesRequest) (*MultiInstanceTypeResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListInstanceTypes not implemented")
 }
@@ -4599,6 +4648,9 @@ func (UnimplementedV2Server) PostAuditLogSearches(context.Context, *PostAuditLog
 }
 func (UnimplementedV2Server) ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowEvaluationTemplates not implemented")
+}
+func (UnimplementedV2Server) ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListLogEntries not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -8582,6 +8634,42 @@ func _V2_PostModelVersionsTrainingTimeEstimate_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListCloudProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCloudProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListCloudProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListCloudProviders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListCloudProviders(ctx, req.(*ListCloudProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListCloudRegions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCloudRegionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListCloudRegions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListCloudRegions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListCloudRegions(ctx, req.(*ListCloudRegionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListInstanceTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListInstanceTypesRequest)
 	if err := dec(in); err != nil {
@@ -8884,6 +8972,24 @@ func _V2_ListWorkflowEvaluationTemplates_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListWorkflowEvaluationTemplates(ctx, req.(*ListWorkflowEvaluationTemplatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListLogEntries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLogEntriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListLogEntries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListLogEntries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListLogEntries(ctx, req.(*ListLogEntriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -9756,6 +9862,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostModelVersionsTrainingTimeEstimate_Handler,
 		},
 		{
+			MethodName: "ListCloudProviders",
+			Handler:    _V2_ListCloudProviders_Handler,
+		},
+		{
+			MethodName: "ListCloudRegions",
+			Handler:    _V2_ListCloudRegions_Handler,
+		},
+		{
 			MethodName: "ListInstanceTypes",
 			Handler:    _V2_ListInstanceTypes_Handler,
 		},
@@ -9822,6 +9936,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListWorkflowEvaluationTemplates",
 			Handler:    _V2_ListWorkflowEvaluationTemplates_Handler,
+		},
+		{
+			MethodName: "ListLogEntries",
+			Handler:    _V2_ListLogEntries_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
