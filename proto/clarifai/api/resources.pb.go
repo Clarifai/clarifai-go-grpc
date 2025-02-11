@@ -22682,6 +22682,217 @@ func (x *WorkflowVersionEvaluationTemplate) GetWorkflowVersionEvaluationMetrics(
 	return nil
 }
 
+// ComputePlaneMetrics captures the compute plane metrics to send back to the control plane.
+// Each message should have the meta filled and one or more of the other fields.
+type ComputePlaneMetrics struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Who and where the metrics are from.
+	Meta            *ComputeSourceMetadata `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`                                              // required.
+	Cloud           string                 `protobuf:"bytes,2,opt,name=cloud,proto3" json:"cloud,omitempty"`                                            // e.g. aws, azure, on-prem.
+	Region          string                 `protobuf:"bytes,3,opt,name=region,proto3" json:"region,omitempty"`                                          // e.g. us-east, us-west.
+	InstanceType    string                 `protobuf:"bytes,4,opt,name=instance_type,json=instanceType,proto3" json:"instance_type,omitempty"`          // e.g. t3a.medium, g5.xlarge.
+	ReservationType string                 `protobuf:"bytes,5,opt,name=reservation_type,json=reservationType,proto3" json:"reservation_type,omitempty"` // e.g. spot, on-demand.
+	// Metrics billing
+	ReservationPrice float32 `protobuf:"fixed32,6,opt,name=reservation_price,json=reservationPrice,proto3" json:"reservation_price,omitempty"` // cost of the reservation. Spot prices may change over time.
+	RuntimeS         int32   `protobuf:"varint,7,opt,name=runtime_s,json=runtimeS,proto3" json:"runtime_s,omitempty"`                          // Runtime in seconds.
+	// Metrics for latency.
+	Timestamp  *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                      // Time of the event.
+	EventType  string                 `protobuf:"bytes,9,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`     // e.g. NodeProvisioned, NodeTerminated, ModelDeployed, ModelScheduled, ModelReady.
+	GpuMetrics []*GpuMetrics          `protobuf:"bytes,10,rep,name=gpu_metrics,json=gpuMetrics,proto3" json:"gpu_metrics,omitempty"` // GPU metrics.
+	Hostname   string                 `protobuf:"bytes,11,opt,name=hostname,proto3" json:"hostname,omitempty"`                       // Hostname of the node.
+}
+
+func (x *ComputePlaneMetrics) Reset() {
+	*x = ComputePlaneMetrics{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[218]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ComputePlaneMetrics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ComputePlaneMetrics) ProtoMessage() {}
+
+func (x *ComputePlaneMetrics) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[218]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ComputePlaneMetrics.ProtoReflect.Descriptor instead.
+func (*ComputePlaneMetrics) Descriptor() ([]byte, []int) {
+	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{218}
+}
+
+func (x *ComputePlaneMetrics) GetMeta() *ComputeSourceMetadata {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *ComputePlaneMetrics) GetCloud() string {
+	if x != nil {
+		return x.Cloud
+	}
+	return ""
+}
+
+func (x *ComputePlaneMetrics) GetRegion() string {
+	if x != nil {
+		return x.Region
+	}
+	return ""
+}
+
+func (x *ComputePlaneMetrics) GetInstanceType() string {
+	if x != nil {
+		return x.InstanceType
+	}
+	return ""
+}
+
+func (x *ComputePlaneMetrics) GetReservationType() string {
+	if x != nil {
+		return x.ReservationType
+	}
+	return ""
+}
+
+func (x *ComputePlaneMetrics) GetReservationPrice() float32 {
+	if x != nil {
+		return x.ReservationPrice
+	}
+	return 0
+}
+
+func (x *ComputePlaneMetrics) GetRuntimeS() int32 {
+	if x != nil {
+		return x.RuntimeS
+	}
+	return 0
+}
+
+func (x *ComputePlaneMetrics) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *ComputePlaneMetrics) GetEventType() string {
+	if x != nil {
+		return x.EventType
+	}
+	return ""
+}
+
+func (x *ComputePlaneMetrics) GetGpuMetrics() []*GpuMetrics {
+	if x != nil {
+		return x.GpuMetrics
+	}
+	return nil
+}
+
+func (x *ComputePlaneMetrics) GetHostname() string {
+	if x != nil {
+		return x.Hostname
+	}
+	return ""
+}
+
+type GpuMetrics struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Uuid                 string  `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`                                                                 // GPU UUID.
+	ModelName            string  `protobuf:"bytes,2,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`                                      // GPU model name. e.g. NVIDIA_A10G
+	UtilizationPct       float32 `protobuf:"fixed32,3,opt,name=utilization_pct,json=utilizationPct,proto3" json:"utilization_pct,omitempty"`                     // GPU utilization. e.g. DCGM_FI_DEV_GPU_UTIL
+	TensorUtilizationPct float32 `protobuf:"fixed32,4,opt,name=tensor_utilization_pct,json=tensorUtilizationPct,proto3" json:"tensor_utilization_pct,omitempty"` // Tensor utilization. e.g. DCGM_FI_PROF_PIPE_TENSOR_ACTIVE
+	MemoryUtilizationPct float32 `protobuf:"fixed32,5,opt,name=memory_utilization_pct,json=memoryUtilizationPct,proto3" json:"memory_utilization_pct,omitempty"` // Memory utilization. e.g. DCGM_FI_PROF_DRAM_ACTIVE
+}
+
+func (x *GpuMetrics) Reset() {
+	*x = GpuMetrics{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[219]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GpuMetrics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GpuMetrics) ProtoMessage() {}
+
+func (x *GpuMetrics) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[219]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GpuMetrics.ProtoReflect.Descriptor instead.
+func (*GpuMetrics) Descriptor() ([]byte, []int) {
+	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{219}
+}
+
+func (x *GpuMetrics) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
+func (x *GpuMetrics) GetModelName() string {
+	if x != nil {
+		return x.ModelName
+	}
+	return ""
+}
+
+func (x *GpuMetrics) GetUtilizationPct() float32 {
+	if x != nil {
+		return x.UtilizationPct
+	}
+	return 0
+}
+
+func (x *GpuMetrics) GetTensorUtilizationPct() float32 {
+	if x != nil {
+		return x.TensorUtilizationPct
+	}
+	return 0
+}
+
+func (x *GpuMetrics) GetMemoryUtilizationPct() float32 {
+	if x != nil {
+		return x.MemoryUtilizationPct
+	}
+	return 0
+}
+
 // LogEntry is a single technical log entry (e.g. service log, stack traces, etc).
 type LogEntry struct {
 	state         protoimpl.MessageState
@@ -22701,7 +22912,7 @@ type LogEntry struct {
 func (x *LogEntry) Reset() {
 	*x = LogEntry{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_resources_proto_msgTypes[218]
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[220]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22714,7 +22925,7 @@ func (x *LogEntry) String() string {
 func (*LogEntry) ProtoMessage() {}
 
 func (x *LogEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_resources_proto_msgTypes[218]
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[220]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22727,7 +22938,7 @@ func (x *LogEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogEntry.ProtoReflect.Descriptor instead.
 func (*LogEntry) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{218}
+	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{220}
 }
 
 func (x *LogEntry) GetMessage() string {
@@ -22781,7 +22992,7 @@ type ComputeSourceMetadata struct {
 func (x *ComputeSourceMetadata) Reset() {
 	*x = ComputeSourceMetadata{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_resources_proto_msgTypes[219]
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[221]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22794,7 +23005,7 @@ func (x *ComputeSourceMetadata) String() string {
 func (*ComputeSourceMetadata) ProtoMessage() {}
 
 func (x *ComputeSourceMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_resources_proto_msgTypes[219]
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[221]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22807,7 +23018,7 @@ func (x *ComputeSourceMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ComputeSourceMetadata.ProtoReflect.Descriptor instead.
 func (*ComputeSourceMetadata) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{219}
+	return file_proto_clarifai_api_resources_proto_rawDescGZIP(), []int{221}
 }
 
 func (x *ComputeSourceMetadata) GetUserAppId() *UserAppIDSet {
@@ -22876,7 +23087,7 @@ type ModuleVersion_ModuleSubNav struct {
 func (x *ModuleVersion_ModuleSubNav) Reset() {
 	*x = ModuleVersion_ModuleSubNav{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_resources_proto_msgTypes[222]
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[224]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22889,7 +23100,7 @@ func (x *ModuleVersion_ModuleSubNav) String() string {
 func (*ModuleVersion_ModuleSubNav) ProtoMessage() {}
 
 func (x *ModuleVersion_ModuleSubNav) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_resources_proto_msgTypes[222]
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[224]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22942,7 +23153,7 @@ type ModuleVersion_ModuleNav struct {
 func (x *ModuleVersion_ModuleNav) Reset() {
 	*x = ModuleVersion_ModuleNav{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_resources_proto_msgTypes[223]
+		mi := &file_proto_clarifai_api_resources_proto_msgTypes[225]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22955,7 +23166,7 @@ func (x *ModuleVersion_ModuleNav) String() string {
 func (*ModuleVersion_ModuleNav) ProtoMessage() {}
 
 func (x *ModuleVersion_ModuleNav) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_resources_proto_msgTypes[223]
+	mi := &file_proto_clarifai_api_resources_proto_msgTypes[225]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -26646,7 +26857,49 @@ var file_proto_clarifai_api_resources_proto_rawDesc = []byte{
 	0x63, 0x73, 0x22, 0x3a, 0x0a, 0x08, 0x54, 0x61, 0x73, 0x6b, 0x54, 0x79, 0x70, 0x65, 0x12, 0x15,
 	0x0a, 0x11, 0x54, 0x41, 0x53, 0x4b, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x5f, 0x4e, 0x4f, 0x54, 0x5f,
 	0x53, 0x45, 0x54, 0x10, 0x00, 0x12, 0x17, 0x0a, 0x13, 0x54, 0x45, 0x58, 0x54, 0x5f, 0x43, 0x4c,
-	0x41, 0x53, 0x53, 0x49, 0x46, 0x49, 0x43, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x10, 0x01, 0x22, 0xa8,
+	0x41, 0x53, 0x53, 0x49, 0x46, 0x49, 0x43, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x10, 0x01, 0x22, 0xc6,
+	0x03, 0x0a, 0x13, 0x43, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x65, 0x4d,
+	0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x12, 0x37, 0x0a, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x43, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x53, 0x6f, 0x75, 0x72, 0x63,
+	0x65, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x52, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x12,
+	0x14, 0x0a, 0x05, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x63, 0x6c, 0x6f, 0x75, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x67, 0x69, 0x6f, 0x6e, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x72, 0x65, 0x67, 0x69, 0x6f, 0x6e, 0x12, 0x23, 0x0a,
+	0x0d, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x29, 0x0a, 0x10, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x72, 0x65,
+	0x73, 0x65, 0x72, 0x76, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x2b, 0x0a,
+	0x11, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x70, 0x72, 0x69,
+	0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x02, 0x52, 0x10, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x72, 0x69, 0x63, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x75,
+	0x6e, 0x74, 0x69, 0x6d, 0x65, 0x5f, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x72,
+	0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x53, 0x12, 0x38, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73,
+	0x74, 0x61, 0x6d, 0x70, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
+	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
+	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x12, 0x1d, 0x0a, 0x0a, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18,
+	0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65,
+	0x12, 0x39, 0x0a, 0x0b, 0x67, 0x70, 0x75, 0x5f, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x18,
+	0x0a, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x47, 0x70, 0x75, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x52,
+	0x0a, 0x67, 0x70, 0x75, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x12, 0x1a, 0x0a, 0x08, 0x68,
+	0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x68,
+	0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0xd4, 0x01, 0x0a, 0x0a, 0x47, 0x70, 0x75, 0x4d,
+	0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x75, 0x75, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75, 0x75, 0x69, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x6f,
+	0x64, 0x65, 0x6c, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
+	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x75, 0x74, 0x69,
+	0x6c, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x70, 0x63, 0x74, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x02, 0x52, 0x0e, 0x75, 0x74, 0x69, 0x6c, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x50,
+	0x63, 0x74, 0x12, 0x34, 0x0a, 0x16, 0x74, 0x65, 0x6e, 0x73, 0x6f, 0x72, 0x5f, 0x75, 0x74, 0x69,
+	0x6c, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x70, 0x63, 0x74, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x02, 0x52, 0x14, 0x74, 0x65, 0x6e, 0x73, 0x6f, 0x72, 0x55, 0x74, 0x69, 0x6c, 0x69, 0x7a,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x63, 0x74, 0x12, 0x34, 0x0a, 0x16, 0x6d, 0x65, 0x6d, 0x6f,
+	0x72, 0x79, 0x5f, 0x75, 0x74, 0x69, 0x6c, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x70,
+	0x63, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x02, 0x52, 0x14, 0x6d, 0x65, 0x6d, 0x6f, 0x72, 0x79,
+	0x55, 0x74, 0x69, 0x6c, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x50, 0x63, 0x74, 0x22, 0xa8,
 	0x01, 0x0a, 0x08, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x6d,
 	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65,
 	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70,
@@ -26966,7 +27219,7 @@ func file_proto_clarifai_api_resources_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_clarifai_api_resources_proto_enumTypes = make([]protoimpl.EnumInfo, 41)
-var file_proto_clarifai_api_resources_proto_msgTypes = make([]protoimpl.MessageInfo, 224)
+var file_proto_clarifai_api_resources_proto_msgTypes = make([]protoimpl.MessageInfo, 226)
 var file_proto_clarifai_api_resources_proto_goTypes = []interface{}{
 	(WorkflowModelUseCase)(0),              // 0: clarifai.api.WorkflowModelUseCase
 	(DatasetVersionRequestOrigin)(0),       // 1: clarifai.api.DatasetVersionRequestOrigin
@@ -27227,61 +27480,63 @@ var file_proto_clarifai_api_resources_proto_goTypes = []interface{}{
 	(*AuditLogQuery)(nil),                                                // 256: clarifai.api.AuditLogQuery
 	(*WorkflowVersionEvaluationMetric)(nil),                              // 257: clarifai.api.WorkflowVersionEvaluationMetric
 	(*WorkflowVersionEvaluationTemplate)(nil),                            // 258: clarifai.api.WorkflowVersionEvaluationTemplate
-	(*LogEntry)(nil),                                                     // 259: clarifai.api.LogEntry
-	(*ComputeSourceMetadata)(nil),                                        // 260: clarifai.api.ComputeSourceMetadata
-	nil,                                                                  // 261: clarifai.api.Image.HostedImageInfoEntry
-	nil,                                                                  // 262: clarifai.api.DatasetVersion.MetricsEntry
-	(*ModuleVersion_ModuleSubNav)(nil),                                   // 263: clarifai.api.ModuleVersion.ModuleSubNav
-	(*ModuleVersion_ModuleNav)(nil),                                      // 264: clarifai.api.ModuleVersion.ModuleNav
-	(*structpb.Struct)(nil),                                              // 265: google.protobuf.Struct
-	(*status.Status)(nil),                                                // 266: clarifai.api.status.Status
-	(*timestamppb.Timestamp)(nil),                                        // 267: google.protobuf.Timestamp
-	(*wrapperspb.BoolValue)(nil),                                         // 268: google.protobuf.BoolValue
-	(*wrapperspb.UInt64Value)(nil),                                       // 269: google.protobuf.UInt64Value
-	(*utils.MatrixUint64)(nil),                                           // 270: MatrixUint64
-	(*structpb.Value)(nil),                                               // 271: google.protobuf.Value
-	(status.StatusCode)(0),                                               // 272: clarifai.api.status.StatusCode
+	(*ComputePlaneMetrics)(nil),                                          // 259: clarifai.api.ComputePlaneMetrics
+	(*GpuMetrics)(nil),                                                   // 260: clarifai.api.GpuMetrics
+	(*LogEntry)(nil),                                                     // 261: clarifai.api.LogEntry
+	(*ComputeSourceMetadata)(nil),                                        // 262: clarifai.api.ComputeSourceMetadata
+	nil,                                                                  // 263: clarifai.api.Image.HostedImageInfoEntry
+	nil,                                                                  // 264: clarifai.api.DatasetVersion.MetricsEntry
+	(*ModuleVersion_ModuleSubNav)(nil),                                   // 265: clarifai.api.ModuleVersion.ModuleSubNav
+	(*ModuleVersion_ModuleNav)(nil),                                      // 266: clarifai.api.ModuleVersion.ModuleNav
+	(*structpb.Struct)(nil),                                              // 267: google.protobuf.Struct
+	(*status.Status)(nil),                                                // 268: clarifai.api.status.Status
+	(*timestamppb.Timestamp)(nil),                                        // 269: google.protobuf.Timestamp
+	(*wrapperspb.BoolValue)(nil),                                         // 270: google.protobuf.BoolValue
+	(*wrapperspb.UInt64Value)(nil),                                       // 271: google.protobuf.UInt64Value
+	(*utils.MatrixUint64)(nil),                                           // 272: MatrixUint64
+	(*structpb.Value)(nil),                                               // 273: google.protobuf.Value
+	(status.StatusCode)(0),                                               // 274: clarifai.api.status.StatusCode
 }
 var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	68,  // 0: clarifai.api.Annotation.data:type_name -> clarifai.api.Data
-	265, // 1: clarifai.api.Annotation.annotation_info:type_name -> google.protobuf.Struct
-	266, // 2: clarifai.api.Annotation.status:type_name -> clarifai.api.status.Status
-	267, // 3: clarifai.api.Annotation.created_at:type_name -> google.protobuf.Timestamp
-	267, // 4: clarifai.api.Annotation.modified_at:type_name -> google.protobuf.Timestamp
-	265, // 5: clarifai.api.Annotation.consensus_info:type_name -> google.protobuf.Struct
+	267, // 1: clarifai.api.Annotation.annotation_info:type_name -> google.protobuf.Struct
+	268, // 2: clarifai.api.Annotation.status:type_name -> clarifai.api.status.Status
+	269, // 3: clarifai.api.Annotation.created_at:type_name -> google.protobuf.Timestamp
+	269, // 4: clarifai.api.Annotation.modified_at:type_name -> google.protobuf.Timestamp
+	267, // 5: clarifai.api.Annotation.consensus_info:type_name -> google.protobuf.Struct
 	42,  // 6: clarifai.api.Annotation.worker:type_name -> clarifai.api.Worker
 	159, // 7: clarifai.api.Worker.user:type_name -> clarifai.api.User
 	105, // 8: clarifai.api.Worker.model:type_name -> clarifai.api.Model
 	167, // 9: clarifai.api.Worker.workflow:type_name -> clarifai.api.Workflow
 	167, // 10: clarifai.api.App.default_workflow:type_name -> clarifai.api.Workflow
-	267, // 11: clarifai.api.App.created_at:type_name -> google.protobuf.Timestamp
-	267, // 12: clarifai.api.App.modified_at:type_name -> google.protobuf.Timestamp
-	265, // 13: clarifai.api.App.metadata:type_name -> google.protobuf.Struct
+	269, // 11: clarifai.api.App.created_at:type_name -> google.protobuf.Timestamp
+	269, // 12: clarifai.api.App.modified_at:type_name -> google.protobuf.Timestamp
+	267, // 13: clarifai.api.App.metadata:type_name -> google.protobuf.Struct
 	206, // 14: clarifai.api.App.visibility:type_name -> clarifai.api.Visibility
 	86,  // 15: clarifai.api.App.image:type_name -> clarifai.api.Image
-	268, // 16: clarifai.api.App.is_template:type_name -> google.protobuf.BoolValue
+	270, // 16: clarifai.api.App.is_template:type_name -> google.protobuf.BoolValue
 	44,  // 17: clarifai.api.App.extra_info:type_name -> clarifai.api.AppExtraInfo
 	20,  // 18: clarifai.api.App.embeddings_storage:type_name -> clarifai.api.App.EmbeddingsStorage
 	46,  // 19: clarifai.api.AppExtraInfo.counts:type_name -> clarifai.api.AppResourceCounts
 	43,  // 20: clarifai.api.Collaborator.app:type_name -> clarifai.api.App
 	159, // 21: clarifai.api.Collaborator.user:type_name -> clarifai.api.User
-	267, // 22: clarifai.api.Collaborator.created_at:type_name -> google.protobuf.Timestamp
-	267, // 23: clarifai.api.Collaborator.modified_at:type_name -> google.protobuf.Timestamp
-	267, // 24: clarifai.api.Collaborator.deleted_at:type_name -> google.protobuf.Timestamp
+	269, // 22: clarifai.api.Collaborator.created_at:type_name -> google.protobuf.Timestamp
+	269, // 23: clarifai.api.Collaborator.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 24: clarifai.api.Collaborator.deleted_at:type_name -> google.protobuf.Timestamp
 	43,  // 25: clarifai.api.Collaboration.app:type_name -> clarifai.api.App
 	159, // 26: clarifai.api.Collaboration.app_owner:type_name -> clarifai.api.User
-	267, // 27: clarifai.api.Collaboration.created_at:type_name -> google.protobuf.Timestamp
+	269, // 27: clarifai.api.Collaboration.created_at:type_name -> google.protobuf.Timestamp
 	88,  // 28: clarifai.api.Audio.hosted:type_name -> clarifai.api.HostedURL
 	50,  // 29: clarifai.api.Audio.audio_info:type_name -> clarifai.api.AudioInfo
 	68,  // 30: clarifai.api.Track.data:type_name -> clarifai.api.Data
 	209, // 31: clarifai.api.Track.time_info:type_name -> clarifai.api.TimeInfo
 	148, // 32: clarifai.api.Cluster.hits:type_name -> clarifai.api.Hit
 	54,  // 33: clarifai.api.Color.w3c:type_name -> clarifai.api.W3C
-	267, // 34: clarifai.api.Concept.created_at:type_name -> google.protobuf.Timestamp
+	269, // 34: clarifai.api.Concept.created_at:type_name -> google.protobuf.Timestamp
 	206, // 35: clarifai.api.Concept.visibility:type_name -> clarifai.api.Visibility
 	58,  // 36: clarifai.api.Concept.keypoint_info:type_name -> clarifai.api.KeypointInfo
 	60,  // 37: clarifai.api.Concept.extra_info:type_name -> clarifai.api.ConceptExtraInfo
-	265, // 38: clarifai.api.Concept.metadata:type_name -> google.protobuf.Struct
+	267, // 38: clarifai.api.Concept.metadata:type_name -> google.protobuf.Struct
 	86,  // 39: clarifai.api.Concept.image:type_name -> clarifai.api.Image
 	59,  // 40: clarifai.api.KeypointInfo.skeleton:type_name -> clarifai.api.KeypointEdge
 	62,  // 41: clarifai.api.ConceptCount.concept_type_count:type_name -> clarifai.api.ConceptTypeCount
@@ -27299,7 +27554,7 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	86,  // 53: clarifai.api.Data.image:type_name -> clarifai.api.Image
 	165, // 54: clarifai.api.Data.video:type_name -> clarifai.api.Video
 	57,  // 55: clarifai.api.Data.concepts:type_name -> clarifai.api.Concept
-	265, // 56: clarifai.api.Data.metadata:type_name -> google.protobuf.Struct
+	267, // 56: clarifai.api.Data.metadata:type_name -> google.protobuf.Struct
 	85,  // 57: clarifai.api.Data.geo:type_name -> clarifai.api.Geo
 	53,  // 58: clarifai.api.Data.colors:type_name -> clarifai.api.Color
 	52,  // 59: clarifai.api.Data.clusters:type_name -> clarifai.api.Cluster
@@ -27335,101 +27590,101 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	84,  // 89: clarifai.api.Geo.geo_box:type_name -> clarifai.api.GeoBoxedPoint
 	88,  // 90: clarifai.api.Image.hosted:type_name -> clarifai.api.HostedURL
 	87,  // 91: clarifai.api.Image.image_info:type_name -> clarifai.api.ImageInfo
-	261, // 92: clarifai.api.Image.hosted_image_info:type_name -> clarifai.api.Image.HostedImageInfoEntry
+	263, // 92: clarifai.api.Image.hosted_image_info:type_name -> clarifai.api.Image.HostedImageInfoEntry
 	68,  // 93: clarifai.api.Input.data:type_name -> clarifai.api.Data
-	267, // 94: clarifai.api.Input.created_at:type_name -> google.protobuf.Timestamp
-	267, // 95: clarifai.api.Input.modified_at:type_name -> google.protobuf.Timestamp
-	266, // 96: clarifai.api.Input.status:type_name -> clarifai.api.status.Status
+	269, // 94: clarifai.api.Input.created_at:type_name -> google.protobuf.Timestamp
+	269, // 95: clarifai.api.Input.modified_at:type_name -> google.protobuf.Timestamp
+	268, // 96: clarifai.api.Input.status:type_name -> clarifai.api.status.Status
 	89,  // 97: clarifai.api.InputBatch.inputs:type_name -> clarifai.api.Input
-	267, // 98: clarifai.api.Dataset.created_at:type_name -> google.protobuf.Timestamp
-	267, // 99: clarifai.api.Dataset.modified_at:type_name -> google.protobuf.Timestamp
-	265, // 100: clarifai.api.Dataset.metadata:type_name -> google.protobuf.Struct
+	269, // 98: clarifai.api.Dataset.created_at:type_name -> google.protobuf.Timestamp
+	269, // 99: clarifai.api.Dataset.modified_at:type_name -> google.protobuf.Timestamp
+	267, // 100: clarifai.api.Dataset.metadata:type_name -> google.protobuf.Struct
 	206, // 101: clarifai.api.Dataset.visibility:type_name -> clarifai.api.Visibility
 	93,  // 102: clarifai.api.Dataset.default_annotation_filter:type_name -> clarifai.api.AnnotationFilter
 	102, // 103: clarifai.api.Dataset.default_processing_info:type_name -> clarifai.api.DatasetVersionProcessingInfo
 	95,  // 104: clarifai.api.Dataset.version:type_name -> clarifai.api.DatasetVersion
 	242, // 105: clarifai.api.Dataset.bookmark_origin:type_name -> clarifai.api.BookmarkOrigin
 	86,  // 106: clarifai.api.Dataset.image:type_name -> clarifai.api.Image
-	267, // 107: clarifai.api.AnnotationFilter.created_at:type_name -> google.protobuf.Timestamp
-	267, // 108: clarifai.api.AnnotationFilter.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 107: clarifai.api.AnnotationFilter.created_at:type_name -> google.protobuf.Timestamp
+	269, // 108: clarifai.api.AnnotationFilter.modified_at:type_name -> google.protobuf.Timestamp
 	152, // 109: clarifai.api.AnnotationFilter.search:type_name -> clarifai.api.Search
-	267, // 110: clarifai.api.DatasetInput.created_at:type_name -> google.protobuf.Timestamp
+	269, // 110: clarifai.api.DatasetInput.created_at:type_name -> google.protobuf.Timestamp
 	89,  // 111: clarifai.api.DatasetInput.input:type_name -> clarifai.api.Input
-	267, // 112: clarifai.api.DatasetVersion.created_at:type_name -> google.protobuf.Timestamp
-	267, // 113: clarifai.api.DatasetVersion.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 112: clarifai.api.DatasetVersion.created_at:type_name -> google.protobuf.Timestamp
+	269, // 113: clarifai.api.DatasetVersion.modified_at:type_name -> google.protobuf.Timestamp
 	96,  // 114: clarifai.api.DatasetVersion.annotation_filter_config:type_name -> clarifai.api.AnnotationFilterConfig
 	97,  // 115: clarifai.api.DatasetVersion.model_predict_config:type_name -> clarifai.api.ModelPredictConfig
-	266, // 116: clarifai.api.DatasetVersion.status:type_name -> clarifai.api.status.Status
+	268, // 116: clarifai.api.DatasetVersion.status:type_name -> clarifai.api.status.Status
 	102, // 117: clarifai.api.DatasetVersion.processing_info:type_name -> clarifai.api.DatasetVersionProcessingInfo
-	262, // 118: clarifai.api.DatasetVersion.metrics:type_name -> clarifai.api.DatasetVersion.MetricsEntry
+	264, // 118: clarifai.api.DatasetVersion.metrics:type_name -> clarifai.api.DatasetVersion.MetricsEntry
 	100, // 119: clarifai.api.DatasetVersion.export_info:type_name -> clarifai.api.DatasetVersionExportInfo
-	265, // 120: clarifai.api.DatasetVersion.metadata:type_name -> google.protobuf.Struct
+	267, // 120: clarifai.api.DatasetVersion.metadata:type_name -> google.protobuf.Struct
 	206, // 121: clarifai.api.DatasetVersion.visibility:type_name -> clarifai.api.Visibility
 	1,   // 122: clarifai.api.DatasetVersion.request_origin:type_name -> clarifai.api.DatasetVersionRequestOrigin
 	93,  // 123: clarifai.api.AnnotationFilterConfig.annotation_filter:type_name -> clarifai.api.AnnotationFilter
 	105, // 124: clarifai.api.ModelPredictConfig.model:type_name -> clarifai.api.Model
-	269, // 125: clarifai.api.DatasetVersionMetrics.inputs_count:type_name -> google.protobuf.UInt64Value
-	269, // 126: clarifai.api.DatasetVersionMetrics.unlabeled_inputs_count:type_name -> google.protobuf.UInt64Value
-	269, // 127: clarifai.api.DatasetVersionMetrics.inputs_with_metadata_count:type_name -> google.protobuf.UInt64Value
-	269, // 128: clarifai.api.DatasetVersionMetrics.inputs_with_geo_count:type_name -> google.protobuf.UInt64Value
-	269, // 129: clarifai.api.DatasetVersionMetrics.regions_count:type_name -> google.protobuf.UInt64Value
-	270, // 130: clarifai.api.DatasetVersionMetrics.region_location_matrix:type_name -> MatrixUint64
-	269, // 131: clarifai.api.DatasetVersionMetrics.bounding_boxes_count:type_name -> google.protobuf.UInt64Value
-	269, // 132: clarifai.api.DatasetVersionMetrics.polygons_count:type_name -> google.protobuf.UInt64Value
-	269, // 133: clarifai.api.DatasetVersionMetrics.points_count:type_name -> google.protobuf.UInt64Value
-	269, // 134: clarifai.api.DatasetVersionMetrics.masks_count:type_name -> google.protobuf.UInt64Value
-	269, // 135: clarifai.api.DatasetVersionMetrics.region_inputs_count:type_name -> google.protobuf.UInt64Value
-	269, // 136: clarifai.api.DatasetVersionMetrics.region_frames_count:type_name -> google.protobuf.UInt64Value
-	269, // 137: clarifai.api.DatasetVersionMetrics.frames_count:type_name -> google.protobuf.UInt64Value
-	269, // 138: clarifai.api.DatasetVersionMetrics.frame_inputs_count:type_name -> google.protobuf.UInt64Value
-	269, // 139: clarifai.api.DatasetVersionMetrics.embeddings_count:type_name -> google.protobuf.UInt64Value
-	269, // 140: clarifai.api.DatasetVersionMetrics.positive_input_tags_count:type_name -> google.protobuf.UInt64Value
-	269, // 141: clarifai.api.DatasetVersionMetrics.positive_region_tags_count:type_name -> google.protobuf.UInt64Value
-	269, // 142: clarifai.api.DatasetVersionMetrics.positive_frame_tags_count:type_name -> google.protobuf.UInt64Value
+	271, // 125: clarifai.api.DatasetVersionMetrics.inputs_count:type_name -> google.protobuf.UInt64Value
+	271, // 126: clarifai.api.DatasetVersionMetrics.unlabeled_inputs_count:type_name -> google.protobuf.UInt64Value
+	271, // 127: clarifai.api.DatasetVersionMetrics.inputs_with_metadata_count:type_name -> google.protobuf.UInt64Value
+	271, // 128: clarifai.api.DatasetVersionMetrics.inputs_with_geo_count:type_name -> google.protobuf.UInt64Value
+	271, // 129: clarifai.api.DatasetVersionMetrics.regions_count:type_name -> google.protobuf.UInt64Value
+	272, // 130: clarifai.api.DatasetVersionMetrics.region_location_matrix:type_name -> MatrixUint64
+	271, // 131: clarifai.api.DatasetVersionMetrics.bounding_boxes_count:type_name -> google.protobuf.UInt64Value
+	271, // 132: clarifai.api.DatasetVersionMetrics.polygons_count:type_name -> google.protobuf.UInt64Value
+	271, // 133: clarifai.api.DatasetVersionMetrics.points_count:type_name -> google.protobuf.UInt64Value
+	271, // 134: clarifai.api.DatasetVersionMetrics.masks_count:type_name -> google.protobuf.UInt64Value
+	271, // 135: clarifai.api.DatasetVersionMetrics.region_inputs_count:type_name -> google.protobuf.UInt64Value
+	271, // 136: clarifai.api.DatasetVersionMetrics.region_frames_count:type_name -> google.protobuf.UInt64Value
+	271, // 137: clarifai.api.DatasetVersionMetrics.frames_count:type_name -> google.protobuf.UInt64Value
+	271, // 138: clarifai.api.DatasetVersionMetrics.frame_inputs_count:type_name -> google.protobuf.UInt64Value
+	271, // 139: clarifai.api.DatasetVersionMetrics.embeddings_count:type_name -> google.protobuf.UInt64Value
+	271, // 140: clarifai.api.DatasetVersionMetrics.positive_input_tags_count:type_name -> google.protobuf.UInt64Value
+	271, // 141: clarifai.api.DatasetVersionMetrics.positive_region_tags_count:type_name -> google.protobuf.UInt64Value
+	271, // 142: clarifai.api.DatasetVersionMetrics.positive_frame_tags_count:type_name -> google.protobuf.UInt64Value
 	2,   // 143: clarifai.api.DatasetVersionMetricsGroup.type:type_name -> clarifai.api.DatasetVersionMetricsGroupType
-	271, // 144: clarifai.api.DatasetVersionMetricsGroup.value:type_name -> google.protobuf.Value
+	273, // 144: clarifai.api.DatasetVersionMetricsGroup.value:type_name -> google.protobuf.Value
 	98,  // 145: clarifai.api.DatasetVersionMetricsGroup.metrics:type_name -> clarifai.api.DatasetVersionMetrics
 	101, // 146: clarifai.api.DatasetVersionExportInfo.clarifai_data_protobuf:type_name -> clarifai.api.DatasetVersionExport
 	101, // 147: clarifai.api.DatasetVersionExportInfo.clarifai_data_json:type_name -> clarifai.api.DatasetVersionExport
 	101, // 148: clarifai.api.DatasetVersionExportInfo.coco:type_name -> clarifai.api.DatasetVersionExport
 	3,   // 149: clarifai.api.DatasetVersionExport.format:type_name -> clarifai.api.DatasetVersionExportFormat
-	266, // 150: clarifai.api.DatasetVersionExport.status:type_name -> clarifai.api.status.Status
+	268, // 150: clarifai.api.DatasetVersionExport.status:type_name -> clarifai.api.status.Status
 	103, // 151: clarifai.api.DatasetVersionProcessingInfo.frame_interpolation_info:type_name -> clarifai.api.FrameInterpolationInfo
 	43,  // 152: clarifai.api.Key.apps:type_name -> clarifai.api.App
-	267, // 153: clarifai.api.Key.created_at:type_name -> google.protobuf.Timestamp
-	267, // 154: clarifai.api.Key.expires_at:type_name -> google.protobuf.Timestamp
-	267, // 155: clarifai.api.Model.created_at:type_name -> google.protobuf.Timestamp
-	267, // 156: clarifai.api.Model.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 153: clarifai.api.Key.created_at:type_name -> google.protobuf.Timestamp
+	269, // 154: clarifai.api.Key.expires_at:type_name -> google.protobuf.Timestamp
+	269, // 155: clarifai.api.Model.created_at:type_name -> google.protobuf.Timestamp
+	269, // 156: clarifai.api.Model.modified_at:type_name -> google.protobuf.Timestamp
 	108, // 157: clarifai.api.Model.output_info:type_name -> clarifai.api.OutputInfo
 	123, // 158: clarifai.api.Model.model_version:type_name -> clarifai.api.ModelVersion
 	111, // 159: clarifai.api.Model.default_eval_info:type_name -> clarifai.api.EvalInfo
 	206, // 160: clarifai.api.Model.visibility:type_name -> clarifai.api.Visibility
-	265, // 161: clarifai.api.Model.metadata:type_name -> google.protobuf.Struct
-	265, // 162: clarifai.api.Model.presets:type_name -> google.protobuf.Struct
+	267, // 161: clarifai.api.Model.metadata:type_name -> google.protobuf.Struct
+	267, // 162: clarifai.api.Model.presets:type_name -> google.protobuf.Struct
 	207, // 163: clarifai.api.Model.languages_full:type_name -> clarifai.api.FullTag
-	268, // 164: clarifai.api.Model.workflow_recommended:type_name -> google.protobuf.BoolValue
+	270, // 164: clarifai.api.Model.workflow_recommended:type_name -> google.protobuf.BoolValue
 	242, // 165: clarifai.api.Model.bookmark_origin:type_name -> clarifai.api.BookmarkOrigin
 	86,  // 166: clarifai.api.Model.image:type_name -> clarifai.api.Image
 	6,   // 167: clarifai.api.Model.license_type:type_name -> clarifai.api.LicenseType
 	22,  // 168: clarifai.api.Model.source:type_name -> clarifai.api.Model.Source
-	265, // 169: clarifai.api.ModelReference.metadata:type_name -> google.protobuf.Struct
+	267, // 169: clarifai.api.ModelReference.metadata:type_name -> google.protobuf.Struct
 	68,  // 170: clarifai.api.ModelVersionInputExample.data:type_name -> clarifai.api.Data
 	68,  // 171: clarifai.api.OutputInfo.data:type_name -> clarifai.api.Data
 	113, // 172: clarifai.api.OutputInfo.output_config:type_name -> clarifai.api.OutputConfig
-	265, // 173: clarifai.api.OutputInfo.fields_map:type_name -> google.protobuf.Struct
-	265, // 174: clarifai.api.OutputInfo.params:type_name -> google.protobuf.Struct
+	267, // 173: clarifai.api.OutputInfo.fields_map:type_name -> google.protobuf.Struct
+	267, // 174: clarifai.api.OutputInfo.params:type_name -> google.protobuf.Struct
 	118, // 175: clarifai.api.OutputInfo.params_specs:type_name -> clarifai.api.ModelTypeField
-	265, // 176: clarifai.api.InputInfo.fields_map:type_name -> google.protobuf.Struct
-	265, // 177: clarifai.api.InputInfo.params:type_name -> google.protobuf.Struct
+	267, // 176: clarifai.api.InputInfo.fields_map:type_name -> google.protobuf.Struct
+	267, // 177: clarifai.api.InputInfo.params:type_name -> google.protobuf.Struct
 	105, // 178: clarifai.api.InputInfo.base_embed_model:type_name -> clarifai.api.Model
-	265, // 179: clarifai.api.TrainInfo.params:type_name -> google.protobuf.Struct
+	267, // 179: clarifai.api.TrainInfo.params:type_name -> google.protobuf.Struct
 	92,  // 180: clarifai.api.TrainInfo.dataset:type_name -> clarifai.api.Dataset
 	105, // 181: clarifai.api.TrainInfo.resume_from_model:type_name -> clarifai.api.Model
-	265, // 182: clarifai.api.EvalInfo.params:type_name -> google.protobuf.Struct
-	265, // 183: clarifai.api.ImportInfo.params:type_name -> google.protobuf.Struct
+	267, // 182: clarifai.api.EvalInfo.params:type_name -> google.protobuf.Struct
+	267, // 183: clarifai.api.ImportInfo.params:type_name -> google.protobuf.Struct
 	57,  // 184: clarifai.api.OutputConfig.select_concepts:type_name -> clarifai.api.Concept
-	265, // 185: clarifai.api.OutputConfig.hyper_params:type_name -> google.protobuf.Struct
-	265, // 186: clarifai.api.OutputConfig.model_metadata:type_name -> google.protobuf.Struct
+	267, // 185: clarifai.api.OutputConfig.hyper_params:type_name -> google.protobuf.Struct
+	267, // 186: clarifai.api.OutputConfig.model_metadata:type_name -> google.protobuf.Struct
 	118, // 187: clarifai.api.ModelType.model_type_fields:type_name -> clarifai.api.ModelTypeField
 	115, // 188: clarifai.api.ModelType.expected_input_layers:type_name -> clarifai.api.ModelLayerInfo
 	115, // 189: clarifai.api.ModelType.expected_output_layers:type_name -> clarifai.api.ModelLayerInfo
@@ -27437,28 +27692,28 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	117, // 191: clarifai.api.ModelLayerInfo.shapes:type_name -> clarifai.api.LayerShape
 	7,   // 192: clarifai.api.LayerShape.data_type:type_name -> clarifai.api.DataType
 	23,  // 193: clarifai.api.ModelTypeField.field_type:type_name -> clarifai.api.ModelTypeField.ModelTypeFieldType
-	271, // 194: clarifai.api.ModelTypeField.default_value:type_name -> google.protobuf.Value
+	273, // 194: clarifai.api.ModelTypeField.default_value:type_name -> google.protobuf.Value
 	120, // 195: clarifai.api.ModelTypeField.model_type_enum_options:type_name -> clarifai.api.ModelTypeEnumOption
 	119, // 196: clarifai.api.ModelTypeField.model_type_range_info:type_name -> clarifai.api.ModelTypeRangeInfo
 	121, // 197: clarifai.api.ModelTypeEnumOption.aliases:type_name -> clarifai.api.ModelTypeEnumOptionAlias
 	118, // 198: clarifai.api.ModelTypeEnumOption.model_type_fields:type_name -> clarifai.api.ModelTypeField
-	267, // 199: clarifai.api.ModelVersion.created_at:type_name -> google.protobuf.Timestamp
-	266, // 200: clarifai.api.ModelVersion.status:type_name -> clarifai.api.status.Status
+	269, // 199: clarifai.api.ModelVersion.created_at:type_name -> google.protobuf.Timestamp
+	268, // 200: clarifai.api.ModelVersion.status:type_name -> clarifai.api.status.Status
 	142, // 201: clarifai.api.ModelVersion.metrics:type_name -> clarifai.api.EvalMetrics
 	126, // 202: clarifai.api.ModelVersion.pretrained_model_config:type_name -> clarifai.api.PretrainedModelConfig
-	267, // 203: clarifai.api.ModelVersion.completed_at:type_name -> google.protobuf.Timestamp
+	269, // 203: clarifai.api.ModelVersion.completed_at:type_name -> google.protobuf.Timestamp
 	206, // 204: clarifai.api.ModelVersion.visibility:type_name -> clarifai.api.Visibility
-	267, // 205: clarifai.api.ModelVersion.modified_at:type_name -> google.protobuf.Timestamp
-	265, // 206: clarifai.api.ModelVersion.metadata:type_name -> google.protobuf.Struct
+	269, // 205: clarifai.api.ModelVersion.modified_at:type_name -> google.protobuf.Timestamp
+	267, // 206: clarifai.api.ModelVersion.metadata:type_name -> google.protobuf.Struct
 	108, // 207: clarifai.api.ModelVersion.output_info:type_name -> clarifai.api.OutputInfo
 	109, // 208: clarifai.api.ModelVersion.input_info:type_name -> clarifai.api.InputInfo
 	110, // 209: clarifai.api.ModelVersion.train_info:type_name -> clarifai.api.TrainInfo
 	112, // 210: clarifai.api.ModelVersion.import_info:type_name -> clarifai.api.ImportInfo
 	249, // 211: clarifai.api.ModelVersion.inference_compute_info:type_name -> clarifai.api.ComputeInfo
 	124, // 212: clarifai.api.ModelVersion.build_info:type_name -> clarifai.api.BuildInfo
-	266, // 213: clarifai.api.ModelVersionExport.status:type_name -> clarifai.api.status.Status
-	265, // 214: clarifai.api.PretrainedModelConfig.input_fields_map:type_name -> google.protobuf.Struct
-	265, // 215: clarifai.api.PretrainedModelConfig.output_fields_map:type_name -> google.protobuf.Struct
+	268, // 213: clarifai.api.ModelVersionExport.status:type_name -> clarifai.api.status.Status
+	267, // 214: clarifai.api.PretrainedModelConfig.input_fields_map:type_name -> google.protobuf.Struct
+	267, // 215: clarifai.api.PretrainedModelConfig.output_fields_map:type_name -> google.protobuf.Struct
 	128, // 216: clarifai.api.TrainStats.loss_curve:type_name -> clarifai.api.LossCurveEntry
 	57,  // 217: clarifai.api.LabelCount.concept:type_name -> clarifai.api.Concept
 	129, // 218: clarifai.api.LabelDistribution.positive_label_counts:type_name -> clarifai.api.LabelCount
@@ -27476,7 +27731,7 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	41,  // 230: clarifai.api.EvalTestSetEntry.predicted_annotation:type_name -> clarifai.api.Annotation
 	41,  // 231: clarifai.api.EvalTestSetEntry.ground_truth_annotation:type_name -> clarifai.api.Annotation
 	140, // 232: clarifai.api.MetricsSummary.lopq_metrics:type_name -> clarifai.api.LOPQEvalResult
-	266, // 233: clarifai.api.EvalMetrics.status:type_name -> clarifai.api.status.Status
+	268, // 233: clarifai.api.EvalMetrics.status:type_name -> clarifai.api.status.Status
 	105, // 234: clarifai.api.EvalMetrics.model:type_name -> clarifai.api.Model
 	92,  // 235: clarifai.api.EvalMetrics.ground_truth_dataset:type_name -> clarifai.api.Dataset
 	92,  // 236: clarifai.api.EvalMetrics.predictions_dataset:type_name -> clarifai.api.Dataset
@@ -27491,9 +27746,9 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	138, // 245: clarifai.api.EvalMetrics.tracker_metrics:type_name -> clarifai.api.TrackerMetrics
 	111, // 246: clarifai.api.EvalMetrics.eval_info:type_name -> clarifai.api.EvalInfo
 	143, // 247: clarifai.api.EvalMetrics.extended_metrics:type_name -> clarifai.api.ExtendedMetrics
-	265, // 248: clarifai.api.ExtendedMetrics.user_metrics:type_name -> google.protobuf.Struct
-	266, // 249: clarifai.api.Output.status:type_name -> clarifai.api.status.Status
-	267, // 250: clarifai.api.Output.created_at:type_name -> google.protobuf.Timestamp
+	267, // 248: clarifai.api.ExtendedMetrics.user_metrics:type_name -> google.protobuf.Struct
+	268, // 249: clarifai.api.Output.status:type_name -> clarifai.api.status.Status
+	269, // 250: clarifai.api.Output.created_at:type_name -> google.protobuf.Timestamp
 	105, // 251: clarifai.api.Output.model:type_name -> clarifai.api.Model
 	89,  // 252: clarifai.api.Output.input:type_name -> clarifai.api.Input
 	68,  // 253: clarifai.api.Output.data:type_name -> clarifai.api.Data
@@ -27506,16 +27761,16 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	153, // 260: clarifai.api.Query.filters:type_name -> clarifai.api.Filter
 	155, // 261: clarifai.api.Query.ranks:type_name -> clarifai.api.Rank
 	151, // 262: clarifai.api.Search.query:type_name -> clarifai.api.Query
-	267, // 263: clarifai.api.Search.as_of:type_name -> google.protobuf.Timestamp
-	267, // 264: clarifai.api.Search.created_at:type_name -> google.protobuf.Timestamp
-	267, // 265: clarifai.api.Search.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 263: clarifai.api.Search.as_of:type_name -> google.protobuf.Timestamp
+	269, // 264: clarifai.api.Search.created_at:type_name -> google.protobuf.Timestamp
+	269, // 265: clarifai.api.Search.modified_at:type_name -> google.protobuf.Timestamp
 	206, // 266: clarifai.api.Search.visibility:type_name -> clarifai.api.Visibility
 	24,  // 267: clarifai.api.Search.metric:type_name -> clarifai.api.Search.Metric
 	41,  // 268: clarifai.api.Filter.annotation:type_name -> clarifai.api.Annotation
 	89,  // 269: clarifai.api.Filter.input:type_name -> clarifai.api.Input
 	154, // 270: clarifai.api.Filter.last_updated_time_range:type_name -> clarifai.api.TimeRange
-	267, // 271: clarifai.api.TimeRange.start_time:type_name -> google.protobuf.Timestamp
-	267, // 272: clarifai.api.TimeRange.end_time:type_name -> google.protobuf.Timestamp
+	269, // 271: clarifai.api.TimeRange.start_time:type_name -> google.protobuf.Timestamp
+	269, // 272: clarifai.api.TimeRange.end_time:type_name -> google.protobuf.Timestamp
 	41,  // 273: clarifai.api.Rank.annotation:type_name -> clarifai.api.Annotation
 	152, // 274: clarifai.api.AnnotationSearchMetrics.ground_truth:type_name -> clarifai.api.Search
 	152, // 275: clarifai.api.AnnotationSearchMetrics.search_to_eval:type_name -> clarifai.api.Search
@@ -27524,143 +27779,143 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	206, // 278: clarifai.api.AnnotationSearchMetrics.visibility:type_name -> clarifai.api.Visibility
 	88,  // 279: clarifai.api.Text.hosted:type_name -> clarifai.api.HostedURL
 	158, // 280: clarifai.api.Text.text_info:type_name -> clarifai.api.TextInfo
-	267, // 281: clarifai.api.User.created_at:type_name -> google.protobuf.Timestamp
-	267, // 282: clarifai.api.User.date_gdpr_consent:type_name -> google.protobuf.Timestamp
-	267, // 283: clarifai.api.User.date_tos_consent:type_name -> google.protobuf.Timestamp
-	267, // 284: clarifai.api.User.date_marketing_consent:type_name -> google.protobuf.Timestamp
-	267, // 285: clarifai.api.User.date_pii_consent:type_name -> google.protobuf.Timestamp
-	265, // 286: clarifai.api.User.metadata:type_name -> google.protobuf.Struct
+	269, // 281: clarifai.api.User.created_at:type_name -> google.protobuf.Timestamp
+	269, // 282: clarifai.api.User.date_gdpr_consent:type_name -> google.protobuf.Timestamp
+	269, // 283: clarifai.api.User.date_tos_consent:type_name -> google.protobuf.Timestamp
+	269, // 284: clarifai.api.User.date_marketing_consent:type_name -> google.protobuf.Timestamp
+	269, // 285: clarifai.api.User.date_pii_consent:type_name -> google.protobuf.Timestamp
+	267, // 286: clarifai.api.User.metadata:type_name -> google.protobuf.Struct
 	161, // 287: clarifai.api.User.email_addresses:type_name -> clarifai.api.EmailAddress
 	206, // 288: clarifai.api.User.visibility:type_name -> clarifai.api.Visibility
 	160, // 289: clarifai.api.User.user_detail:type_name -> clarifai.api.UserDetail
 	86,  // 290: clarifai.api.User.image:type_name -> clarifai.api.Image
-	267, // 291: clarifai.api.UserDetail.date_gdpr_consent:type_name -> google.protobuf.Timestamp
-	267, // 292: clarifai.api.UserDetail.date_tos_consent:type_name -> google.protobuf.Timestamp
-	267, // 293: clarifai.api.UserDetail.date_marketing_consent:type_name -> google.protobuf.Timestamp
-	267, // 294: clarifai.api.UserDetail.date_pii_consent:type_name -> google.protobuf.Timestamp
-	265, // 295: clarifai.api.UserDetail.metadata:type_name -> google.protobuf.Struct
+	269, // 291: clarifai.api.UserDetail.date_gdpr_consent:type_name -> google.protobuf.Timestamp
+	269, // 292: clarifai.api.UserDetail.date_tos_consent:type_name -> google.protobuf.Timestamp
+	269, // 293: clarifai.api.UserDetail.date_marketing_consent:type_name -> google.protobuf.Timestamp
+	269, // 294: clarifai.api.UserDetail.date_pii_consent:type_name -> google.protobuf.Timestamp
+	267, // 295: clarifai.api.UserDetail.metadata:type_name -> google.protobuf.Struct
 	161, // 296: clarifai.api.UserDetail.email_addresses:type_name -> clarifai.api.EmailAddress
 	164, // 297: clarifai.api.UserDetail.commitment_value:type_name -> clarifai.api.CommitmentValue
 	25,  // 298: clarifai.api.CommitmentValue.type:type_name -> clarifai.api.CommitmentValue.CommitmentType
 	88,  // 299: clarifai.api.Video.hosted:type_name -> clarifai.api.HostedURL
 	88,  // 300: clarifai.api.Video.hosted_thumbnail:type_name -> clarifai.api.HostedURL
 	166, // 301: clarifai.api.Video.video_info:type_name -> clarifai.api.VideoInfo
-	267, // 302: clarifai.api.Workflow.created_at:type_name -> google.protobuf.Timestamp
+	269, // 302: clarifai.api.Workflow.created_at:type_name -> google.protobuf.Timestamp
 	169, // 303: clarifai.api.Workflow.nodes:type_name -> clarifai.api.WorkflowNode
-	265, // 304: clarifai.api.Workflow.metadata:type_name -> google.protobuf.Struct
+	267, // 304: clarifai.api.Workflow.metadata:type_name -> google.protobuf.Struct
 	206, // 305: clarifai.api.Workflow.visibility:type_name -> clarifai.api.Visibility
-	267, // 306: clarifai.api.Workflow.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 306: clarifai.api.Workflow.modified_at:type_name -> google.protobuf.Timestamp
 	168, // 307: clarifai.api.Workflow.version:type_name -> clarifai.api.WorkflowVersion
 	242, // 308: clarifai.api.Workflow.bookmark_origin:type_name -> clarifai.api.BookmarkOrigin
 	86,  // 309: clarifai.api.Workflow.image:type_name -> clarifai.api.Image
-	267, // 310: clarifai.api.WorkflowVersion.created_at:type_name -> google.protobuf.Timestamp
-	267, // 311: clarifai.api.WorkflowVersion.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 310: clarifai.api.WorkflowVersion.created_at:type_name -> google.protobuf.Timestamp
+	269, // 311: clarifai.api.WorkflowVersion.modified_at:type_name -> google.protobuf.Timestamp
 	206, // 312: clarifai.api.WorkflowVersion.visibility:type_name -> clarifai.api.Visibility
 	169, // 313: clarifai.api.WorkflowVersion.nodes:type_name -> clarifai.api.WorkflowNode
-	265, // 314: clarifai.api.WorkflowVersion.metadata:type_name -> google.protobuf.Struct
+	267, // 314: clarifai.api.WorkflowVersion.metadata:type_name -> google.protobuf.Struct
 	105, // 315: clarifai.api.WorkflowNode.model:type_name -> clarifai.api.Model
 	170, // 316: clarifai.api.WorkflowNode.node_inputs:type_name -> clarifai.api.NodeInput
 	108, // 317: clarifai.api.WorkflowNode.output_info_override:type_name -> clarifai.api.OutputInfo
-	266, // 318: clarifai.api.WorkflowResult.status:type_name -> clarifai.api.status.Status
-	267, // 319: clarifai.api.WorkflowResult.created_at:type_name -> google.protobuf.Timestamp
+	268, // 318: clarifai.api.WorkflowResult.status:type_name -> clarifai.api.status.Status
+	269, // 319: clarifai.api.WorkflowResult.created_at:type_name -> google.protobuf.Timestamp
 	89,  // 320: clarifai.api.WorkflowResult.input:type_name -> clarifai.api.Input
 	145, // 321: clarifai.api.WorkflowResult.outputs:type_name -> clarifai.api.Output
 	43,  // 322: clarifai.api.AppDuplication.destination_app:type_name -> clarifai.api.App
-	266, // 323: clarifai.api.AppDuplication.status:type_name -> clarifai.api.status.Status
-	267, // 324: clarifai.api.AppDuplication.created_at:type_name -> google.protobuf.Timestamp
-	267, // 325: clarifai.api.AppDuplication.last_modified_at:type_name -> google.protobuf.Timestamp
+	268, // 323: clarifai.api.AppDuplication.status:type_name -> clarifai.api.status.Status
+	269, // 324: clarifai.api.AppDuplication.created_at:type_name -> google.protobuf.Timestamp
+	269, // 325: clarifai.api.AppDuplication.last_modified_at:type_name -> google.protobuf.Timestamp
 	175, // 326: clarifai.api.AppDuplication.filter:type_name -> clarifai.api.AppDuplicationFilters
 	174, // 327: clarifai.api.AppDuplication.progress:type_name -> clarifai.api.AppCopyProgress
-	266, // 328: clarifai.api.LabelOrder.status:type_name -> clarifai.api.status.Status
-	267, // 329: clarifai.api.LabelOrder.desired_fulfill_time:type_name -> google.protobuf.Timestamp
-	267, // 330: clarifai.api.LabelOrder.estimate_fulfill_time:type_name -> google.protobuf.Timestamp
+	268, // 328: clarifai.api.LabelOrder.status:type_name -> clarifai.api.status.Status
+	269, // 329: clarifai.api.LabelOrder.desired_fulfill_time:type_name -> google.protobuf.Timestamp
+	269, // 330: clarifai.api.LabelOrder.estimate_fulfill_time:type_name -> google.protobuf.Timestamp
 	177, // 331: clarifai.api.LabelOrder.task:type_name -> clarifai.api.Task
-	267, // 332: clarifai.api.LabelOrder.created_at:type_name -> google.protobuf.Timestamp
-	267, // 333: clarifai.api.LabelOrder.modified_at:type_name -> google.protobuf.Timestamp
-	267, // 334: clarifai.api.Task.created_at:type_name -> google.protobuf.Timestamp
-	267, // 335: clarifai.api.Task.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 332: clarifai.api.LabelOrder.created_at:type_name -> google.protobuf.Timestamp
+	269, // 333: clarifai.api.LabelOrder.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 334: clarifai.api.Task.created_at:type_name -> google.protobuf.Timestamp
+	269, // 335: clarifai.api.Task.modified_at:type_name -> google.protobuf.Timestamp
 	26,  // 336: clarifai.api.Task.type:type_name -> clarifai.api.Task.TaskType
 	179, // 337: clarifai.api.Task.worker:type_name -> clarifai.api.TaskWorker
 	181, // 338: clarifai.api.Task.input_source:type_name -> clarifai.api.TaskInputSource
 	185, // 339: clarifai.api.Task.ai_assistant:type_name -> clarifai.api.TaskAIAssistant
 	182, // 340: clarifai.api.Task.review:type_name -> clarifai.api.TaskReview
-	266, // 341: clarifai.api.Task.status:type_name -> clarifai.api.status.Status
+	268, // 341: clarifai.api.Task.status:type_name -> clarifai.api.status.Status
 	178, // 342: clarifai.api.Task.ai_assist_params:type_name -> clarifai.api.AiAssistParameters
 	206, // 343: clarifai.api.Task.visibility:type_name -> clarifai.api.Visibility
 	190, // 344: clarifai.api.Task.concepts:type_name -> clarifai.api.TaskConcept
 	191, // 345: clarifai.api.Task.metrics:type_name -> clarifai.api.TaskMetrics
 	27,  // 346: clarifai.api.Task.priority:type_name -> clarifai.api.Task.TaskPriority
-	265, // 347: clarifai.api.Task.metadata:type_name -> google.protobuf.Struct
+	267, // 347: clarifai.api.Task.metadata:type_name -> google.protobuf.Struct
 	28,  // 348: clarifai.api.TaskWorker.strategy:type_name -> clarifai.api.TaskWorker.TaskWorkerStrategy
 	159, // 349: clarifai.api.TaskWorker.users:type_name -> clarifai.api.User
 	180, // 350: clarifai.api.TaskWorker.partitioned_strategy_info:type_name -> clarifai.api.TaskWorkerPartitionedStrategyInfo
 	42,  // 351: clarifai.api.TaskWorker.workers:type_name -> clarifai.api.Worker
 	29,  // 352: clarifai.api.TaskWorker.type:type_name -> clarifai.api.TaskWorker.WorkerType
 	30,  // 353: clarifai.api.TaskWorkerPartitionedStrategyInfo.type:type_name -> clarifai.api.TaskWorkerPartitionedStrategyInfo.TaskWorkerPartitionedStrategy
-	265, // 354: clarifai.api.TaskWorkerPartitionedStrategyInfo.weights:type_name -> google.protobuf.Struct
+	267, // 354: clarifai.api.TaskWorkerPartitionedStrategyInfo.weights:type_name -> google.protobuf.Struct
 	31,  // 355: clarifai.api.TaskInputSource.type:type_name -> clarifai.api.TaskInputSource.TaskInputSourceType
 	32,  // 356: clarifai.api.TaskReview.strategy:type_name -> clarifai.api.TaskReview.TaskReviewStrategy
 	159, // 357: clarifai.api.TaskReview.users:type_name -> clarifai.api.User
 	183, // 358: clarifai.api.TaskReview.manual_strategy_info:type_name -> clarifai.api.TaskReviewManualStrategyInfo
 	184, // 359: clarifai.api.TaskReview.consensus_strategy_info:type_name -> clarifai.api.TaskReviewConsensusStrategyInfo
-	267, // 360: clarifai.api.TaskAssignment.created_at:type_name -> google.protobuf.Timestamp
-	267, // 361: clarifai.api.TaskAssignment.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 360: clarifai.api.TaskAssignment.created_at:type_name -> google.protobuf.Timestamp
+	269, // 361: clarifai.api.TaskAssignment.modified_at:type_name -> google.protobuf.Timestamp
 	42,  // 362: clarifai.api.TaskAssignment.worker:type_name -> clarifai.api.Worker
 	89,  // 363: clarifai.api.TaskAssignment.input:type_name -> clarifai.api.Input
-	266, // 364: clarifai.api.TaskAssignment.status:type_name -> clarifai.api.status.Status
+	268, // 364: clarifai.api.TaskAssignment.status:type_name -> clarifai.api.status.Status
 	42,  // 365: clarifai.api.TaskStatusCountPerUser.worker:type_name -> clarifai.api.Worker
 	188, // 366: clarifai.api.TaskConceptAutoAnnotationConfig.threshold_range:type_name -> clarifai.api.ThresholdRange
-	272, // 367: clarifai.api.TaskConceptAutoAnnotationConfig.status_code:type_name -> clarifai.api.status.StatusCode
+	274, // 367: clarifai.api.TaskConceptAutoAnnotationConfig.status_code:type_name -> clarifai.api.status.StatusCode
 	57,  // 368: clarifai.api.TaskConcept.concept:type_name -> clarifai.api.Concept
 	189, // 369: clarifai.api.TaskConcept.auto_annotation_config:type_name -> clarifai.api.TaskConceptAutoAnnotationConfig
 	192, // 370: clarifai.api.TaskMetrics.work:type_name -> clarifai.api.TaskWorkMetrics
 	193, // 371: clarifai.api.TaskMetrics.review:type_name -> clarifai.api.TaskReviewMetrics
 	194, // 372: clarifai.api.TaskMetrics.input_source:type_name -> clarifai.api.TaskInputSourceMetrics
-	267, // 373: clarifai.api.Role.created_at:type_name -> google.protobuf.Timestamp
-	267, // 374: clarifai.api.Role.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 373: clarifai.api.Role.created_at:type_name -> google.protobuf.Timestamp
+	269, // 374: clarifai.api.Role.modified_at:type_name -> google.protobuf.Timestamp
 	13,  // 375: clarifai.api.Role.type:type_name -> clarifai.api.RoleType
-	267, // 376: clarifai.api.Team.created_at:type_name -> google.protobuf.Timestamp
-	267, // 377: clarifai.api.Team.modified_at:type_name -> google.protobuf.Timestamp
-	267, // 378: clarifai.api.Collector.created_at:type_name -> google.protobuf.Timestamp
+	269, // 376: clarifai.api.Team.created_at:type_name -> google.protobuf.Timestamp
+	269, // 377: clarifai.api.Team.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 378: clarifai.api.Collector.created_at:type_name -> google.protobuf.Timestamp
 	198, // 379: clarifai.api.Collector.collector_source:type_name -> clarifai.api.CollectorSource
-	266, // 380: clarifai.api.Collector.status:type_name -> clarifai.api.status.Status
+	268, // 380: clarifai.api.Collector.status:type_name -> clarifai.api.status.Status
 	199, // 381: clarifai.api.CollectorSource.api_post_model_outputs_collector_source:type_name -> clarifai.api.APIPostModelOutputsCollectorSource
-	267, // 382: clarifai.api.StatValue.time:type_name -> google.protobuf.Timestamp
+	269, // 382: clarifai.api.StatValue.time:type_name -> google.protobuf.Timestamp
 	202, // 383: clarifai.api.StatValueAggregateResult.stat_value_aggregates:type_name -> clarifai.api.StatValueAggregate
 	203, // 384: clarifai.api.StatValueAggregateResult.stat_value_aggregate_query:type_name -> clarifai.api.StatValueAggregateQuery
-	267, // 385: clarifai.api.StatValueAggregate.time:type_name -> google.protobuf.Timestamp
+	269, // 385: clarifai.api.StatValueAggregate.time:type_name -> google.protobuf.Timestamp
 	14,  // 386: clarifai.api.StatValueAggregateQuery.stat_value_agg_type:type_name -> clarifai.api.StatValueAggType
 	15,  // 387: clarifai.api.StatValueAggregateQuery.stat_time_agg_type:type_name -> clarifai.api.StatTimeAggType
-	267, // 388: clarifai.api.StatValueAggregateQuery.start_time:type_name -> google.protobuf.Timestamp
-	267, // 389: clarifai.api.StatValueAggregateQuery.end_time:type_name -> google.protobuf.Timestamp
+	269, // 388: clarifai.api.StatValueAggregateQuery.start_time:type_name -> google.protobuf.Timestamp
+	269, // 389: clarifai.api.StatValueAggregateQuery.end_time:type_name -> google.protobuf.Timestamp
 	33,  // 390: clarifai.api.Visibility.gettable:type_name -> clarifai.api.Visibility.Gettable
 	68,  // 391: clarifai.api.TimeSegment.data:type_name -> clarifai.api.Data
 	209, // 392: clarifai.api.TimeSegment.time_info:type_name -> clarifai.api.TimeInfo
-	267, // 393: clarifai.api.Module.created_at:type_name -> google.protobuf.Timestamp
-	267, // 394: clarifai.api.Module.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 393: clarifai.api.Module.created_at:type_name -> google.protobuf.Timestamp
+	269, // 394: clarifai.api.Module.modified_at:type_name -> google.protobuf.Timestamp
 	206, // 395: clarifai.api.Module.visibility:type_name -> clarifai.api.Visibility
-	265, // 396: clarifai.api.Module.metadata:type_name -> google.protobuf.Struct
+	267, // 396: clarifai.api.Module.metadata:type_name -> google.protobuf.Struct
 	213, // 397: clarifai.api.Module.module_version:type_name -> clarifai.api.ModuleVersion
 	242, // 398: clarifai.api.Module.bookmark_origin:type_name -> clarifai.api.BookmarkOrigin
 	86,  // 399: clarifai.api.Module.image:type_name -> clarifai.api.Image
-	267, // 400: clarifai.api.ModuleVersion.created_at:type_name -> google.protobuf.Timestamp
-	267, // 401: clarifai.api.ModuleVersion.modified_at:type_name -> google.protobuf.Timestamp
-	264, // 402: clarifai.api.ModuleVersion.module_nav:type_name -> clarifai.api.ModuleVersion.ModuleNav
+	269, // 400: clarifai.api.ModuleVersion.created_at:type_name -> google.protobuf.Timestamp
+	269, // 401: clarifai.api.ModuleVersion.modified_at:type_name -> google.protobuf.Timestamp
+	266, // 402: clarifai.api.ModuleVersion.module_nav:type_name -> clarifai.api.ModuleVersion.ModuleNav
 	206, // 403: clarifai.api.ModuleVersion.visibility:type_name -> clarifai.api.Visibility
-	265, // 404: clarifai.api.ModuleVersion.metadata:type_name -> google.protobuf.Struct
+	267, // 404: clarifai.api.ModuleVersion.metadata:type_name -> google.protobuf.Struct
 	213, // 405: clarifai.api.InstalledModuleVersion.module_version:type_name -> clarifai.api.ModuleVersion
-	267, // 406: clarifai.api.InstalledModuleVersion.created_at:type_name -> google.protobuf.Timestamp
-	267, // 407: clarifai.api.InstalledModuleVersion.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 406: clarifai.api.InstalledModuleVersion.created_at:type_name -> google.protobuf.Timestamp
+	269, // 407: clarifai.api.InstalledModuleVersion.modified_at:type_name -> google.protobuf.Timestamp
 	206, // 408: clarifai.api.InstalledModuleVersion.visibility:type_name -> clarifai.api.Visibility
 	216, // 409: clarifai.api.BulkOperation.input_ids:type_name -> clarifai.api.InputIDs
 	152, // 410: clarifai.api.BulkOperation.search:type_name -> clarifai.api.Search
 	92,  // 411: clarifai.api.BulkOperation.dataset:type_name -> clarifai.api.Dataset
 	152, // 412: clarifai.api.BulkOperation.annotation_search:type_name -> clarifai.api.Search
 	218, // 413: clarifai.api.BulkOperation.operation:type_name -> clarifai.api.Operation
-	266, // 414: clarifai.api.BulkOperation.status:type_name -> clarifai.api.status.Status
+	268, // 414: clarifai.api.BulkOperation.status:type_name -> clarifai.api.status.Status
 	217, // 415: clarifai.api.BulkOperation.progress:type_name -> clarifai.api.Progress
-	267, // 416: clarifai.api.BulkOperation.created_at:type_name -> google.protobuf.Timestamp
-	267, // 417: clarifai.api.BulkOperation.last_modified_at:type_name -> google.protobuf.Timestamp
+	269, // 416: clarifai.api.BulkOperation.created_at:type_name -> google.protobuf.Timestamp
+	269, // 417: clarifai.api.BulkOperation.last_modified_at:type_name -> google.protobuf.Timestamp
 	219, // 418: clarifai.api.Operation.add_concepts:type_name -> clarifai.api.AddConcepts
 	220, // 419: clarifai.api.Operation.delete_concepts:type_name -> clarifai.api.DeleteConcepts
 	221, // 420: clarifai.api.Operation.add_metadata:type_name -> clarifai.api.AddMetadata
@@ -27673,26 +27928,26 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	229, // 427: clarifai.api.Operation.delete_annotations:type_name -> clarifai.api.DeleteAnnotations
 	57,  // 428: clarifai.api.AddConcepts.concepts:type_name -> clarifai.api.Concept
 	57,  // 429: clarifai.api.DeleteConcepts.concepts:type_name -> clarifai.api.Concept
-	265, // 430: clarifai.api.AddMetadata.metadata:type_name -> google.protobuf.Struct
-	265, // 431: clarifai.api.DeleteMetadata.metadata:type_name -> google.protobuf.Struct
+	267, // 430: clarifai.api.AddMetadata.metadata:type_name -> google.protobuf.Struct
+	267, // 431: clarifai.api.DeleteMetadata.metadata:type_name -> google.protobuf.Struct
 	85,  // 432: clarifai.api.OverwriteGeo.geo:type_name -> clarifai.api.Geo
 	228, // 433: clarifai.api.SplitIntoDatasets.dataset_splits:type_name -> clarifai.api.DatasetSplit
 	34,  // 434: clarifai.api.SplitIntoDatasets.method:type_name -> clarifai.api.SplitIntoDatasets.DatasetSplitMethod
 	92,  // 435: clarifai.api.DatasetSplit.dataset:type_name -> clarifai.api.Dataset
 	231, // 436: clarifai.api.InputsAddJob.progress:type_name -> clarifai.api.InputsAddJobProgress
-	267, // 437: clarifai.api.InputsAddJob.created_at:type_name -> google.protobuf.Timestamp
-	267, // 438: clarifai.api.InputsAddJob.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 437: clarifai.api.InputsAddJob.created_at:type_name -> google.protobuf.Timestamp
+	269, // 438: clarifai.api.InputsAddJob.modified_at:type_name -> google.protobuf.Timestamp
 	234, // 439: clarifai.api.InputsAddJob.extraction_jobs:type_name -> clarifai.api.InputsExtractionJob
 	232, // 440: clarifai.api.InputsAddJob.uploads:type_name -> clarifai.api.Upload
-	266, // 441: clarifai.api.InputsAddJob.status:type_name -> clarifai.api.status.Status
-	267, // 442: clarifai.api.Upload.created_at:type_name -> google.protobuf.Timestamp
-	267, // 443: clarifai.api.Upload.modified_at:type_name -> google.protobuf.Timestamp
-	267, // 444: clarifai.api.Upload.expires_at:type_name -> google.protobuf.Timestamp
-	266, // 445: clarifai.api.Upload.status:type_name -> clarifai.api.status.Status
-	266, // 446: clarifai.api.InputsExtractionJob.status:type_name -> clarifai.api.status.Status
+	268, // 441: clarifai.api.InputsAddJob.status:type_name -> clarifai.api.status.Status
+	269, // 442: clarifai.api.Upload.created_at:type_name -> google.protobuf.Timestamp
+	269, // 443: clarifai.api.Upload.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 444: clarifai.api.Upload.expires_at:type_name -> google.protobuf.Timestamp
+	268, // 445: clarifai.api.Upload.status:type_name -> clarifai.api.status.Status
+	268, // 446: clarifai.api.InputsExtractionJob.status:type_name -> clarifai.api.status.Status
 	235, // 447: clarifai.api.InputsExtractionJob.progress:type_name -> clarifai.api.InputsExtractionJobProgress
-	267, // 448: clarifai.api.InputsExtractionJob.created_at:type_name -> google.protobuf.Timestamp
-	267, // 449: clarifai.api.InputsExtractionJob.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 448: clarifai.api.InputsExtractionJob.created_at:type_name -> google.protobuf.Timestamp
+	269, // 449: clarifai.api.InputsExtractionJob.modified_at:type_name -> google.protobuf.Timestamp
 	17,  // 450: clarifai.api.InputsExtractionJob.input_id_conflict_resolution:type_name -> clarifai.api.InputIDConflictResolution
 	89,  // 451: clarifai.api.InputsExtractionJob.input_template:type_name -> clarifai.api.Input
 	237, // 452: clarifai.api.InputsDataSource.url:type_name -> clarifai.api.DataSourceURL
@@ -27705,39 +27960,39 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	17,  // 459: clarifai.api.InputsUpload.input_id_conflict_resolution:type_name -> clarifai.api.InputIDConflictResolution
 	89,  // 460: clarifai.api.InputsUpload.input_template:type_name -> clarifai.api.Input
 	35,  // 461: clarifai.api.BookmarkOrigin.resource_type:type_name -> clarifai.api.BookmarkOrigin.BookmarkType
-	267, // 462: clarifai.api.Runner.created_at:type_name -> google.protobuf.Timestamp
-	267, // 463: clarifai.api.Runner.modified_at:type_name -> google.protobuf.Timestamp
-	265, // 464: clarifai.api.Runner.metadata:type_name -> google.protobuf.Struct
+	269, // 462: clarifai.api.Runner.created_at:type_name -> google.protobuf.Timestamp
+	269, // 463: clarifai.api.Runner.modified_at:type_name -> google.protobuf.Timestamp
+	267, // 464: clarifai.api.Runner.metadata:type_name -> google.protobuf.Struct
 	42,  // 465: clarifai.api.Runner.worker:type_name -> clarifai.api.Worker
 	244, // 466: clarifai.api.Runner.nodepool:type_name -> clarifai.api.Nodepool
 	249, // 467: clarifai.api.Runner.compute_info:type_name -> clarifai.api.ComputeInfo
-	267, // 468: clarifai.api.Nodepool.created_at:type_name -> google.protobuf.Timestamp
-	267, // 469: clarifai.api.Nodepool.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 468: clarifai.api.Nodepool.created_at:type_name -> google.protobuf.Timestamp
+	269, // 469: clarifai.api.Nodepool.modified_at:type_name -> google.protobuf.Timestamp
 	248, // 470: clarifai.api.Nodepool.compute_cluster:type_name -> clarifai.api.ComputeCluster
 	245, // 471: clarifai.api.Nodepool.node_capacity_type:type_name -> clarifai.api.NodeCapacityType
 	246, // 472: clarifai.api.Nodepool.instance_types:type_name -> clarifai.api.InstanceType
 	206, // 473: clarifai.api.Nodepool.visibility:type_name -> clarifai.api.Visibility
-	265, // 474: clarifai.api.Nodepool.metadata:type_name -> google.protobuf.Struct
+	267, // 474: clarifai.api.Nodepool.metadata:type_name -> google.protobuf.Struct
 	36,  // 475: clarifai.api.NodeCapacityType.capacity_types:type_name -> clarifai.api.NodeCapacityType.CapacityType
 	249, // 476: clarifai.api.InstanceType.compute_info:type_name -> clarifai.api.ComputeInfo
 	247, // 477: clarifai.api.ComputeCluster.cloud_provider:type_name -> clarifai.api.CloudProvider
-	267, // 478: clarifai.api.ComputeCluster.created_at:type_name -> google.protobuf.Timestamp
-	267, // 479: clarifai.api.ComputeCluster.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 478: clarifai.api.ComputeCluster.created_at:type_name -> google.protobuf.Timestamp
+	269, // 479: clarifai.api.ComputeCluster.modified_at:type_name -> google.protobuf.Timestamp
 	206, // 480: clarifai.api.ComputeCluster.visibility:type_name -> clarifai.api.Visibility
 	104, // 481: clarifai.api.ComputeCluster.key:type_name -> clarifai.api.Key
 	250, // 482: clarifai.api.Deployment.autoscale_config:type_name -> clarifai.api.AutoscaleConfig
 	244, // 483: clarifai.api.Deployment.nodepools:type_name -> clarifai.api.Nodepool
 	37,  // 484: clarifai.api.Deployment.scheduling_choice:type_name -> clarifai.api.Deployment.SchedulingChoice
 	206, // 485: clarifai.api.Deployment.visibility:type_name -> clarifai.api.Visibility
-	265, // 486: clarifai.api.Deployment.metadata:type_name -> google.protobuf.Struct
+	267, // 486: clarifai.api.Deployment.metadata:type_name -> google.protobuf.Struct
 	42,  // 487: clarifai.api.Deployment.worker:type_name -> clarifai.api.Worker
-	267, // 488: clarifai.api.Deployment.created_at:type_name -> google.protobuf.Timestamp
-	267, // 489: clarifai.api.Deployment.modified_at:type_name -> google.protobuf.Timestamp
+	269, // 488: clarifai.api.Deployment.created_at:type_name -> google.protobuf.Timestamp
+	269, // 489: clarifai.api.Deployment.modified_at:type_name -> google.protobuf.Timestamp
 	244, // 490: clarifai.api.RunnerSelector.nodepool:type_name -> clarifai.api.Nodepool
 	243, // 491: clarifai.api.RunnerSelector.runner:type_name -> clarifai.api.Runner
 	251, // 492: clarifai.api.RunnerSelector.deployment:type_name -> clarifai.api.Deployment
 	18,  // 493: clarifai.api.ProcessingInfo.runner_method_type:type_name -> clarifai.api.RunnerMethodType
-	266, // 494: clarifai.api.ProcessingInfo.status:type_name -> clarifai.api.status.Status
+	268, // 494: clarifai.api.ProcessingInfo.status:type_name -> clarifai.api.status.Status
 	159, // 495: clarifai.api.AuditLogTarget.user:type_name -> clarifai.api.User
 	195, // 496: clarifai.api.AuditLogTarget.role:type_name -> clarifai.api.Role
 	196, // 497: clarifai.api.AuditLogTarget.team:type_name -> clarifai.api.Team
@@ -27748,29 +28003,32 @@ var file_proto_clarifai_api_resources_proto_depIdxs = []int32{
 	168, // 502: clarifai.api.AuditLogTarget.workflow_version:type_name -> clarifai.api.WorkflowVersion
 	105, // 503: clarifai.api.AuditLogTarget.model:type_name -> clarifai.api.Model
 	123, // 504: clarifai.api.AuditLogTarget.model_version:type_name -> clarifai.api.ModelVersion
-	267, // 505: clarifai.api.AuditLogEntry.timestamp:type_name -> google.protobuf.Timestamp
+	269, // 505: clarifai.api.AuditLogEntry.timestamp:type_name -> google.protobuf.Timestamp
 	159, // 506: clarifai.api.AuditLogEntry.user:type_name -> clarifai.api.User
 	19,  // 507: clarifai.api.AuditLogEntry.operation:type_name -> clarifai.api.EventType
 	254, // 508: clarifai.api.AuditLogEntry.targets:type_name -> clarifai.api.AuditLogTarget
-	267, // 509: clarifai.api.AuditLogQuery.timestamp_from:type_name -> google.protobuf.Timestamp
-	267, // 510: clarifai.api.AuditLogQuery.timestamp_to:type_name -> google.protobuf.Timestamp
+	269, // 509: clarifai.api.AuditLogQuery.timestamp_from:type_name -> google.protobuf.Timestamp
+	269, // 510: clarifai.api.AuditLogQuery.timestamp_to:type_name -> google.protobuf.Timestamp
 	19,  // 511: clarifai.api.AuditLogQuery.operations:type_name -> clarifai.api.EventType
 	254, // 512: clarifai.api.AuditLogQuery.targets:type_name -> clarifai.api.AuditLogTarget
-	268, // 513: clarifai.api.AuditLogQuery.success:type_name -> google.protobuf.BoolValue
+	270, // 513: clarifai.api.AuditLogQuery.success:type_name -> google.protobuf.BoolValue
 	38,  // 514: clarifai.api.WorkflowVersionEvaluationMetric.data_type:type_name -> clarifai.api.WorkflowVersionEvaluationMetric.DataType
 	39,  // 515: clarifai.api.WorkflowVersionEvaluationMetric.visualisation_type:type_name -> clarifai.api.WorkflowVersionEvaluationMetric.VisualisationType
 	40,  // 516: clarifai.api.WorkflowVersionEvaluationTemplate.task_types:type_name -> clarifai.api.WorkflowVersionEvaluationTemplate.TaskType
 	257, // 517: clarifai.api.WorkflowVersionEvaluationTemplate.workflow_version_evaluation_metrics:type_name -> clarifai.api.WorkflowVersionEvaluationMetric
-	260, // 518: clarifai.api.LogEntry.meta:type_name -> clarifai.api.ComputeSourceMetadata
-	55,  // 519: clarifai.api.ComputeSourceMetadata.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	87,  // 520: clarifai.api.Image.HostedImageInfoEntry.value:type_name -> clarifai.api.ImageInfo
-	98,  // 521: clarifai.api.DatasetVersion.MetricsEntry.value:type_name -> clarifai.api.DatasetVersionMetrics
-	263, // 522: clarifai.api.ModuleVersion.ModuleNav.module_sub_navs:type_name -> clarifai.api.ModuleVersion.ModuleSubNav
-	523, // [523:523] is the sub-list for method output_type
-	523, // [523:523] is the sub-list for method input_type
-	523, // [523:523] is the sub-list for extension type_name
-	523, // [523:523] is the sub-list for extension extendee
-	0,   // [0:523] is the sub-list for field type_name
+	262, // 518: clarifai.api.ComputePlaneMetrics.meta:type_name -> clarifai.api.ComputeSourceMetadata
+	269, // 519: clarifai.api.ComputePlaneMetrics.timestamp:type_name -> google.protobuf.Timestamp
+	260, // 520: clarifai.api.ComputePlaneMetrics.gpu_metrics:type_name -> clarifai.api.GpuMetrics
+	262, // 521: clarifai.api.LogEntry.meta:type_name -> clarifai.api.ComputeSourceMetadata
+	55,  // 522: clarifai.api.ComputeSourceMetadata.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	87,  // 523: clarifai.api.Image.HostedImageInfoEntry.value:type_name -> clarifai.api.ImageInfo
+	98,  // 524: clarifai.api.DatasetVersion.MetricsEntry.value:type_name -> clarifai.api.DatasetVersionMetrics
+	265, // 525: clarifai.api.ModuleVersion.ModuleNav.module_sub_navs:type_name -> clarifai.api.ModuleVersion.ModuleSubNav
+	526, // [526:526] is the sub-list for method output_type
+	526, // [526:526] is the sub-list for method input_type
+	526, // [526:526] is the sub-list for extension type_name
+	526, // [526:526] is the sub-list for extension extendee
+	0,   // [0:526] is the sub-list for field type_name
 }
 
 func init() { file_proto_clarifai_api_resources_proto_init() }
@@ -30396,7 +30654,7 @@ func file_proto_clarifai_api_resources_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_resources_proto_msgTypes[218].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LogEntry); i {
+			switch v := v.(*ComputePlaneMetrics); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -30408,6 +30666,30 @@ func file_proto_clarifai_api_resources_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_resources_proto_msgTypes[219].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GpuMetrics); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_clarifai_api_resources_proto_msgTypes[220].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LogEntry); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_clarifai_api_resources_proto_msgTypes[221].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ComputeSourceMetadata); i {
 			case 0:
 				return &v.state
@@ -30419,7 +30701,7 @@ func file_proto_clarifai_api_resources_proto_init() {
 				return nil
 			}
 		}
-		file_proto_clarifai_api_resources_proto_msgTypes[222].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_clarifai_api_resources_proto_msgTypes[224].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ModuleVersion_ModuleSubNav); i {
 			case 0:
 				return &v.state
@@ -30431,7 +30713,7 @@ func file_proto_clarifai_api_resources_proto_init() {
 				return nil
 			}
 		}
-		file_proto_clarifai_api_resources_proto_msgTypes[223].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_clarifai_api_resources_proto_msgTypes[225].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ModuleVersion_ModuleNav); i {
 			case 0:
 				return &v.state
@@ -30508,7 +30790,7 @@ func file_proto_clarifai_api_resources_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_clarifai_api_resources_proto_rawDesc,
 			NumEnums:      41,
-			NumMessages:   224,
+			NumMessages:   226,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -7212,6 +7212,102 @@ func (x *ListModelInputsRequest) GetPerPage() uint32 {
 	return 0
 }
 
+type PostComputePlaneMetricsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// List of ComputePlaneMetrics.
+	ComputePlaneMetrics []*ComputePlaneMetrics `protobuf:"bytes,1,rep,name=compute_plane_metrics,json=computePlaneMetrics,proto3" json:"compute_plane_metrics,omitempty"`
+}
+
+func (x *PostComputePlaneMetricsRequest) Reset() {
+	*x = PostComputePlaneMetricsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[100]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PostComputePlaneMetricsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostComputePlaneMetricsRequest) ProtoMessage() {}
+
+func (x *PostComputePlaneMetricsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[100]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostComputePlaneMetricsRequest.ProtoReflect.Descriptor instead.
+func (*PostComputePlaneMetricsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{100}
+}
+
+func (x *PostComputePlaneMetricsRequest) GetComputePlaneMetrics() []*ComputePlaneMetrics {
+	if x != nil {
+		return x.ComputePlaneMetrics
+	}
+	return nil
+}
+
+type PostLogEntriesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// List of log entries to be stored.
+	LogEntries []*LogEntry `protobuf:"bytes,1,rep,name=log_entries,json=logEntries,proto3" json:"log_entries,omitempty"`
+}
+
+func (x *PostLogEntriesRequest) Reset() {
+	*x = PostLogEntriesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[101]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PostLogEntriesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostLogEntriesRequest) ProtoMessage() {}
+
+func (x *PostLogEntriesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[101]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostLogEntriesRequest.ProtoReflect.Descriptor instead.
+func (*PostLogEntriesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{101}
+}
+
+func (x *PostLogEntriesRequest) GetLogEntries() []*LogEntry {
+	if x != nil {
+		return x.LogEntries
+	}
+	return nil
+}
+
 type ListLogEntriesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -7243,7 +7339,7 @@ type ListLogEntriesRequest struct {
 func (x *ListLogEntriesRequest) Reset() {
 	*x = ListLogEntriesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[100]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[102]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7256,7 +7352,7 @@ func (x *ListLogEntriesRequest) String() string {
 func (*ListLogEntriesRequest) ProtoMessage() {}
 
 func (x *ListLogEntriesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[100]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[102]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7269,7 +7365,7 @@ func (x *ListLogEntriesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLogEntriesRequest.ProtoReflect.Descriptor instead.
 func (*ListLogEntriesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{100}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{102}
 }
 
 func (x *ListLogEntriesRequest) GetPage() uint32 {
@@ -7342,6 +7438,116 @@ func (x *ListLogEntriesRequest) GetRunnerId() string {
 	return ""
 }
 
+type StreamLogEntriesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The type of log entry. Examples: model, agent, build, training.
+	LogType string `protobuf:"bytes,1,opt,name=log_type,json=logType,proto3" json:"log_type,omitempty"`
+	// Who the logs are for.
+	// The user app id, if a user produced the logs.
+	UserAppId *UserAppIDSet `protobuf:"bytes,2,opt,name=user_app_id,json=userAppId,proto3" json:"user_app_id,omitempty"`
+	// The Model ID, if a model produced the logs.
+	ModelId string `protobuf:"bytes,3,opt,name=model_id,json=modelId,proto3" json:"model_id,omitempty"`
+	// The Version ID, if a model version produced the logs.
+	ModelVersionId string `protobuf:"bytes,4,opt,name=model_version_id,json=modelVersionId,proto3" json:"model_version_id,omitempty"`
+	// Workflow Id, if a workflow produced the logs.
+	WorkflowId string `protobuf:"bytes,5,opt,name=workflow_id,json=workflowId,proto3" json:"workflow_id,omitempty"`
+	// Where the logs came from.
+	ComputeClusterId string `protobuf:"bytes,6,opt,name=compute_cluster_id,json=computeClusterId,proto3" json:"compute_cluster_id,omitempty"`
+	NodepoolId       string `protobuf:"bytes,7,opt,name=nodepool_id,json=nodepoolId,proto3" json:"nodepool_id,omitempty"`
+	RunnerId         string `protobuf:"bytes,8,opt,name=runner_id,json=runnerId,proto3" json:"runner_id,omitempty"`
+}
+
+func (x *StreamLogEntriesRequest) Reset() {
+	*x = StreamLogEntriesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[103]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StreamLogEntriesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamLogEntriesRequest) ProtoMessage() {}
+
+func (x *StreamLogEntriesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[103]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamLogEntriesRequest.ProtoReflect.Descriptor instead.
+func (*StreamLogEntriesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{103}
+}
+
+func (x *StreamLogEntriesRequest) GetLogType() string {
+	if x != nil {
+		return x.LogType
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetUserAppId() *UserAppIDSet {
+	if x != nil {
+		return x.UserAppId
+	}
+	return nil
+}
+
+func (x *StreamLogEntriesRequest) GetModelId() string {
+	if x != nil {
+		return x.ModelId
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetModelVersionId() string {
+	if x != nil {
+		return x.ModelVersionId
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetWorkflowId() string {
+	if x != nil {
+		return x.WorkflowId
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetComputeClusterId() string {
+	if x != nil {
+		return x.ComputeClusterId
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetNodepoolId() string {
+	if x != nil {
+		return x.NodepoolId
+	}
+	return ""
+}
+
+func (x *StreamLogEntriesRequest) GetRunnerId() string {
+	if x != nil {
+		return x.RunnerId
+	}
+	return ""
+}
+
 // GetKeyRequest
 type GetKeyRequest struct {
 	state         protoimpl.MessageState
@@ -7355,7 +7561,7 @@ type GetKeyRequest struct {
 func (x *GetKeyRequest) Reset() {
 	*x = GetKeyRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[101]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[104]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7368,7 +7574,7 @@ func (x *GetKeyRequest) String() string {
 func (*GetKeyRequest) ProtoMessage() {}
 
 func (x *GetKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[101]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[104]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7381,7 +7587,7 @@ func (x *GetKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetKeyRequest.ProtoReflect.Descriptor instead.
 func (*GetKeyRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{101}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{104}
 }
 
 func (x *GetKeyRequest) GetUserAppId() *UserAppIDSet {
@@ -7419,7 +7625,7 @@ type ListKeysRequest struct {
 func (x *ListKeysRequest) Reset() {
 	*x = ListKeysRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[102]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[105]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7432,7 +7638,7 @@ func (x *ListKeysRequest) String() string {
 func (*ListKeysRequest) ProtoMessage() {}
 
 func (x *ListKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[102]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[105]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7445,7 +7651,7 @@ func (x *ListKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListKeysRequest.ProtoReflect.Descriptor instead.
 func (*ListKeysRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{102}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{105}
 }
 
 func (x *ListKeysRequest) GetUserAppId() *UserAppIDSet {
@@ -7508,7 +7714,7 @@ type ListAppKeysRequest struct {
 func (x *ListAppKeysRequest) Reset() {
 	*x = ListAppKeysRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[103]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[106]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7521,7 +7727,7 @@ func (x *ListAppKeysRequest) String() string {
 func (*ListAppKeysRequest) ProtoMessage() {}
 
 func (x *ListAppKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[103]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[106]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7534,7 +7740,7 @@ func (x *ListAppKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAppKeysRequest.ProtoReflect.Descriptor instead.
 func (*ListAppKeysRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{103}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *ListAppKeysRequest) GetUserAppId() *UserAppIDSet {
@@ -7571,7 +7777,7 @@ type PostKeysRequest struct {
 func (x *PostKeysRequest) Reset() {
 	*x = PostKeysRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[104]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[107]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7584,7 +7790,7 @@ func (x *PostKeysRequest) String() string {
 func (*PostKeysRequest) ProtoMessage() {}
 
 func (x *PostKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[104]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[107]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7597,7 +7803,7 @@ func (x *PostKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostKeysRequest.ProtoReflect.Descriptor instead.
 func (*PostKeysRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{104}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{107}
 }
 
 func (x *PostKeysRequest) GetUserAppId() *UserAppIDSet {
@@ -7627,7 +7833,7 @@ type DeleteKeyRequest struct {
 func (x *DeleteKeyRequest) Reset() {
 	*x = DeleteKeyRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[105]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[108]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7640,7 +7846,7 @@ func (x *DeleteKeyRequest) String() string {
 func (*DeleteKeyRequest) ProtoMessage() {}
 
 func (x *DeleteKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[105]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[108]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7653,7 +7859,7 @@ func (x *DeleteKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKeyRequest.ProtoReflect.Descriptor instead.
 func (*DeleteKeyRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{105}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{108}
 }
 
 func (x *DeleteKeyRequest) GetUserAppId() *UserAppIDSet {
@@ -7686,7 +7892,7 @@ type PatchKeysRequest struct {
 func (x *PatchKeysRequest) Reset() {
 	*x = PatchKeysRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[106]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[109]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7699,7 +7905,7 @@ func (x *PatchKeysRequest) String() string {
 func (*PatchKeysRequest) ProtoMessage() {}
 
 func (x *PatchKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[106]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[109]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7712,7 +7918,7 @@ func (x *PatchKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchKeysRequest.ProtoReflect.Descriptor instead.
 func (*PatchKeysRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{106}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{109}
 }
 
 func (x *PatchKeysRequest) GetUserAppId() *UserAppIDSet {
@@ -7749,7 +7955,7 @@ type SingleKeyResponse struct {
 func (x *SingleKeyResponse) Reset() {
 	*x = SingleKeyResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[107]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[110]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7762,7 +7968,7 @@ func (x *SingleKeyResponse) String() string {
 func (*SingleKeyResponse) ProtoMessage() {}
 
 func (x *SingleKeyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[107]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[110]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7775,7 +7981,7 @@ func (x *SingleKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleKeyResponse.ProtoReflect.Descriptor instead.
 func (*SingleKeyResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{107}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{110}
 }
 
 func (x *SingleKeyResponse) GetStatus() *status.Status {
@@ -7805,7 +8011,7 @@ type MultiKeyResponse struct {
 func (x *MultiKeyResponse) Reset() {
 	*x = MultiKeyResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[108]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[111]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7818,7 +8024,7 @@ func (x *MultiKeyResponse) String() string {
 func (*MultiKeyResponse) ProtoMessage() {}
 
 func (x *MultiKeyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[108]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[111]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7831,7 +8037,7 @@ func (x *MultiKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiKeyResponse.ProtoReflect.Descriptor instead.
 func (*MultiKeyResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{108}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{111}
 }
 
 func (x *MultiKeyResponse) GetStatus() *status.Status {
@@ -7868,7 +8074,7 @@ type GetModelRequest struct {
 func (x *GetModelRequest) Reset() {
 	*x = GetModelRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[109]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[112]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7881,7 +8087,7 @@ func (x *GetModelRequest) String() string {
 func (*GetModelRequest) ProtoMessage() {}
 
 func (x *GetModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[109]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[112]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7894,7 +8100,7 @@ func (x *GetModelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelRequest.ProtoReflect.Descriptor instead.
 func (*GetModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{109}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{112}
 }
 
 func (x *GetModelRequest) GetUserAppId() *UserAppIDSet {
@@ -8039,7 +8245,7 @@ type ListModelsRequest struct {
 func (x *ListModelsRequest) Reset() {
 	*x = ListModelsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[110]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[113]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8052,7 +8258,7 @@ func (x *ListModelsRequest) String() string {
 func (*ListModelsRequest) ProtoMessage() {}
 
 func (x *ListModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[110]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[113]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8065,7 +8271,7 @@ func (x *ListModelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModelsRequest.ProtoReflect.Descriptor instead.
 func (*ListModelsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{110}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{113}
 }
 
 func (x *ListModelsRequest) GetUserAppId() *UserAppIDSet {
@@ -8340,7 +8546,7 @@ type GetResourceCountsRequest struct {
 func (x *GetResourceCountsRequest) Reset() {
 	*x = GetResourceCountsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[111]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[114]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8353,7 +8559,7 @@ func (x *GetResourceCountsRequest) String() string {
 func (*GetResourceCountsRequest) ProtoMessage() {}
 
 func (x *GetResourceCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[111]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[114]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8366,7 +8572,7 @@ func (x *GetResourceCountsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetResourceCountsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{111}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{114}
 }
 
 func (x *GetResourceCountsRequest) GetUserAppId() *UserAppIDSet {
@@ -8393,7 +8599,7 @@ type GetResourceCountsResponse struct {
 func (x *GetResourceCountsResponse) Reset() {
 	*x = GetResourceCountsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[112]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[115]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8406,7 +8612,7 @@ func (x *GetResourceCountsResponse) String() string {
 func (*GetResourceCountsResponse) ProtoMessage() {}
 
 func (x *GetResourceCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[112]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[115]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8419,7 +8625,7 @@ func (x *GetResourceCountsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetResourceCountsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{112}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{115}
 }
 
 func (x *GetResourceCountsResponse) GetStatus() *status.Status {
@@ -8479,7 +8685,7 @@ type PatchModelToolkitsRequest struct {
 func (x *PatchModelToolkitsRequest) Reset() {
 	*x = PatchModelToolkitsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[113]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[116]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8492,7 +8698,7 @@ func (x *PatchModelToolkitsRequest) String() string {
 func (*PatchModelToolkitsRequest) ProtoMessage() {}
 
 func (x *PatchModelToolkitsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[113]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[116]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8505,7 +8711,7 @@ func (x *PatchModelToolkitsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelToolkitsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelToolkitsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{113}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{116}
 }
 
 func (x *PatchModelToolkitsRequest) GetUserAppId() *UserAppIDSet {
@@ -8554,7 +8760,7 @@ type PatchModelCheckConsentsRequest struct {
 func (x *PatchModelCheckConsentsRequest) Reset() {
 	*x = PatchModelCheckConsentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[114]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[117]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8567,7 +8773,7 @@ func (x *PatchModelCheckConsentsRequest) String() string {
 func (*PatchModelCheckConsentsRequest) ProtoMessage() {}
 
 func (x *PatchModelCheckConsentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[114]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[117]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8580,7 +8786,7 @@ func (x *PatchModelCheckConsentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelCheckConsentsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelCheckConsentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{114}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{117}
 }
 
 func (x *PatchModelCheckConsentsRequest) GetUserAppId() *UserAppIDSet {
@@ -8626,7 +8832,7 @@ type PatchModelUseCasesRequest struct {
 func (x *PatchModelUseCasesRequest) Reset() {
 	*x = PatchModelUseCasesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[115]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[118]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8639,7 +8845,7 @@ func (x *PatchModelUseCasesRequest) String() string {
 func (*PatchModelUseCasesRequest) ProtoMessage() {}
 
 func (x *PatchModelUseCasesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[115]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[118]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8652,7 +8858,7 @@ func (x *PatchModelUseCasesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelUseCasesRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelUseCasesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{115}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{118}
 }
 
 func (x *PatchModelUseCasesRequest) GetUserAppId() *UserAppIDSet {
@@ -8698,7 +8904,7 @@ type PatchModelLanguagesRequest struct {
 func (x *PatchModelLanguagesRequest) Reset() {
 	*x = PatchModelLanguagesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[116]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[119]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8711,7 +8917,7 @@ func (x *PatchModelLanguagesRequest) String() string {
 func (*PatchModelLanguagesRequest) ProtoMessage() {}
 
 func (x *PatchModelLanguagesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[116]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[119]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8724,7 +8930,7 @@ func (x *PatchModelLanguagesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelLanguagesRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelLanguagesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{116}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{119}
 }
 
 func (x *PatchModelLanguagesRequest) GetUserAppId() *UserAppIDSet {
@@ -8767,7 +8973,7 @@ type MultiModelToolkitResponse struct {
 func (x *MultiModelToolkitResponse) Reset() {
 	*x = MultiModelToolkitResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[117]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[120]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8780,7 +8986,7 @@ func (x *MultiModelToolkitResponse) String() string {
 func (*MultiModelToolkitResponse) ProtoMessage() {}
 
 func (x *MultiModelToolkitResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[117]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[120]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8793,7 +8999,7 @@ func (x *MultiModelToolkitResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelToolkitResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelToolkitResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{117}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{120}
 }
 
 func (x *MultiModelToolkitResponse) GetStatus() *status.Status {
@@ -8822,7 +9028,7 @@ type MultiModelCheckConsentResponse struct {
 func (x *MultiModelCheckConsentResponse) Reset() {
 	*x = MultiModelCheckConsentResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[118]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[121]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8835,7 +9041,7 @@ func (x *MultiModelCheckConsentResponse) String() string {
 func (*MultiModelCheckConsentResponse) ProtoMessage() {}
 
 func (x *MultiModelCheckConsentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[118]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[121]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8848,7 +9054,7 @@ func (x *MultiModelCheckConsentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelCheckConsentResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelCheckConsentResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{118}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{121}
 }
 
 func (x *MultiModelCheckConsentResponse) GetStatus() *status.Status {
@@ -8877,7 +9083,7 @@ type MultiModelUseCaseResponse struct {
 func (x *MultiModelUseCaseResponse) Reset() {
 	*x = MultiModelUseCaseResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[119]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[122]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8890,7 +9096,7 @@ func (x *MultiModelUseCaseResponse) String() string {
 func (*MultiModelUseCaseResponse) ProtoMessage() {}
 
 func (x *MultiModelUseCaseResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[119]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[122]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8903,7 +9109,7 @@ func (x *MultiModelUseCaseResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelUseCaseResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelUseCaseResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{119}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{122}
 }
 
 func (x *MultiModelUseCaseResponse) GetStatus() *status.Status {
@@ -8932,7 +9138,7 @@ type MultiModelLanguageResponse struct {
 func (x *MultiModelLanguageResponse) Reset() {
 	*x = MultiModelLanguageResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[120]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[123]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8945,7 +9151,7 @@ func (x *MultiModelLanguageResponse) String() string {
 func (*MultiModelLanguageResponse) ProtoMessage() {}
 
 func (x *MultiModelLanguageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[120]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[123]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8958,7 +9164,7 @@ func (x *MultiModelLanguageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelLanguageResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelLanguageResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{120}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{123}
 }
 
 func (x *MultiModelLanguageResponse) GetStatus() *status.Status {
@@ -8996,7 +9202,7 @@ type PostModelsRequest struct {
 func (x *PostModelsRequest) Reset() {
 	*x = PostModelsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[121]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[124]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9009,7 +9215,7 @@ func (x *PostModelsRequest) String() string {
 func (*PostModelsRequest) ProtoMessage() {}
 
 func (x *PostModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[121]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[124]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9022,7 +9228,7 @@ func (x *PostModelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelsRequest.ProtoReflect.Descriptor instead.
 func (*PostModelsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{121}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{124}
 }
 
 func (x *PostModelsRequest) GetUserAppId() *UserAppIDSet {
@@ -9067,7 +9273,7 @@ type PatchModelsRequest struct {
 func (x *PatchModelsRequest) Reset() {
 	*x = PatchModelsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[122]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[125]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9080,7 +9286,7 @@ func (x *PatchModelsRequest) String() string {
 func (*PatchModelsRequest) ProtoMessage() {}
 
 func (x *PatchModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[122]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[125]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9093,7 +9299,7 @@ func (x *PatchModelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{122}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{125}
 }
 
 func (x *PatchModelsRequest) GetUserAppId() *UserAppIDSet {
@@ -9131,7 +9337,7 @@ type IdUpdateSource struct {
 func (x *IdUpdateSource) Reset() {
 	*x = IdUpdateSource{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[123]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[126]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9144,7 +9350,7 @@ func (x *IdUpdateSource) String() string {
 func (*IdUpdateSource) ProtoMessage() {}
 
 func (x *IdUpdateSource) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[123]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[126]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9157,7 +9363,7 @@ func (x *IdUpdateSource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdUpdateSource.ProtoReflect.Descriptor instead.
 func (*IdUpdateSource) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{123}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{126}
 }
 
 func (x *IdUpdateSource) GetId() string {
@@ -9191,7 +9397,7 @@ type PatchModelIdsRequest struct {
 func (x *PatchModelIdsRequest) Reset() {
 	*x = PatchModelIdsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[124]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[127]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9204,7 +9410,7 @@ func (x *PatchModelIdsRequest) String() string {
 func (*PatchModelIdsRequest) ProtoMessage() {}
 
 func (x *PatchModelIdsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[124]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[127]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9217,7 +9423,7 @@ func (x *PatchModelIdsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelIdsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelIdsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{124}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{127}
 }
 
 func (x *PatchModelIdsRequest) GetUserAppId() *UserAppIDSet {
@@ -9254,7 +9460,7 @@ type DeleteModelRequest struct {
 func (x *DeleteModelRequest) Reset() {
 	*x = DeleteModelRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[125]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[128]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9267,7 +9473,7 @@ func (x *DeleteModelRequest) String() string {
 func (*DeleteModelRequest) ProtoMessage() {}
 
 func (x *DeleteModelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[125]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[128]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9280,7 +9486,7 @@ func (x *DeleteModelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteModelRequest.ProtoReflect.Descriptor instead.
 func (*DeleteModelRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{125}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{128}
 }
 
 func (x *DeleteModelRequest) GetUserAppId() *UserAppIDSet {
@@ -9311,7 +9517,7 @@ type DeleteModelsRequest struct {
 func (x *DeleteModelsRequest) Reset() {
 	*x = DeleteModelsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[126]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[129]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9324,7 +9530,7 @@ func (x *DeleteModelsRequest) String() string {
 func (*DeleteModelsRequest) ProtoMessage() {}
 
 func (x *DeleteModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[126]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[129]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9337,7 +9543,7 @@ func (x *DeleteModelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteModelsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteModelsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{126}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{129}
 }
 
 func (x *DeleteModelsRequest) GetUserAppId() *UserAppIDSet {
@@ -9379,7 +9585,7 @@ type PostModelsSearchesRequest struct {
 func (x *PostModelsSearchesRequest) Reset() {
 	*x = PostModelsSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[127]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[130]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9392,7 +9598,7 @@ func (x *PostModelsSearchesRequest) String() string {
 func (*PostModelsSearchesRequest) ProtoMessage() {}
 
 func (x *PostModelsSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[127]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[130]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9405,7 +9611,7 @@ func (x *PostModelsSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelsSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PostModelsSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{127}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{130}
 }
 
 func (x *PostModelsSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -9442,7 +9648,7 @@ type SingleModelResponse struct {
 func (x *SingleModelResponse) Reset() {
 	*x = SingleModelResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[128]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[131]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9455,7 +9661,7 @@ func (x *SingleModelResponse) String() string {
 func (*SingleModelResponse) ProtoMessage() {}
 
 func (x *SingleModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[128]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[131]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9468,7 +9674,7 @@ func (x *SingleModelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModelResponse.ProtoReflect.Descriptor instead.
 func (*SingleModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{128}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{131}
 }
 
 func (x *SingleModelResponse) GetStatus() *status.Status {
@@ -9498,7 +9704,7 @@ type MultiModelResponse struct {
 func (x *MultiModelResponse) Reset() {
 	*x = MultiModelResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[129]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[132]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9511,7 +9717,7 @@ func (x *MultiModelResponse) String() string {
 func (*MultiModelResponse) ProtoMessage() {}
 
 func (x *MultiModelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[129]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[132]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9524,7 +9730,7 @@ func (x *MultiModelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{129}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{132}
 }
 
 func (x *MultiModelResponse) GetStatus() *status.Status {
@@ -9558,7 +9764,7 @@ type PatchModelVersionsRequest struct {
 func (x *PatchModelVersionsRequest) Reset() {
 	*x = PatchModelVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[130]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[133]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9571,7 +9777,7 @@ func (x *PatchModelVersionsRequest) String() string {
 func (*PatchModelVersionsRequest) ProtoMessage() {}
 
 func (x *PatchModelVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[130]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[133]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9584,7 +9790,7 @@ func (x *PatchModelVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModelVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModelVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{130}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{133}
 }
 
 func (x *PatchModelVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -9629,7 +9835,7 @@ type GetModelVersionRequest struct {
 func (x *GetModelVersionRequest) Reset() {
 	*x = GetModelVersionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[131]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[134]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9642,7 +9848,7 @@ func (x *GetModelVersionRequest) String() string {
 func (*GetModelVersionRequest) ProtoMessage() {}
 
 func (x *GetModelVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[131]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[134]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9655,7 +9861,7 @@ func (x *GetModelVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetModelVersionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{131}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{134}
 }
 
 func (x *GetModelVersionRequest) GetUserAppId() *UserAppIDSet {
@@ -9713,7 +9919,7 @@ type ListModelVersionsRequest struct {
 func (x *ListModelVersionsRequest) Reset() {
 	*x = ListModelVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[132]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[135]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9726,7 +9932,7 @@ func (x *ListModelVersionsRequest) String() string {
 func (*ListModelVersionsRequest) ProtoMessage() {}
 
 func (x *ListModelVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[132]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[135]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9739,7 +9945,7 @@ func (x *ListModelVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModelVersionsRequest.ProtoReflect.Descriptor instead.
 func (*ListModelVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{132}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{135}
 }
 
 func (x *ListModelVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -9873,7 +10079,7 @@ type DeleteModelVersionRequest struct {
 func (x *DeleteModelVersionRequest) Reset() {
 	*x = DeleteModelVersionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[133]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[136]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9886,7 +10092,7 @@ func (x *DeleteModelVersionRequest) String() string {
 func (*DeleteModelVersionRequest) ProtoMessage() {}
 
 func (x *DeleteModelVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[133]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[136]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9899,7 +10105,7 @@ func (x *DeleteModelVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteModelVersionRequest.ProtoReflect.Descriptor instead.
 func (*DeleteModelVersionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{133}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{136}
 }
 
 func (x *DeleteModelVersionRequest) GetUserAppId() *UserAppIDSet {
@@ -9936,7 +10142,7 @@ type SingleModelVersionResponse struct {
 func (x *SingleModelVersionResponse) Reset() {
 	*x = SingleModelVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[134]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[137]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -9949,7 +10155,7 @@ func (x *SingleModelVersionResponse) String() string {
 func (*SingleModelVersionResponse) ProtoMessage() {}
 
 func (x *SingleModelVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[134]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[137]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9962,7 +10168,7 @@ func (x *SingleModelVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModelVersionResponse.ProtoReflect.Descriptor instead.
 func (*SingleModelVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{134}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{137}
 }
 
 func (x *SingleModelVersionResponse) GetStatus() *status.Status {
@@ -9992,7 +10198,7 @@ type MultiModelVersionResponse struct {
 func (x *MultiModelVersionResponse) Reset() {
 	*x = MultiModelVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[135]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[138]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10005,7 +10211,7 @@ func (x *MultiModelVersionResponse) String() string {
 func (*MultiModelVersionResponse) ProtoMessage() {}
 
 func (x *MultiModelVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[135]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[138]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10018,7 +10224,7 @@ func (x *MultiModelVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelVersionResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{135}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{138}
 }
 
 func (x *MultiModelVersionResponse) GetStatus() *status.Status {
@@ -10054,7 +10260,7 @@ type PostModelVersionsRequest struct {
 func (x *PostModelVersionsRequest) Reset() {
 	*x = PostModelVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[136]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[139]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10067,7 +10273,7 @@ func (x *PostModelVersionsRequest) String() string {
 func (*PostModelVersionsRequest) ProtoMessage() {}
 
 func (x *PostModelVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[136]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[139]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10080,7 +10286,7 @@ func (x *PostModelVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{136}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{139}
 }
 
 func (x *PostModelVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -10133,7 +10339,7 @@ type PostModelVersionsUploadRequest struct {
 func (x *PostModelVersionsUploadRequest) Reset() {
 	*x = PostModelVersionsUploadRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[137]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[140]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10146,7 +10352,7 @@ func (x *PostModelVersionsUploadRequest) String() string {
 func (*PostModelVersionsUploadRequest) ProtoMessage() {}
 
 func (x *PostModelVersionsUploadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[137]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[140]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10159,7 +10365,7 @@ func (x *PostModelVersionsUploadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionsUploadRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsUploadRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{137}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{140}
 }
 
 func (m *PostModelVersionsUploadRequest) GetUploadData() isPostModelVersionsUploadRequest_UploadData {
@@ -10213,7 +10419,7 @@ type PostModelVersionsUploadResponse struct {
 func (x *PostModelVersionsUploadResponse) Reset() {
 	*x = PostModelVersionsUploadResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[138]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[141]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10226,7 +10432,7 @@ func (x *PostModelVersionsUploadResponse) String() string {
 func (*PostModelVersionsUploadResponse) ProtoMessage() {}
 
 func (x *PostModelVersionsUploadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[138]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[141]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10239,7 +10445,7 @@ func (x *PostModelVersionsUploadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionsUploadResponse.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsUploadResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{138}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{141}
 }
 
 func (x *PostModelVersionsUploadResponse) GetStatus() *status.Status {
@@ -10284,7 +10490,7 @@ type PostModelVersionsUploadConfig struct {
 func (x *PostModelVersionsUploadConfig) Reset() {
 	*x = PostModelVersionsUploadConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[139]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[142]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10297,7 +10503,7 @@ func (x *PostModelVersionsUploadConfig) String() string {
 func (*PostModelVersionsUploadConfig) ProtoMessage() {}
 
 func (x *PostModelVersionsUploadConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[139]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[142]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10310,7 +10516,7 @@ func (x *PostModelVersionsUploadConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionsUploadConfig.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsUploadConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{139}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{142}
 }
 
 func (x *PostModelVersionsUploadConfig) GetUserAppId() *UserAppIDSet {
@@ -10369,7 +10575,7 @@ type PutModelVersionExportsRequest struct {
 func (x *PutModelVersionExportsRequest) Reset() {
 	*x = PutModelVersionExportsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[140]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[143]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10382,7 +10588,7 @@ func (x *PutModelVersionExportsRequest) String() string {
 func (*PutModelVersionExportsRequest) ProtoMessage() {}
 
 func (x *PutModelVersionExportsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[140]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[143]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10395,7 +10601,7 @@ func (x *PutModelVersionExportsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutModelVersionExportsRequest.ProtoReflect.Descriptor instead.
 func (*PutModelVersionExportsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{140}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{143}
 }
 
 func (x *PutModelVersionExportsRequest) GetUserAppId() *UserAppIDSet {
@@ -10433,7 +10639,7 @@ type GetModelVersionExportRequest struct {
 func (x *GetModelVersionExportRequest) Reset() {
 	*x = GetModelVersionExportRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[141]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[144]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10446,7 +10652,7 @@ func (x *GetModelVersionExportRequest) String() string {
 func (*GetModelVersionExportRequest) ProtoMessage() {}
 
 func (x *GetModelVersionExportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[141]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[144]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10459,7 +10665,7 @@ func (x *GetModelVersionExportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelVersionExportRequest.ProtoReflect.Descriptor instead.
 func (*GetModelVersionExportRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{141}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{144}
 }
 
 func (x *GetModelVersionExportRequest) GetUserAppId() *UserAppIDSet {
@@ -10496,7 +10702,7 @@ type SingleModelVersionExportResponse struct {
 func (x *SingleModelVersionExportResponse) Reset() {
 	*x = SingleModelVersionExportResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[142]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[145]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10509,7 +10715,7 @@ func (x *SingleModelVersionExportResponse) String() string {
 func (*SingleModelVersionExportResponse) ProtoMessage() {}
 
 func (x *SingleModelVersionExportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[142]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[145]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10522,7 +10728,7 @@ func (x *SingleModelVersionExportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModelVersionExportResponse.ProtoReflect.Descriptor instead.
 func (*SingleModelVersionExportResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{142}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{145}
 }
 
 func (x *SingleModelVersionExportResponse) GetStatus() *status.Status {
@@ -10552,7 +10758,7 @@ type PostWorkflowVersionsUnPublishRequest struct {
 func (x *PostWorkflowVersionsUnPublishRequest) Reset() {
 	*x = PostWorkflowVersionsUnPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[143]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[146]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10565,7 +10771,7 @@ func (x *PostWorkflowVersionsUnPublishRequest) String() string {
 func (*PostWorkflowVersionsUnPublishRequest) ProtoMessage() {}
 
 func (x *PostWorkflowVersionsUnPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[143]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[146]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10578,7 +10784,7 @@ func (x *PostWorkflowVersionsUnPublishRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use PostWorkflowVersionsUnPublishRequest.ProtoReflect.Descriptor instead.
 func (*PostWorkflowVersionsUnPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{143}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{146}
 }
 
 func (x *PostWorkflowVersionsUnPublishRequest) GetUserAppId() *UserAppIDSet {
@@ -10615,7 +10821,7 @@ type PostWorkflowVersionsPublishRequest struct {
 func (x *PostWorkflowVersionsPublishRequest) Reset() {
 	*x = PostWorkflowVersionsPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[144]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[147]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10628,7 +10834,7 @@ func (x *PostWorkflowVersionsPublishRequest) String() string {
 func (*PostWorkflowVersionsPublishRequest) ProtoMessage() {}
 
 func (x *PostWorkflowVersionsPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[144]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[147]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10641,7 +10847,7 @@ func (x *PostWorkflowVersionsPublishRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use PostWorkflowVersionsPublishRequest.ProtoReflect.Descriptor instead.
 func (*PostWorkflowVersionsPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{144}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{147}
 }
 
 func (x *PostWorkflowVersionsPublishRequest) GetUserAppId() *UserAppIDSet {
@@ -10676,7 +10882,7 @@ type WorkflowVersionPublishRequest struct {
 func (x *WorkflowVersionPublishRequest) Reset() {
 	*x = WorkflowVersionPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[145]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[148]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10689,7 +10895,7 @@ func (x *WorkflowVersionPublishRequest) String() string {
 func (*WorkflowVersionPublishRequest) ProtoMessage() {}
 
 func (x *WorkflowVersionPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[145]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[148]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10702,7 +10908,7 @@ func (x *WorkflowVersionPublishRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowVersionPublishRequest.ProtoReflect.Descriptor instead.
 func (*WorkflowVersionPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{145}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{148}
 }
 
 func (x *WorkflowVersionPublishRequest) GetVersionId() string {
@@ -10723,7 +10929,7 @@ type WorkflowVersionUnPublishRequest struct {
 func (x *WorkflowVersionUnPublishRequest) Reset() {
 	*x = WorkflowVersionUnPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[146]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[149]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10736,7 +10942,7 @@ func (x *WorkflowVersionUnPublishRequest) String() string {
 func (*WorkflowVersionUnPublishRequest) ProtoMessage() {}
 
 func (x *WorkflowVersionUnPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[146]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[149]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10749,7 +10955,7 @@ func (x *WorkflowVersionUnPublishRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkflowVersionUnPublishRequest.ProtoReflect.Descriptor instead.
 func (*WorkflowVersionUnPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{146}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{149}
 }
 
 func (x *WorkflowVersionUnPublishRequest) GetVersionId() string {
@@ -10771,7 +10977,7 @@ type ModelVersionPublishRequest struct {
 func (x *ModelVersionPublishRequest) Reset() {
 	*x = ModelVersionPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[147]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[150]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10784,7 +10990,7 @@ func (x *ModelVersionPublishRequest) String() string {
 func (*ModelVersionPublishRequest) ProtoMessage() {}
 
 func (x *ModelVersionPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[147]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[150]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10797,7 +11003,7 @@ func (x *ModelVersionPublishRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelVersionPublishRequest.ProtoReflect.Descriptor instead.
 func (*ModelVersionPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{147}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{150}
 }
 
 func (x *ModelVersionPublishRequest) GetVersionId() string {
@@ -10821,7 +11027,7 @@ type PostModelVersionsPublishRequest struct {
 func (x *PostModelVersionsPublishRequest) Reset() {
 	*x = PostModelVersionsPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[148]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[151]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10834,7 +11040,7 @@ func (x *PostModelVersionsPublishRequest) String() string {
 func (*PostModelVersionsPublishRequest) ProtoMessage() {}
 
 func (x *PostModelVersionsPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[148]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[151]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10847,7 +11053,7 @@ func (x *PostModelVersionsPublishRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionsPublishRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{148}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{151}
 }
 
 func (x *PostModelVersionsPublishRequest) GetUserAppId() *UserAppIDSet {
@@ -10883,7 +11089,7 @@ type ModelVersionUnpublishRequest struct {
 func (x *ModelVersionUnpublishRequest) Reset() {
 	*x = ModelVersionUnpublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[149]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[152]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10896,7 +11102,7 @@ func (x *ModelVersionUnpublishRequest) String() string {
 func (*ModelVersionUnpublishRequest) ProtoMessage() {}
 
 func (x *ModelVersionUnpublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[149]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[152]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10909,7 +11115,7 @@ func (x *ModelVersionUnpublishRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelVersionUnpublishRequest.ProtoReflect.Descriptor instead.
 func (*ModelVersionUnpublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{149}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{152}
 }
 
 func (x *ModelVersionUnpublishRequest) GetVersionId() string {
@@ -10933,7 +11139,7 @@ type PostModelVersionsUnPublishRequest struct {
 func (x *PostModelVersionsUnPublishRequest) Reset() {
 	*x = PostModelVersionsUnPublishRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[150]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[153]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -10946,7 +11152,7 @@ func (x *PostModelVersionsUnPublishRequest) String() string {
 func (*PostModelVersionsUnPublishRequest) ProtoMessage() {}
 
 func (x *PostModelVersionsUnPublishRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[150]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[153]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10959,7 +11165,7 @@ func (x *PostModelVersionsUnPublishRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use PostModelVersionsUnPublishRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsUnPublishRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{150}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{153}
 }
 
 func (x *PostModelVersionsUnPublishRequest) GetUserAppId() *UserAppIDSet {
@@ -10998,7 +11204,7 @@ type PostEvaluationsRequest struct {
 func (x *PostEvaluationsRequest) Reset() {
 	*x = PostEvaluationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[151]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[154]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11011,7 +11217,7 @@ func (x *PostEvaluationsRequest) String() string {
 func (*PostEvaluationsRequest) ProtoMessage() {}
 
 func (x *PostEvaluationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[151]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[154]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11024,7 +11230,7 @@ func (x *PostEvaluationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostEvaluationsRequest.ProtoReflect.Descriptor instead.
 func (*PostEvaluationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{151}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{154}
 }
 
 func (x *PostEvaluationsRequest) GetUserAppId() *UserAppIDSet {
@@ -11083,7 +11289,7 @@ type ListEvaluationsRequest struct {
 func (x *ListEvaluationsRequest) Reset() {
 	*x = ListEvaluationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[152]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[155]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11096,7 +11302,7 @@ func (x *ListEvaluationsRequest) String() string {
 func (*ListEvaluationsRequest) ProtoMessage() {}
 
 func (x *ListEvaluationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[152]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[155]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11109,7 +11315,7 @@ func (x *ListEvaluationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListEvaluationsRequest.ProtoReflect.Descriptor instead.
 func (*ListEvaluationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{152}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{155}
 }
 
 func (x *ListEvaluationsRequest) GetUserAppId() *UserAppIDSet {
@@ -11338,7 +11544,7 @@ type GetEvaluationRequest struct {
 func (x *GetEvaluationRequest) Reset() {
 	*x = GetEvaluationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[153]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[156]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11351,7 +11557,7 @@ func (x *GetEvaluationRequest) String() string {
 func (*GetEvaluationRequest) ProtoMessage() {}
 
 func (x *GetEvaluationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[153]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[156]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11364,7 +11570,7 @@ func (x *GetEvaluationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEvaluationRequest.ProtoReflect.Descriptor instead.
 func (*GetEvaluationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{153}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{156}
 }
 
 func (x *GetEvaluationRequest) GetUserAppId() *UserAppIDSet {
@@ -11404,7 +11610,7 @@ type PostModelVersionEvaluationsRequest struct {
 func (x *PostModelVersionEvaluationsRequest) Reset() {
 	*x = PostModelVersionEvaluationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[154]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[157]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11417,7 +11623,7 @@ func (x *PostModelVersionEvaluationsRequest) String() string {
 func (*PostModelVersionEvaluationsRequest) ProtoMessage() {}
 
 func (x *PostModelVersionEvaluationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[154]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[157]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11430,7 +11636,7 @@ func (x *PostModelVersionEvaluationsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use PostModelVersionEvaluationsRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionEvaluationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{154}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{157}
 }
 
 func (x *PostModelVersionEvaluationsRequest) GetUserAppId() *UserAppIDSet {
@@ -11480,7 +11686,7 @@ type ListModelVersionEvaluationsRequest struct {
 func (x *ListModelVersionEvaluationsRequest) Reset() {
 	*x = ListModelVersionEvaluationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[155]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[158]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11493,7 +11699,7 @@ func (x *ListModelVersionEvaluationsRequest) String() string {
 func (*ListModelVersionEvaluationsRequest) ProtoMessage() {}
 
 func (x *ListModelVersionEvaluationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[155]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[158]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11506,7 +11712,7 @@ func (x *ListModelVersionEvaluationsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use ListModelVersionEvaluationsRequest.ProtoReflect.Descriptor instead.
 func (*ListModelVersionEvaluationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{155}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{158}
 }
 
 func (x *ListModelVersionEvaluationsRequest) GetUserAppId() *UserAppIDSet {
@@ -11561,7 +11767,7 @@ type GetModelVersionEvaluationRequest struct {
 func (x *GetModelVersionEvaluationRequest) Reset() {
 	*x = GetModelVersionEvaluationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[156]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[159]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11574,7 +11780,7 @@ func (x *GetModelVersionEvaluationRequest) String() string {
 func (*GetModelVersionEvaluationRequest) ProtoMessage() {}
 
 func (x *GetModelVersionEvaluationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[156]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[159]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11587,7 +11793,7 @@ func (x *GetModelVersionEvaluationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelVersionEvaluationRequest.ProtoReflect.Descriptor instead.
 func (*GetModelVersionEvaluationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{156}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{159}
 }
 
 func (x *GetModelVersionEvaluationRequest) GetUserAppId() *UserAppIDSet {
@@ -11637,7 +11843,7 @@ type SingleEvalMetricsResponse struct {
 func (x *SingleEvalMetricsResponse) Reset() {
 	*x = SingleEvalMetricsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[157]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[160]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11650,7 +11856,7 @@ func (x *SingleEvalMetricsResponse) String() string {
 func (*SingleEvalMetricsResponse) ProtoMessage() {}
 
 func (x *SingleEvalMetricsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[157]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[160]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11663,7 +11869,7 @@ func (x *SingleEvalMetricsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleEvalMetricsResponse.ProtoReflect.Descriptor instead.
 func (*SingleEvalMetricsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{157}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{160}
 }
 
 func (x *SingleEvalMetricsResponse) GetStatus() *status.Status {
@@ -11692,7 +11898,7 @@ type MultiEvalMetricsResponse struct {
 func (x *MultiEvalMetricsResponse) Reset() {
 	*x = MultiEvalMetricsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[158]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[161]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11705,7 +11911,7 @@ func (x *MultiEvalMetricsResponse) String() string {
 func (*MultiEvalMetricsResponse) ProtoMessage() {}
 
 func (x *MultiEvalMetricsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[158]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[161]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11718,7 +11924,7 @@ func (x *MultiEvalMetricsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiEvalMetricsResponse.ProtoReflect.Descriptor instead.
 func (*MultiEvalMetricsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{158}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{161}
 }
 
 func (x *MultiEvalMetricsResponse) GetStatus() *status.Status {
@@ -11753,7 +11959,7 @@ type PostModelVersionMetricsRequest struct {
 func (x *PostModelVersionMetricsRequest) Reset() {
 	*x = PostModelVersionMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[159]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[162]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11766,7 +11972,7 @@ func (x *PostModelVersionMetricsRequest) String() string {
 func (*PostModelVersionMetricsRequest) ProtoMessage() {}
 
 func (x *PostModelVersionMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[159]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[162]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11779,7 +11985,7 @@ func (x *PostModelVersionMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModelVersionMetricsRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{159}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{162}
 }
 
 func (x *PostModelVersionMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -11835,7 +12041,7 @@ type GetModelVersionMetricsRequest struct {
 func (x *GetModelVersionMetricsRequest) Reset() {
 	*x = GetModelVersionMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[160]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[163]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11848,7 +12054,7 @@ func (x *GetModelVersionMetricsRequest) String() string {
 func (*GetModelVersionMetricsRequest) ProtoMessage() {}
 
 func (x *GetModelVersionMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[160]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[163]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11861,7 +12067,7 @@ func (x *GetModelVersionMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelVersionMetricsRequest.ProtoReflect.Descriptor instead.
 func (*GetModelVersionMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{160}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{163}
 }
 
 func (x *GetModelVersionMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -11907,7 +12113,7 @@ type GetModelTypeRequest struct {
 func (x *GetModelTypeRequest) Reset() {
 	*x = GetModelTypeRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[161]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[164]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11920,7 +12126,7 @@ func (x *GetModelTypeRequest) String() string {
 func (*GetModelTypeRequest) ProtoMessage() {}
 
 func (x *GetModelTypeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[161]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[164]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11933,7 +12139,7 @@ func (x *GetModelTypeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelTypeRequest.ProtoReflect.Descriptor instead.
 func (*GetModelTypeRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{161}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{164}
 }
 
 func (x *GetModelTypeRequest) GetUserAppId() *UserAppIDSet {
@@ -11969,7 +12175,7 @@ type ListModelTypesRequest struct {
 func (x *ListModelTypesRequest) Reset() {
 	*x = ListModelTypesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[162]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[165]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -11982,7 +12188,7 @@ func (x *ListModelTypesRequest) String() string {
 func (*ListModelTypesRequest) ProtoMessage() {}
 
 func (x *ListModelTypesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[162]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[165]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11995,7 +12201,7 @@ func (x *ListModelTypesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModelTypesRequest.ProtoReflect.Descriptor instead.
 func (*ListModelTypesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{162}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{165}
 }
 
 func (x *ListModelTypesRequest) GetUserAppId() *UserAppIDSet {
@@ -12029,7 +12235,7 @@ type ListOpenSourceLicensesRequest struct {
 func (x *ListOpenSourceLicensesRequest) Reset() {
 	*x = ListOpenSourceLicensesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[163]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[166]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12042,7 +12248,7 @@ func (x *ListOpenSourceLicensesRequest) String() string {
 func (*ListOpenSourceLicensesRequest) ProtoMessage() {}
 
 func (x *ListOpenSourceLicensesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[163]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[166]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12055,7 +12261,7 @@ func (x *ListOpenSourceLicensesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOpenSourceLicensesRequest.ProtoReflect.Descriptor instead.
 func (*ListOpenSourceLicensesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{163}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{166}
 }
 
 // ListOpenSourceLicensesResponse
@@ -12071,7 +12277,7 @@ type ListOpenSourceLicensesResponse struct {
 func (x *ListOpenSourceLicensesResponse) Reset() {
 	*x = ListOpenSourceLicensesResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[164]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[167]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12084,7 +12290,7 @@ func (x *ListOpenSourceLicensesResponse) String() string {
 func (*ListOpenSourceLicensesResponse) ProtoMessage() {}
 
 func (x *ListOpenSourceLicensesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[164]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[167]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12097,7 +12303,7 @@ func (x *ListOpenSourceLicensesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOpenSourceLicensesResponse.ProtoReflect.Descriptor instead.
 func (*ListOpenSourceLicensesResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{164}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{167}
 }
 
 func (x *ListOpenSourceLicensesResponse) GetStatus() *status.Status {
@@ -12129,7 +12335,7 @@ type SingleModelTypeResponse struct {
 func (x *SingleModelTypeResponse) Reset() {
 	*x = SingleModelTypeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[165]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[168]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12142,7 +12348,7 @@ func (x *SingleModelTypeResponse) String() string {
 func (*SingleModelTypeResponse) ProtoMessage() {}
 
 func (x *SingleModelTypeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[165]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[168]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12155,7 +12361,7 @@ func (x *SingleModelTypeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModelTypeResponse.ProtoReflect.Descriptor instead.
 func (*SingleModelTypeResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{165}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{168}
 }
 
 func (x *SingleModelTypeResponse) GetStatus() *status.Status {
@@ -12191,7 +12397,7 @@ type MultiModelTypeResponse struct {
 func (x *MultiModelTypeResponse) Reset() {
 	*x = MultiModelTypeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[166]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[169]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12204,7 +12410,7 @@ func (x *MultiModelTypeResponse) String() string {
 func (*MultiModelTypeResponse) ProtoMessage() {}
 
 func (x *MultiModelTypeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[166]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[169]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12217,7 +12423,7 @@ func (x *MultiModelTypeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelTypeResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelTypeResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{166}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{169}
 }
 
 func (x *MultiModelTypeResponse) GetStatus() *status.Status {
@@ -12267,7 +12473,7 @@ type GetModelVersionInputExampleRequest struct {
 func (x *GetModelVersionInputExampleRequest) Reset() {
 	*x = GetModelVersionInputExampleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[167]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[170]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12280,7 +12486,7 @@ func (x *GetModelVersionInputExampleRequest) String() string {
 func (*GetModelVersionInputExampleRequest) ProtoMessage() {}
 
 func (x *GetModelVersionInputExampleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[167]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[170]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12293,7 +12499,7 @@ func (x *GetModelVersionInputExampleRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetModelVersionInputExampleRequest.ProtoReflect.Descriptor instead.
 func (*GetModelVersionInputExampleRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{167}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{170}
 }
 
 func (x *GetModelVersionInputExampleRequest) GetUserAppId() *UserAppIDSet {
@@ -12345,7 +12551,7 @@ type ListModelVersionInputExamplesRequest struct {
 func (x *ListModelVersionInputExamplesRequest) Reset() {
 	*x = ListModelVersionInputExamplesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[168]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[171]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12358,7 +12564,7 @@ func (x *ListModelVersionInputExamplesRequest) String() string {
 func (*ListModelVersionInputExamplesRequest) ProtoMessage() {}
 
 func (x *ListModelVersionInputExamplesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[168]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[171]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12371,7 +12577,7 @@ func (x *ListModelVersionInputExamplesRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use ListModelVersionInputExamplesRequest.ProtoReflect.Descriptor instead.
 func (*ListModelVersionInputExamplesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{168}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{171}
 }
 
 func (x *ListModelVersionInputExamplesRequest) GetUserAppId() *UserAppIDSet {
@@ -12424,7 +12630,7 @@ type SingleModelVersionInputExampleResponse struct {
 func (x *SingleModelVersionInputExampleResponse) Reset() {
 	*x = SingleModelVersionInputExampleResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[169]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[172]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12437,7 +12643,7 @@ func (x *SingleModelVersionInputExampleResponse) String() string {
 func (*SingleModelVersionInputExampleResponse) ProtoMessage() {}
 
 func (x *SingleModelVersionInputExampleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[169]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[172]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12450,7 +12656,7 @@ func (x *SingleModelVersionInputExampleResponse) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use SingleModelVersionInputExampleResponse.ProtoReflect.Descriptor instead.
 func (*SingleModelVersionInputExampleResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{169}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{172}
 }
 
 func (x *SingleModelVersionInputExampleResponse) GetStatus() *status.Status {
@@ -12482,7 +12688,7 @@ type MultiModelVersionInputExampleResponse struct {
 func (x *MultiModelVersionInputExampleResponse) Reset() {
 	*x = MultiModelVersionInputExampleResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[170]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[173]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12495,7 +12701,7 @@ func (x *MultiModelVersionInputExampleResponse) String() string {
 func (*MultiModelVersionInputExampleResponse) ProtoMessage() {}
 
 func (x *MultiModelVersionInputExampleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[170]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[173]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12508,7 +12714,7 @@ func (x *MultiModelVersionInputExampleResponse) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use MultiModelVersionInputExampleResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelVersionInputExampleResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{170}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{173}
 }
 
 func (x *MultiModelVersionInputExampleResponse) GetStatus() *status.Status {
@@ -12542,7 +12748,7 @@ type ListModelReferencesRequest struct {
 func (x *ListModelReferencesRequest) Reset() {
 	*x = ListModelReferencesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[171]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[174]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12555,7 +12761,7 @@ func (x *ListModelReferencesRequest) String() string {
 func (*ListModelReferencesRequest) ProtoMessage() {}
 
 func (x *ListModelReferencesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[171]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[174]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12568,7 +12774,7 @@ func (x *ListModelReferencesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModelReferencesRequest.ProtoReflect.Descriptor instead.
 func (*ListModelReferencesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{171}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{174}
 }
 
 func (x *ListModelReferencesRequest) GetUserAppId() *UserAppIDSet {
@@ -12612,7 +12818,7 @@ type MultiModelReferenceResponse struct {
 func (x *MultiModelReferenceResponse) Reset() {
 	*x = MultiModelReferenceResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[172]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[175]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12625,7 +12831,7 @@ func (x *MultiModelReferenceResponse) String() string {
 func (*MultiModelReferenceResponse) ProtoMessage() {}
 
 func (x *MultiModelReferenceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[172]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[175]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12638,7 +12844,7 @@ func (x *MultiModelReferenceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModelReferenceResponse.ProtoReflect.Descriptor instead.
 func (*MultiModelReferenceResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{172}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{175}
 }
 
 func (x *MultiModelReferenceResponse) GetStatus() *status.Status {
@@ -12669,7 +12875,7 @@ type MultiOutputResponse struct {
 func (x *MultiOutputResponse) Reset() {
 	*x = MultiOutputResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[173]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[176]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12682,7 +12888,7 @@ func (x *MultiOutputResponse) String() string {
 func (*MultiOutputResponse) ProtoMessage() {}
 
 func (x *MultiOutputResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[173]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[176]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12695,7 +12901,7 @@ func (x *MultiOutputResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiOutputResponse.ProtoReflect.Descriptor instead.
 func (*MultiOutputResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{173}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{176}
 }
 
 func (x *MultiOutputResponse) GetStatus() *status.Status {
@@ -12729,7 +12935,7 @@ type MultiLogEntryResponse struct {
 func (x *MultiLogEntryResponse) Reset() {
 	*x = MultiLogEntryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[174]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[177]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12742,7 +12948,7 @@ func (x *MultiLogEntryResponse) String() string {
 func (*MultiLogEntryResponse) ProtoMessage() {}
 
 func (x *MultiLogEntryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[174]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[177]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12755,7 +12961,7 @@ func (x *MultiLogEntryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiLogEntryResponse.ProtoReflect.Descriptor instead.
 func (*MultiLogEntryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{174}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{177}
 }
 
 func (x *MultiLogEntryResponse) GetStatus() *status.Status {
@@ -12802,7 +13008,7 @@ type ListScopesRequest struct {
 func (x *ListScopesRequest) Reset() {
 	*x = ListScopesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[175]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[178]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12815,7 +13021,7 @@ func (x *ListScopesRequest) String() string {
 func (*ListScopesRequest) ProtoMessage() {}
 
 func (x *ListScopesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[175]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[178]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12828,7 +13034,7 @@ func (x *ListScopesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListScopesRequest.ProtoReflect.Descriptor instead.
 func (*ListScopesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{175}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{178}
 }
 
 func (x *ListScopesRequest) GetKeyType() string {
@@ -12857,7 +13063,7 @@ type MyScopesRequest struct {
 func (x *MyScopesRequest) Reset() {
 	*x = MyScopesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[176]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[179]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12870,7 +13076,7 @@ func (x *MyScopesRequest) String() string {
 func (*MyScopesRequest) ProtoMessage() {}
 
 func (x *MyScopesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[176]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[179]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12883,7 +13089,7 @@ func (x *MyScopesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MyScopesRequest.ProtoReflect.Descriptor instead.
 func (*MyScopesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{176}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{179}
 }
 
 func (x *MyScopesRequest) GetUserAppId() *UserAppIDSet {
@@ -12905,7 +13111,7 @@ type MyScopesUserRequest struct {
 func (x *MyScopesUserRequest) Reset() {
 	*x = MyScopesUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[177]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[180]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12918,7 +13124,7 @@ func (x *MyScopesUserRequest) String() string {
 func (*MyScopesUserRequest) ProtoMessage() {}
 
 func (x *MyScopesUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[177]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[180]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12931,7 +13137,7 @@ func (x *MyScopesUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MyScopesUserRequest.ProtoReflect.Descriptor instead.
 func (*MyScopesUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{177}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{180}
 }
 
 func (x *MyScopesUserRequest) GetUserAppId() *UserAppIDSet {
@@ -12951,7 +13157,7 @@ type MyScopesRootRequest struct {
 func (x *MyScopesRootRequest) Reset() {
 	*x = MyScopesRootRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[178]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[181]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -12964,7 +13170,7 @@ func (x *MyScopesRootRequest) String() string {
 func (*MyScopesRootRequest) ProtoMessage() {}
 
 func (x *MyScopesRootRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[178]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[181]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -12977,7 +13183,7 @@ func (x *MyScopesRootRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MyScopesRootRequest.ProtoReflect.Descriptor instead.
 func (*MyScopesRootRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{178}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{181}
 }
 
 // MultiScopeDepsResponse
@@ -12999,7 +13205,7 @@ type MultiScopeDepsResponse struct {
 func (x *MultiScopeDepsResponse) Reset() {
 	*x = MultiScopeDepsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[179]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[182]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13012,7 +13218,7 @@ func (x *MultiScopeDepsResponse) String() string {
 func (*MultiScopeDepsResponse) ProtoMessage() {}
 
 func (x *MultiScopeDepsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[179]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[182]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13025,7 +13231,7 @@ func (x *MultiScopeDepsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiScopeDepsResponse.ProtoReflect.Descriptor instead.
 func (*MultiScopeDepsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{179}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{182}
 }
 
 func (x *MultiScopeDepsResponse) GetStatus() *status.Status {
@@ -13069,7 +13275,7 @@ type MultiScopeResponse struct {
 func (x *MultiScopeResponse) Reset() {
 	*x = MultiScopeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[180]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[183]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13082,7 +13288,7 @@ func (x *MultiScopeResponse) String() string {
 func (*MultiScopeResponse) ProtoMessage() {}
 
 func (x *MultiScopeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[180]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[183]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13095,7 +13301,7 @@ func (x *MultiScopeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiScopeResponse.ProtoReflect.Descriptor instead.
 func (*MultiScopeResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{180}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{183}
 }
 
 func (x *MultiScopeResponse) GetStatus() *status.Status {
@@ -13151,7 +13357,7 @@ type MultiScopeUserResponse struct {
 func (x *MultiScopeUserResponse) Reset() {
 	*x = MultiScopeUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[181]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[184]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13164,7 +13370,7 @@ func (x *MultiScopeUserResponse) String() string {
 func (*MultiScopeUserResponse) ProtoMessage() {}
 
 func (x *MultiScopeUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[181]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[184]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13177,7 +13383,7 @@ func (x *MultiScopeUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiScopeUserResponse.ProtoReflect.Descriptor instead.
 func (*MultiScopeUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{181}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{184}
 }
 
 func (x *MultiScopeUserResponse) GetStatus() *status.Status {
@@ -13226,7 +13432,7 @@ type MultiScopeRootResponse struct {
 func (x *MultiScopeRootResponse) Reset() {
 	*x = MultiScopeRootResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[182]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[185]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13239,7 +13445,7 @@ func (x *MultiScopeRootResponse) String() string {
 func (*MultiScopeRootResponse) ProtoMessage() {}
 
 func (x *MultiScopeRootResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[182]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[185]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13252,7 +13458,7 @@ func (x *MultiScopeRootResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiScopeRootResponse.ProtoReflect.Descriptor instead.
 func (*MultiScopeRootResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{182}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{185}
 }
 
 func (x *MultiScopeRootResponse) GetStatus() *status.Status {
@@ -13296,7 +13502,7 @@ type GetSearchRequest struct {
 func (x *GetSearchRequest) Reset() {
 	*x = GetSearchRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[183]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[186]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13309,7 +13515,7 @@ func (x *GetSearchRequest) String() string {
 func (*GetSearchRequest) ProtoMessage() {}
 
 func (x *GetSearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[183]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[186]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13322,7 +13528,7 @@ func (x *GetSearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSearchRequest.ProtoReflect.Descriptor instead.
 func (*GetSearchRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{183}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{186}
 }
 
 func (x *GetSearchRequest) GetUserAppId() *UserAppIDSet {
@@ -13357,7 +13563,7 @@ type ListSearchesRequest struct {
 func (x *ListSearchesRequest) Reset() {
 	*x = ListSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[184]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[187]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13370,7 +13576,7 @@ func (x *ListSearchesRequest) String() string {
 func (*ListSearchesRequest) ProtoMessage() {}
 
 func (x *ListSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[184]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[187]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13383,7 +13589,7 @@ func (x *ListSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSearchesRequest.ProtoReflect.Descriptor instead.
 func (*ListSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{184}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{187}
 }
 
 func (x *ListSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13430,7 +13636,7 @@ type PostSearchesRequest struct {
 func (x *PostSearchesRequest) Reset() {
 	*x = PostSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[185]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[188]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13443,7 +13649,7 @@ func (x *PostSearchesRequest) String() string {
 func (*PostSearchesRequest) ProtoMessage() {}
 
 func (x *PostSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[185]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[188]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13456,7 +13662,7 @@ func (x *PostSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PostSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{185}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{188}
 }
 
 func (x *PostSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13505,7 +13711,7 @@ type PatchInputsSearchesRequest struct {
 func (x *PatchInputsSearchesRequest) Reset() {
 	*x = PatchInputsSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[186]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[189]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13518,7 +13724,7 @@ func (x *PatchInputsSearchesRequest) String() string {
 func (*PatchInputsSearchesRequest) ProtoMessage() {}
 
 func (x *PatchInputsSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[186]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[189]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13531,7 +13737,7 @@ func (x *PatchInputsSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchInputsSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PatchInputsSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{186}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{189}
 }
 
 func (x *PatchInputsSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13572,7 +13778,7 @@ type PatchAnnotationsSearchesRequest struct {
 func (x *PatchAnnotationsSearchesRequest) Reset() {
 	*x = PatchAnnotationsSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[187]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[190]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13585,7 +13791,7 @@ func (x *PatchAnnotationsSearchesRequest) String() string {
 func (*PatchAnnotationsSearchesRequest) ProtoMessage() {}
 
 func (x *PatchAnnotationsSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[187]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[190]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13598,7 +13804,7 @@ func (x *PatchAnnotationsSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchAnnotationsSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PatchAnnotationsSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{187}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{190}
 }
 
 func (x *PatchAnnotationsSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13640,7 +13846,7 @@ type PatchSearchesRequest struct {
 func (x *PatchSearchesRequest) Reset() {
 	*x = PatchSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[188]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[191]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13653,7 +13859,7 @@ func (x *PatchSearchesRequest) String() string {
 func (*PatchSearchesRequest) ProtoMessage() {}
 
 func (x *PatchSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[188]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[191]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13666,7 +13872,7 @@ func (x *PatchSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PatchSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{188}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{191}
 }
 
 func (x *PatchSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13706,7 +13912,7 @@ type PostSearchesByIDRequest struct {
 func (x *PostSearchesByIDRequest) Reset() {
 	*x = PostSearchesByIDRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[189]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[192]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13719,7 +13925,7 @@ func (x *PostSearchesByIDRequest) String() string {
 func (*PostSearchesByIDRequest) ProtoMessage() {}
 
 func (x *PostSearchesByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[189]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[192]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13732,7 +13938,7 @@ func (x *PostSearchesByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostSearchesByIDRequest.ProtoReflect.Descriptor instead.
 func (*PostSearchesByIDRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{189}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{192}
 }
 
 func (x *PostSearchesByIDRequest) GetUserAppId() *UserAppIDSet {
@@ -13769,7 +13975,7 @@ type DeleteSearchRequest struct {
 func (x *DeleteSearchRequest) Reset() {
 	*x = DeleteSearchRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[190]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[193]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13782,7 +13988,7 @@ func (x *DeleteSearchRequest) String() string {
 func (*DeleteSearchRequest) ProtoMessage() {}
 
 func (x *DeleteSearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[190]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[193]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13795,7 +14001,7 @@ func (x *DeleteSearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSearchRequest.ProtoReflect.Descriptor instead.
 func (*DeleteSearchRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{190}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{193}
 }
 
 func (x *DeleteSearchRequest) GetUserAppId() *UserAppIDSet {
@@ -13830,7 +14036,7 @@ type PostAnnotationsSearchesRequest struct {
 func (x *PostAnnotationsSearchesRequest) Reset() {
 	*x = PostAnnotationsSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[191]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[194]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13843,7 +14049,7 @@ func (x *PostAnnotationsSearchesRequest) String() string {
 func (*PostAnnotationsSearchesRequest) ProtoMessage() {}
 
 func (x *PostAnnotationsSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[191]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[194]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13856,7 +14062,7 @@ func (x *PostAnnotationsSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostAnnotationsSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PostAnnotationsSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{191}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{194}
 }
 
 func (x *PostAnnotationsSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -13893,7 +14099,7 @@ type DeleteAnnotationSearchMetricsRequest struct {
 func (x *DeleteAnnotationSearchMetricsRequest) Reset() {
 	*x = DeleteAnnotationSearchMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[192]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[195]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13906,7 +14112,7 @@ func (x *DeleteAnnotationSearchMetricsRequest) String() string {
 func (*DeleteAnnotationSearchMetricsRequest) ProtoMessage() {}
 
 func (x *DeleteAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[192]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[195]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13919,7 +14125,7 @@ func (x *DeleteAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use DeleteAnnotationSearchMetricsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAnnotationSearchMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{192}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{195}
 }
 
 func (x *DeleteAnnotationSearchMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -13956,7 +14162,7 @@ type PostInputsSearchesRequest struct {
 func (x *PostInputsSearchesRequest) Reset() {
 	*x = PostInputsSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[193]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[196]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -13969,7 +14175,7 @@ func (x *PostInputsSearchesRequest) String() string {
 func (*PostInputsSearchesRequest) ProtoMessage() {}
 
 func (x *PostInputsSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[193]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[196]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -13982,7 +14188,7 @@ func (x *PostInputsSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostInputsSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PostInputsSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{193}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{196}
 }
 
 func (x *PostInputsSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -14027,7 +14233,7 @@ type SingleSearchResponse struct {
 func (x *SingleSearchResponse) Reset() {
 	*x = SingleSearchResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[194]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[197]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14040,7 +14246,7 @@ func (x *SingleSearchResponse) String() string {
 func (*SingleSearchResponse) ProtoMessage() {}
 
 func (x *SingleSearchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[194]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[197]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14053,7 +14259,7 @@ func (x *SingleSearchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleSearchResponse.ProtoReflect.Descriptor instead.
 func (*SingleSearchResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{194}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{197}
 }
 
 func (x *SingleSearchResponse) GetStatus() *status.Status {
@@ -14094,7 +14300,7 @@ type MultiSearchResponse struct {
 func (x *MultiSearchResponse) Reset() {
 	*x = MultiSearchResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[195]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[198]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14107,7 +14313,7 @@ func (x *MultiSearchResponse) String() string {
 func (*MultiSearchResponse) ProtoMessage() {}
 
 func (x *MultiSearchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[195]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[198]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14120,7 +14326,7 @@ func (x *MultiSearchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiSearchResponse.ProtoReflect.Descriptor instead.
 func (*MultiSearchResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{195}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{198}
 }
 
 func (x *MultiSearchResponse) GetStatus() *status.Status {
@@ -14188,7 +14394,7 @@ type PostAnnotationSearchMetricsRequest struct {
 func (x *PostAnnotationSearchMetricsRequest) Reset() {
 	*x = PostAnnotationSearchMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[196]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[199]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14201,7 +14407,7 @@ func (x *PostAnnotationSearchMetricsRequest) String() string {
 func (*PostAnnotationSearchMetricsRequest) ProtoMessage() {}
 
 func (x *PostAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[196]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[199]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14214,7 +14420,7 @@ func (x *PostAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use PostAnnotationSearchMetricsRequest.ProtoReflect.Descriptor instead.
 func (*PostAnnotationSearchMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{196}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{199}
 }
 
 func (x *PostAnnotationSearchMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -14273,7 +14479,7 @@ type GetAnnotationSearchMetricsRequest struct {
 func (x *GetAnnotationSearchMetricsRequest) Reset() {
 	*x = GetAnnotationSearchMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[197]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[200]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14286,7 +14492,7 @@ func (x *GetAnnotationSearchMetricsRequest) String() string {
 func (*GetAnnotationSearchMetricsRequest) ProtoMessage() {}
 
 func (x *GetAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[197]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[200]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14299,7 +14505,7 @@ func (x *GetAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetAnnotationSearchMetricsRequest.ProtoReflect.Descriptor instead.
 func (*GetAnnotationSearchMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{197}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{200}
 }
 
 func (x *GetAnnotationSearchMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -14328,7 +14534,7 @@ type ListAnnotationSearchMetricsRequest struct {
 func (x *ListAnnotationSearchMetricsRequest) Reset() {
 	*x = ListAnnotationSearchMetricsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[198]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[201]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14341,7 +14547,7 @@ func (x *ListAnnotationSearchMetricsRequest) String() string {
 func (*ListAnnotationSearchMetricsRequest) ProtoMessage() {}
 
 func (x *ListAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[198]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[201]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14354,7 +14560,7 @@ func (x *ListAnnotationSearchMetricsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use ListAnnotationSearchMetricsRequest.ProtoReflect.Descriptor instead.
 func (*ListAnnotationSearchMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{198}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{201}
 }
 
 func (x *ListAnnotationSearchMetricsRequest) GetUserAppId() *UserAppIDSet {
@@ -14378,7 +14584,7 @@ type MultiAnnotationSearchMetricsResponse struct {
 func (x *MultiAnnotationSearchMetricsResponse) Reset() {
 	*x = MultiAnnotationSearchMetricsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[199]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[202]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14391,7 +14597,7 @@ func (x *MultiAnnotationSearchMetricsResponse) String() string {
 func (*MultiAnnotationSearchMetricsResponse) ProtoMessage() {}
 
 func (x *MultiAnnotationSearchMetricsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[199]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[202]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14404,7 +14610,7 @@ func (x *MultiAnnotationSearchMetricsResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use MultiAnnotationSearchMetricsResponse.ProtoReflect.Descriptor instead.
 func (*MultiAnnotationSearchMetricsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{199}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{202}
 }
 
 func (x *MultiAnnotationSearchMetricsResponse) GetStatus() *status.Status {
@@ -14439,7 +14645,7 @@ type ListAnnotationFiltersRequest struct {
 func (x *ListAnnotationFiltersRequest) Reset() {
 	*x = ListAnnotationFiltersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[200]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[203]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14452,7 +14658,7 @@ func (x *ListAnnotationFiltersRequest) String() string {
 func (*ListAnnotationFiltersRequest) ProtoMessage() {}
 
 func (x *ListAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[200]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[203]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14465,7 +14671,7 @@ func (x *ListAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAnnotationFiltersRequest.ProtoReflect.Descriptor instead.
 func (*ListAnnotationFiltersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{200}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{203}
 }
 
 func (x *ListAnnotationFiltersRequest) GetUserAppId() *UserAppIDSet {
@@ -14503,7 +14709,7 @@ type GetAnnotationFilterRequest struct {
 func (x *GetAnnotationFilterRequest) Reset() {
 	*x = GetAnnotationFilterRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[201]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[204]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14516,7 +14722,7 @@ func (x *GetAnnotationFilterRequest) String() string {
 func (*GetAnnotationFilterRequest) ProtoMessage() {}
 
 func (x *GetAnnotationFilterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[201]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[204]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14529,7 +14735,7 @@ func (x *GetAnnotationFilterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAnnotationFilterRequest.ProtoReflect.Descriptor instead.
 func (*GetAnnotationFilterRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{201}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{204}
 }
 
 func (x *GetAnnotationFilterRequest) GetUserAppId() *UserAppIDSet {
@@ -14560,7 +14766,7 @@ type PostAnnotationFiltersRequest struct {
 func (x *PostAnnotationFiltersRequest) Reset() {
 	*x = PostAnnotationFiltersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[202]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[205]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14573,7 +14779,7 @@ func (x *PostAnnotationFiltersRequest) String() string {
 func (*PostAnnotationFiltersRequest) ProtoMessage() {}
 
 func (x *PostAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[202]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[205]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14586,7 +14792,7 @@ func (x *PostAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostAnnotationFiltersRequest.ProtoReflect.Descriptor instead.
 func (*PostAnnotationFiltersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{202}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{205}
 }
 
 func (x *PostAnnotationFiltersRequest) GetUserAppId() *UserAppIDSet {
@@ -14620,7 +14826,7 @@ type PatchAnnotationFiltersRequest struct {
 func (x *PatchAnnotationFiltersRequest) Reset() {
 	*x = PatchAnnotationFiltersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[203]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[206]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14633,7 +14839,7 @@ func (x *PatchAnnotationFiltersRequest) String() string {
 func (*PatchAnnotationFiltersRequest) ProtoMessage() {}
 
 func (x *PatchAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[203]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[206]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14646,7 +14852,7 @@ func (x *PatchAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchAnnotationFiltersRequest.ProtoReflect.Descriptor instead.
 func (*PatchAnnotationFiltersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{203}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{206}
 }
 
 func (x *PatchAnnotationFiltersRequest) GetUserAppId() *UserAppIDSet {
@@ -14684,7 +14890,7 @@ type DeleteAnnotationFiltersRequest struct {
 func (x *DeleteAnnotationFiltersRequest) Reset() {
 	*x = DeleteAnnotationFiltersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[204]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[207]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14697,7 +14903,7 @@ func (x *DeleteAnnotationFiltersRequest) String() string {
 func (*DeleteAnnotationFiltersRequest) ProtoMessage() {}
 
 func (x *DeleteAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[204]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[207]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14710,7 +14916,7 @@ func (x *DeleteAnnotationFiltersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAnnotationFiltersRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAnnotationFiltersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{204}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{207}
 }
 
 func (x *DeleteAnnotationFiltersRequest) GetUserAppId() *UserAppIDSet {
@@ -14740,7 +14946,7 @@ type MultiAnnotationFilterResponse struct {
 func (x *MultiAnnotationFilterResponse) Reset() {
 	*x = MultiAnnotationFilterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[205]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[208]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14753,7 +14959,7 @@ func (x *MultiAnnotationFilterResponse) String() string {
 func (*MultiAnnotationFilterResponse) ProtoMessage() {}
 
 func (x *MultiAnnotationFilterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[205]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[208]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14766,7 +14972,7 @@ func (x *MultiAnnotationFilterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiAnnotationFilterResponse.ProtoReflect.Descriptor instead.
 func (*MultiAnnotationFilterResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{205}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{208}
 }
 
 func (x *MultiAnnotationFilterResponse) GetStatus() *status.Status {
@@ -14796,7 +15002,7 @@ type SingleAnnotationFilterResponse struct {
 func (x *SingleAnnotationFilterResponse) Reset() {
 	*x = SingleAnnotationFilterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[206]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[209]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14809,7 +15015,7 @@ func (x *SingleAnnotationFilterResponse) String() string {
 func (*SingleAnnotationFilterResponse) ProtoMessage() {}
 
 func (x *SingleAnnotationFilterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[206]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[209]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14822,7 +15028,7 @@ func (x *SingleAnnotationFilterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleAnnotationFilterResponse.ProtoReflect.Descriptor instead.
 func (*SingleAnnotationFilterResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{206}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{209}
 }
 
 func (x *SingleAnnotationFilterResponse) GetStatus() *status.Status {
@@ -14855,7 +15061,7 @@ type GetUserRequest struct {
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[207]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[210]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14868,7 +15074,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[207]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[210]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14881,7 +15087,7 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{207}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{210}
 }
 
 func (x *GetUserRequest) GetUserAppId() *UserAppIDSet {
@@ -14911,7 +15117,7 @@ type SingleUserResponse struct {
 func (x *SingleUserResponse) Reset() {
 	*x = SingleUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[208]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[211]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14924,7 +15130,7 @@ func (x *SingleUserResponse) String() string {
 func (*SingleUserResponse) ProtoMessage() {}
 
 func (x *SingleUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[208]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[211]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14937,7 +15143,7 @@ func (x *SingleUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleUserResponse.ProtoReflect.Descriptor instead.
 func (*SingleUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{208}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{211}
 }
 
 func (x *SingleUserResponse) GetStatus() *status.Status {
@@ -14968,7 +15174,7 @@ type PostValidatePasswordRequest struct {
 func (x *PostValidatePasswordRequest) Reset() {
 	*x = PostValidatePasswordRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[209]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[212]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -14981,7 +15187,7 @@ func (x *PostValidatePasswordRequest) String() string {
 func (*PostValidatePasswordRequest) ProtoMessage() {}
 
 func (x *PostValidatePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[209]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[212]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14994,7 +15200,7 @@ func (x *PostValidatePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostValidatePasswordRequest.ProtoReflect.Descriptor instead.
 func (*PostValidatePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{209}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{212}
 }
 
 func (x *PostValidatePasswordRequest) GetUserAppId() *UserAppIDSet {
@@ -15025,7 +15231,7 @@ type SinglePasswordValidationResponse struct {
 func (x *SinglePasswordValidationResponse) Reset() {
 	*x = SinglePasswordValidationResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[210]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[213]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15038,7 +15244,7 @@ func (x *SinglePasswordValidationResponse) String() string {
 func (*SinglePasswordValidationResponse) ProtoMessage() {}
 
 func (x *SinglePasswordValidationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[210]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[213]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15051,7 +15257,7 @@ func (x *SinglePasswordValidationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SinglePasswordValidationResponse.ProtoReflect.Descriptor instead.
 func (*SinglePasswordValidationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{210}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{213}
 }
 
 func (x *SinglePasswordValidationResponse) GetStatus() *status.Status {
@@ -15090,7 +15296,7 @@ type GetWorkflowRequest struct {
 func (x *GetWorkflowRequest) Reset() {
 	*x = GetWorkflowRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[211]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[214]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15103,7 +15309,7 @@ func (x *GetWorkflowRequest) String() string {
 func (*GetWorkflowRequest) ProtoMessage() {}
 
 func (x *GetWorkflowRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[211]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[214]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15116,7 +15322,7 @@ func (x *GetWorkflowRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkflowRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{211}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{214}
 }
 
 func (x *GetWorkflowRequest) GetUserAppId() *UserAppIDSet {
@@ -15220,7 +15426,7 @@ type ListWorkflowsRequest struct {
 func (x *ListWorkflowsRequest) Reset() {
 	*x = ListWorkflowsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[212]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[215]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15233,7 +15439,7 @@ func (x *ListWorkflowsRequest) String() string {
 func (*ListWorkflowsRequest) ProtoMessage() {}
 
 func (x *ListWorkflowsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[212]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[215]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15246,7 +15452,7 @@ func (x *ListWorkflowsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowsRequest.ProtoReflect.Descriptor instead.
 func (*ListWorkflowsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{212}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{215}
 }
 
 func (x *ListWorkflowsRequest) GetUserAppId() *UserAppIDSet {
@@ -15417,7 +15623,7 @@ type PostWorkflowsRequest struct {
 func (x *PostWorkflowsRequest) Reset() {
 	*x = PostWorkflowsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[213]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[216]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15430,7 +15636,7 @@ func (x *PostWorkflowsRequest) String() string {
 func (*PostWorkflowsRequest) ProtoMessage() {}
 
 func (x *PostWorkflowsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[213]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[216]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15443,7 +15649,7 @@ func (x *PostWorkflowsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostWorkflowsRequest.ProtoReflect.Descriptor instead.
 func (*PostWorkflowsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{213}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{216}
 }
 
 func (x *PostWorkflowsRequest) GetUserAppId() *UserAppIDSet {
@@ -15480,7 +15686,7 @@ type PatchWorkflowsRequest struct {
 func (x *PatchWorkflowsRequest) Reset() {
 	*x = PatchWorkflowsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[214]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[217]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15493,7 +15699,7 @@ func (x *PatchWorkflowsRequest) String() string {
 func (*PatchWorkflowsRequest) ProtoMessage() {}
 
 func (x *PatchWorkflowsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[214]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[217]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15506,7 +15712,7 @@ func (x *PatchWorkflowsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchWorkflowsRequest.ProtoReflect.Descriptor instead.
 func (*PatchWorkflowsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{214}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{217}
 }
 
 func (x *PatchWorkflowsRequest) GetUserAppId() *UserAppIDSet {
@@ -15547,7 +15753,7 @@ type PatchWorkflowIdsRequest struct {
 func (x *PatchWorkflowIdsRequest) Reset() {
 	*x = PatchWorkflowIdsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[215]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[218]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15560,7 +15766,7 @@ func (x *PatchWorkflowIdsRequest) String() string {
 func (*PatchWorkflowIdsRequest) ProtoMessage() {}
 
 func (x *PatchWorkflowIdsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[215]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[218]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15573,7 +15779,7 @@ func (x *PatchWorkflowIdsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchWorkflowIdsRequest.ProtoReflect.Descriptor instead.
 func (*PatchWorkflowIdsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{215}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{218}
 }
 
 func (x *PatchWorkflowIdsRequest) GetUserAppId() *UserAppIDSet {
@@ -15610,7 +15816,7 @@ type DeleteWorkflowRequest struct {
 func (x *DeleteWorkflowRequest) Reset() {
 	*x = DeleteWorkflowRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[216]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[219]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15623,7 +15829,7 @@ func (x *DeleteWorkflowRequest) String() string {
 func (*DeleteWorkflowRequest) ProtoMessage() {}
 
 func (x *DeleteWorkflowRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[216]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[219]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15636,7 +15842,7 @@ func (x *DeleteWorkflowRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteWorkflowRequest.ProtoReflect.Descriptor instead.
 func (*DeleteWorkflowRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{216}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{219}
 }
 
 func (x *DeleteWorkflowRequest) GetUserAppId() *UserAppIDSet {
@@ -15667,7 +15873,7 @@ type DeleteWorkflowsRequest struct {
 func (x *DeleteWorkflowsRequest) Reset() {
 	*x = DeleteWorkflowsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[217]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[220]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15680,7 +15886,7 @@ func (x *DeleteWorkflowsRequest) String() string {
 func (*DeleteWorkflowsRequest) ProtoMessage() {}
 
 func (x *DeleteWorkflowsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[217]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[220]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15693,7 +15899,7 @@ func (x *DeleteWorkflowsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteWorkflowsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteWorkflowsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{217}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{220}
 }
 
 func (x *DeleteWorkflowsRequest) GetUserAppId() *UserAppIDSet {
@@ -15730,7 +15936,7 @@ type SingleWorkflowResponse struct {
 func (x *SingleWorkflowResponse) Reset() {
 	*x = SingleWorkflowResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[218]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[221]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15743,7 +15949,7 @@ func (x *SingleWorkflowResponse) String() string {
 func (*SingleWorkflowResponse) ProtoMessage() {}
 
 func (x *SingleWorkflowResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[218]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[221]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15756,7 +15962,7 @@ func (x *SingleWorkflowResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleWorkflowResponse.ProtoReflect.Descriptor instead.
 func (*SingleWorkflowResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{218}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{221}
 }
 
 func (x *SingleWorkflowResponse) GetStatus() *status.Status {
@@ -15786,7 +15992,7 @@ type MultiWorkflowResponse struct {
 func (x *MultiWorkflowResponse) Reset() {
 	*x = MultiWorkflowResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[219]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[222]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15799,7 +16005,7 @@ func (x *MultiWorkflowResponse) String() string {
 func (*MultiWorkflowResponse) ProtoMessage() {}
 
 func (x *MultiWorkflowResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[219]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[222]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15812,7 +16018,7 @@ func (x *MultiWorkflowResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiWorkflowResponse.ProtoReflect.Descriptor instead.
 func (*MultiWorkflowResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{219}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{222}
 }
 
 func (x *MultiWorkflowResponse) GetStatus() *status.Status {
@@ -15875,7 +16081,7 @@ type PostWorkflowResultsRequest struct {
 func (x *PostWorkflowResultsRequest) Reset() {
 	*x = PostWorkflowResultsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[220]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[223]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15888,7 +16094,7 @@ func (x *PostWorkflowResultsRequest) String() string {
 func (*PostWorkflowResultsRequest) ProtoMessage() {}
 
 func (x *PostWorkflowResultsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[220]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[223]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15901,7 +16107,7 @@ func (x *PostWorkflowResultsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostWorkflowResultsRequest.ProtoReflect.Descriptor instead.
 func (*PostWorkflowResultsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{220}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{223}
 }
 
 func (x *PostWorkflowResultsRequest) GetUserAppId() *UserAppIDSet {
@@ -15983,7 +16189,7 @@ type PostWorkflowResultsResponse struct {
 func (x *PostWorkflowResultsResponse) Reset() {
 	*x = PostWorkflowResultsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[221]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[224]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -15996,7 +16202,7 @@ func (x *PostWorkflowResultsResponse) String() string {
 func (*PostWorkflowResultsResponse) ProtoMessage() {}
 
 func (x *PostWorkflowResultsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[221]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[224]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16009,7 +16215,7 @@ func (x *PostWorkflowResultsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostWorkflowResultsResponse.ProtoReflect.Descriptor instead.
 func (*PostWorkflowResultsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{221}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{224}
 }
 
 func (x *PostWorkflowResultsResponse) GetStatus() *status.Status {
@@ -16060,7 +16266,7 @@ type ListWorkflowVersionsRequest struct {
 func (x *ListWorkflowVersionsRequest) Reset() {
 	*x = ListWorkflowVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[222]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[225]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16073,7 +16279,7 @@ func (x *ListWorkflowVersionsRequest) String() string {
 func (*ListWorkflowVersionsRequest) ProtoMessage() {}
 
 func (x *ListWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[222]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[225]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16086,7 +16292,7 @@ func (x *ListWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkflowVersionsRequest.ProtoReflect.Descriptor instead.
 func (*ListWorkflowVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{222}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{225}
 }
 
 func (x *ListWorkflowVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -16133,7 +16339,7 @@ type GetWorkflowVersionRequest struct {
 func (x *GetWorkflowVersionRequest) Reset() {
 	*x = GetWorkflowVersionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[223]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[226]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16146,7 +16352,7 @@ func (x *GetWorkflowVersionRequest) String() string {
 func (*GetWorkflowVersionRequest) ProtoMessage() {}
 
 func (x *GetWorkflowVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[223]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[226]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16159,7 +16365,7 @@ func (x *GetWorkflowVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkflowVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkflowVersionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{223}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{226}
 }
 
 func (x *GetWorkflowVersionRequest) GetUserAppId() *UserAppIDSet {
@@ -16199,7 +16405,7 @@ type DeleteWorkflowVersionsRequest struct {
 func (x *DeleteWorkflowVersionsRequest) Reset() {
 	*x = DeleteWorkflowVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[224]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[227]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16212,7 +16418,7 @@ func (x *DeleteWorkflowVersionsRequest) String() string {
 func (*DeleteWorkflowVersionsRequest) ProtoMessage() {}
 
 func (x *DeleteWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[224]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[227]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16225,7 +16431,7 @@ func (x *DeleteWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteWorkflowVersionsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteWorkflowVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{224}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{227}
 }
 
 func (x *DeleteWorkflowVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -16268,7 +16474,7 @@ type PatchWorkflowVersionsRequest struct {
 func (x *PatchWorkflowVersionsRequest) Reset() {
 	*x = PatchWorkflowVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[225]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[228]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16281,7 +16487,7 @@ func (x *PatchWorkflowVersionsRequest) String() string {
 func (*PatchWorkflowVersionsRequest) ProtoMessage() {}
 
 func (x *PatchWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[225]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[228]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16294,7 +16500,7 @@ func (x *PatchWorkflowVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchWorkflowVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PatchWorkflowVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{225}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{228}
 }
 
 func (x *PatchWorkflowVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -16338,7 +16544,7 @@ type MultiWorkflowVersionResponse struct {
 func (x *MultiWorkflowVersionResponse) Reset() {
 	*x = MultiWorkflowVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[226]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[229]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16351,7 +16557,7 @@ func (x *MultiWorkflowVersionResponse) String() string {
 func (*MultiWorkflowVersionResponse) ProtoMessage() {}
 
 func (x *MultiWorkflowVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[226]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[229]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16364,7 +16570,7 @@ func (x *MultiWorkflowVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiWorkflowVersionResponse.ProtoReflect.Descriptor instead.
 func (*MultiWorkflowVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{226}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{229}
 }
 
 func (x *MultiWorkflowVersionResponse) GetStatus() *status.Status {
@@ -16394,7 +16600,7 @@ type SingleWorkflowVersionResponse struct {
 func (x *SingleWorkflowVersionResponse) Reset() {
 	*x = SingleWorkflowVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[227]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[230]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16407,7 +16613,7 @@ func (x *SingleWorkflowVersionResponse) String() string {
 func (*SingleWorkflowVersionResponse) ProtoMessage() {}
 
 func (x *SingleWorkflowVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[227]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[230]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16420,7 +16626,7 @@ func (x *SingleWorkflowVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleWorkflowVersionResponse.ProtoReflect.Descriptor instead.
 func (*SingleWorkflowVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{227}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{230}
 }
 
 func (x *SingleWorkflowVersionResponse) GetStatus() *status.Status {
@@ -16451,7 +16657,7 @@ type PostAppDuplicationsRequest struct {
 func (x *PostAppDuplicationsRequest) Reset() {
 	*x = PostAppDuplicationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[228]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[231]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16464,7 +16670,7 @@ func (x *PostAppDuplicationsRequest) String() string {
 func (*PostAppDuplicationsRequest) ProtoMessage() {}
 
 func (x *PostAppDuplicationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[228]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[231]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16477,7 +16683,7 @@ func (x *PostAppDuplicationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostAppDuplicationsRequest.ProtoReflect.Descriptor instead.
 func (*PostAppDuplicationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{228}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{231}
 }
 
 func (x *PostAppDuplicationsRequest) GetUserAppId() *UserAppIDSet {
@@ -16508,7 +16714,7 @@ type GetAppDuplicationRequest struct {
 func (x *GetAppDuplicationRequest) Reset() {
 	*x = GetAppDuplicationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[229]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[232]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16521,7 +16727,7 @@ func (x *GetAppDuplicationRequest) String() string {
 func (*GetAppDuplicationRequest) ProtoMessage() {}
 
 func (x *GetAppDuplicationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[229]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[232]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16534,7 +16740,7 @@ func (x *GetAppDuplicationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppDuplicationRequest.ProtoReflect.Descriptor instead.
 func (*GetAppDuplicationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{229}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{232}
 }
 
 func (x *GetAppDuplicationRequest) GetUserAppId() *UserAppIDSet {
@@ -16570,7 +16776,7 @@ type ListAppDuplicationsRequest struct {
 func (x *ListAppDuplicationsRequest) Reset() {
 	*x = ListAppDuplicationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[230]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[233]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16583,7 +16789,7 @@ func (x *ListAppDuplicationsRequest) String() string {
 func (*ListAppDuplicationsRequest) ProtoMessage() {}
 
 func (x *ListAppDuplicationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[230]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[233]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16596,7 +16802,7 @@ func (x *ListAppDuplicationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAppDuplicationsRequest.ProtoReflect.Descriptor instead.
 func (*ListAppDuplicationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{230}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{233}
 }
 
 func (x *ListAppDuplicationsRequest) GetUserAppId() *UserAppIDSet {
@@ -16633,7 +16839,7 @@ type MultiAppDuplicationsResponse struct {
 func (x *MultiAppDuplicationsResponse) Reset() {
 	*x = MultiAppDuplicationsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[231]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[234]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16646,7 +16852,7 @@ func (x *MultiAppDuplicationsResponse) String() string {
 func (*MultiAppDuplicationsResponse) ProtoMessage() {}
 
 func (x *MultiAppDuplicationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[231]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[234]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16659,7 +16865,7 @@ func (x *MultiAppDuplicationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiAppDuplicationsResponse.ProtoReflect.Descriptor instead.
 func (*MultiAppDuplicationsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{231}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{234}
 }
 
 func (x *MultiAppDuplicationsResponse) GetStatus() *status.Status {
@@ -16689,7 +16895,7 @@ type SingleAppDuplicationResponse struct {
 func (x *SingleAppDuplicationResponse) Reset() {
 	*x = SingleAppDuplicationResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[232]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[235]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16702,7 +16908,7 @@ func (x *SingleAppDuplicationResponse) String() string {
 func (*SingleAppDuplicationResponse) ProtoMessage() {}
 
 func (x *SingleAppDuplicationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[232]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[235]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16715,7 +16921,7 @@ func (x *SingleAppDuplicationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleAppDuplicationResponse.ProtoReflect.Descriptor instead.
 func (*SingleAppDuplicationResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{232}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{235}
 }
 
 func (x *SingleAppDuplicationResponse) GetStatus() *status.Status {
@@ -16745,7 +16951,7 @@ type PostTasksRequest struct {
 func (x *PostTasksRequest) Reset() {
 	*x = PostTasksRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[233]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[236]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16758,7 +16964,7 @@ func (x *PostTasksRequest) String() string {
 func (*PostTasksRequest) ProtoMessage() {}
 
 func (x *PostTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[233]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[236]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16771,7 +16977,7 @@ func (x *PostTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostTasksRequest.ProtoReflect.Descriptor instead.
 func (*PostTasksRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{233}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{236}
 }
 
 func (x *PostTasksRequest) GetUserAppId() *UserAppIDSet {
@@ -16813,7 +17019,7 @@ type GetTaskRequest struct {
 func (x *GetTaskRequest) Reset() {
 	*x = GetTaskRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[234]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[237]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16826,7 +17032,7 @@ func (x *GetTaskRequest) String() string {
 func (*GetTaskRequest) ProtoMessage() {}
 
 func (x *GetTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[234]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[237]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16839,7 +17045,7 @@ func (x *GetTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskRequest.ProtoReflect.Descriptor instead.
 func (*GetTaskRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{234}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{237}
 }
 
 func (x *GetTaskRequest) GetUserAppId() *UserAppIDSet {
@@ -16908,7 +17114,7 @@ type ListTasksRequest struct {
 func (x *ListTasksRequest) Reset() {
 	*x = ListTasksRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[235]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[238]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -16921,7 +17127,7 @@ func (x *ListTasksRequest) String() string {
 func (*ListTasksRequest) ProtoMessage() {}
 
 func (x *ListTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[235]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[238]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -16934,7 +17140,7 @@ func (x *ListTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTasksRequest.ProtoReflect.Descriptor instead.
 func (*ListTasksRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{235}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{238}
 }
 
 func (x *ListTasksRequest) GetUserAppId() *UserAppIDSet {
@@ -17030,7 +17236,7 @@ type PatchTasksRequest struct {
 func (x *PatchTasksRequest) Reset() {
 	*x = PatchTasksRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[236]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[239]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17043,7 +17249,7 @@ func (x *PatchTasksRequest) String() string {
 func (*PatchTasksRequest) ProtoMessage() {}
 
 func (x *PatchTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[236]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[239]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17056,7 +17262,7 @@ func (x *PatchTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchTasksRequest.ProtoReflect.Descriptor instead.
 func (*PatchTasksRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{236}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{239}
 }
 
 func (x *PatchTasksRequest) GetUserAppId() *UserAppIDSet {
@@ -17093,7 +17299,7 @@ type DeleteTasksRequest struct {
 func (x *DeleteTasksRequest) Reset() {
 	*x = DeleteTasksRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[237]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[240]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17106,7 +17312,7 @@ func (x *DeleteTasksRequest) String() string {
 func (*DeleteTasksRequest) ProtoMessage() {}
 
 func (x *DeleteTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[237]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[240]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17119,7 +17325,7 @@ func (x *DeleteTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTasksRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTasksRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{237}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{240}
 }
 
 func (x *DeleteTasksRequest) GetUserAppId() *UserAppIDSet {
@@ -17149,7 +17355,7 @@ type MultiTaskResponse struct {
 func (x *MultiTaskResponse) Reset() {
 	*x = MultiTaskResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[238]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[241]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17162,7 +17368,7 @@ func (x *MultiTaskResponse) String() string {
 func (*MultiTaskResponse) ProtoMessage() {}
 
 func (x *MultiTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[238]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[241]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17175,7 +17381,7 @@ func (x *MultiTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiTaskResponse.ProtoReflect.Descriptor instead.
 func (*MultiTaskResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{238}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{241}
 }
 
 func (x *MultiTaskResponse) GetStatus() *status.Status {
@@ -17205,7 +17411,7 @@ type SingleTaskResponse struct {
 func (x *SingleTaskResponse) Reset() {
 	*x = SingleTaskResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[239]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[242]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17218,7 +17424,7 @@ func (x *SingleTaskResponse) String() string {
 func (*SingleTaskResponse) ProtoMessage() {}
 
 func (x *SingleTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[239]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[242]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17231,7 +17437,7 @@ func (x *SingleTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleTaskResponse.ProtoReflect.Descriptor instead.
 func (*SingleTaskResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{239}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{242}
 }
 
 func (x *SingleTaskResponse) GetStatus() *status.Status {
@@ -17279,7 +17485,7 @@ type GetTaskCountRequest struct {
 func (x *GetTaskCountRequest) Reset() {
 	*x = GetTaskCountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[240]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[243]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17292,7 +17498,7 @@ func (x *GetTaskCountRequest) String() string {
 func (*GetTaskCountRequest) ProtoMessage() {}
 
 func (x *GetTaskCountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[240]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[243]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17305,7 +17511,7 @@ func (x *GetTaskCountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskCountRequest.ProtoReflect.Descriptor instead.
 func (*GetTaskCountRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{240}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{243}
 }
 
 func (x *GetTaskCountRequest) GetUserAppId() *UserAppIDSet {
@@ -17358,7 +17564,7 @@ type SingleTaskCountResponse struct {
 func (x *SingleTaskCountResponse) Reset() {
 	*x = SingleTaskCountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[241]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[244]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17371,7 +17577,7 @@ func (x *SingleTaskCountResponse) String() string {
 func (*SingleTaskCountResponse) ProtoMessage() {}
 
 func (x *SingleTaskCountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[241]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[244]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17384,7 +17590,7 @@ func (x *SingleTaskCountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleTaskCountResponse.ProtoReflect.Descriptor instead.
 func (*SingleTaskCountResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{241}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{244}
 }
 
 func (x *SingleTaskCountResponse) GetStatus() *status.Status {
@@ -17428,7 +17634,7 @@ type PostLabelOrdersRequest struct {
 func (x *PostLabelOrdersRequest) Reset() {
 	*x = PostLabelOrdersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[242]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[245]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17441,7 +17647,7 @@ func (x *PostLabelOrdersRequest) String() string {
 func (*PostLabelOrdersRequest) ProtoMessage() {}
 
 func (x *PostLabelOrdersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[242]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[245]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17454,7 +17660,7 @@ func (x *PostLabelOrdersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostLabelOrdersRequest.ProtoReflect.Descriptor instead.
 func (*PostLabelOrdersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{242}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{245}
 }
 
 func (x *PostLabelOrdersRequest) GetUserAppId() *UserAppIDSet {
@@ -17484,7 +17690,7 @@ type GetLabelOrderRequest struct {
 func (x *GetLabelOrderRequest) Reset() {
 	*x = GetLabelOrderRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[243]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[246]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17497,7 +17703,7 @@ func (x *GetLabelOrderRequest) String() string {
 func (*GetLabelOrderRequest) ProtoMessage() {}
 
 func (x *GetLabelOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[243]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[246]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17510,7 +17716,7 @@ func (x *GetLabelOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLabelOrderRequest.ProtoReflect.Descriptor instead.
 func (*GetLabelOrderRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{243}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{246}
 }
 
 func (x *GetLabelOrderRequest) GetUserAppId() *UserAppIDSet {
@@ -17545,7 +17751,7 @@ type ListLabelOrdersRequest struct {
 func (x *ListLabelOrdersRequest) Reset() {
 	*x = ListLabelOrdersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[244]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[247]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17558,7 +17764,7 @@ func (x *ListLabelOrdersRequest) String() string {
 func (*ListLabelOrdersRequest) ProtoMessage() {}
 
 func (x *ListLabelOrdersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[244]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[247]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17571,7 +17777,7 @@ func (x *ListLabelOrdersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLabelOrdersRequest.ProtoReflect.Descriptor instead.
 func (*ListLabelOrdersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{244}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{247}
 }
 
 func (x *ListLabelOrdersRequest) GetUserAppId() *UserAppIDSet {
@@ -17611,7 +17817,7 @@ type PatchLabelOrdersRequest struct {
 func (x *PatchLabelOrdersRequest) Reset() {
 	*x = PatchLabelOrdersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[245]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[248]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17624,7 +17830,7 @@ func (x *PatchLabelOrdersRequest) String() string {
 func (*PatchLabelOrdersRequest) ProtoMessage() {}
 
 func (x *PatchLabelOrdersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[245]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[248]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17637,7 +17843,7 @@ func (x *PatchLabelOrdersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchLabelOrdersRequest.ProtoReflect.Descriptor instead.
 func (*PatchLabelOrdersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{245}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{248}
 }
 
 func (x *PatchLabelOrdersRequest) GetUserAppId() *UserAppIDSet {
@@ -17674,7 +17880,7 @@ type DeleteLabelOrdersRequest struct {
 func (x *DeleteLabelOrdersRequest) Reset() {
 	*x = DeleteLabelOrdersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[246]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[249]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17687,7 +17893,7 @@ func (x *DeleteLabelOrdersRequest) String() string {
 func (*DeleteLabelOrdersRequest) ProtoMessage() {}
 
 func (x *DeleteLabelOrdersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[246]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[249]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17700,7 +17906,7 @@ func (x *DeleteLabelOrdersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteLabelOrdersRequest.ProtoReflect.Descriptor instead.
 func (*DeleteLabelOrdersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{246}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{249}
 }
 
 func (x *DeleteLabelOrdersRequest) GetUserAppId() *UserAppIDSet {
@@ -17730,7 +17936,7 @@ type MultiLabelOrderResponse struct {
 func (x *MultiLabelOrderResponse) Reset() {
 	*x = MultiLabelOrderResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[247]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[250]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17743,7 +17949,7 @@ func (x *MultiLabelOrderResponse) String() string {
 func (*MultiLabelOrderResponse) ProtoMessage() {}
 
 func (x *MultiLabelOrderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[247]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[250]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17756,7 +17962,7 @@ func (x *MultiLabelOrderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiLabelOrderResponse.ProtoReflect.Descriptor instead.
 func (*MultiLabelOrderResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{247}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{250}
 }
 
 func (x *MultiLabelOrderResponse) GetStatus() *status.Status {
@@ -17786,7 +17992,7 @@ type SingleLabelOrderResponse struct {
 func (x *SingleLabelOrderResponse) Reset() {
 	*x = SingleLabelOrderResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[248]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[251]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17799,7 +18005,7 @@ func (x *SingleLabelOrderResponse) String() string {
 func (*SingleLabelOrderResponse) ProtoMessage() {}
 
 func (x *SingleLabelOrderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[248]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[251]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17812,7 +18018,7 @@ func (x *SingleLabelOrderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleLabelOrderResponse.ProtoReflect.Descriptor instead.
 func (*SingleLabelOrderResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{248}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{251}
 }
 
 func (x *SingleLabelOrderResponse) GetStatus() *status.Status {
@@ -17842,7 +18048,7 @@ type PostCollectorsRequest struct {
 func (x *PostCollectorsRequest) Reset() {
 	*x = PostCollectorsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[249]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[252]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17855,7 +18061,7 @@ func (x *PostCollectorsRequest) String() string {
 func (*PostCollectorsRequest) ProtoMessage() {}
 
 func (x *PostCollectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[249]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[252]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17868,7 +18074,7 @@ func (x *PostCollectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostCollectorsRequest.ProtoReflect.Descriptor instead.
 func (*PostCollectorsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{249}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{252}
 }
 
 func (x *PostCollectorsRequest) GetUserAppId() *UserAppIDSet {
@@ -17901,7 +18107,7 @@ type PatchCollectorsRequest struct {
 func (x *PatchCollectorsRequest) Reset() {
 	*x = PatchCollectorsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[250]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[253]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17914,7 +18120,7 @@ func (x *PatchCollectorsRequest) String() string {
 func (*PatchCollectorsRequest) ProtoMessage() {}
 
 func (x *PatchCollectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[250]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[253]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17927,7 +18133,7 @@ func (x *PatchCollectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchCollectorsRequest.ProtoReflect.Descriptor instead.
 func (*PatchCollectorsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{250}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{253}
 }
 
 func (x *PatchCollectorsRequest) GetUserAppId() *UserAppIDSet {
@@ -17965,7 +18171,7 @@ type DeleteCollectorsRequest struct {
 func (x *DeleteCollectorsRequest) Reset() {
 	*x = DeleteCollectorsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[251]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[254]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -17978,7 +18184,7 @@ func (x *DeleteCollectorsRequest) String() string {
 func (*DeleteCollectorsRequest) ProtoMessage() {}
 
 func (x *DeleteCollectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[251]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[254]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -17991,7 +18197,7 @@ func (x *DeleteCollectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteCollectorsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteCollectorsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{251}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{254}
 }
 
 func (x *DeleteCollectorsRequest) GetUserAppId() *UserAppIDSet {
@@ -18028,7 +18234,7 @@ type GetCollectorRequest struct {
 func (x *GetCollectorRequest) Reset() {
 	*x = GetCollectorRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[252]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[255]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18041,7 +18247,7 @@ func (x *GetCollectorRequest) String() string {
 func (*GetCollectorRequest) ProtoMessage() {}
 
 func (x *GetCollectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[252]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[255]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18054,7 +18260,7 @@ func (x *GetCollectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCollectorRequest.ProtoReflect.Descriptor instead.
 func (*GetCollectorRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{252}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{255}
 }
 
 func (x *GetCollectorRequest) GetUserAppId() *UserAppIDSet {
@@ -18089,7 +18295,7 @@ type ListCollectorsRequest struct {
 func (x *ListCollectorsRequest) Reset() {
 	*x = ListCollectorsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[253]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[256]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18102,7 +18308,7 @@ func (x *ListCollectorsRequest) String() string {
 func (*ListCollectorsRequest) ProtoMessage() {}
 
 func (x *ListCollectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[253]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[256]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18115,7 +18321,7 @@ func (x *ListCollectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCollectorsRequest.ProtoReflect.Descriptor instead.
 func (*ListCollectorsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{253}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{256}
 }
 
 func (x *ListCollectorsRequest) GetUserAppId() *UserAppIDSet {
@@ -18152,7 +18358,7 @@ type MultiCollectorResponse struct {
 func (x *MultiCollectorResponse) Reset() {
 	*x = MultiCollectorResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[254]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[257]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18165,7 +18371,7 @@ func (x *MultiCollectorResponse) String() string {
 func (*MultiCollectorResponse) ProtoMessage() {}
 
 func (x *MultiCollectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[254]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[257]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18178,7 +18384,7 @@ func (x *MultiCollectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiCollectorResponse.ProtoReflect.Descriptor instead.
 func (*MultiCollectorResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{254}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{257}
 }
 
 func (x *MultiCollectorResponse) GetStatus() *status.Status {
@@ -18208,7 +18414,7 @@ type SingleCollectorResponse struct {
 func (x *SingleCollectorResponse) Reset() {
 	*x = SingleCollectorResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[255]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[258]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18221,7 +18427,7 @@ func (x *SingleCollectorResponse) String() string {
 func (*SingleCollectorResponse) ProtoMessage() {}
 
 func (x *SingleCollectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[255]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[258]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18234,7 +18440,7 @@ func (x *SingleCollectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleCollectorResponse.ProtoReflect.Descriptor instead.
 func (*SingleCollectorResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{255}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{258}
 }
 
 func (x *SingleCollectorResponse) GetStatus() *status.Status {
@@ -18266,7 +18472,7 @@ type PostStatValuesRequest struct {
 func (x *PostStatValuesRequest) Reset() {
 	*x = PostStatValuesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[256]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[259]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18279,7 +18485,7 @@ func (x *PostStatValuesRequest) String() string {
 func (*PostStatValuesRequest) ProtoMessage() {}
 
 func (x *PostStatValuesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[256]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[259]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18292,7 +18498,7 @@ func (x *PostStatValuesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostStatValuesRequest.ProtoReflect.Descriptor instead.
 func (*PostStatValuesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{256}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{259}
 }
 
 func (x *PostStatValuesRequest) GetUserAppId() *UserAppIDSet {
@@ -18324,7 +18530,7 @@ type MultiStatValueResponse struct {
 func (x *MultiStatValueResponse) Reset() {
 	*x = MultiStatValueResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[257]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[260]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18337,7 +18543,7 @@ func (x *MultiStatValueResponse) String() string {
 func (*MultiStatValueResponse) ProtoMessage() {}
 
 func (x *MultiStatValueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[257]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[260]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18350,7 +18556,7 @@ func (x *MultiStatValueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiStatValueResponse.ProtoReflect.Descriptor instead.
 func (*MultiStatValueResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{257}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{260}
 }
 
 func (x *MultiStatValueResponse) GetStatus() *status.Status {
@@ -18382,7 +18588,7 @@ type PostStatValuesAggregateRequest struct {
 func (x *PostStatValuesAggregateRequest) Reset() {
 	*x = PostStatValuesAggregateRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[258]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[261]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18395,7 +18601,7 @@ func (x *PostStatValuesAggregateRequest) String() string {
 func (*PostStatValuesAggregateRequest) ProtoMessage() {}
 
 func (x *PostStatValuesAggregateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[258]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[261]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18408,7 +18614,7 @@ func (x *PostStatValuesAggregateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostStatValuesAggregateRequest.ProtoReflect.Descriptor instead.
 func (*PostStatValuesAggregateRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{258}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{261}
 }
 
 func (x *PostStatValuesAggregateRequest) GetUserAppId() *UserAppIDSet {
@@ -18440,7 +18646,7 @@ type MultiStatValueAggregateResponse struct {
 func (x *MultiStatValueAggregateResponse) Reset() {
 	*x = MultiStatValueAggregateResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[259]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[262]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18453,7 +18659,7 @@ func (x *MultiStatValueAggregateResponse) String() string {
 func (*MultiStatValueAggregateResponse) ProtoMessage() {}
 
 func (x *MultiStatValueAggregateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[259]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[262]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18466,7 +18672,7 @@ func (x *MultiStatValueAggregateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiStatValueAggregateResponse.ProtoReflect.Descriptor instead.
 func (*MultiStatValueAggregateResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{259}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{262}
 }
 
 func (x *MultiStatValueAggregateResponse) GetStatus() *status.Status {
@@ -18497,7 +18703,7 @@ type GetModuleRequest struct {
 func (x *GetModuleRequest) Reset() {
 	*x = GetModuleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[260]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[263]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18510,7 +18716,7 @@ func (x *GetModuleRequest) String() string {
 func (*GetModuleRequest) ProtoMessage() {}
 
 func (x *GetModuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[260]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[263]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18523,7 +18729,7 @@ func (x *GetModuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModuleRequest.ProtoReflect.Descriptor instead.
 func (*GetModuleRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{260}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{263}
 }
 
 func (x *GetModuleRequest) GetUserAppId() *UserAppIDSet {
@@ -18603,7 +18809,7 @@ type ListModulesRequest struct {
 func (x *ListModulesRequest) Reset() {
 	*x = ListModulesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[261]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[264]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18616,7 +18822,7 @@ func (x *ListModulesRequest) String() string {
 func (*ListModulesRequest) ProtoMessage() {}
 
 func (x *ListModulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[261]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[264]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18629,7 +18835,7 @@ func (x *ListModulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModulesRequest.ProtoReflect.Descriptor instead.
 func (*ListModulesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{261}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{264}
 }
 
 func (x *ListModulesRequest) GetUserAppId() *UserAppIDSet {
@@ -18785,7 +18991,7 @@ type PostModulesRequest struct {
 func (x *PostModulesRequest) Reset() {
 	*x = PostModulesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[262]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[265]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18798,7 +19004,7 @@ func (x *PostModulesRequest) String() string {
 func (*PostModulesRequest) ProtoMessage() {}
 
 func (x *PostModulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[262]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[265]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18811,7 +19017,7 @@ func (x *PostModulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModulesRequest.ProtoReflect.Descriptor instead.
 func (*PostModulesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{262}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{265}
 }
 
 func (x *PostModulesRequest) GetUserAppId() *UserAppIDSet {
@@ -18847,7 +19053,7 @@ type PatchModulesRequest struct {
 func (x *PatchModulesRequest) Reset() {
 	*x = PatchModulesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[263]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[266]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18860,7 +19066,7 @@ func (x *PatchModulesRequest) String() string {
 func (*PatchModulesRequest) ProtoMessage() {}
 
 func (x *PatchModulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[263]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[266]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18873,7 +19079,7 @@ func (x *PatchModulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModulesRequest.ProtoReflect.Descriptor instead.
 func (*PatchModulesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{263}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{266}
 }
 
 func (x *PatchModulesRequest) GetUserAppId() *UserAppIDSet {
@@ -18910,7 +19116,7 @@ type DeleteModulesRequest struct {
 func (x *DeleteModulesRequest) Reset() {
 	*x = DeleteModulesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[264]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[267]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18923,7 +19129,7 @@ func (x *DeleteModulesRequest) String() string {
 func (*DeleteModulesRequest) ProtoMessage() {}
 
 func (x *DeleteModulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[264]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[267]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18936,7 +19142,7 @@ func (x *DeleteModulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteModulesRequest.ProtoReflect.Descriptor instead.
 func (*DeleteModulesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{264}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{267}
 }
 
 func (x *DeleteModulesRequest) GetUserAppId() *UserAppIDSet {
@@ -18966,7 +19172,7 @@ type SingleModuleResponse struct {
 func (x *SingleModuleResponse) Reset() {
 	*x = SingleModuleResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[265]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[268]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -18979,7 +19185,7 @@ func (x *SingleModuleResponse) String() string {
 func (*SingleModuleResponse) ProtoMessage() {}
 
 func (x *SingleModuleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[265]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[268]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -18992,7 +19198,7 @@ func (x *SingleModuleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModuleResponse.ProtoReflect.Descriptor instead.
 func (*SingleModuleResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{265}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{268}
 }
 
 func (x *SingleModuleResponse) GetStatus() *status.Status {
@@ -19022,7 +19228,7 @@ type MultiModuleResponse struct {
 func (x *MultiModuleResponse) Reset() {
 	*x = MultiModuleResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[266]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[269]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19035,7 +19241,7 @@ func (x *MultiModuleResponse) String() string {
 func (*MultiModuleResponse) ProtoMessage() {}
 
 func (x *MultiModuleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[266]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[269]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19048,7 +19254,7 @@ func (x *MultiModuleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModuleResponse.ProtoReflect.Descriptor instead.
 func (*MultiModuleResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{266}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{269}
 }
 
 func (x *MultiModuleResponse) GetStatus() *status.Status {
@@ -19079,7 +19285,7 @@ type GetModuleVersionRequest struct {
 func (x *GetModuleVersionRequest) Reset() {
 	*x = GetModuleVersionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[267]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[270]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19092,7 +19298,7 @@ func (x *GetModuleVersionRequest) String() string {
 func (*GetModuleVersionRequest) ProtoMessage() {}
 
 func (x *GetModuleVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[267]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[270]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19105,7 +19311,7 @@ func (x *GetModuleVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModuleVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetModuleVersionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{267}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{270}
 }
 
 func (x *GetModuleVersionRequest) GetUserAppId() *UserAppIDSet {
@@ -19148,7 +19354,7 @@ type ListModuleVersionsRequest struct {
 func (x *ListModuleVersionsRequest) Reset() {
 	*x = ListModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[268]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[271]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19161,7 +19367,7 @@ func (x *ListModuleVersionsRequest) String() string {
 func (*ListModuleVersionsRequest) ProtoMessage() {}
 
 func (x *ListModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[268]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[271]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19174,7 +19380,7 @@ func (x *ListModuleVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*ListModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{268}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{271}
 }
 
 func (x *ListModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19220,7 +19426,7 @@ type PostModuleVersionsRequest struct {
 func (x *PostModuleVersionsRequest) Reset() {
 	*x = PostModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[269]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[272]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19233,7 +19439,7 @@ func (x *PostModuleVersionsRequest) String() string {
 func (*PostModuleVersionsRequest) ProtoMessage() {}
 
 func (x *PostModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[269]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[272]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19246,7 +19452,7 @@ func (x *PostModuleVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PostModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{269}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{272}
 }
 
 func (x *PostModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19298,7 +19504,7 @@ type PatchModuleVersionsRequest struct {
 func (x *PatchModuleVersionsRequest) Reset() {
 	*x = PatchModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[270]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[273]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19311,7 +19517,7 @@ func (x *PatchModuleVersionsRequest) String() string {
 func (*PatchModuleVersionsRequest) ProtoMessage() {}
 
 func (x *PatchModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[270]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[273]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19324,7 +19530,7 @@ func (x *PatchModuleVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PatchModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{270}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{273}
 }
 
 func (x *PatchModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19369,7 +19575,7 @@ type DeleteModuleVersionsRequest struct {
 func (x *DeleteModuleVersionsRequest) Reset() {
 	*x = DeleteModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[271]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[274]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19382,7 +19588,7 @@ func (x *DeleteModuleVersionsRequest) String() string {
 func (*DeleteModuleVersionsRequest) ProtoMessage() {}
 
 func (x *DeleteModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[271]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[274]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19395,7 +19601,7 @@ func (x *DeleteModuleVersionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{271}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{274}
 }
 
 func (x *DeleteModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19433,7 +19639,7 @@ type GetModuleVersionUsageCountRequest struct {
 func (x *GetModuleVersionUsageCountRequest) Reset() {
 	*x = GetModuleVersionUsageCountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[272]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[275]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19446,7 +19652,7 @@ func (x *GetModuleVersionUsageCountRequest) String() string {
 func (*GetModuleVersionUsageCountRequest) ProtoMessage() {}
 
 func (x *GetModuleVersionUsageCountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[272]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[275]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19459,7 +19665,7 @@ func (x *GetModuleVersionUsageCountRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetModuleVersionUsageCountRequest.ProtoReflect.Descriptor instead.
 func (*GetModuleVersionUsageCountRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{272}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{275}
 }
 
 func (x *GetModuleVersionUsageCountRequest) GetUserAppId() *UserAppIDSet {
@@ -19496,7 +19702,7 @@ type SingleModuleVersionResponse struct {
 func (x *SingleModuleVersionResponse) Reset() {
 	*x = SingleModuleVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[273]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[276]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19509,7 +19715,7 @@ func (x *SingleModuleVersionResponse) String() string {
 func (*SingleModuleVersionResponse) ProtoMessage() {}
 
 func (x *SingleModuleVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[273]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[276]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19522,7 +19728,7 @@ func (x *SingleModuleVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleModuleVersionResponse.ProtoReflect.Descriptor instead.
 func (*SingleModuleVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{273}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{276}
 }
 
 func (x *SingleModuleVersionResponse) GetStatus() *status.Status {
@@ -19552,7 +19758,7 @@ type MultiModuleVersionResponse struct {
 func (x *MultiModuleVersionResponse) Reset() {
 	*x = MultiModuleVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[274]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[277]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19565,7 +19771,7 @@ func (x *MultiModuleVersionResponse) String() string {
 func (*MultiModuleVersionResponse) ProtoMessage() {}
 
 func (x *MultiModuleVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[274]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[277]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19578,7 +19784,7 @@ func (x *MultiModuleVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiModuleVersionResponse.ProtoReflect.Descriptor instead.
 func (*MultiModuleVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{274}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{277}
 }
 
 func (x *MultiModuleVersionResponse) GetStatus() *status.Status {
@@ -19608,7 +19814,7 @@ type SingleModuleVersionUsageCountResponse struct {
 func (x *SingleModuleVersionUsageCountResponse) Reset() {
 	*x = SingleModuleVersionUsageCountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[275]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[278]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19621,7 +19827,7 @@ func (x *SingleModuleVersionUsageCountResponse) String() string {
 func (*SingleModuleVersionUsageCountResponse) ProtoMessage() {}
 
 func (x *SingleModuleVersionUsageCountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[275]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[278]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19634,7 +19840,7 @@ func (x *SingleModuleVersionUsageCountResponse) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use SingleModuleVersionUsageCountResponse.ProtoReflect.Descriptor instead.
 func (*SingleModuleVersionUsageCountResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{275}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{278}
 }
 
 func (x *SingleModuleVersionUsageCountResponse) GetStatus() *status.Status {
@@ -19665,7 +19871,7 @@ type GetInstalledModuleVersionRequest struct {
 func (x *GetInstalledModuleVersionRequest) Reset() {
 	*x = GetInstalledModuleVersionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[276]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[279]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19678,7 +19884,7 @@ func (x *GetInstalledModuleVersionRequest) String() string {
 func (*GetInstalledModuleVersionRequest) ProtoMessage() {}
 
 func (x *GetInstalledModuleVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[276]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[279]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19691,7 +19897,7 @@ func (x *GetInstalledModuleVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInstalledModuleVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetInstalledModuleVersionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{276}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{279}
 }
 
 func (x *GetInstalledModuleVersionRequest) GetUserAppId() *UserAppIDSet {
@@ -19726,7 +19932,7 @@ type ListInstalledModuleVersionsRequest struct {
 func (x *ListInstalledModuleVersionsRequest) Reset() {
 	*x = ListInstalledModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[277]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[280]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19739,7 +19945,7 @@ func (x *ListInstalledModuleVersionsRequest) String() string {
 func (*ListInstalledModuleVersionsRequest) ProtoMessage() {}
 
 func (x *ListInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[277]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[280]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19752,7 +19958,7 @@ func (x *ListInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use ListInstalledModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*ListInstalledModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{277}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{280}
 }
 
 func (x *ListInstalledModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19790,7 +19996,7 @@ type PostInstalledModuleVersionsRequest struct {
 func (x *PostInstalledModuleVersionsRequest) Reset() {
 	*x = PostInstalledModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[278]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[281]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19803,7 +20009,7 @@ func (x *PostInstalledModuleVersionsRequest) String() string {
 func (*PostInstalledModuleVersionsRequest) ProtoMessage() {}
 
 func (x *PostInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[278]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[281]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19816,7 +20022,7 @@ func (x *PostInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use PostInstalledModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*PostInstalledModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{278}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{281}
 }
 
 func (x *PostInstalledModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19848,7 +20054,7 @@ type PostInstalledModuleVersionsKeyRequest struct {
 func (x *PostInstalledModuleVersionsKeyRequest) Reset() {
 	*x = PostInstalledModuleVersionsKeyRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[279]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[282]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19861,7 +20067,7 @@ func (x *PostInstalledModuleVersionsKeyRequest) String() string {
 func (*PostInstalledModuleVersionsKeyRequest) ProtoMessage() {}
 
 func (x *PostInstalledModuleVersionsKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[279]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[282]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19874,7 +20080,7 @@ func (x *PostInstalledModuleVersionsKeyRequest) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use PostInstalledModuleVersionsKeyRequest.ProtoReflect.Descriptor instead.
 func (*PostInstalledModuleVersionsKeyRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{279}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{282}
 }
 
 func (x *PostInstalledModuleVersionsKeyRequest) GetUserAppId() *UserAppIDSet {
@@ -19904,7 +20110,7 @@ type DeleteInstalledModuleVersionsRequest struct {
 func (x *DeleteInstalledModuleVersionsRequest) Reset() {
 	*x = DeleteInstalledModuleVersionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[280]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[283]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19917,7 +20123,7 @@ func (x *DeleteInstalledModuleVersionsRequest) String() string {
 func (*DeleteInstalledModuleVersionsRequest) ProtoMessage() {}
 
 func (x *DeleteInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[280]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[283]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19930,7 +20136,7 @@ func (x *DeleteInstalledModuleVersionsRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use DeleteInstalledModuleVersionsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteInstalledModuleVersionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{280}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{283}
 }
 
 func (x *DeleteInstalledModuleVersionsRequest) GetUserAppId() *UserAppIDSet {
@@ -19960,7 +20166,7 @@ type SingleInstalledModuleVersionResponse struct {
 func (x *SingleInstalledModuleVersionResponse) Reset() {
 	*x = SingleInstalledModuleVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[281]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[284]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -19973,7 +20179,7 @@ func (x *SingleInstalledModuleVersionResponse) String() string {
 func (*SingleInstalledModuleVersionResponse) ProtoMessage() {}
 
 func (x *SingleInstalledModuleVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[281]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[284]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -19986,7 +20192,7 @@ func (x *SingleInstalledModuleVersionResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use SingleInstalledModuleVersionResponse.ProtoReflect.Descriptor instead.
 func (*SingleInstalledModuleVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{281}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{284}
 }
 
 func (x *SingleInstalledModuleVersionResponse) GetStatus() *status.Status {
@@ -20016,7 +20222,7 @@ type MultiInstalledModuleVersionResponse struct {
 func (x *MultiInstalledModuleVersionResponse) Reset() {
 	*x = MultiInstalledModuleVersionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[282]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[285]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20029,7 +20235,7 @@ func (x *MultiInstalledModuleVersionResponse) String() string {
 func (*MultiInstalledModuleVersionResponse) ProtoMessage() {}
 
 func (x *MultiInstalledModuleVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[282]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[285]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20042,7 +20248,7 @@ func (x *MultiInstalledModuleVersionResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use MultiInstalledModuleVersionResponse.ProtoReflect.Descriptor instead.
 func (*MultiInstalledModuleVersionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{282}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{285}
 }
 
 func (x *MultiInstalledModuleVersionResponse) GetStatus() *status.Status {
@@ -20072,7 +20278,7 @@ type ListNextTaskAssignmentsRequest struct {
 func (x *ListNextTaskAssignmentsRequest) Reset() {
 	*x = ListNextTaskAssignmentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[283]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[286]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20085,7 +20291,7 @@ func (x *ListNextTaskAssignmentsRequest) String() string {
 func (*ListNextTaskAssignmentsRequest) ProtoMessage() {}
 
 func (x *ListNextTaskAssignmentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[283]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[286]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20098,7 +20304,7 @@ func (x *ListNextTaskAssignmentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNextTaskAssignmentsRequest.ProtoReflect.Descriptor instead.
 func (*ListNextTaskAssignmentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{283}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{286}
 }
 
 func (x *ListNextTaskAssignmentsRequest) GetUserAppId() *UserAppIDSet {
@@ -20129,7 +20335,7 @@ type PostBulkOperationsRequest struct {
 func (x *PostBulkOperationsRequest) Reset() {
 	*x = PostBulkOperationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[284]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[287]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20142,7 +20348,7 @@ func (x *PostBulkOperationsRequest) String() string {
 func (*PostBulkOperationsRequest) ProtoMessage() {}
 
 func (x *PostBulkOperationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[284]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[287]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20155,7 +20361,7 @@ func (x *PostBulkOperationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostBulkOperationsRequest.ProtoReflect.Descriptor instead.
 func (*PostBulkOperationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{284}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{287}
 }
 
 func (x *PostBulkOperationsRequest) GetUserAppId() *UserAppIDSet {
@@ -20190,7 +20396,7 @@ type ListBulkOperationsRequest struct {
 func (x *ListBulkOperationsRequest) Reset() {
 	*x = ListBulkOperationsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[285]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[288]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20203,7 +20409,7 @@ func (x *ListBulkOperationsRequest) String() string {
 func (*ListBulkOperationsRequest) ProtoMessage() {}
 
 func (x *ListBulkOperationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[285]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[288]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20216,7 +20422,7 @@ func (x *ListBulkOperationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListBulkOperationsRequest.ProtoReflect.Descriptor instead.
 func (*ListBulkOperationsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{285}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{288}
 }
 
 func (x *ListBulkOperationsRequest) GetUserAppId() *UserAppIDSet {
@@ -20254,7 +20460,7 @@ type GetBulkOperationRequest struct {
 func (x *GetBulkOperationRequest) Reset() {
 	*x = GetBulkOperationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[286]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[289]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20267,7 +20473,7 @@ func (x *GetBulkOperationRequest) String() string {
 func (*GetBulkOperationRequest) ProtoMessage() {}
 
 func (x *GetBulkOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[286]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[289]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20280,7 +20486,7 @@ func (x *GetBulkOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBulkOperationRequest.ProtoReflect.Descriptor instead.
 func (*GetBulkOperationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{286}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{289}
 }
 
 func (x *GetBulkOperationRequest) GetUserAppId() *UserAppIDSet {
@@ -20311,7 +20517,7 @@ type CancelBulkOperationRequest struct {
 func (x *CancelBulkOperationRequest) Reset() {
 	*x = CancelBulkOperationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[287]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[290]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20324,7 +20530,7 @@ func (x *CancelBulkOperationRequest) String() string {
 func (*CancelBulkOperationRequest) ProtoMessage() {}
 
 func (x *CancelBulkOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[287]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[290]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20337,7 +20543,7 @@ func (x *CancelBulkOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelBulkOperationRequest.ProtoReflect.Descriptor instead.
 func (*CancelBulkOperationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{287}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{290}
 }
 
 func (x *CancelBulkOperationRequest) GetUserAppId() *UserAppIDSet {
@@ -20369,7 +20575,7 @@ type DeleteBulkOperationRequest struct {
 func (x *DeleteBulkOperationRequest) Reset() {
 	*x = DeleteBulkOperationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[288]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[291]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20382,7 +20588,7 @@ func (x *DeleteBulkOperationRequest) String() string {
 func (*DeleteBulkOperationRequest) ProtoMessage() {}
 
 func (x *DeleteBulkOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[288]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[291]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20395,7 +20601,7 @@ func (x *DeleteBulkOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteBulkOperationRequest.ProtoReflect.Descriptor instead.
 func (*DeleteBulkOperationRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{288}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{291}
 }
 
 func (x *DeleteBulkOperationRequest) GetUserAppId() *UserAppIDSet {
@@ -20425,7 +20631,7 @@ type SingleBulkOperationsResponse struct {
 func (x *SingleBulkOperationsResponse) Reset() {
 	*x = SingleBulkOperationsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[289]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[292]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20438,7 +20644,7 @@ func (x *SingleBulkOperationsResponse) String() string {
 func (*SingleBulkOperationsResponse) ProtoMessage() {}
 
 func (x *SingleBulkOperationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[289]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[292]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20451,7 +20657,7 @@ func (x *SingleBulkOperationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleBulkOperationsResponse.ProtoReflect.Descriptor instead.
 func (*SingleBulkOperationsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{289}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{292}
 }
 
 func (x *SingleBulkOperationsResponse) GetStatus() *status.Status {
@@ -20481,7 +20687,7 @@ type MultiBulkOperationsResponse struct {
 func (x *MultiBulkOperationsResponse) Reset() {
 	*x = MultiBulkOperationsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[290]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[293]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20494,7 +20700,7 @@ func (x *MultiBulkOperationsResponse) String() string {
 func (*MultiBulkOperationsResponse) ProtoMessage() {}
 
 func (x *MultiBulkOperationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[290]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[293]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20507,7 +20713,7 @@ func (x *MultiBulkOperationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiBulkOperationsResponse.ProtoReflect.Descriptor instead.
 func (*MultiBulkOperationsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{290}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{293}
 }
 
 func (x *MultiBulkOperationsResponse) GetStatus() *status.Status {
@@ -20552,7 +20758,7 @@ type PutTaskAssignmentsRequest struct {
 func (x *PutTaskAssignmentsRequest) Reset() {
 	*x = PutTaskAssignmentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[291]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[294]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20565,7 +20771,7 @@ func (x *PutTaskAssignmentsRequest) String() string {
 func (*PutTaskAssignmentsRequest) ProtoMessage() {}
 
 func (x *PutTaskAssignmentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[291]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[294]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20578,7 +20784,7 @@ func (x *PutTaskAssignmentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutTaskAssignmentsRequest.ProtoReflect.Descriptor instead.
 func (*PutTaskAssignmentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{291}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{294}
 }
 
 func (x *PutTaskAssignmentsRequest) GetUserAppId() *UserAppIDSet {
@@ -20698,7 +20904,7 @@ type LabelSubmitConfig struct {
 func (x *LabelSubmitConfig) Reset() {
 	*x = LabelSubmitConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[292]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[295]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20711,7 +20917,7 @@ func (x *LabelSubmitConfig) String() string {
 func (*LabelSubmitConfig) ProtoMessage() {}
 
 func (x *LabelSubmitConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[292]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[295]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20724,7 +20930,7 @@ func (x *LabelSubmitConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LabelSubmitConfig.ProtoReflect.Descriptor instead.
 func (*LabelSubmitConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{292}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{295}
 }
 
 func (x *LabelSubmitConfig) GetTaskAssignments() []*TaskAssignment {
@@ -20747,7 +20953,7 @@ type ReviewStartConfig struct {
 func (x *ReviewStartConfig) Reset() {
 	*x = ReviewStartConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[293]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[296]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20760,7 +20966,7 @@ func (x *ReviewStartConfig) String() string {
 func (*ReviewStartConfig) ProtoMessage() {}
 
 func (x *ReviewStartConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[293]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[296]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20773,7 +20979,7 @@ func (x *ReviewStartConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewStartConfig.ProtoReflect.Descriptor instead.
 func (*ReviewStartConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{293}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{296}
 }
 
 func (x *ReviewStartConfig) GetWorkers() []*Worker {
@@ -20795,7 +21001,7 @@ type ReviewApproveConfig struct {
 func (x *ReviewApproveConfig) Reset() {
 	*x = ReviewApproveConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[294]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[297]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20808,7 +21014,7 @@ func (x *ReviewApproveConfig) String() string {
 func (*ReviewApproveConfig) ProtoMessage() {}
 
 func (x *ReviewApproveConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[294]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[297]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20821,7 +21027,7 @@ func (x *ReviewApproveConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewApproveConfig.ProtoReflect.Descriptor instead.
 func (*ReviewApproveConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{294}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{297}
 }
 
 func (x *ReviewApproveConfig) GetTaskAssignments() []*TaskAssignment {
@@ -20850,7 +21056,7 @@ type ReviewRequestChangesConfig struct {
 func (x *ReviewRequestChangesConfig) Reset() {
 	*x = ReviewRequestChangesConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[295]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[298]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20863,7 +21069,7 @@ func (x *ReviewRequestChangesConfig) String() string {
 func (*ReviewRequestChangesConfig) ProtoMessage() {}
 
 func (x *ReviewRequestChangesConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[295]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[298]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20876,7 +21082,7 @@ func (x *ReviewRequestChangesConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewRequestChangesConfig.ProtoReflect.Descriptor instead.
 func (*ReviewRequestChangesConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{295}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{298}
 }
 
 func (x *ReviewRequestChangesConfig) GetTaskAssignments() []*TaskAssignment {
@@ -20905,7 +21111,7 @@ type ReviewRejectConfig struct {
 func (x *ReviewRejectConfig) Reset() {
 	*x = ReviewRejectConfig{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[296]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[299]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20918,7 +21124,7 @@ func (x *ReviewRejectConfig) String() string {
 func (*ReviewRejectConfig) ProtoMessage() {}
 
 func (x *ReviewRejectConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[296]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[299]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20931,7 +21137,7 @@ func (x *ReviewRejectConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewRejectConfig.ProtoReflect.Descriptor instead.
 func (*ReviewRejectConfig) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{296}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{299}
 }
 
 func (x *ReviewRejectConfig) GetTaskAssignments() []*TaskAssignment {
@@ -20960,7 +21166,7 @@ type MultiTaskAssignmentResponse struct {
 func (x *MultiTaskAssignmentResponse) Reset() {
 	*x = MultiTaskAssignmentResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[297]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[300]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -20973,7 +21179,7 @@ func (x *MultiTaskAssignmentResponse) String() string {
 func (*MultiTaskAssignmentResponse) ProtoMessage() {}
 
 func (x *MultiTaskAssignmentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[297]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[300]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -20986,7 +21192,7 @@ func (x *MultiTaskAssignmentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiTaskAssignmentResponse.ProtoReflect.Descriptor instead.
 func (*MultiTaskAssignmentResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{297}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{300}
 }
 
 func (x *MultiTaskAssignmentResponse) GetStatus() *status.Status {
@@ -21021,7 +21227,7 @@ type ListInputsAddJobsRequest struct {
 func (x *ListInputsAddJobsRequest) Reset() {
 	*x = ListInputsAddJobsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[298]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[301]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21034,7 +21240,7 @@ func (x *ListInputsAddJobsRequest) String() string {
 func (*ListInputsAddJobsRequest) ProtoMessage() {}
 
 func (x *ListInputsAddJobsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[298]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[301]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21047,7 +21253,7 @@ func (x *ListInputsAddJobsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInputsAddJobsRequest.ProtoReflect.Descriptor instead.
 func (*ListInputsAddJobsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{298}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{301}
 }
 
 func (x *ListInputsAddJobsRequest) GetUserAppId() *UserAppIDSet {
@@ -21084,7 +21290,7 @@ type GetInputsAddJobRequest struct {
 func (x *GetInputsAddJobRequest) Reset() {
 	*x = GetInputsAddJobRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[299]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[302]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21097,7 +21303,7 @@ func (x *GetInputsAddJobRequest) String() string {
 func (*GetInputsAddJobRequest) ProtoMessage() {}
 
 func (x *GetInputsAddJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[299]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[302]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21110,7 +21316,7 @@ func (x *GetInputsAddJobRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInputsAddJobRequest.ProtoReflect.Descriptor instead.
 func (*GetInputsAddJobRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{299}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{302}
 }
 
 func (x *GetInputsAddJobRequest) GetUserAppId() *UserAppIDSet {
@@ -21140,7 +21346,7 @@ type CancelInputsAddJobRequest struct {
 func (x *CancelInputsAddJobRequest) Reset() {
 	*x = CancelInputsAddJobRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[300]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[303]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21153,7 +21359,7 @@ func (x *CancelInputsAddJobRequest) String() string {
 func (*CancelInputsAddJobRequest) ProtoMessage() {}
 
 func (x *CancelInputsAddJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[300]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[303]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21166,7 +21372,7 @@ func (x *CancelInputsAddJobRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelInputsAddJobRequest.ProtoReflect.Descriptor instead.
 func (*CancelInputsAddJobRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{300}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{303}
 }
 
 func (x *CancelInputsAddJobRequest) GetUserAppId() *UserAppIDSet {
@@ -21196,7 +21402,7 @@ type MultiInputsAddJobResponse struct {
 func (x *MultiInputsAddJobResponse) Reset() {
 	*x = MultiInputsAddJobResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[301]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[304]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21209,7 +21415,7 @@ func (x *MultiInputsAddJobResponse) String() string {
 func (*MultiInputsAddJobResponse) ProtoMessage() {}
 
 func (x *MultiInputsAddJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[301]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[304]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21222,7 +21428,7 @@ func (x *MultiInputsAddJobResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiInputsAddJobResponse.ProtoReflect.Descriptor instead.
 func (*MultiInputsAddJobResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{301}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{304}
 }
 
 func (x *MultiInputsAddJobResponse) GetStatus() *status.Status {
@@ -21252,7 +21458,7 @@ type SingleInputsAddJobResponse struct {
 func (x *SingleInputsAddJobResponse) Reset() {
 	*x = SingleInputsAddJobResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[302]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[305]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21265,7 +21471,7 @@ func (x *SingleInputsAddJobResponse) String() string {
 func (*SingleInputsAddJobResponse) ProtoMessage() {}
 
 func (x *SingleInputsAddJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[302]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[305]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21278,7 +21484,7 @@ func (x *SingleInputsAddJobResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleInputsAddJobResponse.ProtoReflect.Descriptor instead.
 func (*SingleInputsAddJobResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{302}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{305}
 }
 
 func (x *SingleInputsAddJobResponse) GetStatus() *status.Status {
@@ -21308,7 +21514,7 @@ type PostUploadsRequest struct {
 func (x *PostUploadsRequest) Reset() {
 	*x = PostUploadsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[303]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[306]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21321,7 +21527,7 @@ func (x *PostUploadsRequest) String() string {
 func (*PostUploadsRequest) ProtoMessage() {}
 
 func (x *PostUploadsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[303]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[306]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21334,7 +21540,7 @@ func (x *PostUploadsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostUploadsRequest.ProtoReflect.Descriptor instead.
 func (*PostUploadsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{303}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{306}
 }
 
 func (x *PostUploadsRequest) GetUserAppId() *UserAppIDSet {
@@ -21364,7 +21570,7 @@ type DeleteUploadsRequest struct {
 func (x *DeleteUploadsRequest) Reset() {
 	*x = DeleteUploadsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[304]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[307]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21377,7 +21583,7 @@ func (x *DeleteUploadsRequest) String() string {
 func (*DeleteUploadsRequest) ProtoMessage() {}
 
 func (x *DeleteUploadsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[304]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[307]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21390,7 +21596,7 @@ func (x *DeleteUploadsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUploadsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUploadsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{304}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{307}
 }
 
 func (x *DeleteUploadsRequest) GetUserAppId() *UserAppIDSet {
@@ -21424,7 +21630,7 @@ type ListUploadsRequest struct {
 func (x *ListUploadsRequest) Reset() {
 	*x = ListUploadsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[305]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[308]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21437,7 +21643,7 @@ func (x *ListUploadsRequest) String() string {
 func (*ListUploadsRequest) ProtoMessage() {}
 
 func (x *ListUploadsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[305]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[308]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21450,7 +21656,7 @@ func (x *ListUploadsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUploadsRequest.ProtoReflect.Descriptor instead.
 func (*ListUploadsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{305}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{308}
 }
 
 func (x *ListUploadsRequest) GetUserAppId() *UserAppIDSet {
@@ -21487,7 +21693,7 @@ type GetUploadRequest struct {
 func (x *GetUploadRequest) Reset() {
 	*x = GetUploadRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[306]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[309]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21500,7 +21706,7 @@ func (x *GetUploadRequest) String() string {
 func (*GetUploadRequest) ProtoMessage() {}
 
 func (x *GetUploadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[306]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[309]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21513,7 +21719,7 @@ func (x *GetUploadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUploadRequest.ProtoReflect.Descriptor instead.
 func (*GetUploadRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{306}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{309}
 }
 
 func (x *GetUploadRequest) GetUserAppId() *UserAppIDSet {
@@ -21542,7 +21748,7 @@ type SingleUploadResponse struct {
 func (x *SingleUploadResponse) Reset() {
 	*x = SingleUploadResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[307]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[310]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21555,7 +21761,7 @@ func (x *SingleUploadResponse) String() string {
 func (*SingleUploadResponse) ProtoMessage() {}
 
 func (x *SingleUploadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[307]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[310]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21568,7 +21774,7 @@ func (x *SingleUploadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleUploadResponse.ProtoReflect.Descriptor instead.
 func (*SingleUploadResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{307}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{310}
 }
 
 func (x *SingleUploadResponse) GetStatus() *status.Status {
@@ -21597,7 +21803,7 @@ type MultiUploadResponse struct {
 func (x *MultiUploadResponse) Reset() {
 	*x = MultiUploadResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[308]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[311]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21610,7 +21816,7 @@ func (x *MultiUploadResponse) String() string {
 func (*MultiUploadResponse) ProtoMessage() {}
 
 func (x *MultiUploadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[308]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[311]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21623,7 +21829,7 @@ func (x *MultiUploadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiUploadResponse.ProtoReflect.Descriptor instead.
 func (*MultiUploadResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{308}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{311}
 }
 
 func (x *MultiUploadResponse) GetStatus() *status.Status {
@@ -21655,7 +21861,7 @@ type PutUploadContentPartsRequest struct {
 func (x *PutUploadContentPartsRequest) Reset() {
 	*x = PutUploadContentPartsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[309]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[312]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21668,7 +21874,7 @@ func (x *PutUploadContentPartsRequest) String() string {
 func (*PutUploadContentPartsRequest) ProtoMessage() {}
 
 func (x *PutUploadContentPartsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[309]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[312]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21681,7 +21887,7 @@ func (x *PutUploadContentPartsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutUploadContentPartsRequest.ProtoReflect.Descriptor instead.
 func (*PutUploadContentPartsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{309}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{312}
 }
 
 func (x *PutUploadContentPartsRequest) GetUserAppId() *UserAppIDSet {
@@ -21734,7 +21940,7 @@ type PostInputsDataSourcesRequest struct {
 func (x *PostInputsDataSourcesRequest) Reset() {
 	*x = PostInputsDataSourcesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[310]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[313]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21747,7 +21953,7 @@ func (x *PostInputsDataSourcesRequest) String() string {
 func (*PostInputsDataSourcesRequest) ProtoMessage() {}
 
 func (x *PostInputsDataSourcesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[310]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[313]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21760,7 +21966,7 @@ func (x *PostInputsDataSourcesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostInputsDataSourcesRequest.ProtoReflect.Descriptor instead.
 func (*PostInputsDataSourcesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{310}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{313}
 }
 
 func (x *PostInputsDataSourcesRequest) GetUserAppId() *UserAppIDSet {
@@ -21803,7 +22009,7 @@ type GetInputsExtractionJobRequest struct {
 func (x *GetInputsExtractionJobRequest) Reset() {
 	*x = GetInputsExtractionJobRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[311]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[314]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21816,7 +22022,7 @@ func (x *GetInputsExtractionJobRequest) String() string {
 func (*GetInputsExtractionJobRequest) ProtoMessage() {}
 
 func (x *GetInputsExtractionJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[311]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[314]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21829,7 +22035,7 @@ func (x *GetInputsExtractionJobRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInputsExtractionJobRequest.ProtoReflect.Descriptor instead.
 func (*GetInputsExtractionJobRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{311}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{314}
 }
 
 func (x *GetInputsExtractionJobRequest) GetUserAppId() *UserAppIDSet {
@@ -21863,7 +22069,7 @@ type ListInputsExtractionJobsRequest struct {
 func (x *ListInputsExtractionJobsRequest) Reset() {
 	*x = ListInputsExtractionJobsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[312]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[315]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21876,7 +22082,7 @@ func (x *ListInputsExtractionJobsRequest) String() string {
 func (*ListInputsExtractionJobsRequest) ProtoMessage() {}
 
 func (x *ListInputsExtractionJobsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[312]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[315]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21889,7 +22095,7 @@ func (x *ListInputsExtractionJobsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInputsExtractionJobsRequest.ProtoReflect.Descriptor instead.
 func (*ListInputsExtractionJobsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{312}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{315}
 }
 
 func (x *ListInputsExtractionJobsRequest) GetUserAppId() *UserAppIDSet {
@@ -21925,7 +22131,7 @@ type SingleInputsExtractionJobResponse struct {
 func (x *SingleInputsExtractionJobResponse) Reset() {
 	*x = SingleInputsExtractionJobResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[313]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[316]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21938,7 +22144,7 @@ func (x *SingleInputsExtractionJobResponse) String() string {
 func (*SingleInputsExtractionJobResponse) ProtoMessage() {}
 
 func (x *SingleInputsExtractionJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[313]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[316]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -21951,7 +22157,7 @@ func (x *SingleInputsExtractionJobResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use SingleInputsExtractionJobResponse.ProtoReflect.Descriptor instead.
 func (*SingleInputsExtractionJobResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{313}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{316}
 }
 
 func (x *SingleInputsExtractionJobResponse) GetStatus() *status.Status {
@@ -21980,7 +22186,7 @@ type MultiInputsExtractionJobResponse struct {
 func (x *MultiInputsExtractionJobResponse) Reset() {
 	*x = MultiInputsExtractionJobResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[314]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[317]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -21993,7 +22199,7 @@ func (x *MultiInputsExtractionJobResponse) String() string {
 func (*MultiInputsExtractionJobResponse) ProtoMessage() {}
 
 func (x *MultiInputsExtractionJobResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[314]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[317]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22006,7 +22212,7 @@ func (x *MultiInputsExtractionJobResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiInputsExtractionJobResponse.ProtoReflect.Descriptor instead.
 func (*MultiInputsExtractionJobResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{314}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{317}
 }
 
 func (x *MultiInputsExtractionJobResponse) GetStatus() *status.Status {
@@ -22037,7 +22243,7 @@ type CancelInputsExtractionJobsRequest struct {
 func (x *CancelInputsExtractionJobsRequest) Reset() {
 	*x = CancelInputsExtractionJobsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[315]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[318]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22050,7 +22256,7 @@ func (x *CancelInputsExtractionJobsRequest) String() string {
 func (*CancelInputsExtractionJobsRequest) ProtoMessage() {}
 
 func (x *CancelInputsExtractionJobsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[315]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[318]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22063,7 +22269,7 @@ func (x *CancelInputsExtractionJobsRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use CancelInputsExtractionJobsRequest.ProtoReflect.Descriptor instead.
 func (*CancelInputsExtractionJobsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{315}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{318}
 }
 
 func (x *CancelInputsExtractionJobsRequest) GetUserAppId() *UserAppIDSet {
@@ -22097,7 +22303,7 @@ type PostInputsUploadsRequest struct {
 func (x *PostInputsUploadsRequest) Reset() {
 	*x = PostInputsUploadsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[316]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[319]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22110,7 +22316,7 @@ func (x *PostInputsUploadsRequest) String() string {
 func (*PostInputsUploadsRequest) ProtoMessage() {}
 
 func (x *PostInputsUploadsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[316]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[319]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22123,7 +22329,7 @@ func (x *PostInputsUploadsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostInputsUploadsRequest.ProtoReflect.Descriptor instead.
 func (*PostInputsUploadsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{316}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{319}
 }
 
 func (x *PostInputsUploadsRequest) GetUserAppId() *UserAppIDSet {
@@ -22155,7 +22361,7 @@ type GetRunnerRequest struct {
 func (x *GetRunnerRequest) Reset() {
 	*x = GetRunnerRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[317]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[320]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22168,7 +22374,7 @@ func (x *GetRunnerRequest) String() string {
 func (*GetRunnerRequest) ProtoMessage() {}
 
 func (x *GetRunnerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[317]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[320]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22181,7 +22387,7 @@ func (x *GetRunnerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRunnerRequest.ProtoReflect.Descriptor instead.
 func (*GetRunnerRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{317}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{320}
 }
 
 func (x *GetRunnerRequest) GetUserAppId() *UserAppIDSet {
@@ -22234,7 +22440,7 @@ type ListRunnersRequest struct {
 func (x *ListRunnersRequest) Reset() {
 	*x = ListRunnersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[318]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[321]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22247,7 +22453,7 @@ func (x *ListRunnersRequest) String() string {
 func (*ListRunnersRequest) ProtoMessage() {}
 
 func (x *ListRunnersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[318]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[321]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22260,7 +22466,7 @@ func (x *ListRunnersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRunnersRequest.ProtoReflect.Descriptor instead.
 func (*ListRunnersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{318}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{321}
 }
 
 func (x *ListRunnersRequest) GetUserAppId() *UserAppIDSet {
@@ -22321,7 +22527,7 @@ type PostRunnersRequest struct {
 func (x *PostRunnersRequest) Reset() {
 	*x = PostRunnersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[319]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[322]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22334,7 +22540,7 @@ func (x *PostRunnersRequest) String() string {
 func (*PostRunnersRequest) ProtoMessage() {}
 
 func (x *PostRunnersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[319]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[322]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22347,7 +22553,7 @@ func (x *PostRunnersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostRunnersRequest.ProtoReflect.Descriptor instead.
 func (*PostRunnersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{319}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{322}
 }
 
 func (x *PostRunnersRequest) GetUserAppId() *UserAppIDSet {
@@ -22393,7 +22599,7 @@ type DeleteRunnersRequest struct {
 func (x *DeleteRunnersRequest) Reset() {
 	*x = DeleteRunnersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[320]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[323]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22406,7 +22612,7 @@ func (x *DeleteRunnersRequest) String() string {
 func (*DeleteRunnersRequest) ProtoMessage() {}
 
 func (x *DeleteRunnersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[320]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[323]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22419,7 +22625,7 @@ func (x *DeleteRunnersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRunnersRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRunnersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{320}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{323}
 }
 
 func (x *DeleteRunnersRequest) GetUserAppId() *UserAppIDSet {
@@ -22463,7 +22669,7 @@ type SingleRunnerResponse struct {
 func (x *SingleRunnerResponse) Reset() {
 	*x = SingleRunnerResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[321]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[324]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22476,7 +22682,7 @@ func (x *SingleRunnerResponse) String() string {
 func (*SingleRunnerResponse) ProtoMessage() {}
 
 func (x *SingleRunnerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[321]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[324]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22489,7 +22695,7 @@ func (x *SingleRunnerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleRunnerResponse.ProtoReflect.Descriptor instead.
 func (*SingleRunnerResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{321}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{324}
 }
 
 func (x *SingleRunnerResponse) GetStatus() *status.Status {
@@ -22519,7 +22725,7 @@ type MultiRunnerResponse struct {
 func (x *MultiRunnerResponse) Reset() {
 	*x = MultiRunnerResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[322]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[325]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22532,7 +22738,7 @@ func (x *MultiRunnerResponse) String() string {
 func (*MultiRunnerResponse) ProtoMessage() {}
 
 func (x *MultiRunnerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[322]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[325]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22545,7 +22751,7 @@ func (x *MultiRunnerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiRunnerResponse.ProtoReflect.Descriptor instead.
 func (*MultiRunnerResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{322}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{325}
 }
 
 func (x *MultiRunnerResponse) GetStatus() *status.Status {
@@ -22576,7 +22782,7 @@ type ListRunnerItemsRequest struct {
 func (x *ListRunnerItemsRequest) Reset() {
 	*x = ListRunnerItemsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[323]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[326]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22589,7 +22795,7 @@ func (x *ListRunnerItemsRequest) String() string {
 func (*ListRunnerItemsRequest) ProtoMessage() {}
 
 func (x *ListRunnerItemsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[323]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[326]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22602,7 +22808,7 @@ func (x *ListRunnerItemsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRunnerItemsRequest.ProtoReflect.Descriptor instead.
 func (*ListRunnerItemsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{323}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{326}
 }
 
 func (x *ListRunnerItemsRequest) GetUserAppId() *UserAppIDSet {
@@ -22667,7 +22873,7 @@ type PostRunnerItemOutputsRequest struct {
 func (x *PostRunnerItemOutputsRequest) Reset() {
 	*x = PostRunnerItemOutputsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[324]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[327]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22680,7 +22886,7 @@ func (x *PostRunnerItemOutputsRequest) String() string {
 func (*PostRunnerItemOutputsRequest) ProtoMessage() {}
 
 func (x *PostRunnerItemOutputsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[324]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[327]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22693,7 +22899,7 @@ func (x *PostRunnerItemOutputsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostRunnerItemOutputsRequest.ProtoReflect.Descriptor instead.
 func (*PostRunnerItemOutputsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{324}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{327}
 }
 
 func (x *PostRunnerItemOutputsRequest) GetUserAppId() *UserAppIDSet {
@@ -22765,7 +22971,7 @@ type MultiRunnerItemResponse struct {
 func (x *MultiRunnerItemResponse) Reset() {
 	*x = MultiRunnerItemResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[325]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[328]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22778,7 +22984,7 @@ func (x *MultiRunnerItemResponse) String() string {
 func (*MultiRunnerItemResponse) ProtoMessage() {}
 
 func (x *MultiRunnerItemResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[325]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[328]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22791,7 +22997,7 @@ func (x *MultiRunnerItemResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiRunnerItemResponse.ProtoReflect.Descriptor instead.
 func (*MultiRunnerItemResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{325}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{328}
 }
 
 func (x *MultiRunnerItemResponse) GetStatus() *status.Status {
@@ -22831,7 +23037,7 @@ type RunnerItem struct {
 func (x *RunnerItem) Reset() {
 	*x = RunnerItem{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[326]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[329]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22844,7 +23050,7 @@ func (x *RunnerItem) String() string {
 func (*RunnerItem) ProtoMessage() {}
 
 func (x *RunnerItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[326]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[329]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22857,7 +23063,7 @@ func (x *RunnerItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunnerItem.ProtoReflect.Descriptor instead.
 func (*RunnerItem) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{326}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{329}
 }
 
 func (x *RunnerItem) GetId() string {
@@ -22923,7 +23129,7 @@ type RunnerItemOutput struct {
 func (x *RunnerItemOutput) Reset() {
 	*x = RunnerItemOutput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[327]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[330]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -22936,7 +23142,7 @@ func (x *RunnerItemOutput) String() string {
 func (*RunnerItemOutput) ProtoMessage() {}
 
 func (x *RunnerItemOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[327]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[330]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -22949,7 +23155,7 @@ func (x *RunnerItemOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunnerItemOutput.ProtoReflect.Descriptor instead.
 func (*RunnerItemOutput) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{327}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{330}
 }
 
 func (m *RunnerItemOutput) GetResponse() isRunnerItemOutput_Response {
@@ -22989,7 +23195,7 @@ type MultiRunnerItemOutputResponse struct {
 func (x *MultiRunnerItemOutputResponse) Reset() {
 	*x = MultiRunnerItemOutputResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[328]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[331]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23002,7 +23208,7 @@ func (x *MultiRunnerItemOutputResponse) String() string {
 func (*MultiRunnerItemOutputResponse) ProtoMessage() {}
 
 func (x *MultiRunnerItemOutputResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[328]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[331]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23015,7 +23221,7 @@ func (x *MultiRunnerItemOutputResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiRunnerItemOutputResponse.ProtoReflect.Descriptor instead.
 func (*MultiRunnerItemOutputResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{328}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{331}
 }
 
 func (x *MultiRunnerItemOutputResponse) GetStatus() *status.Status {
@@ -23047,7 +23253,7 @@ type PostModelVersionsTrainingTimeEstimateRequest struct {
 func (x *PostModelVersionsTrainingTimeEstimateRequest) Reset() {
 	*x = PostModelVersionsTrainingTimeEstimateRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[329]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[332]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23060,7 +23266,7 @@ func (x *PostModelVersionsTrainingTimeEstimateRequest) String() string {
 func (*PostModelVersionsTrainingTimeEstimateRequest) ProtoMessage() {}
 
 func (x *PostModelVersionsTrainingTimeEstimateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[329]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[332]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23073,7 +23279,7 @@ func (x *PostModelVersionsTrainingTimeEstimateRequest) ProtoReflect() protorefle
 
 // Deprecated: Use PostModelVersionsTrainingTimeEstimateRequest.ProtoReflect.Descriptor instead.
 func (*PostModelVersionsTrainingTimeEstimateRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{329}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{332}
 }
 
 func (x *PostModelVersionsTrainingTimeEstimateRequest) GetUserAppId() *UserAppIDSet {
@@ -23117,7 +23323,7 @@ type MultiTrainingTimeEstimateResponse struct {
 func (x *MultiTrainingTimeEstimateResponse) Reset() {
 	*x = MultiTrainingTimeEstimateResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[330]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[333]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23130,7 +23336,7 @@ func (x *MultiTrainingTimeEstimateResponse) String() string {
 func (*MultiTrainingTimeEstimateResponse) ProtoMessage() {}
 
 func (x *MultiTrainingTimeEstimateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[330]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[333]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23143,7 +23349,7 @@ func (x *MultiTrainingTimeEstimateResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use MultiTrainingTimeEstimateResponse.ProtoReflect.Descriptor instead.
 func (*MultiTrainingTimeEstimateResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{330}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{333}
 }
 
 func (x *MultiTrainingTimeEstimateResponse) GetStatus() *status.Status {
@@ -23170,7 +23376,7 @@ type ListCloudProvidersRequest struct {
 func (x *ListCloudProvidersRequest) Reset() {
 	*x = ListCloudProvidersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[331]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[334]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23183,7 +23389,7 @@ func (x *ListCloudProvidersRequest) String() string {
 func (*ListCloudProvidersRequest) ProtoMessage() {}
 
 func (x *ListCloudProvidersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[331]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[334]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23196,7 +23402,7 @@ func (x *ListCloudProvidersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCloudProvidersRequest.ProtoReflect.Descriptor instead.
 func (*ListCloudProvidersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{331}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{334}
 }
 
 type MultiCloudProviderResponse struct {
@@ -23211,7 +23417,7 @@ type MultiCloudProviderResponse struct {
 func (x *MultiCloudProviderResponse) Reset() {
 	*x = MultiCloudProviderResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[332]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[335]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23224,7 +23430,7 @@ func (x *MultiCloudProviderResponse) String() string {
 func (*MultiCloudProviderResponse) ProtoMessage() {}
 
 func (x *MultiCloudProviderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[332]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[335]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23237,7 +23443,7 @@ func (x *MultiCloudProviderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiCloudProviderResponse.ProtoReflect.Descriptor instead.
 func (*MultiCloudProviderResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{332}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{335}
 }
 
 func (x *MultiCloudProviderResponse) GetStatus() *status.Status {
@@ -23267,7 +23473,7 @@ type ListCloudRegionsRequest struct {
 func (x *ListCloudRegionsRequest) Reset() {
 	*x = ListCloudRegionsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[333]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[336]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23280,7 +23486,7 @@ func (x *ListCloudRegionsRequest) String() string {
 func (*ListCloudRegionsRequest) ProtoMessage() {}
 
 func (x *ListCloudRegionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[333]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[336]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23293,7 +23499,7 @@ func (x *ListCloudRegionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCloudRegionsRequest.ProtoReflect.Descriptor instead.
 func (*ListCloudRegionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{333}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{336}
 }
 
 func (x *ListCloudRegionsRequest) GetCloudProvider() *CloudProvider {
@@ -23315,7 +23521,7 @@ type MultiCloudRegionResponse struct {
 func (x *MultiCloudRegionResponse) Reset() {
 	*x = MultiCloudRegionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[334]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[337]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23328,7 +23534,7 @@ func (x *MultiCloudRegionResponse) String() string {
 func (*MultiCloudRegionResponse) ProtoMessage() {}
 
 func (x *MultiCloudRegionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[334]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[337]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23341,7 +23547,7 @@ func (x *MultiCloudRegionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiCloudRegionResponse.ProtoReflect.Descriptor instead.
 func (*MultiCloudRegionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{334}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{337}
 }
 
 func (x *MultiCloudRegionResponse) GetStatus() *status.Status {
@@ -23374,7 +23580,7 @@ type ListInstanceTypesRequest struct {
 func (x *ListInstanceTypesRequest) Reset() {
 	*x = ListInstanceTypesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[335]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[338]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23387,7 +23593,7 @@ func (x *ListInstanceTypesRequest) String() string {
 func (*ListInstanceTypesRequest) ProtoMessage() {}
 
 func (x *ListInstanceTypesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[335]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[338]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23400,7 +23606,7 @@ func (x *ListInstanceTypesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInstanceTypesRequest.ProtoReflect.Descriptor instead.
 func (*ListInstanceTypesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{335}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{338}
 }
 
 func (x *ListInstanceTypesRequest) GetCloudProvider() *CloudProvider {
@@ -23429,7 +23635,7 @@ type MultiInstanceTypeResponse struct {
 func (x *MultiInstanceTypeResponse) Reset() {
 	*x = MultiInstanceTypeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[336]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[339]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23442,7 +23648,7 @@ func (x *MultiInstanceTypeResponse) String() string {
 func (*MultiInstanceTypeResponse) ProtoMessage() {}
 
 func (x *MultiInstanceTypeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[336]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[339]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23455,7 +23661,7 @@ func (x *MultiInstanceTypeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiInstanceTypeResponse.ProtoReflect.Descriptor instead.
 func (*MultiInstanceTypeResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{336}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{339}
 }
 
 func (x *MultiInstanceTypeResponse) GetStatus() *status.Status {
@@ -23486,7 +23692,7 @@ type GetComputeClusterRequest struct {
 func (x *GetComputeClusterRequest) Reset() {
 	*x = GetComputeClusterRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[337]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[340]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23499,7 +23705,7 @@ func (x *GetComputeClusterRequest) String() string {
 func (*GetComputeClusterRequest) ProtoMessage() {}
 
 func (x *GetComputeClusterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[337]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[340]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23512,7 +23718,7 @@ func (x *GetComputeClusterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetComputeClusterRequest.ProtoReflect.Descriptor instead.
 func (*GetComputeClusterRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{337}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{340}
 }
 
 func (x *GetComputeClusterRequest) GetUserAppId() *UserAppIDSet {
@@ -23547,7 +23753,7 @@ type ListComputeClustersRequest struct {
 func (x *ListComputeClustersRequest) Reset() {
 	*x = ListComputeClustersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[338]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[341]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23560,7 +23766,7 @@ func (x *ListComputeClustersRequest) String() string {
 func (*ListComputeClustersRequest) ProtoMessage() {}
 
 func (x *ListComputeClustersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[338]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[341]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23573,7 +23779,7 @@ func (x *ListComputeClustersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListComputeClustersRequest.ProtoReflect.Descriptor instead.
 func (*ListComputeClustersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{338}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{341}
 }
 
 func (x *ListComputeClustersRequest) GetUserAppId() *UserAppIDSet {
@@ -23611,7 +23817,7 @@ type PostComputeClustersRequest struct {
 func (x *PostComputeClustersRequest) Reset() {
 	*x = PostComputeClustersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[339]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[342]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23624,7 +23830,7 @@ func (x *PostComputeClustersRequest) String() string {
 func (*PostComputeClustersRequest) ProtoMessage() {}
 
 func (x *PostComputeClustersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[339]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[342]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23637,7 +23843,7 @@ func (x *PostComputeClustersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostComputeClustersRequest.ProtoReflect.Descriptor instead.
 func (*PostComputeClustersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{339}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{342}
 }
 
 func (x *PostComputeClustersRequest) GetUserAppId() *UserAppIDSet {
@@ -23668,7 +23874,7 @@ type DeleteComputeClustersRequest struct {
 func (x *DeleteComputeClustersRequest) Reset() {
 	*x = DeleteComputeClustersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[340]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[343]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23681,7 +23887,7 @@ func (x *DeleteComputeClustersRequest) String() string {
 func (*DeleteComputeClustersRequest) ProtoMessage() {}
 
 func (x *DeleteComputeClustersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[340]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[343]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23694,7 +23900,7 @@ func (x *DeleteComputeClustersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteComputeClustersRequest.ProtoReflect.Descriptor instead.
 func (*DeleteComputeClustersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{340}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{343}
 }
 
 func (x *DeleteComputeClustersRequest) GetUserAppId() *UserAppIDSet {
@@ -23723,7 +23929,7 @@ type SingleComputeClusterResponse struct {
 func (x *SingleComputeClusterResponse) Reset() {
 	*x = SingleComputeClusterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[341]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[344]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23736,7 +23942,7 @@ func (x *SingleComputeClusterResponse) String() string {
 func (*SingleComputeClusterResponse) ProtoMessage() {}
 
 func (x *SingleComputeClusterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[341]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[344]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23749,7 +23955,7 @@ func (x *SingleComputeClusterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleComputeClusterResponse.ProtoReflect.Descriptor instead.
 func (*SingleComputeClusterResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{341}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{344}
 }
 
 func (x *SingleComputeClusterResponse) GetStatus() *status.Status {
@@ -23778,7 +23984,7 @@ type MultiComputeClusterResponse struct {
 func (x *MultiComputeClusterResponse) Reset() {
 	*x = MultiComputeClusterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[342]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[345]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23791,7 +23997,7 @@ func (x *MultiComputeClusterResponse) String() string {
 func (*MultiComputeClusterResponse) ProtoMessage() {}
 
 func (x *MultiComputeClusterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[342]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[345]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23804,7 +24010,7 @@ func (x *MultiComputeClusterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiComputeClusterResponse.ProtoReflect.Descriptor instead.
 func (*MultiComputeClusterResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{342}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{345}
 }
 
 func (x *MultiComputeClusterResponse) GetStatus() *status.Status {
@@ -23836,7 +24042,7 @@ type GetNodepoolRequest struct {
 func (x *GetNodepoolRequest) Reset() {
 	*x = GetNodepoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[343]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[346]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23849,7 +24055,7 @@ func (x *GetNodepoolRequest) String() string {
 func (*GetNodepoolRequest) ProtoMessage() {}
 
 func (x *GetNodepoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[343]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[346]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23862,7 +24068,7 @@ func (x *GetNodepoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNodepoolRequest.ProtoReflect.Descriptor instead.
 func (*GetNodepoolRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{343}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{346}
 }
 
 func (x *GetNodepoolRequest) GetUserAppId() *UserAppIDSet {
@@ -23904,7 +24110,7 @@ type ListNodepoolsRequest struct {
 func (x *ListNodepoolsRequest) Reset() {
 	*x = ListNodepoolsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[344]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[347]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23917,7 +24123,7 @@ func (x *ListNodepoolsRequest) String() string {
 func (*ListNodepoolsRequest) ProtoMessage() {}
 
 func (x *ListNodepoolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[344]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[347]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -23930,7 +24136,7 @@ func (x *ListNodepoolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNodepoolsRequest.ProtoReflect.Descriptor instead.
 func (*ListNodepoolsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{344}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{347}
 }
 
 func (x *ListNodepoolsRequest) GetUserAppId() *UserAppIDSet {
@@ -23976,7 +24182,7 @@ type PostNodepoolsRequest struct {
 func (x *PostNodepoolsRequest) Reset() {
 	*x = PostNodepoolsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[345]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[348]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -23989,7 +24195,7 @@ func (x *PostNodepoolsRequest) String() string {
 func (*PostNodepoolsRequest) ProtoMessage() {}
 
 func (x *PostNodepoolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[345]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[348]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24002,7 +24208,7 @@ func (x *PostNodepoolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostNodepoolsRequest.ProtoReflect.Descriptor instead.
 func (*PostNodepoolsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{345}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{348}
 }
 
 func (x *PostNodepoolsRequest) GetUserAppId() *UserAppIDSet {
@@ -24043,7 +24249,7 @@ type PatchNodepoolsRequest struct {
 func (x *PatchNodepoolsRequest) Reset() {
 	*x = PatchNodepoolsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[346]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[349]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24056,7 +24262,7 @@ func (x *PatchNodepoolsRequest) String() string {
 func (*PatchNodepoolsRequest) ProtoMessage() {}
 
 func (x *PatchNodepoolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[346]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[349]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24069,7 +24275,7 @@ func (x *PatchNodepoolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchNodepoolsRequest.ProtoReflect.Descriptor instead.
 func (*PatchNodepoolsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{346}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{349}
 }
 
 func (x *PatchNodepoolsRequest) GetUserAppId() *UserAppIDSet {
@@ -24115,7 +24321,7 @@ type DeleteNodepoolsRequest struct {
 func (x *DeleteNodepoolsRequest) Reset() {
 	*x = DeleteNodepoolsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[347]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[350]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24128,7 +24334,7 @@ func (x *DeleteNodepoolsRequest) String() string {
 func (*DeleteNodepoolsRequest) ProtoMessage() {}
 
 func (x *DeleteNodepoolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[347]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[350]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24141,7 +24347,7 @@ func (x *DeleteNodepoolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteNodepoolsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteNodepoolsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{347}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{350}
 }
 
 func (x *DeleteNodepoolsRequest) GetUserAppId() *UserAppIDSet {
@@ -24177,7 +24383,7 @@ type SingleNodepoolResponse struct {
 func (x *SingleNodepoolResponse) Reset() {
 	*x = SingleNodepoolResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[348]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[351]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24190,7 +24396,7 @@ func (x *SingleNodepoolResponse) String() string {
 func (*SingleNodepoolResponse) ProtoMessage() {}
 
 func (x *SingleNodepoolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[348]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[351]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24203,7 +24409,7 @@ func (x *SingleNodepoolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleNodepoolResponse.ProtoReflect.Descriptor instead.
 func (*SingleNodepoolResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{348}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{351}
 }
 
 func (x *SingleNodepoolResponse) GetStatus() *status.Status {
@@ -24232,7 +24438,7 @@ type MultiNodepoolResponse struct {
 func (x *MultiNodepoolResponse) Reset() {
 	*x = MultiNodepoolResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[349]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[352]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24245,7 +24451,7 @@ func (x *MultiNodepoolResponse) String() string {
 func (*MultiNodepoolResponse) ProtoMessage() {}
 
 func (x *MultiNodepoolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[349]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[352]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24258,7 +24464,7 @@ func (x *MultiNodepoolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiNodepoolResponse.ProtoReflect.Descriptor instead.
 func (*MultiNodepoolResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{349}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{352}
 }
 
 func (x *MultiNodepoolResponse) GetStatus() *status.Status {
@@ -24288,7 +24494,7 @@ type GetDeploymentRequest struct {
 func (x *GetDeploymentRequest) Reset() {
 	*x = GetDeploymentRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[350]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[353]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24301,7 +24507,7 @@ func (x *GetDeploymentRequest) String() string {
 func (*GetDeploymentRequest) ProtoMessage() {}
 
 func (x *GetDeploymentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[350]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[353]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24314,7 +24520,7 @@ func (x *GetDeploymentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeploymentRequest.ProtoReflect.Descriptor instead.
 func (*GetDeploymentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{350}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{353}
 }
 
 func (x *GetDeploymentRequest) GetUserAppId() *UserAppIDSet {
@@ -24354,7 +24560,7 @@ type ListDeploymentsRequest struct {
 func (x *ListDeploymentsRequest) Reset() {
 	*x = ListDeploymentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[351]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[354]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24367,7 +24573,7 @@ func (x *ListDeploymentsRequest) String() string {
 func (*ListDeploymentsRequest) ProtoMessage() {}
 
 func (x *ListDeploymentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[351]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[354]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24380,7 +24586,7 @@ func (x *ListDeploymentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListDeploymentsRequest.ProtoReflect.Descriptor instead.
 func (*ListDeploymentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{351}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{354}
 }
 
 func (x *ListDeploymentsRequest) GetUserAppId() *UserAppIDSet {
@@ -24439,7 +24645,7 @@ type PostDeploymentsRequest struct {
 func (x *PostDeploymentsRequest) Reset() {
 	*x = PostDeploymentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[352]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[355]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24452,7 +24658,7 @@ func (x *PostDeploymentsRequest) String() string {
 func (*PostDeploymentsRequest) ProtoMessage() {}
 
 func (x *PostDeploymentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[352]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[355]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24465,7 +24671,7 @@ func (x *PostDeploymentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostDeploymentsRequest.ProtoReflect.Descriptor instead.
 func (*PostDeploymentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{352}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{355}
 }
 
 func (x *PostDeploymentsRequest) GetUserAppId() *UserAppIDSet {
@@ -24496,7 +24702,7 @@ type DeleteDeploymentsRequest struct {
 func (x *DeleteDeploymentsRequest) Reset() {
 	*x = DeleteDeploymentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[353]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[356]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24509,7 +24715,7 @@ func (x *DeleteDeploymentsRequest) String() string {
 func (*DeleteDeploymentsRequest) ProtoMessage() {}
 
 func (x *DeleteDeploymentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[353]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[356]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24522,7 +24728,7 @@ func (x *DeleteDeploymentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDeploymentsRequest.ProtoReflect.Descriptor instead.
 func (*DeleteDeploymentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{353}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{356}
 }
 
 func (x *DeleteDeploymentsRequest) GetUserAppId() *UserAppIDSet {
@@ -24556,7 +24762,7 @@ type PostAuditLogSearchesRequest struct {
 func (x *PostAuditLogSearchesRequest) Reset() {
 	*x = PostAuditLogSearchesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[354]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[357]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24569,7 +24775,7 @@ func (x *PostAuditLogSearchesRequest) String() string {
 func (*PostAuditLogSearchesRequest) ProtoMessage() {}
 
 func (x *PostAuditLogSearchesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[354]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[357]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24582,7 +24788,7 @@ func (x *PostAuditLogSearchesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostAuditLogSearchesRequest.ProtoReflect.Descriptor instead.
 func (*PostAuditLogSearchesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{354}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{357}
 }
 
 func (x *PostAuditLogSearchesRequest) GetUserAppId() *UserAppIDSet {
@@ -24625,7 +24831,7 @@ type MultiAuditLogEntryResponse struct {
 func (x *MultiAuditLogEntryResponse) Reset() {
 	*x = MultiAuditLogEntryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[355]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[358]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24638,7 +24844,7 @@ func (x *MultiAuditLogEntryResponse) String() string {
 func (*MultiAuditLogEntryResponse) ProtoMessage() {}
 
 func (x *MultiAuditLogEntryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[355]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[358]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24651,7 +24857,7 @@ func (x *MultiAuditLogEntryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiAuditLogEntryResponse.ProtoReflect.Descriptor instead.
 func (*MultiAuditLogEntryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{355}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{358}
 }
 
 func (x *MultiAuditLogEntryResponse) GetStatus() *status.Status {
@@ -24684,7 +24890,7 @@ type PatchDeploymentsRequest struct {
 func (x *PatchDeploymentsRequest) Reset() {
 	*x = PatchDeploymentsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[356]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[359]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24697,7 +24903,7 @@ func (x *PatchDeploymentsRequest) String() string {
 func (*PatchDeploymentsRequest) ProtoMessage() {}
 
 func (x *PatchDeploymentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[356]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[359]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24710,7 +24916,7 @@ func (x *PatchDeploymentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatchDeploymentsRequest.ProtoReflect.Descriptor instead.
 func (*PatchDeploymentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{356}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{359}
 }
 
 func (x *PatchDeploymentsRequest) GetUserAppId() *UserAppIDSet {
@@ -24746,7 +24952,7 @@ type SingleDeploymentResponse struct {
 func (x *SingleDeploymentResponse) Reset() {
 	*x = SingleDeploymentResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[357]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[360]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24759,7 +24965,7 @@ func (x *SingleDeploymentResponse) String() string {
 func (*SingleDeploymentResponse) ProtoMessage() {}
 
 func (x *SingleDeploymentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[357]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[360]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24772,7 +24978,7 @@ func (x *SingleDeploymentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SingleDeploymentResponse.ProtoReflect.Descriptor instead.
 func (*SingleDeploymentResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{357}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{360}
 }
 
 func (x *SingleDeploymentResponse) GetStatus() *status.Status {
@@ -24801,7 +25007,7 @@ type MultiDeploymentResponse struct {
 func (x *MultiDeploymentResponse) Reset() {
 	*x = MultiDeploymentResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[358]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[361]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24814,7 +25020,7 @@ func (x *MultiDeploymentResponse) String() string {
 func (*MultiDeploymentResponse) ProtoMessage() {}
 
 func (x *MultiDeploymentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[358]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[361]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24827,7 +25033,7 @@ func (x *MultiDeploymentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultiDeploymentResponse.ProtoReflect.Descriptor instead.
 func (*MultiDeploymentResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{358}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{361}
 }
 
 func (x *MultiDeploymentResponse) GetStatus() *status.Status {
@@ -24853,7 +25059,7 @@ type ListWorkflowEvaluationTemplatesRequest struct {
 func (x *ListWorkflowEvaluationTemplatesRequest) Reset() {
 	*x = ListWorkflowEvaluationTemplatesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[359]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[362]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24866,7 +25072,7 @@ func (x *ListWorkflowEvaluationTemplatesRequest) String() string {
 func (*ListWorkflowEvaluationTemplatesRequest) ProtoMessage() {}
 
 func (x *ListWorkflowEvaluationTemplatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[359]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[362]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24879,7 +25085,7 @@ func (x *ListWorkflowEvaluationTemplatesRequest) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use ListWorkflowEvaluationTemplatesRequest.ProtoReflect.Descriptor instead.
 func (*ListWorkflowEvaluationTemplatesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{359}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{362}
 }
 
 type MultiWorkflowEvaluationTemplateResponse struct {
@@ -24894,7 +25100,7 @@ type MultiWorkflowEvaluationTemplateResponse struct {
 func (x *MultiWorkflowEvaluationTemplateResponse) Reset() {
 	*x = MultiWorkflowEvaluationTemplateResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_proto_clarifai_api_service_proto_msgTypes[360]
+		mi := &file_proto_clarifai_api_service_proto_msgTypes[363]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -24907,7 +25113,7 @@ func (x *MultiWorkflowEvaluationTemplateResponse) String() string {
 func (*MultiWorkflowEvaluationTemplateResponse) ProtoMessage() {}
 
 func (x *MultiWorkflowEvaluationTemplateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_clarifai_api_service_proto_msgTypes[360]
+	mi := &file_proto_clarifai_api_service_proto_msgTypes[363]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -24920,7 +25126,7 @@ func (x *MultiWorkflowEvaluationTemplateResponse) ProtoReflect() protoreflect.Me
 
 // Deprecated: Use MultiWorkflowEvaluationTemplateResponse.ProtoReflect.Descriptor instead.
 func (*MultiWorkflowEvaluationTemplateResponse) Descriptor() ([]byte, []int) {
-	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{360}
+	return file_proto_clarifai_api_service_proto_rawDescGZIP(), []int{363}
 }
 
 func (x *MultiWorkflowEvaluationTemplateResponse) GetStatus() *status.Status {
@@ -26062,30 +26268,63 @@ var file_proto_clarifai_api_service_proto_rawDesc = []byte{
 	0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18,
 	0x04, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x70,
 	0x65, 0x72, 0x5f, 0x70, 0x61, 0x67, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x07, 0x70,
-	0x65, 0x72, 0x50, 0x61, 0x67, 0x65, 0x22, 0xf5, 0x02, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74, 0x4c,
-	0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04,
-	0x70, 0x61, 0x67, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x70, 0x65, 0x72, 0x5f, 0x70, 0x61, 0x67, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x07, 0x70, 0x65, 0x72, 0x50, 0x61, 0x67, 0x65, 0x12,
-	0x19, 0x0a, 0x08, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x07, 0x6c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x75, 0x73,
-	0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x55,
-	0x73, 0x65, 0x72, 0x41, 0x70, 0x70, 0x49, 0x44, 0x53, 0x65, 0x74, 0x52, 0x09, 0x75, 0x73, 0x65,
-	0x72, 0x41, 0x70, 0x70, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f,
-	0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x49,
-	0x64, 0x12, 0x28, 0x0a, 0x10, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69,
-	0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x6d, 0x6f, 0x64,
-	0x65, 0x6c, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x77,
-	0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0a, 0x77, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x49, 0x64, 0x12, 0x2c, 0x0a, 0x12,
-	0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f,
-	0x69, 0x64, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74,
-	0x65, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x6e, 0x6f,
-	0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0a, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x72,
-	0x75, 0x6e, 0x6e, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
-	0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x49, 0x64, 0x4a, 0x04, 0x08, 0x08, 0x10, 0x09, 0x22, 0x62,
+	0x65, 0x72, 0x50, 0x61, 0x67, 0x65, 0x22, 0x77, 0x0a, 0x1e, 0x50, 0x6f, 0x73, 0x74, 0x43, 0x6f,
+	0x6d, 0x70, 0x75, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x65, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x55, 0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x70,
+	0x75, 0x74, 0x65, 0x5f, 0x70, 0x6c, 0x61, 0x6e, 0x65, 0x5f, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66,
+	0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x43, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x50, 0x6c,
+	0x61, 0x6e, 0x65, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x52, 0x13, 0x63, 0x6f, 0x6d, 0x70,
+	0x75, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x65, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x22,
+	0x50, 0x0a, 0x15, 0x50, 0x6f, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x37, 0x0a, 0x0b, 0x6c, 0x6f, 0x67, 0x5f,
+	0x65, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x16, 0x2e,
+	0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x6f, 0x67,
+	0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x0a, 0x6c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65,
+	0x73, 0x22, 0xf5, 0x02, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74,
+	0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x70,
+	0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12,
+	0x19, 0x0a, 0x08, 0x70, 0x65, 0x72, 0x5f, 0x70, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x07, 0x70, 0x65, 0x72, 0x50, 0x61, 0x67, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x6f,
+	0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6c, 0x6f,
+	0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70,
+	0x70, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x63, 0x6c, 0x61,
+	0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x41, 0x70,
+	0x70, 0x49, 0x44, 0x53, 0x65, 0x74, 0x52, 0x09, 0x75, 0x73, 0x65, 0x72, 0x41, 0x70, 0x70, 0x49,
+	0x64, 0x12, 0x19, 0x0a, 0x08, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x05, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x49, 0x64, 0x12, 0x28, 0x0a, 0x10,
+	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x56, 0x65, 0x72,
+	0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x77, 0x6f, 0x72, 0x6b, 0x66, 0x6c,
+	0x6f, 0x77, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x77, 0x6f, 0x72,
+	0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x49, 0x64, 0x12, 0x2c, 0x0a, 0x12, 0x63, 0x6f, 0x6d, 0x70, 0x75,
+	0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x09, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x10, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x43, 0x6c, 0x75, 0x73,
+	0x74, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f,
+	0x6c, 0x5f, 0x69, 0x64, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x6e, 0x6f, 0x64, 0x65,
+	0x70, 0x6f, 0x6f, 0x6c, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72,
+	0x5f, 0x69, 0x64, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x75, 0x6e, 0x6e, 0x65,
+	0x72, 0x49, 0x64, 0x4a, 0x04, 0x08, 0x08, 0x10, 0x09, 0x22, 0xc2, 0x02, 0x0a, 0x17, 0x53, 0x74,
+	0x72, 0x65, 0x61, 0x6d, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65,
+	0x12, 0x3a, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x41, 0x70, 0x70, 0x49, 0x44, 0x53, 0x65,
+	0x74, 0x52, 0x09, 0x75, 0x73, 0x65, 0x72, 0x41, 0x70, 0x70, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08,
+	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x49, 0x64, 0x12, 0x28, 0x0a, 0x10, 0x6d, 0x6f, 0x64, 0x65, 0x6c,
+	0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49,
+	0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x77, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77, 0x5f, 0x69, 0x64,
+	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x77, 0x6f, 0x72, 0x6b, 0x66, 0x6c, 0x6f, 0x77,
+	0x49, 0x64, 0x12, 0x2c, 0x0a, 0x12, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c,
+	0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10,
+	0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x49, 0x64,
+	0x12, 0x1f, 0x0a, 0x0b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x18,
+	0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x49,
+	0x64, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x08,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x49, 0x64, 0x22, 0x62,
 	0x0a, 0x0d, 0x47, 0x65, 0x74, 0x4b, 0x65, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
 	0x3a, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
@@ -28911,7 +29150,7 @@ var file_proto_clarifai_api_service_proto_rawDesc = []byte{
 	0x0b, 0x12, 0x1a, 0x0a, 0x16, 0x52, 0x45, 0x56, 0x49, 0x45, 0x57, 0x5f, 0x52, 0x45, 0x51, 0x55,
 	0x45, 0x53, 0x54, 0x5f, 0x43, 0x48, 0x41, 0x4e, 0x47, 0x45, 0x53, 0x10, 0x0c, 0x12, 0x11, 0x0a,
 	0x0d, 0x52, 0x45, 0x56, 0x49, 0x45, 0x57, 0x5f, 0x52, 0x45, 0x4a, 0x45, 0x43, 0x54, 0x10, 0x0d,
-	0x32, 0xfb, 0xbb, 0x03, 0x0a, 0x02, 0x56, 0x32, 0x12, 0xae, 0x02, 0x0a, 0x14, 0x4c, 0x69, 0x73,
+	0x32, 0xe0, 0xc1, 0x03, 0x0a, 0x02, 0x56, 0x32, 0x12, 0xae, 0x02, 0x0a, 0x14, 0x4c, 0x69, 0x73,
 	0x74, 0x43, 0x6f, 0x6e, 0x63, 0x65, 0x70, 0x74, 0x52, 0x65, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e,
 	0x73, 0x12, 0x29, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69,
 	0x2e, 0x4c, 0x69, 0x73, 0x74, 0x43, 0x6f, 0x6e, 0x63, 0x65, 0x70, 0x74, 0x52, 0x65, 0x6c, 0x61,
@@ -32422,54 +32661,100 @@ var file_proto_clarifai_api_service_proto_rawDesc = []byte{
 	0xd3, 0xe4, 0x93, 0x02, 0x2b, 0x12, 0x29, 0x2f, 0x76, 0x32, 0x2f, 0x77, 0x6f, 0x72, 0x6b, 0x66,
 	0x6c, 0x6f, 0x77, 0x2d, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x2d, 0x65, 0x76, 0x61, 0x6c,
 	0x75, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2d, 0x74, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73,
-	0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x2d, 0x90, 0x9c, 0x27, 0x13, 0x12, 0x80, 0x05, 0x0a,
-	0x0e, 0x4c, 0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x12,
-	0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x4c,
-	0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x4d, 0x75, 0x6c, 0x74, 0x69, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72,
-	0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xa3, 0x04, 0x82, 0xd3, 0xe4, 0x93,
-	0x02, 0x93, 0x04, 0x12, 0x81, 0x01, 0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f,
-	0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65,
-	0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c,
+	0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x2d, 0x90, 0x9c, 0x27, 0x13, 0x12, 0x87, 0x01, 0x0a,
+	0x0e, 0x50, 0x6f, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x12,
+	0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x50,
+	0x6f, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2d, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22,
+	0x0f, 0x2f, 0x76, 0x32, 0x2f, 0x6c, 0x6f, 0x67, 0x5f, 0x65, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73,
+	0x3a, 0x01, 0x2a, 0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x8b, 0x01, 0x90, 0x9c, 0x27, 0x88,
+	0x01, 0x90, 0x9c, 0x27, 0x83, 0x01, 0x12, 0x80, 0x05, 0x0a, 0x0e, 0x4c, 0x69, 0x73, 0x74, 0x4c,
+	0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x12, 0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72,
+	0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67,
+	0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23,
+	0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x4d, 0x75,
+	0x6c, 0x74, 0x69, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0xa3, 0x04, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x93, 0x04, 0x12, 0x81, 0x01,
+	0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f,
+	0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f,
+	0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x73,
+	0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65,
+	0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x73, 0x2f,
+	0x7b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x72, 0x75,
+	0x6e, 0x6e, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x5f, 0x69, 0x64,
+	0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67,
+	0x73, 0x5a, 0xb8, 0x01, 0x12, 0xb5, 0x01, 0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73,
+	0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73,
+	0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65,
+	0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x7d,
+	0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69,
+	0x64, 0x7d, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64,
+	0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63,
+	0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x73, 0x2f,
+	0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72,
+	0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x73, 0x2f, 0x7b,
+	0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f,
+	0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x5a, 0x57, 0x12, 0x55,
+	0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f,
+	0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f,
+	0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x73,
+	0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65,
+	0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d,
+	0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x5a, 0x79, 0x12, 0x77, 0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65,
+	0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x7b, 0x75,
+	0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x61, 0x70, 0x70, 0x5f, 0x69,
+	0x64, 0x7d, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c,
+	0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x6d,
+	0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x7d,
+	0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73,
+	0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x97, 0x01, 0x12, 0xb2, 0x03, 0x0a, 0x10, 0x53, 0x74,
+	0x72, 0x65, 0x61, 0x6d, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x12, 0x25,
+	0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x53, 0x74,
+	0x72, 0x65, 0x61, 0x6d, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x4d, 0x75, 0x6c, 0x74, 0x69, 0x4c, 0x6f, 0x67, 0x45, 0x6e, 0x74,
+	0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xcf, 0x02, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0xbf, 0x02, 0x12, 0x81, 0x01, 0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73,
+	0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73,
+	0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63,
+	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65,
+	0x5f, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6e, 0x6f, 0x64,
+	0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x73, 0x2f, 0x7b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c,
+	0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x72, 0x75,
+	0x6e, 0x6e, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79,
+	0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x5a, 0xb8, 0x01, 0x12, 0xb5, 0x01, 0x2f, 0x76,
+	0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70,
+	0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x61, 0x70,
+	0x70, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e,
+	0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f, 0x7b,
+	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f,
+	0x6e, 0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f,
+	0x6e, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c,
 	0x75, 0x73, 0x74, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f,
 	0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6e, 0x6f, 0x64, 0x65,
 	0x70, 0x6f, 0x6f, 0x6c, 0x73, 0x2f, 0x7b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f,
-	0x69, 0x64, 0x7d, 0x2f, 0x72, 0x75, 0x6e, 0x6e, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x72, 0x75, 0x6e,
-	0x6e, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70,
-	0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x5a, 0xb8, 0x01, 0x12, 0xb5, 0x01, 0x2f, 0x76, 0x32,
-	0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70,
-	0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x61, 0x70, 0x70,
-	0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x61,
-	0x70, 0x70, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f, 0x7b, 0x6d,
-	0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
-	0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
-	0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c, 0x75,
-	0x73, 0x74, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63,
-	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6e, 0x6f, 0x64, 0x65, 0x70,
-	0x6f, 0x6f, 0x6c, 0x73, 0x2f, 0x7b, 0x6e, 0x6f, 0x64, 0x65, 0x70, 0x6f, 0x6f, 0x6c, 0x5f, 0x69,
-	0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f,
-	0x67, 0x73, 0x5a, 0x57, 0x12, 0x55, 0x2f, 0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f,
-	0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65,
-	0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f, 0x63, 0x6c,
-	0x75, 0x73, 0x74, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x5f,
-	0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67,
-	0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x5a, 0x79, 0x12, 0x77, 0x2f,
-	0x76, 0x32, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61,
-	0x70, 0x70, 0x5f, 0x69, 0x64, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x61,
-	0x70, 0x70, 0x73, 0x2f, 0x7b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64,
-	0x2e, 0x61, 0x70, 0x70, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f,
-	0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69,
-	0x6f, 0x6e, 0x73, 0x2f, 0x7b, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69,
-	0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65,
-	0x7d, 0x2f, 0x6c, 0x6f, 0x67, 0x73, 0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x97, 0x01, 0x42,
-	0x59, 0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2e,
-	0x67, 0x72, 0x70, 0x63, 0x2e, 0x61, 0x70, 0x69, 0x50, 0x01, 0x5a, 0x37, 0x67, 0x69, 0x74, 0x68,
-	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f,
-	0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2d, 0x67, 0x6f, 0x2d, 0x67, 0x72, 0x70, 0x63,
-	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2f,
-	0x61, 0x70, 0x69, 0xa2, 0x02, 0x04, 0x43, 0x41, 0x49, 0x50, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x69, 0x64, 0x7d, 0x2f, 0x7b, 0x6c, 0x6f, 0x67, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x7d, 0x2f, 0x6c,
+	0x6f, 0x67, 0x73, 0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x97, 0x01, 0x30, 0x01, 0x12, 0xa3,
+	0x01, 0x0a, 0x17, 0x50, 0x6f, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65, 0x50, 0x6c,
+	0x61, 0x6e, 0x65, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x12, 0x2c, 0x2e, 0x63, 0x6c, 0x61,
+	0x72, 0x69, 0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x50, 0x6f, 0x73, 0x74, 0x43, 0x6f,
+	0x6d, 0x70, 0x75, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x65, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e, 0x63, 0x6c, 0x61, 0x72, 0x69,
+	0x66, 0x61, 0x69, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x2e, 0x42,
+	0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x37, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x1e, 0x22, 0x19, 0x2f, 0x76, 0x32, 0x2f, 0x63, 0x6f, 0x6d, 0x70, 0x75, 0x74, 0x65,
+	0x5f, 0x70, 0x6c, 0x61, 0x6e, 0x65, 0x5f, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x3a, 0x01,
+	0x2a, 0x98, 0x9c, 0x27, 0x05, 0x90, 0x9c, 0x27, 0x8b, 0x01, 0x90, 0x9c, 0x27, 0x88, 0x01, 0x90,
+	0x9c, 0x27, 0x83, 0x01, 0x42, 0x59, 0x0a, 0x15, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6c, 0x61, 0x72,
+	0x69, 0x66, 0x61, 0x69, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x61, 0x70, 0x69, 0x50, 0x01, 0x5a,
+	0x37, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x6c, 0x61, 0x72,
+	0x69, 0x66, 0x61, 0x69, 0x2f, 0x63, 0x6c, 0x61, 0x72, 0x69, 0x66, 0x61, 0x69, 0x2d, 0x67, 0x6f,
+	0x2d, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6c, 0x61, 0x72,
+	0x69, 0x66, 0x61, 0x69, 0x2f, 0x61, 0x70, 0x69, 0xa2, 0x02, 0x04, 0x43, 0x41, 0x49, 0x50, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -32485,7 +32770,7 @@ func file_proto_clarifai_api_service_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_clarifai_api_service_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_clarifai_api_service_proto_msgTypes = make([]protoimpl.MessageInfo, 362)
+var file_proto_clarifai_api_service_proto_msgTypes = make([]protoimpl.MessageInfo, 365)
 var file_proto_clarifai_api_service_proto_goTypes = []interface{}{
 	(OrganizationInvitationStatus)(0),                    // 0: clarifai.api.OrganizationInvitationStatus
 	(PutTaskAssignmentsRequestAction)(0),                 // 1: clarifai.api.PutTaskAssignmentsRequestAction
@@ -32589,1440 +32874,1453 @@ var file_proto_clarifai_api_service_proto_goTypes = []interface{}{
 	(*SingleDatasetVersionResponse)(nil),                 // 99: clarifai.api.SingleDatasetVersionResponse
 	(*PostModelOutputsRequest)(nil),                      // 100: clarifai.api.PostModelOutputsRequest
 	(*ListModelInputsRequest)(nil),                       // 101: clarifai.api.ListModelInputsRequest
-	(*ListLogEntriesRequest)(nil),                        // 102: clarifai.api.ListLogEntriesRequest
-	(*GetKeyRequest)(nil),                                // 103: clarifai.api.GetKeyRequest
-	(*ListKeysRequest)(nil),                              // 104: clarifai.api.ListKeysRequest
-	(*ListAppKeysRequest)(nil),                           // 105: clarifai.api.ListAppKeysRequest
-	(*PostKeysRequest)(nil),                              // 106: clarifai.api.PostKeysRequest
-	(*DeleteKeyRequest)(nil),                             // 107: clarifai.api.DeleteKeyRequest
-	(*PatchKeysRequest)(nil),                             // 108: clarifai.api.PatchKeysRequest
-	(*SingleKeyResponse)(nil),                            // 109: clarifai.api.SingleKeyResponse
-	(*MultiKeyResponse)(nil),                             // 110: clarifai.api.MultiKeyResponse
-	(*GetModelRequest)(nil),                              // 111: clarifai.api.GetModelRequest
-	(*ListModelsRequest)(nil),                            // 112: clarifai.api.ListModelsRequest
-	(*GetResourceCountsRequest)(nil),                     // 113: clarifai.api.GetResourceCountsRequest
-	(*GetResourceCountsResponse)(nil),                    // 114: clarifai.api.GetResourceCountsResponse
-	(*PatchModelToolkitsRequest)(nil),                    // 115: clarifai.api.PatchModelToolkitsRequest
-	(*PatchModelCheckConsentsRequest)(nil),               // 116: clarifai.api.PatchModelCheckConsentsRequest
-	(*PatchModelUseCasesRequest)(nil),                    // 117: clarifai.api.PatchModelUseCasesRequest
-	(*PatchModelLanguagesRequest)(nil),                   // 118: clarifai.api.PatchModelLanguagesRequest
-	(*MultiModelToolkitResponse)(nil),                    // 119: clarifai.api.MultiModelToolkitResponse
-	(*MultiModelCheckConsentResponse)(nil),               // 120: clarifai.api.MultiModelCheckConsentResponse
-	(*MultiModelUseCaseResponse)(nil),                    // 121: clarifai.api.MultiModelUseCaseResponse
-	(*MultiModelLanguageResponse)(nil),                   // 122: clarifai.api.MultiModelLanguageResponse
-	(*PostModelsRequest)(nil),                            // 123: clarifai.api.PostModelsRequest
-	(*PatchModelsRequest)(nil),                           // 124: clarifai.api.PatchModelsRequest
-	(*IdUpdateSource)(nil),                               // 125: clarifai.api.IdUpdateSource
-	(*PatchModelIdsRequest)(nil),                         // 126: clarifai.api.PatchModelIdsRequest
-	(*DeleteModelRequest)(nil),                           // 127: clarifai.api.DeleteModelRequest
-	(*DeleteModelsRequest)(nil),                          // 128: clarifai.api.DeleteModelsRequest
-	(*PostModelsSearchesRequest)(nil),                    // 129: clarifai.api.PostModelsSearchesRequest
-	(*SingleModelResponse)(nil),                          // 130: clarifai.api.SingleModelResponse
-	(*MultiModelResponse)(nil),                           // 131: clarifai.api.MultiModelResponse
-	(*PatchModelVersionsRequest)(nil),                    // 132: clarifai.api.PatchModelVersionsRequest
-	(*GetModelVersionRequest)(nil),                       // 133: clarifai.api.GetModelVersionRequest
-	(*ListModelVersionsRequest)(nil),                     // 134: clarifai.api.ListModelVersionsRequest
-	(*DeleteModelVersionRequest)(nil),                    // 135: clarifai.api.DeleteModelVersionRequest
-	(*SingleModelVersionResponse)(nil),                   // 136: clarifai.api.SingleModelVersionResponse
-	(*MultiModelVersionResponse)(nil),                    // 137: clarifai.api.MultiModelVersionResponse
-	(*PostModelVersionsRequest)(nil),                     // 138: clarifai.api.PostModelVersionsRequest
-	(*PostModelVersionsUploadRequest)(nil),               // 139: clarifai.api.PostModelVersionsUploadRequest
-	(*PostModelVersionsUploadResponse)(nil),              // 140: clarifai.api.PostModelVersionsUploadResponse
-	(*PostModelVersionsUploadConfig)(nil),                // 141: clarifai.api.PostModelVersionsUploadConfig
-	(*PutModelVersionExportsRequest)(nil),                // 142: clarifai.api.PutModelVersionExportsRequest
-	(*GetModelVersionExportRequest)(nil),                 // 143: clarifai.api.GetModelVersionExportRequest
-	(*SingleModelVersionExportResponse)(nil),             // 144: clarifai.api.SingleModelVersionExportResponse
-	(*PostWorkflowVersionsUnPublishRequest)(nil),         // 145: clarifai.api.PostWorkflowVersionsUnPublishRequest
-	(*PostWorkflowVersionsPublishRequest)(nil),           // 146: clarifai.api.PostWorkflowVersionsPublishRequest
-	(*WorkflowVersionPublishRequest)(nil),                // 147: clarifai.api.WorkflowVersionPublishRequest
-	(*WorkflowVersionUnPublishRequest)(nil),              // 148: clarifai.api.WorkflowVersionUnPublishRequest
-	(*ModelVersionPublishRequest)(nil),                   // 149: clarifai.api.ModelVersionPublishRequest
-	(*PostModelVersionsPublishRequest)(nil),              // 150: clarifai.api.PostModelVersionsPublishRequest
-	(*ModelVersionUnpublishRequest)(nil),                 // 151: clarifai.api.ModelVersionUnpublishRequest
-	(*PostModelVersionsUnPublishRequest)(nil),            // 152: clarifai.api.PostModelVersionsUnPublishRequest
-	(*PostEvaluationsRequest)(nil),                       // 153: clarifai.api.PostEvaluationsRequest
-	(*ListEvaluationsRequest)(nil),                       // 154: clarifai.api.ListEvaluationsRequest
-	(*GetEvaluationRequest)(nil),                         // 155: clarifai.api.GetEvaluationRequest
-	(*PostModelVersionEvaluationsRequest)(nil),           // 156: clarifai.api.PostModelVersionEvaluationsRequest
-	(*ListModelVersionEvaluationsRequest)(nil),           // 157: clarifai.api.ListModelVersionEvaluationsRequest
-	(*GetModelVersionEvaluationRequest)(nil),             // 158: clarifai.api.GetModelVersionEvaluationRequest
-	(*SingleEvalMetricsResponse)(nil),                    // 159: clarifai.api.SingleEvalMetricsResponse
-	(*MultiEvalMetricsResponse)(nil),                     // 160: clarifai.api.MultiEvalMetricsResponse
-	(*PostModelVersionMetricsRequest)(nil),               // 161: clarifai.api.PostModelVersionMetricsRequest
-	(*GetModelVersionMetricsRequest)(nil),                // 162: clarifai.api.GetModelVersionMetricsRequest
-	(*GetModelTypeRequest)(nil),                          // 163: clarifai.api.GetModelTypeRequest
-	(*ListModelTypesRequest)(nil),                        // 164: clarifai.api.ListModelTypesRequest
-	(*ListOpenSourceLicensesRequest)(nil),                // 165: clarifai.api.ListOpenSourceLicensesRequest
-	(*ListOpenSourceLicensesResponse)(nil),               // 166: clarifai.api.ListOpenSourceLicensesResponse
-	(*SingleModelTypeResponse)(nil),                      // 167: clarifai.api.SingleModelTypeResponse
-	(*MultiModelTypeResponse)(nil),                       // 168: clarifai.api.MultiModelTypeResponse
-	(*GetModelVersionInputExampleRequest)(nil),           // 169: clarifai.api.GetModelVersionInputExampleRequest
-	(*ListModelVersionInputExamplesRequest)(nil),         // 170: clarifai.api.ListModelVersionInputExamplesRequest
-	(*SingleModelVersionInputExampleResponse)(nil),       // 171: clarifai.api.SingleModelVersionInputExampleResponse
-	(*MultiModelVersionInputExampleResponse)(nil),        // 172: clarifai.api.MultiModelVersionInputExampleResponse
-	(*ListModelReferencesRequest)(nil),                   // 173: clarifai.api.ListModelReferencesRequest
-	(*MultiModelReferenceResponse)(nil),                  // 174: clarifai.api.MultiModelReferenceResponse
-	(*MultiOutputResponse)(nil),                          // 175: clarifai.api.MultiOutputResponse
-	(*MultiLogEntryResponse)(nil),                        // 176: clarifai.api.MultiLogEntryResponse
-	(*ListScopesRequest)(nil),                            // 177: clarifai.api.ListScopesRequest
-	(*MyScopesRequest)(nil),                              // 178: clarifai.api.MyScopesRequest
-	(*MyScopesUserRequest)(nil),                          // 179: clarifai.api.MyScopesUserRequest
-	(*MyScopesRootRequest)(nil),                          // 180: clarifai.api.MyScopesRootRequest
-	(*MultiScopeDepsResponse)(nil),                       // 181: clarifai.api.MultiScopeDepsResponse
-	(*MultiScopeResponse)(nil),                           // 182: clarifai.api.MultiScopeResponse
-	(*MultiScopeUserResponse)(nil),                       // 183: clarifai.api.MultiScopeUserResponse
-	(*MultiScopeRootResponse)(nil),                       // 184: clarifai.api.MultiScopeRootResponse
-	(*GetSearchRequest)(nil),                             // 185: clarifai.api.GetSearchRequest
-	(*ListSearchesRequest)(nil),                          // 186: clarifai.api.ListSearchesRequest
-	(*PostSearchesRequest)(nil),                          // 187: clarifai.api.PostSearchesRequest
-	(*PatchInputsSearchesRequest)(nil),                   // 188: clarifai.api.PatchInputsSearchesRequest
-	(*PatchAnnotationsSearchesRequest)(nil),              // 189: clarifai.api.PatchAnnotationsSearchesRequest
-	(*PatchSearchesRequest)(nil),                         // 190: clarifai.api.PatchSearchesRequest
-	(*PostSearchesByIDRequest)(nil),                      // 191: clarifai.api.PostSearchesByIDRequest
-	(*DeleteSearchRequest)(nil),                          // 192: clarifai.api.DeleteSearchRequest
-	(*PostAnnotationsSearchesRequest)(nil),               // 193: clarifai.api.PostAnnotationsSearchesRequest
-	(*DeleteAnnotationSearchMetricsRequest)(nil),         // 194: clarifai.api.DeleteAnnotationSearchMetricsRequest
-	(*PostInputsSearchesRequest)(nil),                    // 195: clarifai.api.PostInputsSearchesRequest
-	(*SingleSearchResponse)(nil),                         // 196: clarifai.api.SingleSearchResponse
-	(*MultiSearchResponse)(nil),                          // 197: clarifai.api.MultiSearchResponse
-	(*PostAnnotationSearchMetricsRequest)(nil),           // 198: clarifai.api.PostAnnotationSearchMetricsRequest
-	(*GetAnnotationSearchMetricsRequest)(nil),            // 199: clarifai.api.GetAnnotationSearchMetricsRequest
-	(*ListAnnotationSearchMetricsRequest)(nil),           // 200: clarifai.api.ListAnnotationSearchMetricsRequest
-	(*MultiAnnotationSearchMetricsResponse)(nil),         // 201: clarifai.api.MultiAnnotationSearchMetricsResponse
-	(*ListAnnotationFiltersRequest)(nil),                 // 202: clarifai.api.ListAnnotationFiltersRequest
-	(*GetAnnotationFilterRequest)(nil),                   // 203: clarifai.api.GetAnnotationFilterRequest
-	(*PostAnnotationFiltersRequest)(nil),                 // 204: clarifai.api.PostAnnotationFiltersRequest
-	(*PatchAnnotationFiltersRequest)(nil),                // 205: clarifai.api.PatchAnnotationFiltersRequest
-	(*DeleteAnnotationFiltersRequest)(nil),               // 206: clarifai.api.DeleteAnnotationFiltersRequest
-	(*MultiAnnotationFilterResponse)(nil),                // 207: clarifai.api.MultiAnnotationFilterResponse
-	(*SingleAnnotationFilterResponse)(nil),               // 208: clarifai.api.SingleAnnotationFilterResponse
-	(*GetUserRequest)(nil),                               // 209: clarifai.api.GetUserRequest
-	(*SingleUserResponse)(nil),                           // 210: clarifai.api.SingleUserResponse
-	(*PostValidatePasswordRequest)(nil),                  // 211: clarifai.api.PostValidatePasswordRequest
-	(*SinglePasswordValidationResponse)(nil),             // 212: clarifai.api.SinglePasswordValidationResponse
-	(*GetWorkflowRequest)(nil),                           // 213: clarifai.api.GetWorkflowRequest
-	(*ListWorkflowsRequest)(nil),                         // 214: clarifai.api.ListWorkflowsRequest
-	(*PostWorkflowsRequest)(nil),                         // 215: clarifai.api.PostWorkflowsRequest
-	(*PatchWorkflowsRequest)(nil),                        // 216: clarifai.api.PatchWorkflowsRequest
-	(*PatchWorkflowIdsRequest)(nil),                      // 217: clarifai.api.PatchWorkflowIdsRequest
-	(*DeleteWorkflowRequest)(nil),                        // 218: clarifai.api.DeleteWorkflowRequest
-	(*DeleteWorkflowsRequest)(nil),                       // 219: clarifai.api.DeleteWorkflowsRequest
-	(*SingleWorkflowResponse)(nil),                       // 220: clarifai.api.SingleWorkflowResponse
-	(*MultiWorkflowResponse)(nil),                        // 221: clarifai.api.MultiWorkflowResponse
-	(*PostWorkflowResultsRequest)(nil),                   // 222: clarifai.api.PostWorkflowResultsRequest
-	(*PostWorkflowResultsResponse)(nil),                  // 223: clarifai.api.PostWorkflowResultsResponse
-	(*ListWorkflowVersionsRequest)(nil),                  // 224: clarifai.api.ListWorkflowVersionsRequest
-	(*GetWorkflowVersionRequest)(nil),                    // 225: clarifai.api.GetWorkflowVersionRequest
-	(*DeleteWorkflowVersionsRequest)(nil),                // 226: clarifai.api.DeleteWorkflowVersionsRequest
-	(*PatchWorkflowVersionsRequest)(nil),                 // 227: clarifai.api.PatchWorkflowVersionsRequest
-	(*MultiWorkflowVersionResponse)(nil),                 // 228: clarifai.api.MultiWorkflowVersionResponse
-	(*SingleWorkflowVersionResponse)(nil),                // 229: clarifai.api.SingleWorkflowVersionResponse
-	(*PostAppDuplicationsRequest)(nil),                   // 230: clarifai.api.PostAppDuplicationsRequest
-	(*GetAppDuplicationRequest)(nil),                     // 231: clarifai.api.GetAppDuplicationRequest
-	(*ListAppDuplicationsRequest)(nil),                   // 232: clarifai.api.ListAppDuplicationsRequest
-	(*MultiAppDuplicationsResponse)(nil),                 // 233: clarifai.api.MultiAppDuplicationsResponse
-	(*SingleAppDuplicationResponse)(nil),                 // 234: clarifai.api.SingleAppDuplicationResponse
-	(*PostTasksRequest)(nil),                             // 235: clarifai.api.PostTasksRequest
-	(*GetTaskRequest)(nil),                               // 236: clarifai.api.GetTaskRequest
-	(*ListTasksRequest)(nil),                             // 237: clarifai.api.ListTasksRequest
-	(*PatchTasksRequest)(nil),                            // 238: clarifai.api.PatchTasksRequest
-	(*DeleteTasksRequest)(nil),                           // 239: clarifai.api.DeleteTasksRequest
-	(*MultiTaskResponse)(nil),                            // 240: clarifai.api.MultiTaskResponse
-	(*SingleTaskResponse)(nil),                           // 241: clarifai.api.SingleTaskResponse
-	(*GetTaskCountRequest)(nil),                          // 242: clarifai.api.GetTaskCountRequest
-	(*SingleTaskCountResponse)(nil),                      // 243: clarifai.api.SingleTaskCountResponse
-	(*PostLabelOrdersRequest)(nil),                       // 244: clarifai.api.PostLabelOrdersRequest
-	(*GetLabelOrderRequest)(nil),                         // 245: clarifai.api.GetLabelOrderRequest
-	(*ListLabelOrdersRequest)(nil),                       // 246: clarifai.api.ListLabelOrdersRequest
-	(*PatchLabelOrdersRequest)(nil),                      // 247: clarifai.api.PatchLabelOrdersRequest
-	(*DeleteLabelOrdersRequest)(nil),                     // 248: clarifai.api.DeleteLabelOrdersRequest
-	(*MultiLabelOrderResponse)(nil),                      // 249: clarifai.api.MultiLabelOrderResponse
-	(*SingleLabelOrderResponse)(nil),                     // 250: clarifai.api.SingleLabelOrderResponse
-	(*PostCollectorsRequest)(nil),                        // 251: clarifai.api.PostCollectorsRequest
-	(*PatchCollectorsRequest)(nil),                       // 252: clarifai.api.PatchCollectorsRequest
-	(*DeleteCollectorsRequest)(nil),                      // 253: clarifai.api.DeleteCollectorsRequest
-	(*GetCollectorRequest)(nil),                          // 254: clarifai.api.GetCollectorRequest
-	(*ListCollectorsRequest)(nil),                        // 255: clarifai.api.ListCollectorsRequest
-	(*MultiCollectorResponse)(nil),                       // 256: clarifai.api.MultiCollectorResponse
-	(*SingleCollectorResponse)(nil),                      // 257: clarifai.api.SingleCollectorResponse
-	(*PostStatValuesRequest)(nil),                        // 258: clarifai.api.PostStatValuesRequest
-	(*MultiStatValueResponse)(nil),                       // 259: clarifai.api.MultiStatValueResponse
-	(*PostStatValuesAggregateRequest)(nil),               // 260: clarifai.api.PostStatValuesAggregateRequest
-	(*MultiStatValueAggregateResponse)(nil),              // 261: clarifai.api.MultiStatValueAggregateResponse
-	(*GetModuleRequest)(nil),                             // 262: clarifai.api.GetModuleRequest
-	(*ListModulesRequest)(nil),                           // 263: clarifai.api.ListModulesRequest
-	(*PostModulesRequest)(nil),                           // 264: clarifai.api.PostModulesRequest
-	(*PatchModulesRequest)(nil),                          // 265: clarifai.api.PatchModulesRequest
-	(*DeleteModulesRequest)(nil),                         // 266: clarifai.api.DeleteModulesRequest
-	(*SingleModuleResponse)(nil),                         // 267: clarifai.api.SingleModuleResponse
-	(*MultiModuleResponse)(nil),                          // 268: clarifai.api.MultiModuleResponse
-	(*GetModuleVersionRequest)(nil),                      // 269: clarifai.api.GetModuleVersionRequest
-	(*ListModuleVersionsRequest)(nil),                    // 270: clarifai.api.ListModuleVersionsRequest
-	(*PostModuleVersionsRequest)(nil),                    // 271: clarifai.api.PostModuleVersionsRequest
-	(*PatchModuleVersionsRequest)(nil),                   // 272: clarifai.api.PatchModuleVersionsRequest
-	(*DeleteModuleVersionsRequest)(nil),                  // 273: clarifai.api.DeleteModuleVersionsRequest
-	(*GetModuleVersionUsageCountRequest)(nil),            // 274: clarifai.api.GetModuleVersionUsageCountRequest
-	(*SingleModuleVersionResponse)(nil),                  // 275: clarifai.api.SingleModuleVersionResponse
-	(*MultiModuleVersionResponse)(nil),                   // 276: clarifai.api.MultiModuleVersionResponse
-	(*SingleModuleVersionUsageCountResponse)(nil),        // 277: clarifai.api.SingleModuleVersionUsageCountResponse
-	(*GetInstalledModuleVersionRequest)(nil),             // 278: clarifai.api.GetInstalledModuleVersionRequest
-	(*ListInstalledModuleVersionsRequest)(nil),           // 279: clarifai.api.ListInstalledModuleVersionsRequest
-	(*PostInstalledModuleVersionsRequest)(nil),           // 280: clarifai.api.PostInstalledModuleVersionsRequest
-	(*PostInstalledModuleVersionsKeyRequest)(nil),        // 281: clarifai.api.PostInstalledModuleVersionsKeyRequest
-	(*DeleteInstalledModuleVersionsRequest)(nil),         // 282: clarifai.api.DeleteInstalledModuleVersionsRequest
-	(*SingleInstalledModuleVersionResponse)(nil),         // 283: clarifai.api.SingleInstalledModuleVersionResponse
-	(*MultiInstalledModuleVersionResponse)(nil),          // 284: clarifai.api.MultiInstalledModuleVersionResponse
-	(*ListNextTaskAssignmentsRequest)(nil),               // 285: clarifai.api.ListNextTaskAssignmentsRequest
-	(*PostBulkOperationsRequest)(nil),                    // 286: clarifai.api.PostBulkOperationsRequest
-	(*ListBulkOperationsRequest)(nil),                    // 287: clarifai.api.ListBulkOperationsRequest
-	(*GetBulkOperationRequest)(nil),                      // 288: clarifai.api.GetBulkOperationRequest
-	(*CancelBulkOperationRequest)(nil),                   // 289: clarifai.api.CancelBulkOperationRequest
-	(*DeleteBulkOperationRequest)(nil),                   // 290: clarifai.api.DeleteBulkOperationRequest
-	(*SingleBulkOperationsResponse)(nil),                 // 291: clarifai.api.SingleBulkOperationsResponse
-	(*MultiBulkOperationsResponse)(nil),                  // 292: clarifai.api.MultiBulkOperationsResponse
-	(*PutTaskAssignmentsRequest)(nil),                    // 293: clarifai.api.PutTaskAssignmentsRequest
-	(*LabelSubmitConfig)(nil),                            // 294: clarifai.api.LabelSubmitConfig
-	(*ReviewStartConfig)(nil),                            // 295: clarifai.api.ReviewStartConfig
-	(*ReviewApproveConfig)(nil),                          // 296: clarifai.api.ReviewApproveConfig
-	(*ReviewRequestChangesConfig)(nil),                   // 297: clarifai.api.ReviewRequestChangesConfig
-	(*ReviewRejectConfig)(nil),                           // 298: clarifai.api.ReviewRejectConfig
-	(*MultiTaskAssignmentResponse)(nil),                  // 299: clarifai.api.MultiTaskAssignmentResponse
-	(*ListInputsAddJobsRequest)(nil),                     // 300: clarifai.api.ListInputsAddJobsRequest
-	(*GetInputsAddJobRequest)(nil),                       // 301: clarifai.api.GetInputsAddJobRequest
-	(*CancelInputsAddJobRequest)(nil),                    // 302: clarifai.api.CancelInputsAddJobRequest
-	(*MultiInputsAddJobResponse)(nil),                    // 303: clarifai.api.MultiInputsAddJobResponse
-	(*SingleInputsAddJobResponse)(nil),                   // 304: clarifai.api.SingleInputsAddJobResponse
-	(*PostUploadsRequest)(nil),                           // 305: clarifai.api.PostUploadsRequest
-	(*DeleteUploadsRequest)(nil),                         // 306: clarifai.api.DeleteUploadsRequest
-	(*ListUploadsRequest)(nil),                           // 307: clarifai.api.ListUploadsRequest
-	(*GetUploadRequest)(nil),                             // 308: clarifai.api.GetUploadRequest
-	(*SingleUploadResponse)(nil),                         // 309: clarifai.api.SingleUploadResponse
-	(*MultiUploadResponse)(nil),                          // 310: clarifai.api.MultiUploadResponse
-	(*PutUploadContentPartsRequest)(nil),                 // 311: clarifai.api.PutUploadContentPartsRequest
-	(*PostInputsDataSourcesRequest)(nil),                 // 312: clarifai.api.PostInputsDataSourcesRequest
-	(*GetInputsExtractionJobRequest)(nil),                // 313: clarifai.api.GetInputsExtractionJobRequest
-	(*ListInputsExtractionJobsRequest)(nil),              // 314: clarifai.api.ListInputsExtractionJobsRequest
-	(*SingleInputsExtractionJobResponse)(nil),            // 315: clarifai.api.SingleInputsExtractionJobResponse
-	(*MultiInputsExtractionJobResponse)(nil),             // 316: clarifai.api.MultiInputsExtractionJobResponse
-	(*CancelInputsExtractionJobsRequest)(nil),            // 317: clarifai.api.CancelInputsExtractionJobsRequest
-	(*PostInputsUploadsRequest)(nil),                     // 318: clarifai.api.PostInputsUploadsRequest
-	(*GetRunnerRequest)(nil),                             // 319: clarifai.api.GetRunnerRequest
-	(*ListRunnersRequest)(nil),                           // 320: clarifai.api.ListRunnersRequest
-	(*PostRunnersRequest)(nil),                           // 321: clarifai.api.PostRunnersRequest
-	(*DeleteRunnersRequest)(nil),                         // 322: clarifai.api.DeleteRunnersRequest
-	(*SingleRunnerResponse)(nil),                         // 323: clarifai.api.SingleRunnerResponse
-	(*MultiRunnerResponse)(nil),                          // 324: clarifai.api.MultiRunnerResponse
-	(*ListRunnerItemsRequest)(nil),                       // 325: clarifai.api.ListRunnerItemsRequest
-	(*PostRunnerItemOutputsRequest)(nil),                 // 326: clarifai.api.PostRunnerItemOutputsRequest
-	(*MultiRunnerItemResponse)(nil),                      // 327: clarifai.api.MultiRunnerItemResponse
-	(*RunnerItem)(nil),                                   // 328: clarifai.api.RunnerItem
-	(*RunnerItemOutput)(nil),                             // 329: clarifai.api.RunnerItemOutput
-	(*MultiRunnerItemOutputResponse)(nil),                // 330: clarifai.api.MultiRunnerItemOutputResponse
-	(*PostModelVersionsTrainingTimeEstimateRequest)(nil), // 331: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest
-	(*MultiTrainingTimeEstimateResponse)(nil),            // 332: clarifai.api.MultiTrainingTimeEstimateResponse
-	(*ListCloudProvidersRequest)(nil),                    // 333: clarifai.api.ListCloudProvidersRequest
-	(*MultiCloudProviderResponse)(nil),                   // 334: clarifai.api.MultiCloudProviderResponse
-	(*ListCloudRegionsRequest)(nil),                      // 335: clarifai.api.ListCloudRegionsRequest
-	(*MultiCloudRegionResponse)(nil),                     // 336: clarifai.api.MultiCloudRegionResponse
-	(*ListInstanceTypesRequest)(nil),                     // 337: clarifai.api.ListInstanceTypesRequest
-	(*MultiInstanceTypeResponse)(nil),                    // 338: clarifai.api.MultiInstanceTypeResponse
-	(*GetComputeClusterRequest)(nil),                     // 339: clarifai.api.GetComputeClusterRequest
-	(*ListComputeClustersRequest)(nil),                   // 340: clarifai.api.ListComputeClustersRequest
-	(*PostComputeClustersRequest)(nil),                   // 341: clarifai.api.PostComputeClustersRequest
-	(*DeleteComputeClustersRequest)(nil),                 // 342: clarifai.api.DeleteComputeClustersRequest
-	(*SingleComputeClusterResponse)(nil),                 // 343: clarifai.api.SingleComputeClusterResponse
-	(*MultiComputeClusterResponse)(nil),                  // 344: clarifai.api.MultiComputeClusterResponse
-	(*GetNodepoolRequest)(nil),                           // 345: clarifai.api.GetNodepoolRequest
-	(*ListNodepoolsRequest)(nil),                         // 346: clarifai.api.ListNodepoolsRequest
-	(*PostNodepoolsRequest)(nil),                         // 347: clarifai.api.PostNodepoolsRequest
-	(*PatchNodepoolsRequest)(nil),                        // 348: clarifai.api.PatchNodepoolsRequest
-	(*DeleteNodepoolsRequest)(nil),                       // 349: clarifai.api.DeleteNodepoolsRequest
-	(*SingleNodepoolResponse)(nil),                       // 350: clarifai.api.SingleNodepoolResponse
-	(*MultiNodepoolResponse)(nil),                        // 351: clarifai.api.MultiNodepoolResponse
-	(*GetDeploymentRequest)(nil),                         // 352: clarifai.api.GetDeploymentRequest
-	(*ListDeploymentsRequest)(nil),                       // 353: clarifai.api.ListDeploymentsRequest
-	(*PostDeploymentsRequest)(nil),                       // 354: clarifai.api.PostDeploymentsRequest
-	(*DeleteDeploymentsRequest)(nil),                     // 355: clarifai.api.DeleteDeploymentsRequest
-	(*PostAuditLogSearchesRequest)(nil),                  // 356: clarifai.api.PostAuditLogSearchesRequest
-	(*MultiAuditLogEntryResponse)(nil),                   // 357: clarifai.api.MultiAuditLogEntryResponse
-	(*PatchDeploymentsRequest)(nil),                      // 358: clarifai.api.PatchDeploymentsRequest
-	(*SingleDeploymentResponse)(nil),                     // 359: clarifai.api.SingleDeploymentResponse
-	(*MultiDeploymentResponse)(nil),                      // 360: clarifai.api.MultiDeploymentResponse
-	(*ListWorkflowEvaluationTemplatesRequest)(nil),       // 361: clarifai.api.ListWorkflowEvaluationTemplatesRequest
-	(*MultiWorkflowEvaluationTemplateResponse)(nil),      // 362: clarifai.api.MultiWorkflowEvaluationTemplateResponse
-	nil,                                       // 363: clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry
-	(*UserAppIDSet)(nil),                      // 364: clarifai.api.UserAppIDSet
-	(*status.Status)(nil),                     // 365: clarifai.api.status.Status
-	(*Annotation)(nil),                        // 366: clarifai.api.Annotation
-	(status.StatusCode)(0),                    // 367: clarifai.api.status.StatusCode
-	(*Worker)(nil),                            // 368: clarifai.api.Worker
-	(*App)(nil),                               // 369: clarifai.api.App
-	(*PatchAction)(nil),                       // 370: clarifai.api.PatchAction
-	(*AppQuery)(nil),                          // 371: clarifai.api.AppQuery
-	(*Collaborator)(nil),                      // 372: clarifai.api.Collaborator
-	(*User)(nil),                              // 373: clarifai.api.User
-	(*Collaboration)(nil),                     // 374: clarifai.api.Collaboration
-	(*ConceptQuery)(nil),                      // 375: clarifai.api.ConceptQuery
-	(*Model)(nil),                             // 376: clarifai.api.Model
-	(*Concept)(nil),                           // 377: clarifai.api.Concept
-	(*ConceptCount)(nil),                      // 378: clarifai.api.ConceptCount
-	(*ConceptRelation)(nil),                   // 379: clarifai.api.ConceptRelation
-	(*KnowledgeGraph)(nil),                    // 380: clarifai.api.KnowledgeGraph
-	(*ConceptLanguage)(nil),                   // 381: clarifai.api.ConceptLanguage
-	(*Input)(nil),                             // 382: clarifai.api.Input
-	(InputIDConflictResolution)(0),            // 383: clarifai.api.InputIDConflictResolution
-	(*InputsAddJob)(nil),                      // 384: clarifai.api.InputsAddJob
-	(*Hit)(nil),                               // 385: clarifai.api.Hit
-	(*InputCount)(nil),                        // 386: clarifai.api.InputCount
-	(*Dataset)(nil),                           // 387: clarifai.api.Dataset
-	(*DatasetInput)(nil),                      // 388: clarifai.api.DatasetInput
-	(*Search)(nil),                            // 389: clarifai.api.Search
-	(*BulkOperation)(nil),                     // 390: clarifai.api.BulkOperation
-	(DatasetVersionRequestOrigin)(0),          // 391: clarifai.api.DatasetVersionRequestOrigin
-	(DatasetVersionMetricsGroupType)(0),       // 392: clarifai.api.DatasetVersionMetricsGroupType
-	(*structpb.Value)(nil),                    // 393: google.protobuf.Value
-	(*DatasetVersion)(nil),                    // 394: clarifai.api.DatasetVersion
-	(*DatasetVersionExport)(nil),              // 395: clarifai.api.DatasetVersionExport
-	(*DatasetVersionMetricsGroup)(nil),        // 396: clarifai.api.DatasetVersionMetricsGroup
-	(*RunnerSelector)(nil),                    // 397: clarifai.api.RunnerSelector
-	(*Key)(nil),                               // 398: clarifai.api.Key
-	(LicenseType)(0),                          // 399: clarifai.api.LicenseType
-	(*ModelQuery)(nil),                        // 400: clarifai.api.ModelQuery
-	(*ModelVersion)(nil),                      // 401: clarifai.api.ModelVersion
-	(*EvalInfo)(nil),                          // 402: clarifai.api.EvalInfo
-	(*UploadContentPart)(nil),                 // 403: clarifai.api.UploadContentPart
-	(*ModelVersionExport)(nil),                // 404: clarifai.api.ModelVersionExport
-	(*EvalMetrics)(nil),                       // 405: clarifai.api.EvalMetrics
-	(*FieldsValue)(nil),                       // 406: clarifai.api.FieldsValue
-	(*ModelType)(nil),                         // 407: clarifai.api.ModelType
-	(*ModelTypeField)(nil),                    // 408: clarifai.api.ModelTypeField
-	(*TritonCondaEnvInfo)(nil),                // 409: clarifai.api.TritonCondaEnvInfo
-	(*ModelVersionInputExample)(nil),          // 410: clarifai.api.ModelVersionInputExample
-	(*ModelReference)(nil),                    // 411: clarifai.api.ModelReference
-	(*Output)(nil),                            // 412: clarifai.api.Output
-	(*LogEntry)(nil),                          // 413: clarifai.api.LogEntry
-	(*ScopeDeps)(nil),                         // 414: clarifai.api.ScopeDeps
-	(*EndpointDeps)(nil),                      // 415: clarifai.api.EndpointDeps
-	(*Query)(nil),                             // 416: clarifai.api.Query
-	(*HitCount)(nil),                          // 417: clarifai.api.HitCount
-	(*Data)(nil),                              // 418: clarifai.api.Data
-	(EvaluationType)(0),                       // 419: clarifai.api.EvaluationType
-	(*AnnotationSearchMetrics)(nil),           // 420: clarifai.api.AnnotationSearchMetrics
-	(*AnnotationFilter)(nil),                  // 421: clarifai.api.AnnotationFilter
-	(*Password)(nil),                          // 422: clarifai.api.Password
-	(*PasswordViolations)(nil),                // 423: clarifai.api.PasswordViolations
-	(*Workflow)(nil),                          // 424: clarifai.api.Workflow
-	(*OutputConfig)(nil),                      // 425: clarifai.api.OutputConfig
-	(*WorkflowState)(nil),                     // 426: clarifai.api.WorkflowState
-	(*WorkflowResult)(nil),                    // 427: clarifai.api.WorkflowResult
-	(*WorkflowVersion)(nil),                   // 428: clarifai.api.WorkflowVersion
-	(*AppDuplication)(nil),                    // 429: clarifai.api.AppDuplication
-	(*Task)(nil),                              // 430: clarifai.api.Task
-	(TaskInputSource_TaskInputSourceType)(0),  // 431: clarifai.api.TaskInputSource.TaskInputSourceType
-	(*TaskStatusCountPerUser)(nil),            // 432: clarifai.api.TaskStatusCountPerUser
-	(*LabelOrder)(nil),                        // 433: clarifai.api.LabelOrder
-	(*Collector)(nil),                         // 434: clarifai.api.Collector
-	(*StatValue)(nil),                         // 435: clarifai.api.StatValue
-	(*StatValueAggregateQuery)(nil),           // 436: clarifai.api.StatValueAggregateQuery
-	(*StatValueAggregateResult)(nil),          // 437: clarifai.api.StatValueAggregateResult
-	(*Module)(nil),                            // 438: clarifai.api.Module
-	(*ModuleVersion)(nil),                     // 439: clarifai.api.ModuleVersion
-	(*InstalledModuleVersion)(nil),            // 440: clarifai.api.InstalledModuleVersion
-	(*TaskAssignment)(nil),                    // 441: clarifai.api.TaskAssignment
-	(*Upload)(nil),                            // 442: clarifai.api.Upload
-	(*InputsDataSource)(nil),                  // 443: clarifai.api.InputsDataSource
-	(*InputsExtractionJob)(nil),               // 444: clarifai.api.InputsExtractionJob
-	(*InputsUpload)(nil),                      // 445: clarifai.api.InputsUpload
-	(*Runner)(nil),                            // 446: clarifai.api.Runner
-	(*ProcessingInfo)(nil),                    // 447: clarifai.api.ProcessingInfo
-	(*durationpb.Duration)(nil),               // 448: google.protobuf.Duration
-	(*CloudProvider)(nil),                     // 449: clarifai.api.CloudProvider
-	(*InstanceType)(nil),                      // 450: clarifai.api.InstanceType
-	(*ComputeCluster)(nil),                    // 451: clarifai.api.ComputeCluster
-	(*Nodepool)(nil),                          // 452: clarifai.api.Nodepool
-	(*Deployment)(nil),                        // 453: clarifai.api.Deployment
-	(*AuditLogQuery)(nil),                     // 454: clarifai.api.AuditLogQuery
-	(*AuditLogEntry)(nil),                     // 455: clarifai.api.AuditLogEntry
-	(*WorkflowVersionEvaluationTemplate)(nil), // 456: clarifai.api.WorkflowVersionEvaluationTemplate
-	(*status.BaseResponse)(nil),               // 457: clarifai.api.status.BaseResponse
+	(*PostComputePlaneMetricsRequest)(nil),               // 102: clarifai.api.PostComputePlaneMetricsRequest
+	(*PostLogEntriesRequest)(nil),                        // 103: clarifai.api.PostLogEntriesRequest
+	(*ListLogEntriesRequest)(nil),                        // 104: clarifai.api.ListLogEntriesRequest
+	(*StreamLogEntriesRequest)(nil),                      // 105: clarifai.api.StreamLogEntriesRequest
+	(*GetKeyRequest)(nil),                                // 106: clarifai.api.GetKeyRequest
+	(*ListKeysRequest)(nil),                              // 107: clarifai.api.ListKeysRequest
+	(*ListAppKeysRequest)(nil),                           // 108: clarifai.api.ListAppKeysRequest
+	(*PostKeysRequest)(nil),                              // 109: clarifai.api.PostKeysRequest
+	(*DeleteKeyRequest)(nil),                             // 110: clarifai.api.DeleteKeyRequest
+	(*PatchKeysRequest)(nil),                             // 111: clarifai.api.PatchKeysRequest
+	(*SingleKeyResponse)(nil),                            // 112: clarifai.api.SingleKeyResponse
+	(*MultiKeyResponse)(nil),                             // 113: clarifai.api.MultiKeyResponse
+	(*GetModelRequest)(nil),                              // 114: clarifai.api.GetModelRequest
+	(*ListModelsRequest)(nil),                            // 115: clarifai.api.ListModelsRequest
+	(*GetResourceCountsRequest)(nil),                     // 116: clarifai.api.GetResourceCountsRequest
+	(*GetResourceCountsResponse)(nil),                    // 117: clarifai.api.GetResourceCountsResponse
+	(*PatchModelToolkitsRequest)(nil),                    // 118: clarifai.api.PatchModelToolkitsRequest
+	(*PatchModelCheckConsentsRequest)(nil),               // 119: clarifai.api.PatchModelCheckConsentsRequest
+	(*PatchModelUseCasesRequest)(nil),                    // 120: clarifai.api.PatchModelUseCasesRequest
+	(*PatchModelLanguagesRequest)(nil),                   // 121: clarifai.api.PatchModelLanguagesRequest
+	(*MultiModelToolkitResponse)(nil),                    // 122: clarifai.api.MultiModelToolkitResponse
+	(*MultiModelCheckConsentResponse)(nil),               // 123: clarifai.api.MultiModelCheckConsentResponse
+	(*MultiModelUseCaseResponse)(nil),                    // 124: clarifai.api.MultiModelUseCaseResponse
+	(*MultiModelLanguageResponse)(nil),                   // 125: clarifai.api.MultiModelLanguageResponse
+	(*PostModelsRequest)(nil),                            // 126: clarifai.api.PostModelsRequest
+	(*PatchModelsRequest)(nil),                           // 127: clarifai.api.PatchModelsRequest
+	(*IdUpdateSource)(nil),                               // 128: clarifai.api.IdUpdateSource
+	(*PatchModelIdsRequest)(nil),                         // 129: clarifai.api.PatchModelIdsRequest
+	(*DeleteModelRequest)(nil),                           // 130: clarifai.api.DeleteModelRequest
+	(*DeleteModelsRequest)(nil),                          // 131: clarifai.api.DeleteModelsRequest
+	(*PostModelsSearchesRequest)(nil),                    // 132: clarifai.api.PostModelsSearchesRequest
+	(*SingleModelResponse)(nil),                          // 133: clarifai.api.SingleModelResponse
+	(*MultiModelResponse)(nil),                           // 134: clarifai.api.MultiModelResponse
+	(*PatchModelVersionsRequest)(nil),                    // 135: clarifai.api.PatchModelVersionsRequest
+	(*GetModelVersionRequest)(nil),                       // 136: clarifai.api.GetModelVersionRequest
+	(*ListModelVersionsRequest)(nil),                     // 137: clarifai.api.ListModelVersionsRequest
+	(*DeleteModelVersionRequest)(nil),                    // 138: clarifai.api.DeleteModelVersionRequest
+	(*SingleModelVersionResponse)(nil),                   // 139: clarifai.api.SingleModelVersionResponse
+	(*MultiModelVersionResponse)(nil),                    // 140: clarifai.api.MultiModelVersionResponse
+	(*PostModelVersionsRequest)(nil),                     // 141: clarifai.api.PostModelVersionsRequest
+	(*PostModelVersionsUploadRequest)(nil),               // 142: clarifai.api.PostModelVersionsUploadRequest
+	(*PostModelVersionsUploadResponse)(nil),              // 143: clarifai.api.PostModelVersionsUploadResponse
+	(*PostModelVersionsUploadConfig)(nil),                // 144: clarifai.api.PostModelVersionsUploadConfig
+	(*PutModelVersionExportsRequest)(nil),                // 145: clarifai.api.PutModelVersionExportsRequest
+	(*GetModelVersionExportRequest)(nil),                 // 146: clarifai.api.GetModelVersionExportRequest
+	(*SingleModelVersionExportResponse)(nil),             // 147: clarifai.api.SingleModelVersionExportResponse
+	(*PostWorkflowVersionsUnPublishRequest)(nil),         // 148: clarifai.api.PostWorkflowVersionsUnPublishRequest
+	(*PostWorkflowVersionsPublishRequest)(nil),           // 149: clarifai.api.PostWorkflowVersionsPublishRequest
+	(*WorkflowVersionPublishRequest)(nil),                // 150: clarifai.api.WorkflowVersionPublishRequest
+	(*WorkflowVersionUnPublishRequest)(nil),              // 151: clarifai.api.WorkflowVersionUnPublishRequest
+	(*ModelVersionPublishRequest)(nil),                   // 152: clarifai.api.ModelVersionPublishRequest
+	(*PostModelVersionsPublishRequest)(nil),              // 153: clarifai.api.PostModelVersionsPublishRequest
+	(*ModelVersionUnpublishRequest)(nil),                 // 154: clarifai.api.ModelVersionUnpublishRequest
+	(*PostModelVersionsUnPublishRequest)(nil),            // 155: clarifai.api.PostModelVersionsUnPublishRequest
+	(*PostEvaluationsRequest)(nil),                       // 156: clarifai.api.PostEvaluationsRequest
+	(*ListEvaluationsRequest)(nil),                       // 157: clarifai.api.ListEvaluationsRequest
+	(*GetEvaluationRequest)(nil),                         // 158: clarifai.api.GetEvaluationRequest
+	(*PostModelVersionEvaluationsRequest)(nil),           // 159: clarifai.api.PostModelVersionEvaluationsRequest
+	(*ListModelVersionEvaluationsRequest)(nil),           // 160: clarifai.api.ListModelVersionEvaluationsRequest
+	(*GetModelVersionEvaluationRequest)(nil),             // 161: clarifai.api.GetModelVersionEvaluationRequest
+	(*SingleEvalMetricsResponse)(nil),                    // 162: clarifai.api.SingleEvalMetricsResponse
+	(*MultiEvalMetricsResponse)(nil),                     // 163: clarifai.api.MultiEvalMetricsResponse
+	(*PostModelVersionMetricsRequest)(nil),               // 164: clarifai.api.PostModelVersionMetricsRequest
+	(*GetModelVersionMetricsRequest)(nil),                // 165: clarifai.api.GetModelVersionMetricsRequest
+	(*GetModelTypeRequest)(nil),                          // 166: clarifai.api.GetModelTypeRequest
+	(*ListModelTypesRequest)(nil),                        // 167: clarifai.api.ListModelTypesRequest
+	(*ListOpenSourceLicensesRequest)(nil),                // 168: clarifai.api.ListOpenSourceLicensesRequest
+	(*ListOpenSourceLicensesResponse)(nil),               // 169: clarifai.api.ListOpenSourceLicensesResponse
+	(*SingleModelTypeResponse)(nil),                      // 170: clarifai.api.SingleModelTypeResponse
+	(*MultiModelTypeResponse)(nil),                       // 171: clarifai.api.MultiModelTypeResponse
+	(*GetModelVersionInputExampleRequest)(nil),           // 172: clarifai.api.GetModelVersionInputExampleRequest
+	(*ListModelVersionInputExamplesRequest)(nil),         // 173: clarifai.api.ListModelVersionInputExamplesRequest
+	(*SingleModelVersionInputExampleResponse)(nil),       // 174: clarifai.api.SingleModelVersionInputExampleResponse
+	(*MultiModelVersionInputExampleResponse)(nil),        // 175: clarifai.api.MultiModelVersionInputExampleResponse
+	(*ListModelReferencesRequest)(nil),                   // 176: clarifai.api.ListModelReferencesRequest
+	(*MultiModelReferenceResponse)(nil),                  // 177: clarifai.api.MultiModelReferenceResponse
+	(*MultiOutputResponse)(nil),                          // 178: clarifai.api.MultiOutputResponse
+	(*MultiLogEntryResponse)(nil),                        // 179: clarifai.api.MultiLogEntryResponse
+	(*ListScopesRequest)(nil),                            // 180: clarifai.api.ListScopesRequest
+	(*MyScopesRequest)(nil),                              // 181: clarifai.api.MyScopesRequest
+	(*MyScopesUserRequest)(nil),                          // 182: clarifai.api.MyScopesUserRequest
+	(*MyScopesRootRequest)(nil),                          // 183: clarifai.api.MyScopesRootRequest
+	(*MultiScopeDepsResponse)(nil),                       // 184: clarifai.api.MultiScopeDepsResponse
+	(*MultiScopeResponse)(nil),                           // 185: clarifai.api.MultiScopeResponse
+	(*MultiScopeUserResponse)(nil),                       // 186: clarifai.api.MultiScopeUserResponse
+	(*MultiScopeRootResponse)(nil),                       // 187: clarifai.api.MultiScopeRootResponse
+	(*GetSearchRequest)(nil),                             // 188: clarifai.api.GetSearchRequest
+	(*ListSearchesRequest)(nil),                          // 189: clarifai.api.ListSearchesRequest
+	(*PostSearchesRequest)(nil),                          // 190: clarifai.api.PostSearchesRequest
+	(*PatchInputsSearchesRequest)(nil),                   // 191: clarifai.api.PatchInputsSearchesRequest
+	(*PatchAnnotationsSearchesRequest)(nil),              // 192: clarifai.api.PatchAnnotationsSearchesRequest
+	(*PatchSearchesRequest)(nil),                         // 193: clarifai.api.PatchSearchesRequest
+	(*PostSearchesByIDRequest)(nil),                      // 194: clarifai.api.PostSearchesByIDRequest
+	(*DeleteSearchRequest)(nil),                          // 195: clarifai.api.DeleteSearchRequest
+	(*PostAnnotationsSearchesRequest)(nil),               // 196: clarifai.api.PostAnnotationsSearchesRequest
+	(*DeleteAnnotationSearchMetricsRequest)(nil),         // 197: clarifai.api.DeleteAnnotationSearchMetricsRequest
+	(*PostInputsSearchesRequest)(nil),                    // 198: clarifai.api.PostInputsSearchesRequest
+	(*SingleSearchResponse)(nil),                         // 199: clarifai.api.SingleSearchResponse
+	(*MultiSearchResponse)(nil),                          // 200: clarifai.api.MultiSearchResponse
+	(*PostAnnotationSearchMetricsRequest)(nil),           // 201: clarifai.api.PostAnnotationSearchMetricsRequest
+	(*GetAnnotationSearchMetricsRequest)(nil),            // 202: clarifai.api.GetAnnotationSearchMetricsRequest
+	(*ListAnnotationSearchMetricsRequest)(nil),           // 203: clarifai.api.ListAnnotationSearchMetricsRequest
+	(*MultiAnnotationSearchMetricsResponse)(nil),         // 204: clarifai.api.MultiAnnotationSearchMetricsResponse
+	(*ListAnnotationFiltersRequest)(nil),                 // 205: clarifai.api.ListAnnotationFiltersRequest
+	(*GetAnnotationFilterRequest)(nil),                   // 206: clarifai.api.GetAnnotationFilterRequest
+	(*PostAnnotationFiltersRequest)(nil),                 // 207: clarifai.api.PostAnnotationFiltersRequest
+	(*PatchAnnotationFiltersRequest)(nil),                // 208: clarifai.api.PatchAnnotationFiltersRequest
+	(*DeleteAnnotationFiltersRequest)(nil),               // 209: clarifai.api.DeleteAnnotationFiltersRequest
+	(*MultiAnnotationFilterResponse)(nil),                // 210: clarifai.api.MultiAnnotationFilterResponse
+	(*SingleAnnotationFilterResponse)(nil),               // 211: clarifai.api.SingleAnnotationFilterResponse
+	(*GetUserRequest)(nil),                               // 212: clarifai.api.GetUserRequest
+	(*SingleUserResponse)(nil),                           // 213: clarifai.api.SingleUserResponse
+	(*PostValidatePasswordRequest)(nil),                  // 214: clarifai.api.PostValidatePasswordRequest
+	(*SinglePasswordValidationResponse)(nil),             // 215: clarifai.api.SinglePasswordValidationResponse
+	(*GetWorkflowRequest)(nil),                           // 216: clarifai.api.GetWorkflowRequest
+	(*ListWorkflowsRequest)(nil),                         // 217: clarifai.api.ListWorkflowsRequest
+	(*PostWorkflowsRequest)(nil),                         // 218: clarifai.api.PostWorkflowsRequest
+	(*PatchWorkflowsRequest)(nil),                        // 219: clarifai.api.PatchWorkflowsRequest
+	(*PatchWorkflowIdsRequest)(nil),                      // 220: clarifai.api.PatchWorkflowIdsRequest
+	(*DeleteWorkflowRequest)(nil),                        // 221: clarifai.api.DeleteWorkflowRequest
+	(*DeleteWorkflowsRequest)(nil),                       // 222: clarifai.api.DeleteWorkflowsRequest
+	(*SingleWorkflowResponse)(nil),                       // 223: clarifai.api.SingleWorkflowResponse
+	(*MultiWorkflowResponse)(nil),                        // 224: clarifai.api.MultiWorkflowResponse
+	(*PostWorkflowResultsRequest)(nil),                   // 225: clarifai.api.PostWorkflowResultsRequest
+	(*PostWorkflowResultsResponse)(nil),                  // 226: clarifai.api.PostWorkflowResultsResponse
+	(*ListWorkflowVersionsRequest)(nil),                  // 227: clarifai.api.ListWorkflowVersionsRequest
+	(*GetWorkflowVersionRequest)(nil),                    // 228: clarifai.api.GetWorkflowVersionRequest
+	(*DeleteWorkflowVersionsRequest)(nil),                // 229: clarifai.api.DeleteWorkflowVersionsRequest
+	(*PatchWorkflowVersionsRequest)(nil),                 // 230: clarifai.api.PatchWorkflowVersionsRequest
+	(*MultiWorkflowVersionResponse)(nil),                 // 231: clarifai.api.MultiWorkflowVersionResponse
+	(*SingleWorkflowVersionResponse)(nil),                // 232: clarifai.api.SingleWorkflowVersionResponse
+	(*PostAppDuplicationsRequest)(nil),                   // 233: clarifai.api.PostAppDuplicationsRequest
+	(*GetAppDuplicationRequest)(nil),                     // 234: clarifai.api.GetAppDuplicationRequest
+	(*ListAppDuplicationsRequest)(nil),                   // 235: clarifai.api.ListAppDuplicationsRequest
+	(*MultiAppDuplicationsResponse)(nil),                 // 236: clarifai.api.MultiAppDuplicationsResponse
+	(*SingleAppDuplicationResponse)(nil),                 // 237: clarifai.api.SingleAppDuplicationResponse
+	(*PostTasksRequest)(nil),                             // 238: clarifai.api.PostTasksRequest
+	(*GetTaskRequest)(nil),                               // 239: clarifai.api.GetTaskRequest
+	(*ListTasksRequest)(nil),                             // 240: clarifai.api.ListTasksRequest
+	(*PatchTasksRequest)(nil),                            // 241: clarifai.api.PatchTasksRequest
+	(*DeleteTasksRequest)(nil),                           // 242: clarifai.api.DeleteTasksRequest
+	(*MultiTaskResponse)(nil),                            // 243: clarifai.api.MultiTaskResponse
+	(*SingleTaskResponse)(nil),                           // 244: clarifai.api.SingleTaskResponse
+	(*GetTaskCountRequest)(nil),                          // 245: clarifai.api.GetTaskCountRequest
+	(*SingleTaskCountResponse)(nil),                      // 246: clarifai.api.SingleTaskCountResponse
+	(*PostLabelOrdersRequest)(nil),                       // 247: clarifai.api.PostLabelOrdersRequest
+	(*GetLabelOrderRequest)(nil),                         // 248: clarifai.api.GetLabelOrderRequest
+	(*ListLabelOrdersRequest)(nil),                       // 249: clarifai.api.ListLabelOrdersRequest
+	(*PatchLabelOrdersRequest)(nil),                      // 250: clarifai.api.PatchLabelOrdersRequest
+	(*DeleteLabelOrdersRequest)(nil),                     // 251: clarifai.api.DeleteLabelOrdersRequest
+	(*MultiLabelOrderResponse)(nil),                      // 252: clarifai.api.MultiLabelOrderResponse
+	(*SingleLabelOrderResponse)(nil),                     // 253: clarifai.api.SingleLabelOrderResponse
+	(*PostCollectorsRequest)(nil),                        // 254: clarifai.api.PostCollectorsRequest
+	(*PatchCollectorsRequest)(nil),                       // 255: clarifai.api.PatchCollectorsRequest
+	(*DeleteCollectorsRequest)(nil),                      // 256: clarifai.api.DeleteCollectorsRequest
+	(*GetCollectorRequest)(nil),                          // 257: clarifai.api.GetCollectorRequest
+	(*ListCollectorsRequest)(nil),                        // 258: clarifai.api.ListCollectorsRequest
+	(*MultiCollectorResponse)(nil),                       // 259: clarifai.api.MultiCollectorResponse
+	(*SingleCollectorResponse)(nil),                      // 260: clarifai.api.SingleCollectorResponse
+	(*PostStatValuesRequest)(nil),                        // 261: clarifai.api.PostStatValuesRequest
+	(*MultiStatValueResponse)(nil),                       // 262: clarifai.api.MultiStatValueResponse
+	(*PostStatValuesAggregateRequest)(nil),               // 263: clarifai.api.PostStatValuesAggregateRequest
+	(*MultiStatValueAggregateResponse)(nil),              // 264: clarifai.api.MultiStatValueAggregateResponse
+	(*GetModuleRequest)(nil),                             // 265: clarifai.api.GetModuleRequest
+	(*ListModulesRequest)(nil),                           // 266: clarifai.api.ListModulesRequest
+	(*PostModulesRequest)(nil),                           // 267: clarifai.api.PostModulesRequest
+	(*PatchModulesRequest)(nil),                          // 268: clarifai.api.PatchModulesRequest
+	(*DeleteModulesRequest)(nil),                         // 269: clarifai.api.DeleteModulesRequest
+	(*SingleModuleResponse)(nil),                         // 270: clarifai.api.SingleModuleResponse
+	(*MultiModuleResponse)(nil),                          // 271: clarifai.api.MultiModuleResponse
+	(*GetModuleVersionRequest)(nil),                      // 272: clarifai.api.GetModuleVersionRequest
+	(*ListModuleVersionsRequest)(nil),                    // 273: clarifai.api.ListModuleVersionsRequest
+	(*PostModuleVersionsRequest)(nil),                    // 274: clarifai.api.PostModuleVersionsRequest
+	(*PatchModuleVersionsRequest)(nil),                   // 275: clarifai.api.PatchModuleVersionsRequest
+	(*DeleteModuleVersionsRequest)(nil),                  // 276: clarifai.api.DeleteModuleVersionsRequest
+	(*GetModuleVersionUsageCountRequest)(nil),            // 277: clarifai.api.GetModuleVersionUsageCountRequest
+	(*SingleModuleVersionResponse)(nil),                  // 278: clarifai.api.SingleModuleVersionResponse
+	(*MultiModuleVersionResponse)(nil),                   // 279: clarifai.api.MultiModuleVersionResponse
+	(*SingleModuleVersionUsageCountResponse)(nil),        // 280: clarifai.api.SingleModuleVersionUsageCountResponse
+	(*GetInstalledModuleVersionRequest)(nil),             // 281: clarifai.api.GetInstalledModuleVersionRequest
+	(*ListInstalledModuleVersionsRequest)(nil),           // 282: clarifai.api.ListInstalledModuleVersionsRequest
+	(*PostInstalledModuleVersionsRequest)(nil),           // 283: clarifai.api.PostInstalledModuleVersionsRequest
+	(*PostInstalledModuleVersionsKeyRequest)(nil),        // 284: clarifai.api.PostInstalledModuleVersionsKeyRequest
+	(*DeleteInstalledModuleVersionsRequest)(nil),         // 285: clarifai.api.DeleteInstalledModuleVersionsRequest
+	(*SingleInstalledModuleVersionResponse)(nil),         // 286: clarifai.api.SingleInstalledModuleVersionResponse
+	(*MultiInstalledModuleVersionResponse)(nil),          // 287: clarifai.api.MultiInstalledModuleVersionResponse
+	(*ListNextTaskAssignmentsRequest)(nil),               // 288: clarifai.api.ListNextTaskAssignmentsRequest
+	(*PostBulkOperationsRequest)(nil),                    // 289: clarifai.api.PostBulkOperationsRequest
+	(*ListBulkOperationsRequest)(nil),                    // 290: clarifai.api.ListBulkOperationsRequest
+	(*GetBulkOperationRequest)(nil),                      // 291: clarifai.api.GetBulkOperationRequest
+	(*CancelBulkOperationRequest)(nil),                   // 292: clarifai.api.CancelBulkOperationRequest
+	(*DeleteBulkOperationRequest)(nil),                   // 293: clarifai.api.DeleteBulkOperationRequest
+	(*SingleBulkOperationsResponse)(nil),                 // 294: clarifai.api.SingleBulkOperationsResponse
+	(*MultiBulkOperationsResponse)(nil),                  // 295: clarifai.api.MultiBulkOperationsResponse
+	(*PutTaskAssignmentsRequest)(nil),                    // 296: clarifai.api.PutTaskAssignmentsRequest
+	(*LabelSubmitConfig)(nil),                            // 297: clarifai.api.LabelSubmitConfig
+	(*ReviewStartConfig)(nil),                            // 298: clarifai.api.ReviewStartConfig
+	(*ReviewApproveConfig)(nil),                          // 299: clarifai.api.ReviewApproveConfig
+	(*ReviewRequestChangesConfig)(nil),                   // 300: clarifai.api.ReviewRequestChangesConfig
+	(*ReviewRejectConfig)(nil),                           // 301: clarifai.api.ReviewRejectConfig
+	(*MultiTaskAssignmentResponse)(nil),                  // 302: clarifai.api.MultiTaskAssignmentResponse
+	(*ListInputsAddJobsRequest)(nil),                     // 303: clarifai.api.ListInputsAddJobsRequest
+	(*GetInputsAddJobRequest)(nil),                       // 304: clarifai.api.GetInputsAddJobRequest
+	(*CancelInputsAddJobRequest)(nil),                    // 305: clarifai.api.CancelInputsAddJobRequest
+	(*MultiInputsAddJobResponse)(nil),                    // 306: clarifai.api.MultiInputsAddJobResponse
+	(*SingleInputsAddJobResponse)(nil),                   // 307: clarifai.api.SingleInputsAddJobResponse
+	(*PostUploadsRequest)(nil),                           // 308: clarifai.api.PostUploadsRequest
+	(*DeleteUploadsRequest)(nil),                         // 309: clarifai.api.DeleteUploadsRequest
+	(*ListUploadsRequest)(nil),                           // 310: clarifai.api.ListUploadsRequest
+	(*GetUploadRequest)(nil),                             // 311: clarifai.api.GetUploadRequest
+	(*SingleUploadResponse)(nil),                         // 312: clarifai.api.SingleUploadResponse
+	(*MultiUploadResponse)(nil),                          // 313: clarifai.api.MultiUploadResponse
+	(*PutUploadContentPartsRequest)(nil),                 // 314: clarifai.api.PutUploadContentPartsRequest
+	(*PostInputsDataSourcesRequest)(nil),                 // 315: clarifai.api.PostInputsDataSourcesRequest
+	(*GetInputsExtractionJobRequest)(nil),                // 316: clarifai.api.GetInputsExtractionJobRequest
+	(*ListInputsExtractionJobsRequest)(nil),              // 317: clarifai.api.ListInputsExtractionJobsRequest
+	(*SingleInputsExtractionJobResponse)(nil),            // 318: clarifai.api.SingleInputsExtractionJobResponse
+	(*MultiInputsExtractionJobResponse)(nil),             // 319: clarifai.api.MultiInputsExtractionJobResponse
+	(*CancelInputsExtractionJobsRequest)(nil),            // 320: clarifai.api.CancelInputsExtractionJobsRequest
+	(*PostInputsUploadsRequest)(nil),                     // 321: clarifai.api.PostInputsUploadsRequest
+	(*GetRunnerRequest)(nil),                             // 322: clarifai.api.GetRunnerRequest
+	(*ListRunnersRequest)(nil),                           // 323: clarifai.api.ListRunnersRequest
+	(*PostRunnersRequest)(nil),                           // 324: clarifai.api.PostRunnersRequest
+	(*DeleteRunnersRequest)(nil),                         // 325: clarifai.api.DeleteRunnersRequest
+	(*SingleRunnerResponse)(nil),                         // 326: clarifai.api.SingleRunnerResponse
+	(*MultiRunnerResponse)(nil),                          // 327: clarifai.api.MultiRunnerResponse
+	(*ListRunnerItemsRequest)(nil),                       // 328: clarifai.api.ListRunnerItemsRequest
+	(*PostRunnerItemOutputsRequest)(nil),                 // 329: clarifai.api.PostRunnerItemOutputsRequest
+	(*MultiRunnerItemResponse)(nil),                      // 330: clarifai.api.MultiRunnerItemResponse
+	(*RunnerItem)(nil),                                   // 331: clarifai.api.RunnerItem
+	(*RunnerItemOutput)(nil),                             // 332: clarifai.api.RunnerItemOutput
+	(*MultiRunnerItemOutputResponse)(nil),                // 333: clarifai.api.MultiRunnerItemOutputResponse
+	(*PostModelVersionsTrainingTimeEstimateRequest)(nil), // 334: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest
+	(*MultiTrainingTimeEstimateResponse)(nil),            // 335: clarifai.api.MultiTrainingTimeEstimateResponse
+	(*ListCloudProvidersRequest)(nil),                    // 336: clarifai.api.ListCloudProvidersRequest
+	(*MultiCloudProviderResponse)(nil),                   // 337: clarifai.api.MultiCloudProviderResponse
+	(*ListCloudRegionsRequest)(nil),                      // 338: clarifai.api.ListCloudRegionsRequest
+	(*MultiCloudRegionResponse)(nil),                     // 339: clarifai.api.MultiCloudRegionResponse
+	(*ListInstanceTypesRequest)(nil),                     // 340: clarifai.api.ListInstanceTypesRequest
+	(*MultiInstanceTypeResponse)(nil),                    // 341: clarifai.api.MultiInstanceTypeResponse
+	(*GetComputeClusterRequest)(nil),                     // 342: clarifai.api.GetComputeClusterRequest
+	(*ListComputeClustersRequest)(nil),                   // 343: clarifai.api.ListComputeClustersRequest
+	(*PostComputeClustersRequest)(nil),                   // 344: clarifai.api.PostComputeClustersRequest
+	(*DeleteComputeClustersRequest)(nil),                 // 345: clarifai.api.DeleteComputeClustersRequest
+	(*SingleComputeClusterResponse)(nil),                 // 346: clarifai.api.SingleComputeClusterResponse
+	(*MultiComputeClusterResponse)(nil),                  // 347: clarifai.api.MultiComputeClusterResponse
+	(*GetNodepoolRequest)(nil),                           // 348: clarifai.api.GetNodepoolRequest
+	(*ListNodepoolsRequest)(nil),                         // 349: clarifai.api.ListNodepoolsRequest
+	(*PostNodepoolsRequest)(nil),                         // 350: clarifai.api.PostNodepoolsRequest
+	(*PatchNodepoolsRequest)(nil),                        // 351: clarifai.api.PatchNodepoolsRequest
+	(*DeleteNodepoolsRequest)(nil),                       // 352: clarifai.api.DeleteNodepoolsRequest
+	(*SingleNodepoolResponse)(nil),                       // 353: clarifai.api.SingleNodepoolResponse
+	(*MultiNodepoolResponse)(nil),                        // 354: clarifai.api.MultiNodepoolResponse
+	(*GetDeploymentRequest)(nil),                         // 355: clarifai.api.GetDeploymentRequest
+	(*ListDeploymentsRequest)(nil),                       // 356: clarifai.api.ListDeploymentsRequest
+	(*PostDeploymentsRequest)(nil),                       // 357: clarifai.api.PostDeploymentsRequest
+	(*DeleteDeploymentsRequest)(nil),                     // 358: clarifai.api.DeleteDeploymentsRequest
+	(*PostAuditLogSearchesRequest)(nil),                  // 359: clarifai.api.PostAuditLogSearchesRequest
+	(*MultiAuditLogEntryResponse)(nil),                   // 360: clarifai.api.MultiAuditLogEntryResponse
+	(*PatchDeploymentsRequest)(nil),                      // 361: clarifai.api.PatchDeploymentsRequest
+	(*SingleDeploymentResponse)(nil),                     // 362: clarifai.api.SingleDeploymentResponse
+	(*MultiDeploymentResponse)(nil),                      // 363: clarifai.api.MultiDeploymentResponse
+	(*ListWorkflowEvaluationTemplatesRequest)(nil),       // 364: clarifai.api.ListWorkflowEvaluationTemplatesRequest
+	(*MultiWorkflowEvaluationTemplateResponse)(nil),      // 365: clarifai.api.MultiWorkflowEvaluationTemplateResponse
+	nil,                                       // 366: clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry
+	(*UserAppIDSet)(nil),                      // 367: clarifai.api.UserAppIDSet
+	(*status.Status)(nil),                     // 368: clarifai.api.status.Status
+	(*Annotation)(nil),                        // 369: clarifai.api.Annotation
+	(status.StatusCode)(0),                    // 370: clarifai.api.status.StatusCode
+	(*Worker)(nil),                            // 371: clarifai.api.Worker
+	(*App)(nil),                               // 372: clarifai.api.App
+	(*PatchAction)(nil),                       // 373: clarifai.api.PatchAction
+	(*AppQuery)(nil),                          // 374: clarifai.api.AppQuery
+	(*Collaborator)(nil),                      // 375: clarifai.api.Collaborator
+	(*User)(nil),                              // 376: clarifai.api.User
+	(*Collaboration)(nil),                     // 377: clarifai.api.Collaboration
+	(*ConceptQuery)(nil),                      // 378: clarifai.api.ConceptQuery
+	(*Model)(nil),                             // 379: clarifai.api.Model
+	(*Concept)(nil),                           // 380: clarifai.api.Concept
+	(*ConceptCount)(nil),                      // 381: clarifai.api.ConceptCount
+	(*ConceptRelation)(nil),                   // 382: clarifai.api.ConceptRelation
+	(*KnowledgeGraph)(nil),                    // 383: clarifai.api.KnowledgeGraph
+	(*ConceptLanguage)(nil),                   // 384: clarifai.api.ConceptLanguage
+	(*Input)(nil),                             // 385: clarifai.api.Input
+	(InputIDConflictResolution)(0),            // 386: clarifai.api.InputIDConflictResolution
+	(*InputsAddJob)(nil),                      // 387: clarifai.api.InputsAddJob
+	(*Hit)(nil),                               // 388: clarifai.api.Hit
+	(*InputCount)(nil),                        // 389: clarifai.api.InputCount
+	(*Dataset)(nil),                           // 390: clarifai.api.Dataset
+	(*DatasetInput)(nil),                      // 391: clarifai.api.DatasetInput
+	(*Search)(nil),                            // 392: clarifai.api.Search
+	(*BulkOperation)(nil),                     // 393: clarifai.api.BulkOperation
+	(DatasetVersionRequestOrigin)(0),          // 394: clarifai.api.DatasetVersionRequestOrigin
+	(DatasetVersionMetricsGroupType)(0),       // 395: clarifai.api.DatasetVersionMetricsGroupType
+	(*structpb.Value)(nil),                    // 396: google.protobuf.Value
+	(*DatasetVersion)(nil),                    // 397: clarifai.api.DatasetVersion
+	(*DatasetVersionExport)(nil),              // 398: clarifai.api.DatasetVersionExport
+	(*DatasetVersionMetricsGroup)(nil),        // 399: clarifai.api.DatasetVersionMetricsGroup
+	(*RunnerSelector)(nil),                    // 400: clarifai.api.RunnerSelector
+	(*ComputePlaneMetrics)(nil),               // 401: clarifai.api.ComputePlaneMetrics
+	(*LogEntry)(nil),                          // 402: clarifai.api.LogEntry
+	(*Key)(nil),                               // 403: clarifai.api.Key
+	(LicenseType)(0),                          // 404: clarifai.api.LicenseType
+	(*ModelQuery)(nil),                        // 405: clarifai.api.ModelQuery
+	(*ModelVersion)(nil),                      // 406: clarifai.api.ModelVersion
+	(*EvalInfo)(nil),                          // 407: clarifai.api.EvalInfo
+	(*UploadContentPart)(nil),                 // 408: clarifai.api.UploadContentPart
+	(*ModelVersionExport)(nil),                // 409: clarifai.api.ModelVersionExport
+	(*EvalMetrics)(nil),                       // 410: clarifai.api.EvalMetrics
+	(*FieldsValue)(nil),                       // 411: clarifai.api.FieldsValue
+	(*ModelType)(nil),                         // 412: clarifai.api.ModelType
+	(*ModelTypeField)(nil),                    // 413: clarifai.api.ModelTypeField
+	(*TritonCondaEnvInfo)(nil),                // 414: clarifai.api.TritonCondaEnvInfo
+	(*ModelVersionInputExample)(nil),          // 415: clarifai.api.ModelVersionInputExample
+	(*ModelReference)(nil),                    // 416: clarifai.api.ModelReference
+	(*Output)(nil),                            // 417: clarifai.api.Output
+	(*ScopeDeps)(nil),                         // 418: clarifai.api.ScopeDeps
+	(*EndpointDeps)(nil),                      // 419: clarifai.api.EndpointDeps
+	(*Query)(nil),                             // 420: clarifai.api.Query
+	(*HitCount)(nil),                          // 421: clarifai.api.HitCount
+	(*Data)(nil),                              // 422: clarifai.api.Data
+	(EvaluationType)(0),                       // 423: clarifai.api.EvaluationType
+	(*AnnotationSearchMetrics)(nil),           // 424: clarifai.api.AnnotationSearchMetrics
+	(*AnnotationFilter)(nil),                  // 425: clarifai.api.AnnotationFilter
+	(*Password)(nil),                          // 426: clarifai.api.Password
+	(*PasswordViolations)(nil),                // 427: clarifai.api.PasswordViolations
+	(*Workflow)(nil),                          // 428: clarifai.api.Workflow
+	(*OutputConfig)(nil),                      // 429: clarifai.api.OutputConfig
+	(*WorkflowState)(nil),                     // 430: clarifai.api.WorkflowState
+	(*WorkflowResult)(nil),                    // 431: clarifai.api.WorkflowResult
+	(*WorkflowVersion)(nil),                   // 432: clarifai.api.WorkflowVersion
+	(*AppDuplication)(nil),                    // 433: clarifai.api.AppDuplication
+	(*Task)(nil),                              // 434: clarifai.api.Task
+	(TaskInputSource_TaskInputSourceType)(0),  // 435: clarifai.api.TaskInputSource.TaskInputSourceType
+	(*TaskStatusCountPerUser)(nil),            // 436: clarifai.api.TaskStatusCountPerUser
+	(*LabelOrder)(nil),                        // 437: clarifai.api.LabelOrder
+	(*Collector)(nil),                         // 438: clarifai.api.Collector
+	(*StatValue)(nil),                         // 439: clarifai.api.StatValue
+	(*StatValueAggregateQuery)(nil),           // 440: clarifai.api.StatValueAggregateQuery
+	(*StatValueAggregateResult)(nil),          // 441: clarifai.api.StatValueAggregateResult
+	(*Module)(nil),                            // 442: clarifai.api.Module
+	(*ModuleVersion)(nil),                     // 443: clarifai.api.ModuleVersion
+	(*InstalledModuleVersion)(nil),            // 444: clarifai.api.InstalledModuleVersion
+	(*TaskAssignment)(nil),                    // 445: clarifai.api.TaskAssignment
+	(*Upload)(nil),                            // 446: clarifai.api.Upload
+	(*InputsDataSource)(nil),                  // 447: clarifai.api.InputsDataSource
+	(*InputsExtractionJob)(nil),               // 448: clarifai.api.InputsExtractionJob
+	(*InputsUpload)(nil),                      // 449: clarifai.api.InputsUpload
+	(*Runner)(nil),                            // 450: clarifai.api.Runner
+	(*ProcessingInfo)(nil),                    // 451: clarifai.api.ProcessingInfo
+	(*durationpb.Duration)(nil),               // 452: google.protobuf.Duration
+	(*CloudProvider)(nil),                     // 453: clarifai.api.CloudProvider
+	(*InstanceType)(nil),                      // 454: clarifai.api.InstanceType
+	(*ComputeCluster)(nil),                    // 455: clarifai.api.ComputeCluster
+	(*Nodepool)(nil),                          // 456: clarifai.api.Nodepool
+	(*Deployment)(nil),                        // 457: clarifai.api.Deployment
+	(*AuditLogQuery)(nil),                     // 458: clarifai.api.AuditLogQuery
+	(*AuditLogEntry)(nil),                     // 459: clarifai.api.AuditLogEntry
+	(*WorkflowVersionEvaluationTemplate)(nil), // 460: clarifai.api.WorkflowVersionEvaluationTemplate
+	(*status.BaseResponse)(nil),               // 461: clarifai.api.status.BaseResponse
 }
 var file_proto_clarifai_api_service_proto_depIdxs = []int32{
-	364, // 0: clarifai.api.GetAnnotationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 1: clarifai.api.ListAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 2: clarifai.api.ListAnnotationsRequest.statuses:type_name -> clarifai.api.status.Status
-	364, // 3: clarifai.api.PostAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	366, // 4: clarifai.api.PostAnnotationsRequest.annotations:type_name -> clarifai.api.Annotation
-	364, // 5: clarifai.api.PatchAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	366, // 6: clarifai.api.PatchAnnotationsRequest.annotations:type_name -> clarifai.api.Annotation
-	364, // 7: clarifai.api.PatchAnnotationsStatusRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	367, // 8: clarifai.api.PatchAnnotationsStatusRequest.status_codes:type_name -> clarifai.api.status.StatusCode
-	367, // 9: clarifai.api.PatchAnnotationsStatusRequest.status_code:type_name -> clarifai.api.status.StatusCode
-	365, // 10: clarifai.api.PatchAnnotationsStatusResponse.status:type_name -> clarifai.api.status.Status
-	364, // 11: clarifai.api.DeleteAnnotationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 12: clarifai.api.DeleteAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 13: clarifai.api.SingleAnnotationResponse.status:type_name -> clarifai.api.status.Status
-	366, // 14: clarifai.api.SingleAnnotationResponse.annotation:type_name -> clarifai.api.Annotation
-	365, // 15: clarifai.api.MultiAnnotationResponse.status:type_name -> clarifai.api.status.Status
-	366, // 16: clarifai.api.MultiAnnotationResponse.annotations:type_name -> clarifai.api.Annotation
-	364, // 17: clarifai.api.ListAnnotationWorkersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 18: clarifai.api.MultiWorkerResponse.status:type_name -> clarifai.api.status.Status
-	368, // 19: clarifai.api.MultiWorkerResponse.workers:type_name -> clarifai.api.Worker
-	364, // 20: clarifai.api.GetAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 21: clarifai.api.ListAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 22: clarifai.api.PostAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	369, // 23: clarifai.api.PostAppsRequest.apps:type_name -> clarifai.api.App
-	364, // 24: clarifai.api.DeleteAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 25: clarifai.api.PatchAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	369, // 26: clarifai.api.PatchAppsRequest.apps:type_name -> clarifai.api.App
-	370, // 27: clarifai.api.PatchAppsRequest.metadata_action:type_name -> clarifai.api.PatchAction
-	364, // 28: clarifai.api.PatchAppsDetailsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	369, // 29: clarifai.api.PatchAppsDetailsRequest.apps:type_name -> clarifai.api.App
-	364, // 30: clarifai.api.PatchAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	369, // 31: clarifai.api.PatchAppRequest.app:type_name -> clarifai.api.App
-	370, // 32: clarifai.api.PatchAppRequest.metadata_action:type_name -> clarifai.api.PatchAction
-	364, // 33: clarifai.api.PatchAppsIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	125, // 34: clarifai.api.PatchAppsIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
-	364, // 35: clarifai.api.PostAppsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	371, // 36: clarifai.api.PostAppsSearchesRequest.app_query:type_name -> clarifai.api.AppQuery
+	367, // 0: clarifai.api.GetAnnotationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 1: clarifai.api.ListAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 2: clarifai.api.ListAnnotationsRequest.statuses:type_name -> clarifai.api.status.Status
+	367, // 3: clarifai.api.PostAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	369, // 4: clarifai.api.PostAnnotationsRequest.annotations:type_name -> clarifai.api.Annotation
+	367, // 5: clarifai.api.PatchAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	369, // 6: clarifai.api.PatchAnnotationsRequest.annotations:type_name -> clarifai.api.Annotation
+	367, // 7: clarifai.api.PatchAnnotationsStatusRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	370, // 8: clarifai.api.PatchAnnotationsStatusRequest.status_codes:type_name -> clarifai.api.status.StatusCode
+	370, // 9: clarifai.api.PatchAnnotationsStatusRequest.status_code:type_name -> clarifai.api.status.StatusCode
+	368, // 10: clarifai.api.PatchAnnotationsStatusResponse.status:type_name -> clarifai.api.status.Status
+	367, // 11: clarifai.api.DeleteAnnotationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 12: clarifai.api.DeleteAnnotationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 13: clarifai.api.SingleAnnotationResponse.status:type_name -> clarifai.api.status.Status
+	369, // 14: clarifai.api.SingleAnnotationResponse.annotation:type_name -> clarifai.api.Annotation
+	368, // 15: clarifai.api.MultiAnnotationResponse.status:type_name -> clarifai.api.status.Status
+	369, // 16: clarifai.api.MultiAnnotationResponse.annotations:type_name -> clarifai.api.Annotation
+	367, // 17: clarifai.api.ListAnnotationWorkersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 18: clarifai.api.MultiWorkerResponse.status:type_name -> clarifai.api.status.Status
+	371, // 19: clarifai.api.MultiWorkerResponse.workers:type_name -> clarifai.api.Worker
+	367, // 20: clarifai.api.GetAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 21: clarifai.api.ListAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 22: clarifai.api.PostAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	372, // 23: clarifai.api.PostAppsRequest.apps:type_name -> clarifai.api.App
+	367, // 24: clarifai.api.DeleteAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 25: clarifai.api.PatchAppsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	372, // 26: clarifai.api.PatchAppsRequest.apps:type_name -> clarifai.api.App
+	373, // 27: clarifai.api.PatchAppsRequest.metadata_action:type_name -> clarifai.api.PatchAction
+	367, // 28: clarifai.api.PatchAppsDetailsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	372, // 29: clarifai.api.PatchAppsDetailsRequest.apps:type_name -> clarifai.api.App
+	367, // 30: clarifai.api.PatchAppRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	372, // 31: clarifai.api.PatchAppRequest.app:type_name -> clarifai.api.App
+	373, // 32: clarifai.api.PatchAppRequest.metadata_action:type_name -> clarifai.api.PatchAction
+	367, // 33: clarifai.api.PatchAppsIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	128, // 34: clarifai.api.PatchAppsIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
+	367, // 35: clarifai.api.PostAppsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	374, // 36: clarifai.api.PostAppsSearchesRequest.app_query:type_name -> clarifai.api.AppQuery
 	2,   // 37: clarifai.api.PostAppsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	365, // 38: clarifai.api.SingleAppResponse.status:type_name -> clarifai.api.status.Status
-	369, // 39: clarifai.api.SingleAppResponse.app:type_name -> clarifai.api.App
-	365, // 40: clarifai.api.MultiAppResponse.status:type_name -> clarifai.api.status.Status
-	369, // 41: clarifai.api.MultiAppResponse.apps:type_name -> clarifai.api.App
-	364, // 42: clarifai.api.ListCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 43: clarifai.api.PostCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	372, // 44: clarifai.api.PostCollaboratorsRequest.collaborators:type_name -> clarifai.api.Collaborator
-	364, // 45: clarifai.api.PatchCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	372, // 46: clarifai.api.PatchCollaboratorsRequest.collaborators:type_name -> clarifai.api.Collaborator
-	364, // 47: clarifai.api.DeleteCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 48: clarifai.api.MultiCollaboratorsResponse.status:type_name -> clarifai.api.status.Status
-	372, // 49: clarifai.api.MultiCollaboratorsResponse.collaborators:type_name -> clarifai.api.Collaborator
-	373, // 50: clarifai.api.MultiCollaboratorsResponse.app_owner:type_name -> clarifai.api.User
-	364, // 51: clarifai.api.ListCollaborationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 52: clarifai.api.MultiCollaborationsResponse.status:type_name -> clarifai.api.status.Status
-	374, // 53: clarifai.api.MultiCollaborationsResponse.collaborations:type_name -> clarifai.api.Collaboration
-	365, // 54: clarifai.api.SingleStatusCodeResponse.status:type_name -> clarifai.api.status.Status
-	365, // 55: clarifai.api.MultiStatusCodeResponse.status:type_name -> clarifai.api.status.Status
-	365, // 56: clarifai.api.MultiStatusCodeResponse.statuses:type_name -> clarifai.api.status.Status
-	364, // 57: clarifai.api.GetConceptRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 58: clarifai.api.ListConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 59: clarifai.api.ListModelConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 60: clarifai.api.PostConceptsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	375, // 61: clarifai.api.PostConceptsSearchesRequest.concept_query:type_name -> clarifai.api.ConceptQuery
+	368, // 38: clarifai.api.SingleAppResponse.status:type_name -> clarifai.api.status.Status
+	372, // 39: clarifai.api.SingleAppResponse.app:type_name -> clarifai.api.App
+	368, // 40: clarifai.api.MultiAppResponse.status:type_name -> clarifai.api.status.Status
+	372, // 41: clarifai.api.MultiAppResponse.apps:type_name -> clarifai.api.App
+	367, // 42: clarifai.api.ListCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 43: clarifai.api.PostCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	375, // 44: clarifai.api.PostCollaboratorsRequest.collaborators:type_name -> clarifai.api.Collaborator
+	367, // 45: clarifai.api.PatchCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	375, // 46: clarifai.api.PatchCollaboratorsRequest.collaborators:type_name -> clarifai.api.Collaborator
+	367, // 47: clarifai.api.DeleteCollaboratorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 48: clarifai.api.MultiCollaboratorsResponse.status:type_name -> clarifai.api.status.Status
+	375, // 49: clarifai.api.MultiCollaboratorsResponse.collaborators:type_name -> clarifai.api.Collaborator
+	376, // 50: clarifai.api.MultiCollaboratorsResponse.app_owner:type_name -> clarifai.api.User
+	367, // 51: clarifai.api.ListCollaborationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 52: clarifai.api.MultiCollaborationsResponse.status:type_name -> clarifai.api.status.Status
+	377, // 53: clarifai.api.MultiCollaborationsResponse.collaborations:type_name -> clarifai.api.Collaboration
+	368, // 54: clarifai.api.SingleStatusCodeResponse.status:type_name -> clarifai.api.status.Status
+	368, // 55: clarifai.api.MultiStatusCodeResponse.status:type_name -> clarifai.api.status.Status
+	368, // 56: clarifai.api.MultiStatusCodeResponse.statuses:type_name -> clarifai.api.status.Status
+	367, // 57: clarifai.api.GetConceptRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 58: clarifai.api.ListConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 59: clarifai.api.ListModelConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 60: clarifai.api.PostConceptsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	378, // 61: clarifai.api.PostConceptsSearchesRequest.concept_query:type_name -> clarifai.api.ConceptQuery
 	41,  // 62: clarifai.api.PostConceptsSearchesRequest.extra_info:type_name -> clarifai.api.ConceptExtraInfoRequest
 	2,   // 63: clarifai.api.PostConceptsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	376, // 64: clarifai.api.ConceptExtraInfoRequest.rankable_model:type_name -> clarifai.api.Model
-	364, // 65: clarifai.api.PostConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	377, // 66: clarifai.api.PostConceptsRequest.concepts:type_name -> clarifai.api.Concept
-	364, // 67: clarifai.api.PatchConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	377, // 68: clarifai.api.PatchConceptsRequest.concepts:type_name -> clarifai.api.Concept
-	364, // 69: clarifai.api.GetConceptCountsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 70: clarifai.api.SingleConceptResponse.status:type_name -> clarifai.api.status.Status
-	377, // 71: clarifai.api.SingleConceptResponse.concept:type_name -> clarifai.api.Concept
-	365, // 72: clarifai.api.MultiConceptResponse.status:type_name -> clarifai.api.status.Status
-	377, // 73: clarifai.api.MultiConceptResponse.concepts:type_name -> clarifai.api.Concept
-	365, // 74: clarifai.api.MultiConceptCountResponse.status:type_name -> clarifai.api.status.Status
-	378, // 75: clarifai.api.MultiConceptCountResponse.concept_counts:type_name -> clarifai.api.ConceptCount
-	364, // 76: clarifai.api.ListConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 77: clarifai.api.PostConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	379, // 78: clarifai.api.PostConceptRelationsRequest.concept_relations:type_name -> clarifai.api.ConceptRelation
-	364, // 79: clarifai.api.DeleteConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 80: clarifai.api.ListKnowledgeGraphsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 81: clarifai.api.PostKnowledgeGraphsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	380, // 82: clarifai.api.PostKnowledgeGraphsRequest.knowledge_graphs:type_name -> clarifai.api.KnowledgeGraph
-	365, // 83: clarifai.api.MultiConceptRelationResponse.status:type_name -> clarifai.api.status.Status
-	379, // 84: clarifai.api.MultiConceptRelationResponse.concept_relations:type_name -> clarifai.api.ConceptRelation
-	365, // 85: clarifai.api.MultiKnowledgeGraphResponse.status:type_name -> clarifai.api.status.Status
-	380, // 86: clarifai.api.MultiKnowledgeGraphResponse.knowledge_graphs:type_name -> clarifai.api.KnowledgeGraph
-	364, // 87: clarifai.api.GetConceptLanguageRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 88: clarifai.api.ListConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 89: clarifai.api.PatchConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	381, // 90: clarifai.api.PatchConceptLanguagesRequest.concept_languages:type_name -> clarifai.api.ConceptLanguage
-	364, // 91: clarifai.api.PostConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	381, // 92: clarifai.api.PostConceptLanguagesRequest.concept_languages:type_name -> clarifai.api.ConceptLanguage
-	365, // 93: clarifai.api.SingleConceptLanguageResponse.status:type_name -> clarifai.api.status.Status
-	381, // 94: clarifai.api.SingleConceptLanguageResponse.concept_language:type_name -> clarifai.api.ConceptLanguage
-	365, // 95: clarifai.api.MultiConceptLanguageResponse.status:type_name -> clarifai.api.status.Status
-	381, // 96: clarifai.api.MultiConceptLanguageResponse.concept_languages:type_name -> clarifai.api.ConceptLanguage
-	364, // 97: clarifai.api.GetInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 98: clarifai.api.GetVideoManifestRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 99: clarifai.api.GetInputSamplesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 100: clarifai.api.ListInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 101: clarifai.api.ListInputsRequest.status:type_name -> clarifai.api.status.Status
-	364, // 102: clarifai.api.StreamInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 103: clarifai.api.PostInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	382, // 104: clarifai.api.PostInputsRequest.inputs:type_name -> clarifai.api.Input
-	383, // 105: clarifai.api.PostInputsRequest.input_id_conflict_resolution:type_name -> clarifai.api.InputIDConflictResolution
-	364, // 106: clarifai.api.PatchInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	382, // 107: clarifai.api.PatchInputsRequest.inputs:type_name -> clarifai.api.Input
-	364, // 108: clarifai.api.DeleteInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 109: clarifai.api.DeleteInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 110: clarifai.api.SingleInputResponse.status:type_name -> clarifai.api.status.Status
-	382, // 111: clarifai.api.SingleInputResponse.input:type_name -> clarifai.api.Input
-	365, // 112: clarifai.api.GetVideoManifestResponse.status:type_name -> clarifai.api.status.Status
-	365, // 113: clarifai.api.MultiInputResponse.status:type_name -> clarifai.api.status.Status
-	382, // 114: clarifai.api.MultiInputResponse.inputs:type_name -> clarifai.api.Input
-	384, // 115: clarifai.api.MultiInputResponse.inputs_add_job:type_name -> clarifai.api.InputsAddJob
-	365, // 116: clarifai.api.MultiInputAnnotationResponse.status:type_name -> clarifai.api.status.Status
-	385, // 117: clarifai.api.MultiInputAnnotationResponse.hits:type_name -> clarifai.api.Hit
-	365, // 118: clarifai.api.SingleInputCountResponse.status:type_name -> clarifai.api.status.Status
-	386, // 119: clarifai.api.SingleInputCountResponse.counts:type_name -> clarifai.api.InputCount
-	364, // 120: clarifai.api.GetInputCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 121: clarifai.api.ListDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 122: clarifai.api.GetDatasetRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 123: clarifai.api.PostDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	387, // 124: clarifai.api.PostDatasetsRequest.datasets:type_name -> clarifai.api.Dataset
-	364, // 125: clarifai.api.PatchDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	387, // 126: clarifai.api.PatchDatasetsRequest.datasets:type_name -> clarifai.api.Dataset
-	364, // 127: clarifai.api.DeleteDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 128: clarifai.api.MultiDatasetResponse.status:type_name -> clarifai.api.status.Status
-	387, // 129: clarifai.api.MultiDatasetResponse.datasets:type_name -> clarifai.api.Dataset
-	365, // 130: clarifai.api.SingleDatasetResponse.status:type_name -> clarifai.api.status.Status
-	387, // 131: clarifai.api.SingleDatasetResponse.dataset:type_name -> clarifai.api.Dataset
-	364, // 132: clarifai.api.ListDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 133: clarifai.api.GetDatasetInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 134: clarifai.api.PostDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	388, // 135: clarifai.api.PostDatasetInputsRequest.dataset_inputs:type_name -> clarifai.api.DatasetInput
-	389, // 136: clarifai.api.PostDatasetInputsRequest.search:type_name -> clarifai.api.Search
-	364, // 137: clarifai.api.DeleteDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 138: clarifai.api.MultiDatasetInputResponse.status:type_name -> clarifai.api.status.Status
-	388, // 139: clarifai.api.MultiDatasetInputResponse.dataset_inputs:type_name -> clarifai.api.DatasetInput
-	390, // 140: clarifai.api.MultiDatasetInputResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
-	365, // 141: clarifai.api.SingleDatasetInputResponse.status:type_name -> clarifai.api.status.Status
-	388, // 142: clarifai.api.SingleDatasetInputResponse.dataset_input:type_name -> clarifai.api.DatasetInput
-	364, // 143: clarifai.api.ListDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	391, // 144: clarifai.api.ListDatasetVersionsRequest.request_origins:type_name -> clarifai.api.DatasetVersionRequestOrigin
-	364, // 145: clarifai.api.GetDatasetVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 146: clarifai.api.ListDatasetVersionMetricsGroupsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	392, // 147: clarifai.api.ListDatasetVersionMetricsGroupsRequest.types:type_name -> clarifai.api.DatasetVersionMetricsGroupType
-	393, // 148: clarifai.api.ListDatasetVersionMetricsGroupsRequest.values:type_name -> google.protobuf.Value
-	364, // 149: clarifai.api.PostDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	394, // 150: clarifai.api.PostDatasetVersionsRequest.dataset_versions:type_name -> clarifai.api.DatasetVersion
-	364, // 151: clarifai.api.PatchDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	394, // 152: clarifai.api.PatchDatasetVersionsRequest.dataset_versions:type_name -> clarifai.api.DatasetVersion
-	364, // 153: clarifai.api.DeleteDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 154: clarifai.api.PutDatasetVersionExportsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	395, // 155: clarifai.api.PutDatasetVersionExportsRequest.exports:type_name -> clarifai.api.DatasetVersionExport
-	365, // 156: clarifai.api.MultiDatasetVersionResponse.status:type_name -> clarifai.api.status.Status
-	394, // 157: clarifai.api.MultiDatasetVersionResponse.dataset_versions:type_name -> clarifai.api.DatasetVersion
-	365, // 158: clarifai.api.MultiDatasetVersionExportResponse.status:type_name -> clarifai.api.status.Status
-	395, // 159: clarifai.api.MultiDatasetVersionExportResponse.exports:type_name -> clarifai.api.DatasetVersionExport
-	365, // 160: clarifai.api.MultiDatasetVersionMetricsGroupResponse.status:type_name -> clarifai.api.status.Status
-	396, // 161: clarifai.api.MultiDatasetVersionMetricsGroupResponse.dataset_version_metrics_groups:type_name -> clarifai.api.DatasetVersionMetricsGroup
-	365, // 162: clarifai.api.SingleDatasetVersionResponse.status:type_name -> clarifai.api.status.Status
-	394, // 163: clarifai.api.SingleDatasetVersionResponse.dataset_version:type_name -> clarifai.api.DatasetVersion
-	364, // 164: clarifai.api.PostModelOutputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	382, // 165: clarifai.api.PostModelOutputsRequest.inputs:type_name -> clarifai.api.Input
-	376, // 166: clarifai.api.PostModelOutputsRequest.model:type_name -> clarifai.api.Model
-	397, // 167: clarifai.api.PostModelOutputsRequest.runner_selector:type_name -> clarifai.api.RunnerSelector
-	364, // 168: clarifai.api.ListModelInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 169: clarifai.api.ListLogEntriesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 170: clarifai.api.GetKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 171: clarifai.api.ListKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 172: clarifai.api.ListAppKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 173: clarifai.api.PostKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	398, // 174: clarifai.api.PostKeysRequest.keys:type_name -> clarifai.api.Key
-	364, // 175: clarifai.api.DeleteKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 176: clarifai.api.PatchKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	398, // 177: clarifai.api.PatchKeysRequest.keys:type_name -> clarifai.api.Key
-	365, // 178: clarifai.api.SingleKeyResponse.status:type_name -> clarifai.api.status.Status
-	398, // 179: clarifai.api.SingleKeyResponse.key:type_name -> clarifai.api.Key
-	365, // 180: clarifai.api.MultiKeyResponse.status:type_name -> clarifai.api.status.Status
-	398, // 181: clarifai.api.MultiKeyResponse.keys:type_name -> clarifai.api.Key
-	364, // 182: clarifai.api.GetModelRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 183: clarifai.api.ListModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	399, // 184: clarifai.api.ListModelsRequest.license_type:type_name -> clarifai.api.LicenseType
-	364, // 185: clarifai.api.GetResourceCountsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 186: clarifai.api.GetResourceCountsResponse.status:type_name -> clarifai.api.status.Status
-	364, // 187: clarifai.api.PatchModelToolkitsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 188: clarifai.api.PatchModelCheckConsentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 189: clarifai.api.PatchModelUseCasesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 190: clarifai.api.PatchModelLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 191: clarifai.api.MultiModelToolkitResponse.status:type_name -> clarifai.api.status.Status
-	365, // 192: clarifai.api.MultiModelCheckConsentResponse.status:type_name -> clarifai.api.status.Status
-	365, // 193: clarifai.api.MultiModelUseCaseResponse.status:type_name -> clarifai.api.status.Status
-	365, // 194: clarifai.api.MultiModelLanguageResponse.status:type_name -> clarifai.api.status.Status
-	364, // 195: clarifai.api.PostModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	376, // 196: clarifai.api.PostModelsRequest.model:type_name -> clarifai.api.Model
-	376, // 197: clarifai.api.PostModelsRequest.models:type_name -> clarifai.api.Model
-	364, // 198: clarifai.api.PatchModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	376, // 199: clarifai.api.PatchModelsRequest.models:type_name -> clarifai.api.Model
-	364, // 200: clarifai.api.PatchModelIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	125, // 201: clarifai.api.PatchModelIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
-	364, // 202: clarifai.api.DeleteModelRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 203: clarifai.api.DeleteModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 204: clarifai.api.PostModelsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	400, // 205: clarifai.api.PostModelsSearchesRequest.model_query:type_name -> clarifai.api.ModelQuery
-	2,   // 206: clarifai.api.PostModelsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	365, // 207: clarifai.api.SingleModelResponse.status:type_name -> clarifai.api.status.Status
-	376, // 208: clarifai.api.SingleModelResponse.model:type_name -> clarifai.api.Model
-	365, // 209: clarifai.api.MultiModelResponse.status:type_name -> clarifai.api.status.Status
-	376, // 210: clarifai.api.MultiModelResponse.models:type_name -> clarifai.api.Model
-	364, // 211: clarifai.api.PatchModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	401, // 212: clarifai.api.PatchModelVersionsRequest.model_versions:type_name -> clarifai.api.ModelVersion
-	364, // 213: clarifai.api.GetModelVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 214: clarifai.api.ListModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 215: clarifai.api.DeleteModelVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 216: clarifai.api.SingleModelVersionResponse.status:type_name -> clarifai.api.status.Status
-	401, // 217: clarifai.api.SingleModelVersionResponse.model_version:type_name -> clarifai.api.ModelVersion
-	365, // 218: clarifai.api.MultiModelVersionResponse.status:type_name -> clarifai.api.status.Status
-	401, // 219: clarifai.api.MultiModelVersionResponse.model_versions:type_name -> clarifai.api.ModelVersion
-	364, // 220: clarifai.api.PostModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	401, // 221: clarifai.api.PostModelVersionsRequest.model_versions:type_name -> clarifai.api.ModelVersion
-	402, // 222: clarifai.api.PostModelVersionsRequest.eval_info:type_name -> clarifai.api.EvalInfo
-	141, // 223: clarifai.api.PostModelVersionsUploadRequest.upload_config:type_name -> clarifai.api.PostModelVersionsUploadConfig
-	403, // 224: clarifai.api.PostModelVersionsUploadRequest.content_part:type_name -> clarifai.api.UploadContentPart
-	365, // 225: clarifai.api.PostModelVersionsUploadResponse.status:type_name -> clarifai.api.status.Status
-	364, // 226: clarifai.api.PostModelVersionsUploadConfig.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	401, // 227: clarifai.api.PostModelVersionsUploadConfig.model_version:type_name -> clarifai.api.ModelVersion
-	364, // 228: clarifai.api.PutModelVersionExportsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 229: clarifai.api.GetModelVersionExportRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 230: clarifai.api.SingleModelVersionExportResponse.status:type_name -> clarifai.api.status.Status
-	404, // 231: clarifai.api.SingleModelVersionExportResponse.export:type_name -> clarifai.api.ModelVersionExport
-	364, // 232: clarifai.api.PostWorkflowVersionsUnPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	148, // 233: clarifai.api.PostWorkflowVersionsUnPublishRequest.publications:type_name -> clarifai.api.WorkflowVersionUnPublishRequest
-	364, // 234: clarifai.api.PostWorkflowVersionsPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	147, // 235: clarifai.api.PostWorkflowVersionsPublishRequest.publications:type_name -> clarifai.api.WorkflowVersionPublishRequest
-	364, // 236: clarifai.api.PostModelVersionsPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	149, // 237: clarifai.api.PostModelVersionsPublishRequest.publications:type_name -> clarifai.api.ModelVersionPublishRequest
-	364, // 238: clarifai.api.PostModelVersionsUnPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	151, // 239: clarifai.api.PostModelVersionsUnPublishRequest.publications:type_name -> clarifai.api.ModelVersionUnpublishRequest
-	364, // 240: clarifai.api.PostEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	405, // 241: clarifai.api.PostEvaluationsRequest.eval_metrics:type_name -> clarifai.api.EvalMetrics
-	364, // 242: clarifai.api.ListEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 243: clarifai.api.GetEvaluationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	406, // 244: clarifai.api.GetEvaluationRequest.fields:type_name -> clarifai.api.FieldsValue
-	364, // 245: clarifai.api.PostModelVersionEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	405, // 246: clarifai.api.PostModelVersionEvaluationsRequest.eval_metrics:type_name -> clarifai.api.EvalMetrics
-	364, // 247: clarifai.api.ListModelVersionEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 248: clarifai.api.GetModelVersionEvaluationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	406, // 249: clarifai.api.GetModelVersionEvaluationRequest.fields:type_name -> clarifai.api.FieldsValue
-	365, // 250: clarifai.api.SingleEvalMetricsResponse.status:type_name -> clarifai.api.status.Status
-	405, // 251: clarifai.api.SingleEvalMetricsResponse.eval_metrics:type_name -> clarifai.api.EvalMetrics
-	365, // 252: clarifai.api.MultiEvalMetricsResponse.status:type_name -> clarifai.api.status.Status
-	405, // 253: clarifai.api.MultiEvalMetricsResponse.eval_metrics:type_name -> clarifai.api.EvalMetrics
-	364, // 254: clarifai.api.PostModelVersionMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 255: clarifai.api.PostModelVersionMetricsRequest.test_search:type_name -> clarifai.api.Search
-	402, // 256: clarifai.api.PostModelVersionMetricsRequest.eval_info:type_name -> clarifai.api.EvalInfo
-	364, // 257: clarifai.api.GetModelVersionMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	406, // 258: clarifai.api.GetModelVersionMetricsRequest.fields:type_name -> clarifai.api.FieldsValue
-	364, // 259: clarifai.api.GetModelTypeRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 260: clarifai.api.ListModelTypesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 261: clarifai.api.ListOpenSourceLicensesResponse.status:type_name -> clarifai.api.status.Status
-	365, // 262: clarifai.api.SingleModelTypeResponse.status:type_name -> clarifai.api.status.Status
-	407, // 263: clarifai.api.SingleModelTypeResponse.model_type:type_name -> clarifai.api.ModelType
-	365, // 264: clarifai.api.MultiModelTypeResponse.status:type_name -> clarifai.api.status.Status
-	407, // 265: clarifai.api.MultiModelTypeResponse.model_types:type_name -> clarifai.api.ModelType
-	408, // 266: clarifai.api.MultiModelTypeResponse.model_importers:type_name -> clarifai.api.ModelTypeField
-	409, // 267: clarifai.api.MultiModelTypeResponse.triton_conda_envs_info:type_name -> clarifai.api.TritonCondaEnvInfo
-	364, // 268: clarifai.api.GetModelVersionInputExampleRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 269: clarifai.api.ListModelVersionInputExamplesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 270: clarifai.api.SingleModelVersionInputExampleResponse.status:type_name -> clarifai.api.status.Status
-	410, // 271: clarifai.api.SingleModelVersionInputExampleResponse.model_version_input_example:type_name -> clarifai.api.ModelVersionInputExample
-	365, // 272: clarifai.api.MultiModelVersionInputExampleResponse.status:type_name -> clarifai.api.status.Status
-	410, // 273: clarifai.api.MultiModelVersionInputExampleResponse.model_version_input_examples:type_name -> clarifai.api.ModelVersionInputExample
-	364, // 274: clarifai.api.ListModelReferencesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 275: clarifai.api.MultiModelReferenceResponse.status:type_name -> clarifai.api.status.Status
-	411, // 276: clarifai.api.MultiModelReferenceResponse.model_references:type_name -> clarifai.api.ModelReference
-	365, // 277: clarifai.api.MultiOutputResponse.status:type_name -> clarifai.api.status.Status
-	412, // 278: clarifai.api.MultiOutputResponse.outputs:type_name -> clarifai.api.Output
-	365, // 279: clarifai.api.MultiLogEntryResponse.status:type_name -> clarifai.api.status.Status
-	413, // 280: clarifai.api.MultiLogEntryResponse.log_entries:type_name -> clarifai.api.LogEntry
-	364, // 281: clarifai.api.ListScopesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 282: clarifai.api.MyScopesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 283: clarifai.api.MyScopesUserRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 284: clarifai.api.MultiScopeDepsResponse.status:type_name -> clarifai.api.status.Status
-	414, // 285: clarifai.api.MultiScopeDepsResponse.scope_deps:type_name -> clarifai.api.ScopeDeps
-	415, // 286: clarifai.api.MultiScopeDepsResponse.endpoint_deps:type_name -> clarifai.api.EndpointDeps
-	365, // 287: clarifai.api.MultiScopeResponse.status:type_name -> clarifai.api.status.Status
-	369, // 288: clarifai.api.MultiScopeResponse.app:type_name -> clarifai.api.App
-	365, // 289: clarifai.api.MultiScopeUserResponse.status:type_name -> clarifai.api.status.Status
-	365, // 290: clarifai.api.MultiScopeRootResponse.status:type_name -> clarifai.api.status.Status
-	364, // 291: clarifai.api.GetSearchRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 292: clarifai.api.ListSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 293: clarifai.api.PostSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	416, // 294: clarifai.api.PostSearchesRequest.query:type_name -> clarifai.api.Query
-	389, // 295: clarifai.api.PostSearchesRequest.searches:type_name -> clarifai.api.Search
-	2,   // 296: clarifai.api.PostSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	364, // 297: clarifai.api.PatchInputsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 298: clarifai.api.PatchInputsSearchesRequest.searches:type_name -> clarifai.api.Search
-	364, // 299: clarifai.api.PatchAnnotationsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 300: clarifai.api.PatchAnnotationsSearchesRequest.searches:type_name -> clarifai.api.Search
-	364, // 301: clarifai.api.PatchSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 302: clarifai.api.PatchSearchesRequest.searches:type_name -> clarifai.api.Search
-	364, // 303: clarifai.api.PostSearchesByIDRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	2,   // 304: clarifai.api.PostSearchesByIDRequest.pagination:type_name -> clarifai.api.Pagination
-	364, // 305: clarifai.api.DeleteSearchRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 306: clarifai.api.PostAnnotationsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 307: clarifai.api.PostAnnotationsSearchesRequest.searches:type_name -> clarifai.api.Search
-	2,   // 308: clarifai.api.PostAnnotationsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	364, // 309: clarifai.api.DeleteAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 310: clarifai.api.PostInputsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 311: clarifai.api.PostInputsSearchesRequest.searches:type_name -> clarifai.api.Search
-	2,   // 312: clarifai.api.PostInputsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	365, // 313: clarifai.api.SingleSearchResponse.status:type_name -> clarifai.api.status.Status
-	389, // 314: clarifai.api.SingleSearchResponse.search:type_name -> clarifai.api.Search
-	365, // 315: clarifai.api.MultiSearchResponse.status:type_name -> clarifai.api.status.Status
-	385, // 316: clarifai.api.MultiSearchResponse.hits:type_name -> clarifai.api.Hit
-	416, // 317: clarifai.api.MultiSearchResponse.query:type_name -> clarifai.api.Query
-	389, // 318: clarifai.api.MultiSearchResponse.searches:type_name -> clarifai.api.Search
-	417, // 319: clarifai.api.MultiSearchResponse.hit_counts:type_name -> clarifai.api.HitCount
-	364, // 320: clarifai.api.PostAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	389, // 321: clarifai.api.PostAnnotationSearchMetricsRequest.ground_truth:type_name -> clarifai.api.Search
-	389, // 322: clarifai.api.PostAnnotationSearchMetricsRequest.search_to_eval:type_name -> clarifai.api.Search
-	418, // 323: clarifai.api.PostAnnotationSearchMetricsRequest.data:type_name -> clarifai.api.Data
-	419, // 324: clarifai.api.PostAnnotationSearchMetricsRequest.evaluation_type:type_name -> clarifai.api.EvaluationType
-	364, // 325: clarifai.api.GetAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 326: clarifai.api.ListAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 327: clarifai.api.MultiAnnotationSearchMetricsResponse.status:type_name -> clarifai.api.status.Status
-	420, // 328: clarifai.api.MultiAnnotationSearchMetricsResponse.annotation_search_metrics:type_name -> clarifai.api.AnnotationSearchMetrics
-	364, // 329: clarifai.api.ListAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 330: clarifai.api.GetAnnotationFilterRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 331: clarifai.api.PostAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	421, // 332: clarifai.api.PostAnnotationFiltersRequest.annotation_filters:type_name -> clarifai.api.AnnotationFilter
-	364, // 333: clarifai.api.PatchAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	421, // 334: clarifai.api.PatchAnnotationFiltersRequest.annotation_filters:type_name -> clarifai.api.AnnotationFilter
-	364, // 335: clarifai.api.DeleteAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 336: clarifai.api.MultiAnnotationFilterResponse.status:type_name -> clarifai.api.status.Status
-	421, // 337: clarifai.api.MultiAnnotationFilterResponse.annotation_filters:type_name -> clarifai.api.AnnotationFilter
-	365, // 338: clarifai.api.SingleAnnotationFilterResponse.status:type_name -> clarifai.api.status.Status
-	421, // 339: clarifai.api.SingleAnnotationFilterResponse.annotation_filter:type_name -> clarifai.api.AnnotationFilter
-	364, // 340: clarifai.api.GetUserRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 341: clarifai.api.SingleUserResponse.status:type_name -> clarifai.api.status.Status
-	373, // 342: clarifai.api.SingleUserResponse.user:type_name -> clarifai.api.User
-	364, // 343: clarifai.api.PostValidatePasswordRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	422, // 344: clarifai.api.PostValidatePasswordRequest.password:type_name -> clarifai.api.Password
-	365, // 345: clarifai.api.SinglePasswordValidationResponse.status:type_name -> clarifai.api.status.Status
-	423, // 346: clarifai.api.SinglePasswordValidationResponse.password_violations:type_name -> clarifai.api.PasswordViolations
-	364, // 347: clarifai.api.GetWorkflowRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 348: clarifai.api.ListWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 349: clarifai.api.PostWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	424, // 350: clarifai.api.PostWorkflowsRequest.workflows:type_name -> clarifai.api.Workflow
-	364, // 351: clarifai.api.PatchWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	424, // 352: clarifai.api.PatchWorkflowsRequest.workflows:type_name -> clarifai.api.Workflow
-	364, // 353: clarifai.api.PatchWorkflowIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	125, // 354: clarifai.api.PatchWorkflowIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
-	364, // 355: clarifai.api.DeleteWorkflowRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 356: clarifai.api.DeleteWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 357: clarifai.api.SingleWorkflowResponse.status:type_name -> clarifai.api.status.Status
-	424, // 358: clarifai.api.SingleWorkflowResponse.workflow:type_name -> clarifai.api.Workflow
-	365, // 359: clarifai.api.MultiWorkflowResponse.status:type_name -> clarifai.api.status.Status
-	424, // 360: clarifai.api.MultiWorkflowResponse.workflows:type_name -> clarifai.api.Workflow
-	364, // 361: clarifai.api.PostWorkflowResultsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	382, // 362: clarifai.api.PostWorkflowResultsRequest.inputs:type_name -> clarifai.api.Input
-	425, // 363: clarifai.api.PostWorkflowResultsRequest.output_config:type_name -> clarifai.api.OutputConfig
-	426, // 364: clarifai.api.PostWorkflowResultsRequest.workflow_state:type_name -> clarifai.api.WorkflowState
-	363, // 365: clarifai.api.PostWorkflowResultsRequest.node_runner_selectors:type_name -> clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry
-	365, // 366: clarifai.api.PostWorkflowResultsResponse.status:type_name -> clarifai.api.status.Status
-	424, // 367: clarifai.api.PostWorkflowResultsResponse.workflow:type_name -> clarifai.api.Workflow
-	427, // 368: clarifai.api.PostWorkflowResultsResponse.results:type_name -> clarifai.api.WorkflowResult
-	426, // 369: clarifai.api.PostWorkflowResultsResponse.workflow_state:type_name -> clarifai.api.WorkflowState
-	364, // 370: clarifai.api.ListWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 371: clarifai.api.GetWorkflowVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 372: clarifai.api.DeleteWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 373: clarifai.api.PatchWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	428, // 374: clarifai.api.PatchWorkflowVersionsRequest.workflow_versions:type_name -> clarifai.api.WorkflowVersion
-	365, // 375: clarifai.api.MultiWorkflowVersionResponse.status:type_name -> clarifai.api.status.Status
-	428, // 376: clarifai.api.MultiWorkflowVersionResponse.workflow_versions:type_name -> clarifai.api.WorkflowVersion
-	365, // 377: clarifai.api.SingleWorkflowVersionResponse.status:type_name -> clarifai.api.status.Status
-	428, // 378: clarifai.api.SingleWorkflowVersionResponse.workflow_version:type_name -> clarifai.api.WorkflowVersion
-	364, // 379: clarifai.api.PostAppDuplicationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	429, // 380: clarifai.api.PostAppDuplicationsRequest.app_duplications:type_name -> clarifai.api.AppDuplication
-	364, // 381: clarifai.api.GetAppDuplicationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 382: clarifai.api.ListAppDuplicationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 383: clarifai.api.MultiAppDuplicationsResponse.status:type_name -> clarifai.api.status.Status
-	429, // 384: clarifai.api.MultiAppDuplicationsResponse.app_duplications:type_name -> clarifai.api.AppDuplication
-	365, // 385: clarifai.api.SingleAppDuplicationResponse.status:type_name -> clarifai.api.status.Status
-	429, // 386: clarifai.api.SingleAppDuplicationResponse.app_duplication:type_name -> clarifai.api.AppDuplication
-	364, // 387: clarifai.api.PostTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	430, // 388: clarifai.api.PostTasksRequest.tasks:type_name -> clarifai.api.Task
-	364, // 389: clarifai.api.GetTaskRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 390: clarifai.api.ListTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	431, // 391: clarifai.api.ListTasksRequest.input_source_type:type_name -> clarifai.api.TaskInputSource.TaskInputSourceType
-	364, // 392: clarifai.api.PatchTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	430, // 393: clarifai.api.PatchTasksRequest.tasks:type_name -> clarifai.api.Task
-	364, // 394: clarifai.api.DeleteTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 395: clarifai.api.MultiTaskResponse.status:type_name -> clarifai.api.status.Status
-	430, // 396: clarifai.api.MultiTaskResponse.tasks:type_name -> clarifai.api.Task
-	365, // 397: clarifai.api.SingleTaskResponse.status:type_name -> clarifai.api.status.Status
-	430, // 398: clarifai.api.SingleTaskResponse.task:type_name -> clarifai.api.Task
-	364, // 399: clarifai.api.GetTaskCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 400: clarifai.api.SingleTaskCountResponse.status:type_name -> clarifai.api.status.Status
-	432, // 401: clarifai.api.SingleTaskCountResponse.counts:type_name -> clarifai.api.TaskStatusCountPerUser
-	364, // 402: clarifai.api.PostLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	433, // 403: clarifai.api.PostLabelOrdersRequest.label_orders:type_name -> clarifai.api.LabelOrder
-	364, // 404: clarifai.api.GetLabelOrderRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 405: clarifai.api.ListLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 406: clarifai.api.PatchLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	433, // 407: clarifai.api.PatchLabelOrdersRequest.label_orders:type_name -> clarifai.api.LabelOrder
-	364, // 408: clarifai.api.DeleteLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 409: clarifai.api.MultiLabelOrderResponse.status:type_name -> clarifai.api.status.Status
-	433, // 410: clarifai.api.MultiLabelOrderResponse.label_orders:type_name -> clarifai.api.LabelOrder
-	365, // 411: clarifai.api.SingleLabelOrderResponse.status:type_name -> clarifai.api.status.Status
-	433, // 412: clarifai.api.SingleLabelOrderResponse.label_order:type_name -> clarifai.api.LabelOrder
-	364, // 413: clarifai.api.PostCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	434, // 414: clarifai.api.PostCollectorsRequest.collectors:type_name -> clarifai.api.Collector
-	364, // 415: clarifai.api.PatchCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	434, // 416: clarifai.api.PatchCollectorsRequest.collectors:type_name -> clarifai.api.Collector
-	364, // 417: clarifai.api.DeleteCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 418: clarifai.api.GetCollectorRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 419: clarifai.api.ListCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 420: clarifai.api.MultiCollectorResponse.status:type_name -> clarifai.api.status.Status
-	434, // 421: clarifai.api.MultiCollectorResponse.collectors:type_name -> clarifai.api.Collector
-	365, // 422: clarifai.api.SingleCollectorResponse.status:type_name -> clarifai.api.status.Status
-	434, // 423: clarifai.api.SingleCollectorResponse.collector:type_name -> clarifai.api.Collector
-	364, // 424: clarifai.api.PostStatValuesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	435, // 425: clarifai.api.PostStatValuesRequest.stat_values:type_name -> clarifai.api.StatValue
-	365, // 426: clarifai.api.MultiStatValueResponse.status:type_name -> clarifai.api.status.Status
-	435, // 427: clarifai.api.MultiStatValueResponse.stat_values:type_name -> clarifai.api.StatValue
-	364, // 428: clarifai.api.PostStatValuesAggregateRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	436, // 429: clarifai.api.PostStatValuesAggregateRequest.stat_value_aggregate_queries:type_name -> clarifai.api.StatValueAggregateQuery
-	365, // 430: clarifai.api.MultiStatValueAggregateResponse.status:type_name -> clarifai.api.status.Status
-	437, // 431: clarifai.api.MultiStatValueAggregateResponse.stat_value_aggregate_results:type_name -> clarifai.api.StatValueAggregateResult
-	364, // 432: clarifai.api.GetModuleRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 433: clarifai.api.ListModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 434: clarifai.api.PostModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	438, // 435: clarifai.api.PostModulesRequest.modules:type_name -> clarifai.api.Module
-	364, // 436: clarifai.api.PatchModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	438, // 437: clarifai.api.PatchModulesRequest.modules:type_name -> clarifai.api.Module
-	364, // 438: clarifai.api.DeleteModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 439: clarifai.api.SingleModuleResponse.status:type_name -> clarifai.api.status.Status
-	438, // 440: clarifai.api.SingleModuleResponse.module:type_name -> clarifai.api.Module
-	365, // 441: clarifai.api.MultiModuleResponse.status:type_name -> clarifai.api.status.Status
-	438, // 442: clarifai.api.MultiModuleResponse.modules:type_name -> clarifai.api.Module
-	364, // 443: clarifai.api.GetModuleVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 444: clarifai.api.ListModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 445: clarifai.api.PostModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	439, // 446: clarifai.api.PostModuleVersionsRequest.module_versions:type_name -> clarifai.api.ModuleVersion
-	364, // 447: clarifai.api.PatchModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	439, // 448: clarifai.api.PatchModuleVersionsRequest.module_versions:type_name -> clarifai.api.ModuleVersion
-	364, // 449: clarifai.api.DeleteModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 450: clarifai.api.GetModuleVersionUsageCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 451: clarifai.api.SingleModuleVersionResponse.status:type_name -> clarifai.api.status.Status
-	439, // 452: clarifai.api.SingleModuleVersionResponse.module_version:type_name -> clarifai.api.ModuleVersion
-	365, // 453: clarifai.api.MultiModuleVersionResponse.status:type_name -> clarifai.api.status.Status
-	439, // 454: clarifai.api.MultiModuleVersionResponse.module_versions:type_name -> clarifai.api.ModuleVersion
-	365, // 455: clarifai.api.SingleModuleVersionUsageCountResponse.status:type_name -> clarifai.api.status.Status
-	364, // 456: clarifai.api.GetInstalledModuleVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 457: clarifai.api.ListInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 458: clarifai.api.PostInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	440, // 459: clarifai.api.PostInstalledModuleVersionsRequest.installed_module_versions:type_name -> clarifai.api.InstalledModuleVersion
-	364, // 460: clarifai.api.PostInstalledModuleVersionsKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 461: clarifai.api.DeleteInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 462: clarifai.api.SingleInstalledModuleVersionResponse.status:type_name -> clarifai.api.status.Status
-	440, // 463: clarifai.api.SingleInstalledModuleVersionResponse.installed_module_version:type_name -> clarifai.api.InstalledModuleVersion
-	365, // 464: clarifai.api.MultiInstalledModuleVersionResponse.status:type_name -> clarifai.api.status.Status
-	440, // 465: clarifai.api.MultiInstalledModuleVersionResponse.installed_module_versions:type_name -> clarifai.api.InstalledModuleVersion
-	364, // 466: clarifai.api.ListNextTaskAssignmentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 467: clarifai.api.PostBulkOperationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	390, // 468: clarifai.api.PostBulkOperationsRequest.bulk_operations:type_name -> clarifai.api.BulkOperation
-	364, // 469: clarifai.api.ListBulkOperationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 470: clarifai.api.GetBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 471: clarifai.api.CancelBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 472: clarifai.api.DeleteBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 473: clarifai.api.SingleBulkOperationsResponse.status:type_name -> clarifai.api.status.Status
-	390, // 474: clarifai.api.SingleBulkOperationsResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
-	365, // 475: clarifai.api.MultiBulkOperationsResponse.status:type_name -> clarifai.api.status.Status
-	390, // 476: clarifai.api.MultiBulkOperationsResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
-	364, // 477: clarifai.api.PutTaskAssignmentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	1,   // 478: clarifai.api.PutTaskAssignmentsRequest.action:type_name -> clarifai.api.PutTaskAssignmentsRequestAction
-	294, // 479: clarifai.api.PutTaskAssignmentsRequest.label_submit_config:type_name -> clarifai.api.LabelSubmitConfig
-	295, // 480: clarifai.api.PutTaskAssignmentsRequest.review_start_config:type_name -> clarifai.api.ReviewStartConfig
-	296, // 481: clarifai.api.PutTaskAssignmentsRequest.review_approve_config:type_name -> clarifai.api.ReviewApproveConfig
-	297, // 482: clarifai.api.PutTaskAssignmentsRequest.review_request_changes_config:type_name -> clarifai.api.ReviewRequestChangesConfig
-	298, // 483: clarifai.api.PutTaskAssignmentsRequest.review_reject_config:type_name -> clarifai.api.ReviewRejectConfig
-	441, // 484: clarifai.api.LabelSubmitConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
-	368, // 485: clarifai.api.ReviewStartConfig.workers:type_name -> clarifai.api.Worker
-	441, // 486: clarifai.api.ReviewApproveConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
-	368, // 487: clarifai.api.ReviewApproveConfig.workers:type_name -> clarifai.api.Worker
-	441, // 488: clarifai.api.ReviewRequestChangesConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
-	368, // 489: clarifai.api.ReviewRequestChangesConfig.workers:type_name -> clarifai.api.Worker
-	441, // 490: clarifai.api.ReviewRejectConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
-	368, // 491: clarifai.api.ReviewRejectConfig.workers:type_name -> clarifai.api.Worker
-	365, // 492: clarifai.api.MultiTaskAssignmentResponse.status:type_name -> clarifai.api.status.Status
-	441, // 493: clarifai.api.MultiTaskAssignmentResponse.task_assignments:type_name -> clarifai.api.TaskAssignment
-	364, // 494: clarifai.api.ListInputsAddJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 495: clarifai.api.GetInputsAddJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 496: clarifai.api.CancelInputsAddJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 497: clarifai.api.MultiInputsAddJobResponse.status:type_name -> clarifai.api.status.Status
-	384, // 498: clarifai.api.MultiInputsAddJobResponse.inputs_add_jobs:type_name -> clarifai.api.InputsAddJob
-	365, // 499: clarifai.api.SingleInputsAddJobResponse.status:type_name -> clarifai.api.status.Status
-	384, // 500: clarifai.api.SingleInputsAddJobResponse.inputs_add_job:type_name -> clarifai.api.InputsAddJob
-	364, // 501: clarifai.api.PostUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	442, // 502: clarifai.api.PostUploadsRequest.uploads:type_name -> clarifai.api.Upload
-	364, // 503: clarifai.api.DeleteUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 504: clarifai.api.ListUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 505: clarifai.api.GetUploadRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 506: clarifai.api.SingleUploadResponse.status:type_name -> clarifai.api.status.Status
-	442, // 507: clarifai.api.SingleUploadResponse.upload:type_name -> clarifai.api.Upload
-	365, // 508: clarifai.api.MultiUploadResponse.status:type_name -> clarifai.api.status.Status
-	442, // 509: clarifai.api.MultiUploadResponse.uploads:type_name -> clarifai.api.Upload
-	364, // 510: clarifai.api.PutUploadContentPartsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	403, // 511: clarifai.api.PutUploadContentPartsRequest.content_parts:type_name -> clarifai.api.UploadContentPart
-	364, // 512: clarifai.api.PostInputsDataSourcesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	443, // 513: clarifai.api.PostInputsDataSourcesRequest.data_sources:type_name -> clarifai.api.InputsDataSource
-	364, // 514: clarifai.api.GetInputsExtractionJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 515: clarifai.api.ListInputsExtractionJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 516: clarifai.api.SingleInputsExtractionJobResponse.status:type_name -> clarifai.api.status.Status
-	444, // 517: clarifai.api.SingleInputsExtractionJobResponse.inputs_extraction_job:type_name -> clarifai.api.InputsExtractionJob
-	365, // 518: clarifai.api.MultiInputsExtractionJobResponse.status:type_name -> clarifai.api.status.Status
-	444, // 519: clarifai.api.MultiInputsExtractionJobResponse.inputs_extraction_jobs:type_name -> clarifai.api.InputsExtractionJob
-	364, // 520: clarifai.api.CancelInputsExtractionJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 521: clarifai.api.PostInputsUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	445, // 522: clarifai.api.PostInputsUploadsRequest.inputs_uploads:type_name -> clarifai.api.InputsUpload
-	364, // 523: clarifai.api.GetRunnerRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 524: clarifai.api.ListRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 525: clarifai.api.PostRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	446, // 526: clarifai.api.PostRunnersRequest.runners:type_name -> clarifai.api.Runner
-	364, // 527: clarifai.api.DeleteRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 528: clarifai.api.SingleRunnerResponse.status:type_name -> clarifai.api.status.Status
-	446, // 529: clarifai.api.SingleRunnerResponse.runner:type_name -> clarifai.api.Runner
-	365, // 530: clarifai.api.MultiRunnerResponse.status:type_name -> clarifai.api.status.Status
-	446, // 531: clarifai.api.MultiRunnerResponse.runners:type_name -> clarifai.api.Runner
-	364, // 532: clarifai.api.ListRunnerItemsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 533: clarifai.api.PostRunnerItemOutputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	329, // 534: clarifai.api.PostRunnerItemOutputsRequest.runner_item_outputs:type_name -> clarifai.api.RunnerItemOutput
-	365, // 535: clarifai.api.PostRunnerItemOutputsRequest.status:type_name -> clarifai.api.status.Status
-	365, // 536: clarifai.api.MultiRunnerItemResponse.status:type_name -> clarifai.api.status.Status
-	328, // 537: clarifai.api.MultiRunnerItemResponse.runner_items:type_name -> clarifai.api.RunnerItem
-	447, // 538: clarifai.api.RunnerItem.processing_info:type_name -> clarifai.api.ProcessingInfo
-	100, // 539: clarifai.api.RunnerItem.post_model_outputs_request:type_name -> clarifai.api.PostModelOutputsRequest
-	175, // 540: clarifai.api.RunnerItemOutput.multi_output_response:type_name -> clarifai.api.MultiOutputResponse
-	365, // 541: clarifai.api.MultiRunnerItemOutputResponse.status:type_name -> clarifai.api.status.Status
-	329, // 542: clarifai.api.MultiRunnerItemOutputResponse.runner_item_outputs:type_name -> clarifai.api.RunnerItemOutput
-	364, // 543: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	401, // 544: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest.model_versions:type_name -> clarifai.api.ModelVersion
-	365, // 545: clarifai.api.MultiTrainingTimeEstimateResponse.status:type_name -> clarifai.api.status.Status
-	448, // 546: clarifai.api.MultiTrainingTimeEstimateResponse.training_time_estimates:type_name -> google.protobuf.Duration
-	365, // 547: clarifai.api.MultiCloudProviderResponse.status:type_name -> clarifai.api.status.Status
-	449, // 548: clarifai.api.MultiCloudProviderResponse.cloud_providers:type_name -> clarifai.api.CloudProvider
-	449, // 549: clarifai.api.ListCloudRegionsRequest.cloud_provider:type_name -> clarifai.api.CloudProvider
-	365, // 550: clarifai.api.MultiCloudRegionResponse.status:type_name -> clarifai.api.status.Status
-	449, // 551: clarifai.api.ListInstanceTypesRequest.cloud_provider:type_name -> clarifai.api.CloudProvider
-	365, // 552: clarifai.api.MultiInstanceTypeResponse.status:type_name -> clarifai.api.status.Status
-	450, // 553: clarifai.api.MultiInstanceTypeResponse.instance_types:type_name -> clarifai.api.InstanceType
-	364, // 554: clarifai.api.GetComputeClusterRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 555: clarifai.api.ListComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 556: clarifai.api.PostComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	451, // 557: clarifai.api.PostComputeClustersRequest.compute_clusters:type_name -> clarifai.api.ComputeCluster
-	364, // 558: clarifai.api.DeleteComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 559: clarifai.api.SingleComputeClusterResponse.status:type_name -> clarifai.api.status.Status
-	451, // 560: clarifai.api.SingleComputeClusterResponse.compute_cluster:type_name -> clarifai.api.ComputeCluster
-	365, // 561: clarifai.api.MultiComputeClusterResponse.status:type_name -> clarifai.api.status.Status
-	451, // 562: clarifai.api.MultiComputeClusterResponse.compute_clusters:type_name -> clarifai.api.ComputeCluster
-	364, // 563: clarifai.api.GetNodepoolRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 564: clarifai.api.ListNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 565: clarifai.api.PostNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	452, // 566: clarifai.api.PostNodepoolsRequest.nodepools:type_name -> clarifai.api.Nodepool
-	364, // 567: clarifai.api.PatchNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	452, // 568: clarifai.api.PatchNodepoolsRequest.nodepools:type_name -> clarifai.api.Nodepool
-	364, // 569: clarifai.api.DeleteNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	365, // 570: clarifai.api.SingleNodepoolResponse.status:type_name -> clarifai.api.status.Status
-	452, // 571: clarifai.api.SingleNodepoolResponse.nodepool:type_name -> clarifai.api.Nodepool
-	365, // 572: clarifai.api.MultiNodepoolResponse.status:type_name -> clarifai.api.status.Status
-	452, // 573: clarifai.api.MultiNodepoolResponse.nodepools:type_name -> clarifai.api.Nodepool
-	364, // 574: clarifai.api.GetDeploymentRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 575: clarifai.api.ListDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 576: clarifai.api.PostDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	453, // 577: clarifai.api.PostDeploymentsRequest.deployments:type_name -> clarifai.api.Deployment
-	364, // 578: clarifai.api.DeleteDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	364, // 579: clarifai.api.PostAuditLogSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	454, // 580: clarifai.api.PostAuditLogSearchesRequest.query:type_name -> clarifai.api.AuditLogQuery
-	2,   // 581: clarifai.api.PostAuditLogSearchesRequest.pagination:type_name -> clarifai.api.Pagination
-	365, // 582: clarifai.api.MultiAuditLogEntryResponse.status:type_name -> clarifai.api.status.Status
-	455, // 583: clarifai.api.MultiAuditLogEntryResponse.entries:type_name -> clarifai.api.AuditLogEntry
-	364, // 584: clarifai.api.PatchDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
-	453, // 585: clarifai.api.PatchDeploymentsRequest.deployments:type_name -> clarifai.api.Deployment
-	365, // 586: clarifai.api.SingleDeploymentResponse.status:type_name -> clarifai.api.status.Status
-	453, // 587: clarifai.api.SingleDeploymentResponse.deployment:type_name -> clarifai.api.Deployment
-	365, // 588: clarifai.api.MultiDeploymentResponse.status:type_name -> clarifai.api.status.Status
-	453, // 589: clarifai.api.MultiDeploymentResponse.deployments:type_name -> clarifai.api.Deployment
-	365, // 590: clarifai.api.MultiWorkflowEvaluationTemplateResponse.status:type_name -> clarifai.api.status.Status
-	456, // 591: clarifai.api.MultiWorkflowEvaluationTemplateResponse.workflow_version_evaluation_templates:type_name -> clarifai.api.WorkflowVersionEvaluationTemplate
-	397, // 592: clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry.value:type_name -> clarifai.api.RunnerSelector
-	48,  // 593: clarifai.api.V2.ListConceptRelations:input_type -> clarifai.api.ListConceptRelationsRequest
-	49,  // 594: clarifai.api.V2.PostConceptRelations:input_type -> clarifai.api.PostConceptRelationsRequest
-	50,  // 595: clarifai.api.V2.DeleteConceptRelations:input_type -> clarifai.api.DeleteConceptRelationsRequest
-	44,  // 596: clarifai.api.V2.GetConceptCounts:input_type -> clarifai.api.GetConceptCountsRequest
-	37,  // 597: clarifai.api.V2.GetConcept:input_type -> clarifai.api.GetConceptRequest
-	38,  // 598: clarifai.api.V2.ListConcepts:input_type -> clarifai.api.ListConceptsRequest
-	39,  // 599: clarifai.api.V2.ListModelConcepts:input_type -> clarifai.api.ListModelConceptsRequest
-	40,  // 600: clarifai.api.V2.PostConceptsSearches:input_type -> clarifai.api.PostConceptsSearchesRequest
-	42,  // 601: clarifai.api.V2.PostConcepts:input_type -> clarifai.api.PostConceptsRequest
-	43,  // 602: clarifai.api.V2.PatchConcepts:input_type -> clarifai.api.PatchConceptsRequest
-	55,  // 603: clarifai.api.V2.GetConceptLanguage:input_type -> clarifai.api.GetConceptLanguageRequest
-	56,  // 604: clarifai.api.V2.ListConceptLanguages:input_type -> clarifai.api.ListConceptLanguagesRequest
-	58,  // 605: clarifai.api.V2.PostConceptLanguages:input_type -> clarifai.api.PostConceptLanguagesRequest
-	57,  // 606: clarifai.api.V2.PatchConceptLanguages:input_type -> clarifai.api.PatchConceptLanguagesRequest
-	51,  // 607: clarifai.api.V2.ListKnowledgeGraphs:input_type -> clarifai.api.ListKnowledgeGraphsRequest
-	52,  // 608: clarifai.api.V2.PostKnowledgeGraphs:input_type -> clarifai.api.PostKnowledgeGraphsRequest
-	3,   // 609: clarifai.api.V2.GetAnnotation:input_type -> clarifai.api.GetAnnotationRequest
-	4,   // 610: clarifai.api.V2.ListAnnotations:input_type -> clarifai.api.ListAnnotationsRequest
-	5,   // 611: clarifai.api.V2.PostAnnotations:input_type -> clarifai.api.PostAnnotationsRequest
-	6,   // 612: clarifai.api.V2.PatchAnnotations:input_type -> clarifai.api.PatchAnnotationsRequest
-	7,   // 613: clarifai.api.V2.PatchAnnotationsStatus:input_type -> clarifai.api.PatchAnnotationsStatusRequest
-	9,   // 614: clarifai.api.V2.DeleteAnnotation:input_type -> clarifai.api.DeleteAnnotationRequest
-	10,  // 615: clarifai.api.V2.DeleteAnnotations:input_type -> clarifai.api.DeleteAnnotationsRequest
-	189, // 616: clarifai.api.V2.PatchAnnotationsSearches:input_type -> clarifai.api.PatchAnnotationsSearchesRequest
-	193, // 617: clarifai.api.V2.PostAnnotationsSearches:input_type -> clarifai.api.PostAnnotationsSearchesRequest
-	13,  // 618: clarifai.api.V2.ListAnnotationWorkers:input_type -> clarifai.api.ListAnnotationWorkersRequest
-	75,  // 619: clarifai.api.V2.GetInputCount:input_type -> clarifai.api.GetInputCountRequest
-	65,  // 620: clarifai.api.V2.StreamInputs:input_type -> clarifai.api.StreamInputsRequest
-	63,  // 621: clarifai.api.V2.GetInputSamples:input_type -> clarifai.api.GetInputSamplesRequest
-	61,  // 622: clarifai.api.V2.GetInput:input_type -> clarifai.api.GetInputRequest
-	62,  // 623: clarifai.api.V2.GetInputVideoManifest:input_type -> clarifai.api.GetVideoManifestRequest
-	64,  // 624: clarifai.api.V2.ListInputs:input_type -> clarifai.api.ListInputsRequest
-	66,  // 625: clarifai.api.V2.PostInputs:input_type -> clarifai.api.PostInputsRequest
-	67,  // 626: clarifai.api.V2.PatchInputs:input_type -> clarifai.api.PatchInputsRequest
-	68,  // 627: clarifai.api.V2.DeleteInput:input_type -> clarifai.api.DeleteInputRequest
-	69,  // 628: clarifai.api.V2.DeleteInputs:input_type -> clarifai.api.DeleteInputsRequest
-	188, // 629: clarifai.api.V2.PatchInputsSearches:input_type -> clarifai.api.PatchInputsSearchesRequest
-	195, // 630: clarifai.api.V2.PostInputsSearches:input_type -> clarifai.api.PostInputsSearchesRequest
-	100, // 631: clarifai.api.V2.PostModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
-	100, // 632: clarifai.api.V2.GenerateModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
-	100, // 633: clarifai.api.V2.StreamModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
-	76,  // 634: clarifai.api.V2.ListDatasets:input_type -> clarifai.api.ListDatasetsRequest
-	77,  // 635: clarifai.api.V2.GetDataset:input_type -> clarifai.api.GetDatasetRequest
-	78,  // 636: clarifai.api.V2.PostDatasets:input_type -> clarifai.api.PostDatasetsRequest
-	79,  // 637: clarifai.api.V2.PatchDatasets:input_type -> clarifai.api.PatchDatasetsRequest
-	80,  // 638: clarifai.api.V2.DeleteDatasets:input_type -> clarifai.api.DeleteDatasetsRequest
-	83,  // 639: clarifai.api.V2.ListDatasetInputs:input_type -> clarifai.api.ListDatasetInputsRequest
-	84,  // 640: clarifai.api.V2.GetDatasetInput:input_type -> clarifai.api.GetDatasetInputRequest
-	85,  // 641: clarifai.api.V2.PostDatasetInputs:input_type -> clarifai.api.PostDatasetInputsRequest
-	86,  // 642: clarifai.api.V2.DeleteDatasetInputs:input_type -> clarifai.api.DeleteDatasetInputsRequest
-	89,  // 643: clarifai.api.V2.ListDatasetVersions:input_type -> clarifai.api.ListDatasetVersionsRequest
-	90,  // 644: clarifai.api.V2.GetDatasetVersion:input_type -> clarifai.api.GetDatasetVersionRequest
-	91,  // 645: clarifai.api.V2.ListDatasetVersionMetricsGroups:input_type -> clarifai.api.ListDatasetVersionMetricsGroupsRequest
-	92,  // 646: clarifai.api.V2.PostDatasetVersions:input_type -> clarifai.api.PostDatasetVersionsRequest
-	93,  // 647: clarifai.api.V2.PatchDatasetVersions:input_type -> clarifai.api.PatchDatasetVersionsRequest
-	94,  // 648: clarifai.api.V2.DeleteDatasetVersions:input_type -> clarifai.api.DeleteDatasetVersionsRequest
-	95,  // 649: clarifai.api.V2.PutDatasetVersionExports:input_type -> clarifai.api.PutDatasetVersionExportsRequest
-	163, // 650: clarifai.api.V2.GetModelType:input_type -> clarifai.api.GetModelTypeRequest
-	165, // 651: clarifai.api.V2.ListOpenSourceLicenses:input_type -> clarifai.api.ListOpenSourceLicensesRequest
-	164, // 652: clarifai.api.V2.ListModelTypes:input_type -> clarifai.api.ListModelTypesRequest
-	111, // 653: clarifai.api.V2.GetModel:input_type -> clarifai.api.GetModelRequest
-	111, // 654: clarifai.api.V2.GetModelOutputInfo:input_type -> clarifai.api.GetModelRequest
-	112, // 655: clarifai.api.V2.ListModels:input_type -> clarifai.api.ListModelsRequest
-	113, // 656: clarifai.api.V2.GetResourceCounts:input_type -> clarifai.api.GetResourceCountsRequest
-	129, // 657: clarifai.api.V2.PostModelsSearches:input_type -> clarifai.api.PostModelsSearchesRequest
-	123, // 658: clarifai.api.V2.PostModels:input_type -> clarifai.api.PostModelsRequest
-	124, // 659: clarifai.api.V2.PatchModels:input_type -> clarifai.api.PatchModelsRequest
-	126, // 660: clarifai.api.V2.PatchModelIds:input_type -> clarifai.api.PatchModelIdsRequest
-	127, // 661: clarifai.api.V2.DeleteModel:input_type -> clarifai.api.DeleteModelRequest
-	128, // 662: clarifai.api.V2.DeleteModels:input_type -> clarifai.api.DeleteModelsRequest
-	116, // 663: clarifai.api.V2.PatchModelCheckConsents:input_type -> clarifai.api.PatchModelCheckConsentsRequest
-	115, // 664: clarifai.api.V2.PatchModelToolkits:input_type -> clarifai.api.PatchModelToolkitsRequest
-	117, // 665: clarifai.api.V2.PatchModelUseCases:input_type -> clarifai.api.PatchModelUseCasesRequest
-	118, // 666: clarifai.api.V2.PatchModelLanguages:input_type -> clarifai.api.PatchModelLanguagesRequest
-	101, // 667: clarifai.api.V2.ListModelInputs:input_type -> clarifai.api.ListModelInputsRequest
-	133, // 668: clarifai.api.V2.GetModelVersion:input_type -> clarifai.api.GetModelVersionRequest
-	134, // 669: clarifai.api.V2.ListModelVersions:input_type -> clarifai.api.ListModelVersionsRequest
-	145, // 670: clarifai.api.V2.PostWorkflowVersionsUnPublish:input_type -> clarifai.api.PostWorkflowVersionsUnPublishRequest
-	146, // 671: clarifai.api.V2.PostWorkflowVersionsPublish:input_type -> clarifai.api.PostWorkflowVersionsPublishRequest
-	150, // 672: clarifai.api.V2.PostModelVersionsPublish:input_type -> clarifai.api.PostModelVersionsPublishRequest
-	152, // 673: clarifai.api.V2.PostModelVersionsUnPublish:input_type -> clarifai.api.PostModelVersionsUnPublishRequest
-	138, // 674: clarifai.api.V2.PostModelVersions:input_type -> clarifai.api.PostModelVersionsRequest
-	132, // 675: clarifai.api.V2.PatchModelVersions:input_type -> clarifai.api.PatchModelVersionsRequest
-	135, // 676: clarifai.api.V2.DeleteModelVersion:input_type -> clarifai.api.DeleteModelVersionRequest
-	139, // 677: clarifai.api.V2.PostModelVersionsUpload:input_type -> clarifai.api.PostModelVersionsUploadRequest
-	142, // 678: clarifai.api.V2.PutModelVersionExports:input_type -> clarifai.api.PutModelVersionExportsRequest
-	143, // 679: clarifai.api.V2.GetModelVersionExport:input_type -> clarifai.api.GetModelVersionExportRequest
-	162, // 680: clarifai.api.V2.GetModelVersionMetrics:input_type -> clarifai.api.GetModelVersionMetricsRequest
-	161, // 681: clarifai.api.V2.PostModelVersionMetrics:input_type -> clarifai.api.PostModelVersionMetricsRequest
-	156, // 682: clarifai.api.V2.PostModelVersionEvaluations:input_type -> clarifai.api.PostModelVersionEvaluationsRequest
-	157, // 683: clarifai.api.V2.ListModelVersionEvaluations:input_type -> clarifai.api.ListModelVersionEvaluationsRequest
-	158, // 684: clarifai.api.V2.GetModelVersionEvaluation:input_type -> clarifai.api.GetModelVersionEvaluationRequest
-	153, // 685: clarifai.api.V2.PostEvaluations:input_type -> clarifai.api.PostEvaluationsRequest
-	154, // 686: clarifai.api.V2.ListEvaluations:input_type -> clarifai.api.ListEvaluationsRequest
-	155, // 687: clarifai.api.V2.GetEvaluation:input_type -> clarifai.api.GetEvaluationRequest
-	173, // 688: clarifai.api.V2.ListModelReferences:input_type -> clarifai.api.ListModelReferencesRequest
-	169, // 689: clarifai.api.V2.GetModelVersionInputExample:input_type -> clarifai.api.GetModelVersionInputExampleRequest
-	170, // 690: clarifai.api.V2.ListModelVersionInputExamples:input_type -> clarifai.api.ListModelVersionInputExamplesRequest
-	213, // 691: clarifai.api.V2.GetWorkflow:input_type -> clarifai.api.GetWorkflowRequest
-	214, // 692: clarifai.api.V2.ListWorkflows:input_type -> clarifai.api.ListWorkflowsRequest
-	215, // 693: clarifai.api.V2.PostWorkflows:input_type -> clarifai.api.PostWorkflowsRequest
-	216, // 694: clarifai.api.V2.PatchWorkflows:input_type -> clarifai.api.PatchWorkflowsRequest
-	217, // 695: clarifai.api.V2.PatchWorkflowIds:input_type -> clarifai.api.PatchWorkflowIdsRequest
-	218, // 696: clarifai.api.V2.DeleteWorkflow:input_type -> clarifai.api.DeleteWorkflowRequest
-	219, // 697: clarifai.api.V2.DeleteWorkflows:input_type -> clarifai.api.DeleteWorkflowsRequest
-	222, // 698: clarifai.api.V2.PostWorkflowResults:input_type -> clarifai.api.PostWorkflowResultsRequest
-	224, // 699: clarifai.api.V2.ListWorkflowVersions:input_type -> clarifai.api.ListWorkflowVersionsRequest
-	225, // 700: clarifai.api.V2.GetWorkflowVersion:input_type -> clarifai.api.GetWorkflowVersionRequest
-	226, // 701: clarifai.api.V2.DeleteWorkflowVersions:input_type -> clarifai.api.DeleteWorkflowVersionsRequest
-	227, // 702: clarifai.api.V2.PatchWorkflowVersions:input_type -> clarifai.api.PatchWorkflowVersionsRequest
-	103, // 703: clarifai.api.V2.GetKey:input_type -> clarifai.api.GetKeyRequest
-	104, // 704: clarifai.api.V2.ListKeys:input_type -> clarifai.api.ListKeysRequest
-	105, // 705: clarifai.api.V2.ListAppKeys:input_type -> clarifai.api.ListAppKeysRequest
-	107, // 706: clarifai.api.V2.DeleteKey:input_type -> clarifai.api.DeleteKeyRequest
-	106, // 707: clarifai.api.V2.PostKeys:input_type -> clarifai.api.PostKeysRequest
-	108, // 708: clarifai.api.V2.PatchKeys:input_type -> clarifai.api.PatchKeysRequest
-	178, // 709: clarifai.api.V2.MyScopes:input_type -> clarifai.api.MyScopesRequest
-	179, // 710: clarifai.api.V2.MyScopesUser:input_type -> clarifai.api.MyScopesUserRequest
-	180, // 711: clarifai.api.V2.MyScopesRoot:input_type -> clarifai.api.MyScopesRootRequest
-	177, // 712: clarifai.api.V2.ListScopes:input_type -> clarifai.api.ListScopesRequest
-	15,  // 713: clarifai.api.V2.GetApp:input_type -> clarifai.api.GetAppRequest
-	16,  // 714: clarifai.api.V2.ListApps:input_type -> clarifai.api.ListAppsRequest
-	18,  // 715: clarifai.api.V2.DeleteApp:input_type -> clarifai.api.DeleteAppRequest
-	17,  // 716: clarifai.api.V2.PostApps:input_type -> clarifai.api.PostAppsRequest
-	19,  // 717: clarifai.api.V2.PatchApps:input_type -> clarifai.api.PatchAppsRequest
-	20,  // 718: clarifai.api.V2.PatchAppsDetails:input_type -> clarifai.api.PatchAppsDetailsRequest
-	22,  // 719: clarifai.api.V2.PatchAppsIds:input_type -> clarifai.api.PatchAppsIdsRequest
-	21,  // 720: clarifai.api.V2.PatchApp:input_type -> clarifai.api.PatchAppRequest
-	23,  // 721: clarifai.api.V2.PostAppsSearches:input_type -> clarifai.api.PostAppsSearchesRequest
-	209, // 722: clarifai.api.V2.GetUser:input_type -> clarifai.api.GetUserRequest
-	211, // 723: clarifai.api.V2.PostValidatePassword:input_type -> clarifai.api.PostValidatePasswordRequest
-	185, // 724: clarifai.api.V2.GetSearch:input_type -> clarifai.api.GetSearchRequest
-	186, // 725: clarifai.api.V2.ListSearches:input_type -> clarifai.api.ListSearchesRequest
-	190, // 726: clarifai.api.V2.PatchSearches:input_type -> clarifai.api.PatchSearchesRequest
-	187, // 727: clarifai.api.V2.PostSearches:input_type -> clarifai.api.PostSearchesRequest
-	191, // 728: clarifai.api.V2.PostSearchesByID:input_type -> clarifai.api.PostSearchesByIDRequest
-	198, // 729: clarifai.api.V2.PostAnnotationSearchMetrics:input_type -> clarifai.api.PostAnnotationSearchMetricsRequest
-	199, // 730: clarifai.api.V2.GetAnnotationSearchMetrics:input_type -> clarifai.api.GetAnnotationSearchMetricsRequest
-	200, // 731: clarifai.api.V2.ListAnnotationSearchMetrics:input_type -> clarifai.api.ListAnnotationSearchMetricsRequest
-	194, // 732: clarifai.api.V2.DeleteAnnotationSearchMetrics:input_type -> clarifai.api.DeleteAnnotationSearchMetricsRequest
-	192, // 733: clarifai.api.V2.DeleteSearch:input_type -> clarifai.api.DeleteSearchRequest
-	202, // 734: clarifai.api.V2.ListAnnotationFilters:input_type -> clarifai.api.ListAnnotationFiltersRequest
-	203, // 735: clarifai.api.V2.GetAnnotationFilter:input_type -> clarifai.api.GetAnnotationFilterRequest
-	204, // 736: clarifai.api.V2.PostAnnotationFilters:input_type -> clarifai.api.PostAnnotationFiltersRequest
-	205, // 737: clarifai.api.V2.PatchAnnotationFilters:input_type -> clarifai.api.PatchAnnotationFiltersRequest
-	206, // 738: clarifai.api.V2.DeleteAnnotationFilters:input_type -> clarifai.api.DeleteAnnotationFiltersRequest
-	34,  // 739: clarifai.api.V2.ListStatusCodes:input_type -> clarifai.api.ListStatusCodesRequest
-	33,  // 740: clarifai.api.V2.GetStatusCode:input_type -> clarifai.api.GetStatusCodeRequest
-	26,  // 741: clarifai.api.V2.ListCollaborators:input_type -> clarifai.api.ListCollaboratorsRequest
-	27,  // 742: clarifai.api.V2.PostCollaborators:input_type -> clarifai.api.PostCollaboratorsRequest
-	28,  // 743: clarifai.api.V2.PatchCollaborators:input_type -> clarifai.api.PatchCollaboratorsRequest
-	29,  // 744: clarifai.api.V2.DeleteCollaborators:input_type -> clarifai.api.DeleteCollaboratorsRequest
-	31,  // 745: clarifai.api.V2.ListCollaborations:input_type -> clarifai.api.ListCollaborationsRequest
-	230, // 746: clarifai.api.V2.PostAppDuplications:input_type -> clarifai.api.PostAppDuplicationsRequest
-	232, // 747: clarifai.api.V2.ListAppDuplications:input_type -> clarifai.api.ListAppDuplicationsRequest
-	231, // 748: clarifai.api.V2.GetAppDuplication:input_type -> clarifai.api.GetAppDuplicationRequest
-	235, // 749: clarifai.api.V2.PostTasks:input_type -> clarifai.api.PostTasksRequest
-	242, // 750: clarifai.api.V2.GetTaskAnnotationCount:input_type -> clarifai.api.GetTaskCountRequest
-	242, // 751: clarifai.api.V2.GetTaskInputCount:input_type -> clarifai.api.GetTaskCountRequest
-	236, // 752: clarifai.api.V2.GetTask:input_type -> clarifai.api.GetTaskRequest
-	237, // 753: clarifai.api.V2.ListTasks:input_type -> clarifai.api.ListTasksRequest
-	238, // 754: clarifai.api.V2.PatchTasks:input_type -> clarifai.api.PatchTasksRequest
-	239, // 755: clarifai.api.V2.DeleteTasks:input_type -> clarifai.api.DeleteTasksRequest
-	244, // 756: clarifai.api.V2.PostLabelOrders:input_type -> clarifai.api.PostLabelOrdersRequest
-	245, // 757: clarifai.api.V2.GetLabelOrder:input_type -> clarifai.api.GetLabelOrderRequest
-	246, // 758: clarifai.api.V2.ListLabelOrders:input_type -> clarifai.api.ListLabelOrdersRequest
-	247, // 759: clarifai.api.V2.PatchLabelOrders:input_type -> clarifai.api.PatchLabelOrdersRequest
-	248, // 760: clarifai.api.V2.DeleteLabelOrders:input_type -> clarifai.api.DeleteLabelOrdersRequest
-	251, // 761: clarifai.api.V2.PostCollectors:input_type -> clarifai.api.PostCollectorsRequest
-	254, // 762: clarifai.api.V2.GetCollector:input_type -> clarifai.api.GetCollectorRequest
-	255, // 763: clarifai.api.V2.ListCollectors:input_type -> clarifai.api.ListCollectorsRequest
-	252, // 764: clarifai.api.V2.PatchCollectors:input_type -> clarifai.api.PatchCollectorsRequest
-	253, // 765: clarifai.api.V2.DeleteCollectors:input_type -> clarifai.api.DeleteCollectorsRequest
-	258, // 766: clarifai.api.V2.PostStatValues:input_type -> clarifai.api.PostStatValuesRequest
-	260, // 767: clarifai.api.V2.PostStatValuesAggregate:input_type -> clarifai.api.PostStatValuesAggregateRequest
-	262, // 768: clarifai.api.V2.GetModule:input_type -> clarifai.api.GetModuleRequest
-	263, // 769: clarifai.api.V2.ListModules:input_type -> clarifai.api.ListModulesRequest
-	264, // 770: clarifai.api.V2.PostModules:input_type -> clarifai.api.PostModulesRequest
-	265, // 771: clarifai.api.V2.PatchModules:input_type -> clarifai.api.PatchModulesRequest
-	266, // 772: clarifai.api.V2.DeleteModules:input_type -> clarifai.api.DeleteModulesRequest
-	269, // 773: clarifai.api.V2.GetModuleVersion:input_type -> clarifai.api.GetModuleVersionRequest
-	270, // 774: clarifai.api.V2.ListModuleVersions:input_type -> clarifai.api.ListModuleVersionsRequest
-	271, // 775: clarifai.api.V2.PostModuleVersions:input_type -> clarifai.api.PostModuleVersionsRequest
-	272, // 776: clarifai.api.V2.PatchModuleVersions:input_type -> clarifai.api.PatchModuleVersionsRequest
-	273, // 777: clarifai.api.V2.DeleteModuleVersions:input_type -> clarifai.api.DeleteModuleVersionsRequest
-	274, // 778: clarifai.api.V2.GetModuleVersionUsageCount:input_type -> clarifai.api.GetModuleVersionUsageCountRequest
-	278, // 779: clarifai.api.V2.GetInstalledModuleVersion:input_type -> clarifai.api.GetInstalledModuleVersionRequest
-	279, // 780: clarifai.api.V2.ListInstalledModuleVersions:input_type -> clarifai.api.ListInstalledModuleVersionsRequest
-	280, // 781: clarifai.api.V2.PostInstalledModuleVersions:input_type -> clarifai.api.PostInstalledModuleVersionsRequest
-	282, // 782: clarifai.api.V2.DeleteInstalledModuleVersions:input_type -> clarifai.api.DeleteInstalledModuleVersionsRequest
-	281, // 783: clarifai.api.V2.PostInstalledModuleVersionsKey:input_type -> clarifai.api.PostInstalledModuleVersionsKeyRequest
-	286, // 784: clarifai.api.V2.PostBulkOperations:input_type -> clarifai.api.PostBulkOperationsRequest
-	287, // 785: clarifai.api.V2.ListBulkOperations:input_type -> clarifai.api.ListBulkOperationsRequest
-	288, // 786: clarifai.api.V2.GetBulkOperation:input_type -> clarifai.api.GetBulkOperationRequest
-	289, // 787: clarifai.api.V2.CancelBulkOperations:input_type -> clarifai.api.CancelBulkOperationRequest
-	290, // 788: clarifai.api.V2.DeleteBulkOperations:input_type -> clarifai.api.DeleteBulkOperationRequest
-	285, // 789: clarifai.api.V2.ListNextTaskAssignments:input_type -> clarifai.api.ListNextTaskAssignmentsRequest
-	293, // 790: clarifai.api.V2.PutTaskAssignments:input_type -> clarifai.api.PutTaskAssignmentsRequest
-	300, // 791: clarifai.api.V2.ListInputsAddJobs:input_type -> clarifai.api.ListInputsAddJobsRequest
-	301, // 792: clarifai.api.V2.GetInputsAddJob:input_type -> clarifai.api.GetInputsAddJobRequest
-	302, // 793: clarifai.api.V2.CancelInputsAddJob:input_type -> clarifai.api.CancelInputsAddJobRequest
-	305, // 794: clarifai.api.V2.PostUploads:input_type -> clarifai.api.PostUploadsRequest
-	311, // 795: clarifai.api.V2.PutUploadContentParts:input_type -> clarifai.api.PutUploadContentPartsRequest
-	308, // 796: clarifai.api.V2.GetUpload:input_type -> clarifai.api.GetUploadRequest
-	307, // 797: clarifai.api.V2.ListUploads:input_type -> clarifai.api.ListUploadsRequest
-	306, // 798: clarifai.api.V2.DeleteUploads:input_type -> clarifai.api.DeleteUploadsRequest
-	312, // 799: clarifai.api.V2.PostInputsDataSources:input_type -> clarifai.api.PostInputsDataSourcesRequest
-	313, // 800: clarifai.api.V2.GetInputsExtractionJob:input_type -> clarifai.api.GetInputsExtractionJobRequest
-	314, // 801: clarifai.api.V2.ListInputsExtractionJobs:input_type -> clarifai.api.ListInputsExtractionJobsRequest
-	317, // 802: clarifai.api.V2.CancelInputsExtractionJobs:input_type -> clarifai.api.CancelInputsExtractionJobsRequest
-	318, // 803: clarifai.api.V2.PostInputsUploads:input_type -> clarifai.api.PostInputsUploadsRequest
-	319, // 804: clarifai.api.V2.GetRunner:input_type -> clarifai.api.GetRunnerRequest
-	320, // 805: clarifai.api.V2.ListRunners:input_type -> clarifai.api.ListRunnersRequest
-	321, // 806: clarifai.api.V2.PostRunners:input_type -> clarifai.api.PostRunnersRequest
-	322, // 807: clarifai.api.V2.DeleteRunners:input_type -> clarifai.api.DeleteRunnersRequest
-	325, // 808: clarifai.api.V2.ListRunnerItems:input_type -> clarifai.api.ListRunnerItemsRequest
-	326, // 809: clarifai.api.V2.PostRunnerItemOutputs:input_type -> clarifai.api.PostRunnerItemOutputsRequest
-	326, // 810: clarifai.api.V2.ProcessRunnerItems:input_type -> clarifai.api.PostRunnerItemOutputsRequest
-	331, // 811: clarifai.api.V2.PostModelVersionsTrainingTimeEstimate:input_type -> clarifai.api.PostModelVersionsTrainingTimeEstimateRequest
-	333, // 812: clarifai.api.V2.ListCloudProviders:input_type -> clarifai.api.ListCloudProvidersRequest
-	335, // 813: clarifai.api.V2.ListCloudRegions:input_type -> clarifai.api.ListCloudRegionsRequest
-	337, // 814: clarifai.api.V2.ListInstanceTypes:input_type -> clarifai.api.ListInstanceTypesRequest
-	339, // 815: clarifai.api.V2.GetComputeCluster:input_type -> clarifai.api.GetComputeClusterRequest
-	340, // 816: clarifai.api.V2.ListComputeClusters:input_type -> clarifai.api.ListComputeClustersRequest
-	341, // 817: clarifai.api.V2.PostComputeClusters:input_type -> clarifai.api.PostComputeClustersRequest
-	342, // 818: clarifai.api.V2.DeleteComputeClusters:input_type -> clarifai.api.DeleteComputeClustersRequest
-	345, // 819: clarifai.api.V2.GetNodepool:input_type -> clarifai.api.GetNodepoolRequest
-	346, // 820: clarifai.api.V2.ListNodepools:input_type -> clarifai.api.ListNodepoolsRequest
-	347, // 821: clarifai.api.V2.PostNodepools:input_type -> clarifai.api.PostNodepoolsRequest
-	348, // 822: clarifai.api.V2.PatchNodepools:input_type -> clarifai.api.PatchNodepoolsRequest
-	349, // 823: clarifai.api.V2.DeleteNodepools:input_type -> clarifai.api.DeleteNodepoolsRequest
-	352, // 824: clarifai.api.V2.GetDeployment:input_type -> clarifai.api.GetDeploymentRequest
-	353, // 825: clarifai.api.V2.ListDeployments:input_type -> clarifai.api.ListDeploymentsRequest
-	354, // 826: clarifai.api.V2.PostDeployments:input_type -> clarifai.api.PostDeploymentsRequest
-	358, // 827: clarifai.api.V2.PatchDeployments:input_type -> clarifai.api.PatchDeploymentsRequest
-	355, // 828: clarifai.api.V2.DeleteDeployments:input_type -> clarifai.api.DeleteDeploymentsRequest
-	356, // 829: clarifai.api.V2.PostAuditLogSearches:input_type -> clarifai.api.PostAuditLogSearchesRequest
-	361, // 830: clarifai.api.V2.ListWorkflowEvaluationTemplates:input_type -> clarifai.api.ListWorkflowEvaluationTemplatesRequest
-	102, // 831: clarifai.api.V2.ListLogEntries:input_type -> clarifai.api.ListLogEntriesRequest
-	53,  // 832: clarifai.api.V2.ListConceptRelations:output_type -> clarifai.api.MultiConceptRelationResponse
-	53,  // 833: clarifai.api.V2.PostConceptRelations:output_type -> clarifai.api.MultiConceptRelationResponse
-	457, // 834: clarifai.api.V2.DeleteConceptRelations:output_type -> clarifai.api.status.BaseResponse
-	47,  // 835: clarifai.api.V2.GetConceptCounts:output_type -> clarifai.api.MultiConceptCountResponse
-	45,  // 836: clarifai.api.V2.GetConcept:output_type -> clarifai.api.SingleConceptResponse
-	46,  // 837: clarifai.api.V2.ListConcepts:output_type -> clarifai.api.MultiConceptResponse
-	46,  // 838: clarifai.api.V2.ListModelConcepts:output_type -> clarifai.api.MultiConceptResponse
-	46,  // 839: clarifai.api.V2.PostConceptsSearches:output_type -> clarifai.api.MultiConceptResponse
-	46,  // 840: clarifai.api.V2.PostConcepts:output_type -> clarifai.api.MultiConceptResponse
-	46,  // 841: clarifai.api.V2.PatchConcepts:output_type -> clarifai.api.MultiConceptResponse
-	59,  // 842: clarifai.api.V2.GetConceptLanguage:output_type -> clarifai.api.SingleConceptLanguageResponse
-	60,  // 843: clarifai.api.V2.ListConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
-	60,  // 844: clarifai.api.V2.PostConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
-	60,  // 845: clarifai.api.V2.PatchConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
-	54,  // 846: clarifai.api.V2.ListKnowledgeGraphs:output_type -> clarifai.api.MultiKnowledgeGraphResponse
-	54,  // 847: clarifai.api.V2.PostKnowledgeGraphs:output_type -> clarifai.api.MultiKnowledgeGraphResponse
-	11,  // 848: clarifai.api.V2.GetAnnotation:output_type -> clarifai.api.SingleAnnotationResponse
-	12,  // 849: clarifai.api.V2.ListAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
-	12,  // 850: clarifai.api.V2.PostAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
-	12,  // 851: clarifai.api.V2.PatchAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
-	8,   // 852: clarifai.api.V2.PatchAnnotationsStatus:output_type -> clarifai.api.PatchAnnotationsStatusResponse
-	457, // 853: clarifai.api.V2.DeleteAnnotation:output_type -> clarifai.api.status.BaseResponse
-	457, // 854: clarifai.api.V2.DeleteAnnotations:output_type -> clarifai.api.status.BaseResponse
-	197, // 855: clarifai.api.V2.PatchAnnotationsSearches:output_type -> clarifai.api.MultiSearchResponse
-	197, // 856: clarifai.api.V2.PostAnnotationsSearches:output_type -> clarifai.api.MultiSearchResponse
-	14,  // 857: clarifai.api.V2.ListAnnotationWorkers:output_type -> clarifai.api.MultiWorkerResponse
-	74,  // 858: clarifai.api.V2.GetInputCount:output_type -> clarifai.api.SingleInputCountResponse
-	72,  // 859: clarifai.api.V2.StreamInputs:output_type -> clarifai.api.MultiInputResponse
-	73,  // 860: clarifai.api.V2.GetInputSamples:output_type -> clarifai.api.MultiInputAnnotationResponse
-	70,  // 861: clarifai.api.V2.GetInput:output_type -> clarifai.api.SingleInputResponse
-	71,  // 862: clarifai.api.V2.GetInputVideoManifest:output_type -> clarifai.api.GetVideoManifestResponse
-	72,  // 863: clarifai.api.V2.ListInputs:output_type -> clarifai.api.MultiInputResponse
-	72,  // 864: clarifai.api.V2.PostInputs:output_type -> clarifai.api.MultiInputResponse
-	72,  // 865: clarifai.api.V2.PatchInputs:output_type -> clarifai.api.MultiInputResponse
-	457, // 866: clarifai.api.V2.DeleteInput:output_type -> clarifai.api.status.BaseResponse
-	457, // 867: clarifai.api.V2.DeleteInputs:output_type -> clarifai.api.status.BaseResponse
-	197, // 868: clarifai.api.V2.PatchInputsSearches:output_type -> clarifai.api.MultiSearchResponse
-	197, // 869: clarifai.api.V2.PostInputsSearches:output_type -> clarifai.api.MultiSearchResponse
-	175, // 870: clarifai.api.V2.PostModelOutputs:output_type -> clarifai.api.MultiOutputResponse
-	175, // 871: clarifai.api.V2.GenerateModelOutputs:output_type -> clarifai.api.MultiOutputResponse
-	175, // 872: clarifai.api.V2.StreamModelOutputs:output_type -> clarifai.api.MultiOutputResponse
-	81,  // 873: clarifai.api.V2.ListDatasets:output_type -> clarifai.api.MultiDatasetResponse
-	82,  // 874: clarifai.api.V2.GetDataset:output_type -> clarifai.api.SingleDatasetResponse
-	81,  // 875: clarifai.api.V2.PostDatasets:output_type -> clarifai.api.MultiDatasetResponse
-	81,  // 876: clarifai.api.V2.PatchDatasets:output_type -> clarifai.api.MultiDatasetResponse
-	457, // 877: clarifai.api.V2.DeleteDatasets:output_type -> clarifai.api.status.BaseResponse
-	87,  // 878: clarifai.api.V2.ListDatasetInputs:output_type -> clarifai.api.MultiDatasetInputResponse
-	88,  // 879: clarifai.api.V2.GetDatasetInput:output_type -> clarifai.api.SingleDatasetInputResponse
-	87,  // 880: clarifai.api.V2.PostDatasetInputs:output_type -> clarifai.api.MultiDatasetInputResponse
-	457, // 881: clarifai.api.V2.DeleteDatasetInputs:output_type -> clarifai.api.status.BaseResponse
-	96,  // 882: clarifai.api.V2.ListDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
-	99,  // 883: clarifai.api.V2.GetDatasetVersion:output_type -> clarifai.api.SingleDatasetVersionResponse
-	98,  // 884: clarifai.api.V2.ListDatasetVersionMetricsGroups:output_type -> clarifai.api.MultiDatasetVersionMetricsGroupResponse
-	96,  // 885: clarifai.api.V2.PostDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
-	96,  // 886: clarifai.api.V2.PatchDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
-	457, // 887: clarifai.api.V2.DeleteDatasetVersions:output_type -> clarifai.api.status.BaseResponse
-	97,  // 888: clarifai.api.V2.PutDatasetVersionExports:output_type -> clarifai.api.MultiDatasetVersionExportResponse
-	167, // 889: clarifai.api.V2.GetModelType:output_type -> clarifai.api.SingleModelTypeResponse
-	166, // 890: clarifai.api.V2.ListOpenSourceLicenses:output_type -> clarifai.api.ListOpenSourceLicensesResponse
-	168, // 891: clarifai.api.V2.ListModelTypes:output_type -> clarifai.api.MultiModelTypeResponse
-	130, // 892: clarifai.api.V2.GetModel:output_type -> clarifai.api.SingleModelResponse
-	130, // 893: clarifai.api.V2.GetModelOutputInfo:output_type -> clarifai.api.SingleModelResponse
-	131, // 894: clarifai.api.V2.ListModels:output_type -> clarifai.api.MultiModelResponse
-	114, // 895: clarifai.api.V2.GetResourceCounts:output_type -> clarifai.api.GetResourceCountsResponse
-	131, // 896: clarifai.api.V2.PostModelsSearches:output_type -> clarifai.api.MultiModelResponse
-	130, // 897: clarifai.api.V2.PostModels:output_type -> clarifai.api.SingleModelResponse
-	131, // 898: clarifai.api.V2.PatchModels:output_type -> clarifai.api.MultiModelResponse
-	131, // 899: clarifai.api.V2.PatchModelIds:output_type -> clarifai.api.MultiModelResponse
-	457, // 900: clarifai.api.V2.DeleteModel:output_type -> clarifai.api.status.BaseResponse
-	457, // 901: clarifai.api.V2.DeleteModels:output_type -> clarifai.api.status.BaseResponse
-	120, // 902: clarifai.api.V2.PatchModelCheckConsents:output_type -> clarifai.api.MultiModelCheckConsentResponse
-	119, // 903: clarifai.api.V2.PatchModelToolkits:output_type -> clarifai.api.MultiModelToolkitResponse
-	121, // 904: clarifai.api.V2.PatchModelUseCases:output_type -> clarifai.api.MultiModelUseCaseResponse
-	122, // 905: clarifai.api.V2.PatchModelLanguages:output_type -> clarifai.api.MultiModelLanguageResponse
-	72,  // 906: clarifai.api.V2.ListModelInputs:output_type -> clarifai.api.MultiInputResponse
-	136, // 907: clarifai.api.V2.GetModelVersion:output_type -> clarifai.api.SingleModelVersionResponse
-	137, // 908: clarifai.api.V2.ListModelVersions:output_type -> clarifai.api.MultiModelVersionResponse
-	457, // 909: clarifai.api.V2.PostWorkflowVersionsUnPublish:output_type -> clarifai.api.status.BaseResponse
-	457, // 910: clarifai.api.V2.PostWorkflowVersionsPublish:output_type -> clarifai.api.status.BaseResponse
-	457, // 911: clarifai.api.V2.PostModelVersionsPublish:output_type -> clarifai.api.status.BaseResponse
-	457, // 912: clarifai.api.V2.PostModelVersionsUnPublish:output_type -> clarifai.api.status.BaseResponse
-	130, // 913: clarifai.api.V2.PostModelVersions:output_type -> clarifai.api.SingleModelResponse
-	137, // 914: clarifai.api.V2.PatchModelVersions:output_type -> clarifai.api.MultiModelVersionResponse
-	457, // 915: clarifai.api.V2.DeleteModelVersion:output_type -> clarifai.api.status.BaseResponse
-	140, // 916: clarifai.api.V2.PostModelVersionsUpload:output_type -> clarifai.api.PostModelVersionsUploadResponse
-	144, // 917: clarifai.api.V2.PutModelVersionExports:output_type -> clarifai.api.SingleModelVersionExportResponse
-	144, // 918: clarifai.api.V2.GetModelVersionExport:output_type -> clarifai.api.SingleModelVersionExportResponse
-	136, // 919: clarifai.api.V2.GetModelVersionMetrics:output_type -> clarifai.api.SingleModelVersionResponse
-	136, // 920: clarifai.api.V2.PostModelVersionMetrics:output_type -> clarifai.api.SingleModelVersionResponse
-	160, // 921: clarifai.api.V2.PostModelVersionEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
-	160, // 922: clarifai.api.V2.ListModelVersionEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
-	159, // 923: clarifai.api.V2.GetModelVersionEvaluation:output_type -> clarifai.api.SingleEvalMetricsResponse
-	160, // 924: clarifai.api.V2.PostEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
-	160, // 925: clarifai.api.V2.ListEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
-	159, // 926: clarifai.api.V2.GetEvaluation:output_type -> clarifai.api.SingleEvalMetricsResponse
-	174, // 927: clarifai.api.V2.ListModelReferences:output_type -> clarifai.api.MultiModelReferenceResponse
-	171, // 928: clarifai.api.V2.GetModelVersionInputExample:output_type -> clarifai.api.SingleModelVersionInputExampleResponse
-	172, // 929: clarifai.api.V2.ListModelVersionInputExamples:output_type -> clarifai.api.MultiModelVersionInputExampleResponse
-	220, // 930: clarifai.api.V2.GetWorkflow:output_type -> clarifai.api.SingleWorkflowResponse
-	221, // 931: clarifai.api.V2.ListWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
-	221, // 932: clarifai.api.V2.PostWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
-	221, // 933: clarifai.api.V2.PatchWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
-	221, // 934: clarifai.api.V2.PatchWorkflowIds:output_type -> clarifai.api.MultiWorkflowResponse
-	457, // 935: clarifai.api.V2.DeleteWorkflow:output_type -> clarifai.api.status.BaseResponse
-	457, // 936: clarifai.api.V2.DeleteWorkflows:output_type -> clarifai.api.status.BaseResponse
-	223, // 937: clarifai.api.V2.PostWorkflowResults:output_type -> clarifai.api.PostWorkflowResultsResponse
-	228, // 938: clarifai.api.V2.ListWorkflowVersions:output_type -> clarifai.api.MultiWorkflowVersionResponse
-	229, // 939: clarifai.api.V2.GetWorkflowVersion:output_type -> clarifai.api.SingleWorkflowVersionResponse
-	457, // 940: clarifai.api.V2.DeleteWorkflowVersions:output_type -> clarifai.api.status.BaseResponse
-	228, // 941: clarifai.api.V2.PatchWorkflowVersions:output_type -> clarifai.api.MultiWorkflowVersionResponse
-	109, // 942: clarifai.api.V2.GetKey:output_type -> clarifai.api.SingleKeyResponse
-	110, // 943: clarifai.api.V2.ListKeys:output_type -> clarifai.api.MultiKeyResponse
-	110, // 944: clarifai.api.V2.ListAppKeys:output_type -> clarifai.api.MultiKeyResponse
-	457, // 945: clarifai.api.V2.DeleteKey:output_type -> clarifai.api.status.BaseResponse
-	110, // 946: clarifai.api.V2.PostKeys:output_type -> clarifai.api.MultiKeyResponse
-	110, // 947: clarifai.api.V2.PatchKeys:output_type -> clarifai.api.MultiKeyResponse
-	182, // 948: clarifai.api.V2.MyScopes:output_type -> clarifai.api.MultiScopeResponse
-	183, // 949: clarifai.api.V2.MyScopesUser:output_type -> clarifai.api.MultiScopeUserResponse
-	184, // 950: clarifai.api.V2.MyScopesRoot:output_type -> clarifai.api.MultiScopeRootResponse
-	181, // 951: clarifai.api.V2.ListScopes:output_type -> clarifai.api.MultiScopeDepsResponse
-	24,  // 952: clarifai.api.V2.GetApp:output_type -> clarifai.api.SingleAppResponse
-	25,  // 953: clarifai.api.V2.ListApps:output_type -> clarifai.api.MultiAppResponse
-	457, // 954: clarifai.api.V2.DeleteApp:output_type -> clarifai.api.status.BaseResponse
-	25,  // 955: clarifai.api.V2.PostApps:output_type -> clarifai.api.MultiAppResponse
-	25,  // 956: clarifai.api.V2.PatchApps:output_type -> clarifai.api.MultiAppResponse
-	25,  // 957: clarifai.api.V2.PatchAppsDetails:output_type -> clarifai.api.MultiAppResponse
-	25,  // 958: clarifai.api.V2.PatchAppsIds:output_type -> clarifai.api.MultiAppResponse
-	24,  // 959: clarifai.api.V2.PatchApp:output_type -> clarifai.api.SingleAppResponse
-	25,  // 960: clarifai.api.V2.PostAppsSearches:output_type -> clarifai.api.MultiAppResponse
-	210, // 961: clarifai.api.V2.GetUser:output_type -> clarifai.api.SingleUserResponse
-	212, // 962: clarifai.api.V2.PostValidatePassword:output_type -> clarifai.api.SinglePasswordValidationResponse
-	196, // 963: clarifai.api.V2.GetSearch:output_type -> clarifai.api.SingleSearchResponse
-	197, // 964: clarifai.api.V2.ListSearches:output_type -> clarifai.api.MultiSearchResponse
-	197, // 965: clarifai.api.V2.PatchSearches:output_type -> clarifai.api.MultiSearchResponse
-	197, // 966: clarifai.api.V2.PostSearches:output_type -> clarifai.api.MultiSearchResponse
-	197, // 967: clarifai.api.V2.PostSearchesByID:output_type -> clarifai.api.MultiSearchResponse
-	201, // 968: clarifai.api.V2.PostAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
-	201, // 969: clarifai.api.V2.GetAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
-	201, // 970: clarifai.api.V2.ListAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
-	457, // 971: clarifai.api.V2.DeleteAnnotationSearchMetrics:output_type -> clarifai.api.status.BaseResponse
-	457, // 972: clarifai.api.V2.DeleteSearch:output_type -> clarifai.api.status.BaseResponse
-	207, // 973: clarifai.api.V2.ListAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
-	208, // 974: clarifai.api.V2.GetAnnotationFilter:output_type -> clarifai.api.SingleAnnotationFilterResponse
-	207, // 975: clarifai.api.V2.PostAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
-	207, // 976: clarifai.api.V2.PatchAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
-	457, // 977: clarifai.api.V2.DeleteAnnotationFilters:output_type -> clarifai.api.status.BaseResponse
-	36,  // 978: clarifai.api.V2.ListStatusCodes:output_type -> clarifai.api.MultiStatusCodeResponse
-	35,  // 979: clarifai.api.V2.GetStatusCode:output_type -> clarifai.api.SingleStatusCodeResponse
-	30,  // 980: clarifai.api.V2.ListCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
-	30,  // 981: clarifai.api.V2.PostCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
-	30,  // 982: clarifai.api.V2.PatchCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
-	457, // 983: clarifai.api.V2.DeleteCollaborators:output_type -> clarifai.api.status.BaseResponse
-	32,  // 984: clarifai.api.V2.ListCollaborations:output_type -> clarifai.api.MultiCollaborationsResponse
-	233, // 985: clarifai.api.V2.PostAppDuplications:output_type -> clarifai.api.MultiAppDuplicationsResponse
-	233, // 986: clarifai.api.V2.ListAppDuplications:output_type -> clarifai.api.MultiAppDuplicationsResponse
-	234, // 987: clarifai.api.V2.GetAppDuplication:output_type -> clarifai.api.SingleAppDuplicationResponse
-	240, // 988: clarifai.api.V2.PostTasks:output_type -> clarifai.api.MultiTaskResponse
-	243, // 989: clarifai.api.V2.GetTaskAnnotationCount:output_type -> clarifai.api.SingleTaskCountResponse
-	243, // 990: clarifai.api.V2.GetTaskInputCount:output_type -> clarifai.api.SingleTaskCountResponse
-	241, // 991: clarifai.api.V2.GetTask:output_type -> clarifai.api.SingleTaskResponse
-	240, // 992: clarifai.api.V2.ListTasks:output_type -> clarifai.api.MultiTaskResponse
-	240, // 993: clarifai.api.V2.PatchTasks:output_type -> clarifai.api.MultiTaskResponse
-	457, // 994: clarifai.api.V2.DeleteTasks:output_type -> clarifai.api.status.BaseResponse
-	249, // 995: clarifai.api.V2.PostLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
-	250, // 996: clarifai.api.V2.GetLabelOrder:output_type -> clarifai.api.SingleLabelOrderResponse
-	249, // 997: clarifai.api.V2.ListLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
-	249, // 998: clarifai.api.V2.PatchLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
-	457, // 999: clarifai.api.V2.DeleteLabelOrders:output_type -> clarifai.api.status.BaseResponse
-	256, // 1000: clarifai.api.V2.PostCollectors:output_type -> clarifai.api.MultiCollectorResponse
-	257, // 1001: clarifai.api.V2.GetCollector:output_type -> clarifai.api.SingleCollectorResponse
-	256, // 1002: clarifai.api.V2.ListCollectors:output_type -> clarifai.api.MultiCollectorResponse
-	256, // 1003: clarifai.api.V2.PatchCollectors:output_type -> clarifai.api.MultiCollectorResponse
-	457, // 1004: clarifai.api.V2.DeleteCollectors:output_type -> clarifai.api.status.BaseResponse
-	259, // 1005: clarifai.api.V2.PostStatValues:output_type -> clarifai.api.MultiStatValueResponse
-	261, // 1006: clarifai.api.V2.PostStatValuesAggregate:output_type -> clarifai.api.MultiStatValueAggregateResponse
-	267, // 1007: clarifai.api.V2.GetModule:output_type -> clarifai.api.SingleModuleResponse
-	268, // 1008: clarifai.api.V2.ListModules:output_type -> clarifai.api.MultiModuleResponse
-	268, // 1009: clarifai.api.V2.PostModules:output_type -> clarifai.api.MultiModuleResponse
-	268, // 1010: clarifai.api.V2.PatchModules:output_type -> clarifai.api.MultiModuleResponse
-	457, // 1011: clarifai.api.V2.DeleteModules:output_type -> clarifai.api.status.BaseResponse
-	275, // 1012: clarifai.api.V2.GetModuleVersion:output_type -> clarifai.api.SingleModuleVersionResponse
-	276, // 1013: clarifai.api.V2.ListModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
-	276, // 1014: clarifai.api.V2.PostModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
-	276, // 1015: clarifai.api.V2.PatchModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
-	457, // 1016: clarifai.api.V2.DeleteModuleVersions:output_type -> clarifai.api.status.BaseResponse
-	277, // 1017: clarifai.api.V2.GetModuleVersionUsageCount:output_type -> clarifai.api.SingleModuleVersionUsageCountResponse
-	283, // 1018: clarifai.api.V2.GetInstalledModuleVersion:output_type -> clarifai.api.SingleInstalledModuleVersionResponse
-	284, // 1019: clarifai.api.V2.ListInstalledModuleVersions:output_type -> clarifai.api.MultiInstalledModuleVersionResponse
-	284, // 1020: clarifai.api.V2.PostInstalledModuleVersions:output_type -> clarifai.api.MultiInstalledModuleVersionResponse
-	457, // 1021: clarifai.api.V2.DeleteInstalledModuleVersions:output_type -> clarifai.api.status.BaseResponse
-	109, // 1022: clarifai.api.V2.PostInstalledModuleVersionsKey:output_type -> clarifai.api.SingleKeyResponse
-	292, // 1023: clarifai.api.V2.PostBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
-	292, // 1024: clarifai.api.V2.ListBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
-	291, // 1025: clarifai.api.V2.GetBulkOperation:output_type -> clarifai.api.SingleBulkOperationsResponse
-	292, // 1026: clarifai.api.V2.CancelBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
-	457, // 1027: clarifai.api.V2.DeleteBulkOperations:output_type -> clarifai.api.status.BaseResponse
-	72,  // 1028: clarifai.api.V2.ListNextTaskAssignments:output_type -> clarifai.api.MultiInputResponse
-	299, // 1029: clarifai.api.V2.PutTaskAssignments:output_type -> clarifai.api.MultiTaskAssignmentResponse
-	303, // 1030: clarifai.api.V2.ListInputsAddJobs:output_type -> clarifai.api.MultiInputsAddJobResponse
-	304, // 1031: clarifai.api.V2.GetInputsAddJob:output_type -> clarifai.api.SingleInputsAddJobResponse
-	304, // 1032: clarifai.api.V2.CancelInputsAddJob:output_type -> clarifai.api.SingleInputsAddJobResponse
-	310, // 1033: clarifai.api.V2.PostUploads:output_type -> clarifai.api.MultiUploadResponse
-	309, // 1034: clarifai.api.V2.PutUploadContentParts:output_type -> clarifai.api.SingleUploadResponse
-	309, // 1035: clarifai.api.V2.GetUpload:output_type -> clarifai.api.SingleUploadResponse
-	310, // 1036: clarifai.api.V2.ListUploads:output_type -> clarifai.api.MultiUploadResponse
-	457, // 1037: clarifai.api.V2.DeleteUploads:output_type -> clarifai.api.status.BaseResponse
-	303, // 1038: clarifai.api.V2.PostInputsDataSources:output_type -> clarifai.api.MultiInputsAddJobResponse
-	315, // 1039: clarifai.api.V2.GetInputsExtractionJob:output_type -> clarifai.api.SingleInputsExtractionJobResponse
-	316, // 1040: clarifai.api.V2.ListInputsExtractionJobs:output_type -> clarifai.api.MultiInputsExtractionJobResponse
-	316, // 1041: clarifai.api.V2.CancelInputsExtractionJobs:output_type -> clarifai.api.MultiInputsExtractionJobResponse
-	303, // 1042: clarifai.api.V2.PostInputsUploads:output_type -> clarifai.api.MultiInputsAddJobResponse
-	323, // 1043: clarifai.api.V2.GetRunner:output_type -> clarifai.api.SingleRunnerResponse
-	324, // 1044: clarifai.api.V2.ListRunners:output_type -> clarifai.api.MultiRunnerResponse
-	324, // 1045: clarifai.api.V2.PostRunners:output_type -> clarifai.api.MultiRunnerResponse
-	457, // 1046: clarifai.api.V2.DeleteRunners:output_type -> clarifai.api.status.BaseResponse
-	327, // 1047: clarifai.api.V2.ListRunnerItems:output_type -> clarifai.api.MultiRunnerItemResponse
-	330, // 1048: clarifai.api.V2.PostRunnerItemOutputs:output_type -> clarifai.api.MultiRunnerItemOutputResponse
-	327, // 1049: clarifai.api.V2.ProcessRunnerItems:output_type -> clarifai.api.MultiRunnerItemResponse
-	332, // 1050: clarifai.api.V2.PostModelVersionsTrainingTimeEstimate:output_type -> clarifai.api.MultiTrainingTimeEstimateResponse
-	334, // 1051: clarifai.api.V2.ListCloudProviders:output_type -> clarifai.api.MultiCloudProviderResponse
-	336, // 1052: clarifai.api.V2.ListCloudRegions:output_type -> clarifai.api.MultiCloudRegionResponse
-	338, // 1053: clarifai.api.V2.ListInstanceTypes:output_type -> clarifai.api.MultiInstanceTypeResponse
-	343, // 1054: clarifai.api.V2.GetComputeCluster:output_type -> clarifai.api.SingleComputeClusterResponse
-	344, // 1055: clarifai.api.V2.ListComputeClusters:output_type -> clarifai.api.MultiComputeClusterResponse
-	344, // 1056: clarifai.api.V2.PostComputeClusters:output_type -> clarifai.api.MultiComputeClusterResponse
-	457, // 1057: clarifai.api.V2.DeleteComputeClusters:output_type -> clarifai.api.status.BaseResponse
-	350, // 1058: clarifai.api.V2.GetNodepool:output_type -> clarifai.api.SingleNodepoolResponse
-	351, // 1059: clarifai.api.V2.ListNodepools:output_type -> clarifai.api.MultiNodepoolResponse
-	351, // 1060: clarifai.api.V2.PostNodepools:output_type -> clarifai.api.MultiNodepoolResponse
-	351, // 1061: clarifai.api.V2.PatchNodepools:output_type -> clarifai.api.MultiNodepoolResponse
-	457, // 1062: clarifai.api.V2.DeleteNodepools:output_type -> clarifai.api.status.BaseResponse
-	359, // 1063: clarifai.api.V2.GetDeployment:output_type -> clarifai.api.SingleDeploymentResponse
-	360, // 1064: clarifai.api.V2.ListDeployments:output_type -> clarifai.api.MultiDeploymentResponse
-	360, // 1065: clarifai.api.V2.PostDeployments:output_type -> clarifai.api.MultiDeploymentResponse
-	360, // 1066: clarifai.api.V2.PatchDeployments:output_type -> clarifai.api.MultiDeploymentResponse
-	457, // 1067: clarifai.api.V2.DeleteDeployments:output_type -> clarifai.api.status.BaseResponse
-	357, // 1068: clarifai.api.V2.PostAuditLogSearches:output_type -> clarifai.api.MultiAuditLogEntryResponse
-	362, // 1069: clarifai.api.V2.ListWorkflowEvaluationTemplates:output_type -> clarifai.api.MultiWorkflowEvaluationTemplateResponse
-	176, // 1070: clarifai.api.V2.ListLogEntries:output_type -> clarifai.api.MultiLogEntryResponse
-	832, // [832:1071] is the sub-list for method output_type
-	593, // [593:832] is the sub-list for method input_type
-	593, // [593:593] is the sub-list for extension type_name
-	593, // [593:593] is the sub-list for extension extendee
-	0,   // [0:593] is the sub-list for field type_name
+	379, // 64: clarifai.api.ConceptExtraInfoRequest.rankable_model:type_name -> clarifai.api.Model
+	367, // 65: clarifai.api.PostConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	380, // 66: clarifai.api.PostConceptsRequest.concepts:type_name -> clarifai.api.Concept
+	367, // 67: clarifai.api.PatchConceptsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	380, // 68: clarifai.api.PatchConceptsRequest.concepts:type_name -> clarifai.api.Concept
+	367, // 69: clarifai.api.GetConceptCountsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 70: clarifai.api.SingleConceptResponse.status:type_name -> clarifai.api.status.Status
+	380, // 71: clarifai.api.SingleConceptResponse.concept:type_name -> clarifai.api.Concept
+	368, // 72: clarifai.api.MultiConceptResponse.status:type_name -> clarifai.api.status.Status
+	380, // 73: clarifai.api.MultiConceptResponse.concepts:type_name -> clarifai.api.Concept
+	368, // 74: clarifai.api.MultiConceptCountResponse.status:type_name -> clarifai.api.status.Status
+	381, // 75: clarifai.api.MultiConceptCountResponse.concept_counts:type_name -> clarifai.api.ConceptCount
+	367, // 76: clarifai.api.ListConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 77: clarifai.api.PostConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	382, // 78: clarifai.api.PostConceptRelationsRequest.concept_relations:type_name -> clarifai.api.ConceptRelation
+	367, // 79: clarifai.api.DeleteConceptRelationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 80: clarifai.api.ListKnowledgeGraphsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 81: clarifai.api.PostKnowledgeGraphsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	383, // 82: clarifai.api.PostKnowledgeGraphsRequest.knowledge_graphs:type_name -> clarifai.api.KnowledgeGraph
+	368, // 83: clarifai.api.MultiConceptRelationResponse.status:type_name -> clarifai.api.status.Status
+	382, // 84: clarifai.api.MultiConceptRelationResponse.concept_relations:type_name -> clarifai.api.ConceptRelation
+	368, // 85: clarifai.api.MultiKnowledgeGraphResponse.status:type_name -> clarifai.api.status.Status
+	383, // 86: clarifai.api.MultiKnowledgeGraphResponse.knowledge_graphs:type_name -> clarifai.api.KnowledgeGraph
+	367, // 87: clarifai.api.GetConceptLanguageRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 88: clarifai.api.ListConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 89: clarifai.api.PatchConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	384, // 90: clarifai.api.PatchConceptLanguagesRequest.concept_languages:type_name -> clarifai.api.ConceptLanguage
+	367, // 91: clarifai.api.PostConceptLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	384, // 92: clarifai.api.PostConceptLanguagesRequest.concept_languages:type_name -> clarifai.api.ConceptLanguage
+	368, // 93: clarifai.api.SingleConceptLanguageResponse.status:type_name -> clarifai.api.status.Status
+	384, // 94: clarifai.api.SingleConceptLanguageResponse.concept_language:type_name -> clarifai.api.ConceptLanguage
+	368, // 95: clarifai.api.MultiConceptLanguageResponse.status:type_name -> clarifai.api.status.Status
+	384, // 96: clarifai.api.MultiConceptLanguageResponse.concept_languages:type_name -> clarifai.api.ConceptLanguage
+	367, // 97: clarifai.api.GetInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 98: clarifai.api.GetVideoManifestRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 99: clarifai.api.GetInputSamplesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 100: clarifai.api.ListInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 101: clarifai.api.ListInputsRequest.status:type_name -> clarifai.api.status.Status
+	367, // 102: clarifai.api.StreamInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 103: clarifai.api.PostInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	385, // 104: clarifai.api.PostInputsRequest.inputs:type_name -> clarifai.api.Input
+	386, // 105: clarifai.api.PostInputsRequest.input_id_conflict_resolution:type_name -> clarifai.api.InputIDConflictResolution
+	367, // 106: clarifai.api.PatchInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	385, // 107: clarifai.api.PatchInputsRequest.inputs:type_name -> clarifai.api.Input
+	367, // 108: clarifai.api.DeleteInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 109: clarifai.api.DeleteInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 110: clarifai.api.SingleInputResponse.status:type_name -> clarifai.api.status.Status
+	385, // 111: clarifai.api.SingleInputResponse.input:type_name -> clarifai.api.Input
+	368, // 112: clarifai.api.GetVideoManifestResponse.status:type_name -> clarifai.api.status.Status
+	368, // 113: clarifai.api.MultiInputResponse.status:type_name -> clarifai.api.status.Status
+	385, // 114: clarifai.api.MultiInputResponse.inputs:type_name -> clarifai.api.Input
+	387, // 115: clarifai.api.MultiInputResponse.inputs_add_job:type_name -> clarifai.api.InputsAddJob
+	368, // 116: clarifai.api.MultiInputAnnotationResponse.status:type_name -> clarifai.api.status.Status
+	388, // 117: clarifai.api.MultiInputAnnotationResponse.hits:type_name -> clarifai.api.Hit
+	368, // 118: clarifai.api.SingleInputCountResponse.status:type_name -> clarifai.api.status.Status
+	389, // 119: clarifai.api.SingleInputCountResponse.counts:type_name -> clarifai.api.InputCount
+	367, // 120: clarifai.api.GetInputCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 121: clarifai.api.ListDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 122: clarifai.api.GetDatasetRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 123: clarifai.api.PostDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	390, // 124: clarifai.api.PostDatasetsRequest.datasets:type_name -> clarifai.api.Dataset
+	367, // 125: clarifai.api.PatchDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	390, // 126: clarifai.api.PatchDatasetsRequest.datasets:type_name -> clarifai.api.Dataset
+	367, // 127: clarifai.api.DeleteDatasetsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 128: clarifai.api.MultiDatasetResponse.status:type_name -> clarifai.api.status.Status
+	390, // 129: clarifai.api.MultiDatasetResponse.datasets:type_name -> clarifai.api.Dataset
+	368, // 130: clarifai.api.SingleDatasetResponse.status:type_name -> clarifai.api.status.Status
+	390, // 131: clarifai.api.SingleDatasetResponse.dataset:type_name -> clarifai.api.Dataset
+	367, // 132: clarifai.api.ListDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 133: clarifai.api.GetDatasetInputRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 134: clarifai.api.PostDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	391, // 135: clarifai.api.PostDatasetInputsRequest.dataset_inputs:type_name -> clarifai.api.DatasetInput
+	392, // 136: clarifai.api.PostDatasetInputsRequest.search:type_name -> clarifai.api.Search
+	367, // 137: clarifai.api.DeleteDatasetInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 138: clarifai.api.MultiDatasetInputResponse.status:type_name -> clarifai.api.status.Status
+	391, // 139: clarifai.api.MultiDatasetInputResponse.dataset_inputs:type_name -> clarifai.api.DatasetInput
+	393, // 140: clarifai.api.MultiDatasetInputResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
+	368, // 141: clarifai.api.SingleDatasetInputResponse.status:type_name -> clarifai.api.status.Status
+	391, // 142: clarifai.api.SingleDatasetInputResponse.dataset_input:type_name -> clarifai.api.DatasetInput
+	367, // 143: clarifai.api.ListDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	394, // 144: clarifai.api.ListDatasetVersionsRequest.request_origins:type_name -> clarifai.api.DatasetVersionRequestOrigin
+	367, // 145: clarifai.api.GetDatasetVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 146: clarifai.api.ListDatasetVersionMetricsGroupsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	395, // 147: clarifai.api.ListDatasetVersionMetricsGroupsRequest.types:type_name -> clarifai.api.DatasetVersionMetricsGroupType
+	396, // 148: clarifai.api.ListDatasetVersionMetricsGroupsRequest.values:type_name -> google.protobuf.Value
+	367, // 149: clarifai.api.PostDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	397, // 150: clarifai.api.PostDatasetVersionsRequest.dataset_versions:type_name -> clarifai.api.DatasetVersion
+	367, // 151: clarifai.api.PatchDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	397, // 152: clarifai.api.PatchDatasetVersionsRequest.dataset_versions:type_name -> clarifai.api.DatasetVersion
+	367, // 153: clarifai.api.DeleteDatasetVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 154: clarifai.api.PutDatasetVersionExportsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	398, // 155: clarifai.api.PutDatasetVersionExportsRequest.exports:type_name -> clarifai.api.DatasetVersionExport
+	368, // 156: clarifai.api.MultiDatasetVersionResponse.status:type_name -> clarifai.api.status.Status
+	397, // 157: clarifai.api.MultiDatasetVersionResponse.dataset_versions:type_name -> clarifai.api.DatasetVersion
+	368, // 158: clarifai.api.MultiDatasetVersionExportResponse.status:type_name -> clarifai.api.status.Status
+	398, // 159: clarifai.api.MultiDatasetVersionExportResponse.exports:type_name -> clarifai.api.DatasetVersionExport
+	368, // 160: clarifai.api.MultiDatasetVersionMetricsGroupResponse.status:type_name -> clarifai.api.status.Status
+	399, // 161: clarifai.api.MultiDatasetVersionMetricsGroupResponse.dataset_version_metrics_groups:type_name -> clarifai.api.DatasetVersionMetricsGroup
+	368, // 162: clarifai.api.SingleDatasetVersionResponse.status:type_name -> clarifai.api.status.Status
+	397, // 163: clarifai.api.SingleDatasetVersionResponse.dataset_version:type_name -> clarifai.api.DatasetVersion
+	367, // 164: clarifai.api.PostModelOutputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	385, // 165: clarifai.api.PostModelOutputsRequest.inputs:type_name -> clarifai.api.Input
+	379, // 166: clarifai.api.PostModelOutputsRequest.model:type_name -> clarifai.api.Model
+	400, // 167: clarifai.api.PostModelOutputsRequest.runner_selector:type_name -> clarifai.api.RunnerSelector
+	367, // 168: clarifai.api.ListModelInputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	401, // 169: clarifai.api.PostComputePlaneMetricsRequest.compute_plane_metrics:type_name -> clarifai.api.ComputePlaneMetrics
+	402, // 170: clarifai.api.PostLogEntriesRequest.log_entries:type_name -> clarifai.api.LogEntry
+	367, // 171: clarifai.api.ListLogEntriesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 172: clarifai.api.StreamLogEntriesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 173: clarifai.api.GetKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 174: clarifai.api.ListKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 175: clarifai.api.ListAppKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 176: clarifai.api.PostKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	403, // 177: clarifai.api.PostKeysRequest.keys:type_name -> clarifai.api.Key
+	367, // 178: clarifai.api.DeleteKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 179: clarifai.api.PatchKeysRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	403, // 180: clarifai.api.PatchKeysRequest.keys:type_name -> clarifai.api.Key
+	368, // 181: clarifai.api.SingleKeyResponse.status:type_name -> clarifai.api.status.Status
+	403, // 182: clarifai.api.SingleKeyResponse.key:type_name -> clarifai.api.Key
+	368, // 183: clarifai.api.MultiKeyResponse.status:type_name -> clarifai.api.status.Status
+	403, // 184: clarifai.api.MultiKeyResponse.keys:type_name -> clarifai.api.Key
+	367, // 185: clarifai.api.GetModelRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 186: clarifai.api.ListModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	404, // 187: clarifai.api.ListModelsRequest.license_type:type_name -> clarifai.api.LicenseType
+	367, // 188: clarifai.api.GetResourceCountsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 189: clarifai.api.GetResourceCountsResponse.status:type_name -> clarifai.api.status.Status
+	367, // 190: clarifai.api.PatchModelToolkitsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 191: clarifai.api.PatchModelCheckConsentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 192: clarifai.api.PatchModelUseCasesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 193: clarifai.api.PatchModelLanguagesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 194: clarifai.api.MultiModelToolkitResponse.status:type_name -> clarifai.api.status.Status
+	368, // 195: clarifai.api.MultiModelCheckConsentResponse.status:type_name -> clarifai.api.status.Status
+	368, // 196: clarifai.api.MultiModelUseCaseResponse.status:type_name -> clarifai.api.status.Status
+	368, // 197: clarifai.api.MultiModelLanguageResponse.status:type_name -> clarifai.api.status.Status
+	367, // 198: clarifai.api.PostModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	379, // 199: clarifai.api.PostModelsRequest.model:type_name -> clarifai.api.Model
+	379, // 200: clarifai.api.PostModelsRequest.models:type_name -> clarifai.api.Model
+	367, // 201: clarifai.api.PatchModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	379, // 202: clarifai.api.PatchModelsRequest.models:type_name -> clarifai.api.Model
+	367, // 203: clarifai.api.PatchModelIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	128, // 204: clarifai.api.PatchModelIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
+	367, // 205: clarifai.api.DeleteModelRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 206: clarifai.api.DeleteModelsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 207: clarifai.api.PostModelsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	405, // 208: clarifai.api.PostModelsSearchesRequest.model_query:type_name -> clarifai.api.ModelQuery
+	2,   // 209: clarifai.api.PostModelsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
+	368, // 210: clarifai.api.SingleModelResponse.status:type_name -> clarifai.api.status.Status
+	379, // 211: clarifai.api.SingleModelResponse.model:type_name -> clarifai.api.Model
+	368, // 212: clarifai.api.MultiModelResponse.status:type_name -> clarifai.api.status.Status
+	379, // 213: clarifai.api.MultiModelResponse.models:type_name -> clarifai.api.Model
+	367, // 214: clarifai.api.PatchModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	406, // 215: clarifai.api.PatchModelVersionsRequest.model_versions:type_name -> clarifai.api.ModelVersion
+	367, // 216: clarifai.api.GetModelVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 217: clarifai.api.ListModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 218: clarifai.api.DeleteModelVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 219: clarifai.api.SingleModelVersionResponse.status:type_name -> clarifai.api.status.Status
+	406, // 220: clarifai.api.SingleModelVersionResponse.model_version:type_name -> clarifai.api.ModelVersion
+	368, // 221: clarifai.api.MultiModelVersionResponse.status:type_name -> clarifai.api.status.Status
+	406, // 222: clarifai.api.MultiModelVersionResponse.model_versions:type_name -> clarifai.api.ModelVersion
+	367, // 223: clarifai.api.PostModelVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	406, // 224: clarifai.api.PostModelVersionsRequest.model_versions:type_name -> clarifai.api.ModelVersion
+	407, // 225: clarifai.api.PostModelVersionsRequest.eval_info:type_name -> clarifai.api.EvalInfo
+	144, // 226: clarifai.api.PostModelVersionsUploadRequest.upload_config:type_name -> clarifai.api.PostModelVersionsUploadConfig
+	408, // 227: clarifai.api.PostModelVersionsUploadRequest.content_part:type_name -> clarifai.api.UploadContentPart
+	368, // 228: clarifai.api.PostModelVersionsUploadResponse.status:type_name -> clarifai.api.status.Status
+	367, // 229: clarifai.api.PostModelVersionsUploadConfig.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	406, // 230: clarifai.api.PostModelVersionsUploadConfig.model_version:type_name -> clarifai.api.ModelVersion
+	367, // 231: clarifai.api.PutModelVersionExportsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 232: clarifai.api.GetModelVersionExportRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 233: clarifai.api.SingleModelVersionExportResponse.status:type_name -> clarifai.api.status.Status
+	409, // 234: clarifai.api.SingleModelVersionExportResponse.export:type_name -> clarifai.api.ModelVersionExport
+	367, // 235: clarifai.api.PostWorkflowVersionsUnPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	151, // 236: clarifai.api.PostWorkflowVersionsUnPublishRequest.publications:type_name -> clarifai.api.WorkflowVersionUnPublishRequest
+	367, // 237: clarifai.api.PostWorkflowVersionsPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	150, // 238: clarifai.api.PostWorkflowVersionsPublishRequest.publications:type_name -> clarifai.api.WorkflowVersionPublishRequest
+	367, // 239: clarifai.api.PostModelVersionsPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	152, // 240: clarifai.api.PostModelVersionsPublishRequest.publications:type_name -> clarifai.api.ModelVersionPublishRequest
+	367, // 241: clarifai.api.PostModelVersionsUnPublishRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	154, // 242: clarifai.api.PostModelVersionsUnPublishRequest.publications:type_name -> clarifai.api.ModelVersionUnpublishRequest
+	367, // 243: clarifai.api.PostEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	410, // 244: clarifai.api.PostEvaluationsRequest.eval_metrics:type_name -> clarifai.api.EvalMetrics
+	367, // 245: clarifai.api.ListEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 246: clarifai.api.GetEvaluationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	411, // 247: clarifai.api.GetEvaluationRequest.fields:type_name -> clarifai.api.FieldsValue
+	367, // 248: clarifai.api.PostModelVersionEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	410, // 249: clarifai.api.PostModelVersionEvaluationsRequest.eval_metrics:type_name -> clarifai.api.EvalMetrics
+	367, // 250: clarifai.api.ListModelVersionEvaluationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 251: clarifai.api.GetModelVersionEvaluationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	411, // 252: clarifai.api.GetModelVersionEvaluationRequest.fields:type_name -> clarifai.api.FieldsValue
+	368, // 253: clarifai.api.SingleEvalMetricsResponse.status:type_name -> clarifai.api.status.Status
+	410, // 254: clarifai.api.SingleEvalMetricsResponse.eval_metrics:type_name -> clarifai.api.EvalMetrics
+	368, // 255: clarifai.api.MultiEvalMetricsResponse.status:type_name -> clarifai.api.status.Status
+	410, // 256: clarifai.api.MultiEvalMetricsResponse.eval_metrics:type_name -> clarifai.api.EvalMetrics
+	367, // 257: clarifai.api.PostModelVersionMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 258: clarifai.api.PostModelVersionMetricsRequest.test_search:type_name -> clarifai.api.Search
+	407, // 259: clarifai.api.PostModelVersionMetricsRequest.eval_info:type_name -> clarifai.api.EvalInfo
+	367, // 260: clarifai.api.GetModelVersionMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	411, // 261: clarifai.api.GetModelVersionMetricsRequest.fields:type_name -> clarifai.api.FieldsValue
+	367, // 262: clarifai.api.GetModelTypeRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 263: clarifai.api.ListModelTypesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 264: clarifai.api.ListOpenSourceLicensesResponse.status:type_name -> clarifai.api.status.Status
+	368, // 265: clarifai.api.SingleModelTypeResponse.status:type_name -> clarifai.api.status.Status
+	412, // 266: clarifai.api.SingleModelTypeResponse.model_type:type_name -> clarifai.api.ModelType
+	368, // 267: clarifai.api.MultiModelTypeResponse.status:type_name -> clarifai.api.status.Status
+	412, // 268: clarifai.api.MultiModelTypeResponse.model_types:type_name -> clarifai.api.ModelType
+	413, // 269: clarifai.api.MultiModelTypeResponse.model_importers:type_name -> clarifai.api.ModelTypeField
+	414, // 270: clarifai.api.MultiModelTypeResponse.triton_conda_envs_info:type_name -> clarifai.api.TritonCondaEnvInfo
+	367, // 271: clarifai.api.GetModelVersionInputExampleRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 272: clarifai.api.ListModelVersionInputExamplesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 273: clarifai.api.SingleModelVersionInputExampleResponse.status:type_name -> clarifai.api.status.Status
+	415, // 274: clarifai.api.SingleModelVersionInputExampleResponse.model_version_input_example:type_name -> clarifai.api.ModelVersionInputExample
+	368, // 275: clarifai.api.MultiModelVersionInputExampleResponse.status:type_name -> clarifai.api.status.Status
+	415, // 276: clarifai.api.MultiModelVersionInputExampleResponse.model_version_input_examples:type_name -> clarifai.api.ModelVersionInputExample
+	367, // 277: clarifai.api.ListModelReferencesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 278: clarifai.api.MultiModelReferenceResponse.status:type_name -> clarifai.api.status.Status
+	416, // 279: clarifai.api.MultiModelReferenceResponse.model_references:type_name -> clarifai.api.ModelReference
+	368, // 280: clarifai.api.MultiOutputResponse.status:type_name -> clarifai.api.status.Status
+	417, // 281: clarifai.api.MultiOutputResponse.outputs:type_name -> clarifai.api.Output
+	368, // 282: clarifai.api.MultiLogEntryResponse.status:type_name -> clarifai.api.status.Status
+	402, // 283: clarifai.api.MultiLogEntryResponse.log_entries:type_name -> clarifai.api.LogEntry
+	367, // 284: clarifai.api.ListScopesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 285: clarifai.api.MyScopesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 286: clarifai.api.MyScopesUserRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 287: clarifai.api.MultiScopeDepsResponse.status:type_name -> clarifai.api.status.Status
+	418, // 288: clarifai.api.MultiScopeDepsResponse.scope_deps:type_name -> clarifai.api.ScopeDeps
+	419, // 289: clarifai.api.MultiScopeDepsResponse.endpoint_deps:type_name -> clarifai.api.EndpointDeps
+	368, // 290: clarifai.api.MultiScopeResponse.status:type_name -> clarifai.api.status.Status
+	372, // 291: clarifai.api.MultiScopeResponse.app:type_name -> clarifai.api.App
+	368, // 292: clarifai.api.MultiScopeUserResponse.status:type_name -> clarifai.api.status.Status
+	368, // 293: clarifai.api.MultiScopeRootResponse.status:type_name -> clarifai.api.status.Status
+	367, // 294: clarifai.api.GetSearchRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 295: clarifai.api.ListSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 296: clarifai.api.PostSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	420, // 297: clarifai.api.PostSearchesRequest.query:type_name -> clarifai.api.Query
+	392, // 298: clarifai.api.PostSearchesRequest.searches:type_name -> clarifai.api.Search
+	2,   // 299: clarifai.api.PostSearchesRequest.pagination:type_name -> clarifai.api.Pagination
+	367, // 300: clarifai.api.PatchInputsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 301: clarifai.api.PatchInputsSearchesRequest.searches:type_name -> clarifai.api.Search
+	367, // 302: clarifai.api.PatchAnnotationsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 303: clarifai.api.PatchAnnotationsSearchesRequest.searches:type_name -> clarifai.api.Search
+	367, // 304: clarifai.api.PatchSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 305: clarifai.api.PatchSearchesRequest.searches:type_name -> clarifai.api.Search
+	367, // 306: clarifai.api.PostSearchesByIDRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	2,   // 307: clarifai.api.PostSearchesByIDRequest.pagination:type_name -> clarifai.api.Pagination
+	367, // 308: clarifai.api.DeleteSearchRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 309: clarifai.api.PostAnnotationsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 310: clarifai.api.PostAnnotationsSearchesRequest.searches:type_name -> clarifai.api.Search
+	2,   // 311: clarifai.api.PostAnnotationsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
+	367, // 312: clarifai.api.DeleteAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 313: clarifai.api.PostInputsSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 314: clarifai.api.PostInputsSearchesRequest.searches:type_name -> clarifai.api.Search
+	2,   // 315: clarifai.api.PostInputsSearchesRequest.pagination:type_name -> clarifai.api.Pagination
+	368, // 316: clarifai.api.SingleSearchResponse.status:type_name -> clarifai.api.status.Status
+	392, // 317: clarifai.api.SingleSearchResponse.search:type_name -> clarifai.api.Search
+	368, // 318: clarifai.api.MultiSearchResponse.status:type_name -> clarifai.api.status.Status
+	388, // 319: clarifai.api.MultiSearchResponse.hits:type_name -> clarifai.api.Hit
+	420, // 320: clarifai.api.MultiSearchResponse.query:type_name -> clarifai.api.Query
+	392, // 321: clarifai.api.MultiSearchResponse.searches:type_name -> clarifai.api.Search
+	421, // 322: clarifai.api.MultiSearchResponse.hit_counts:type_name -> clarifai.api.HitCount
+	367, // 323: clarifai.api.PostAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	392, // 324: clarifai.api.PostAnnotationSearchMetricsRequest.ground_truth:type_name -> clarifai.api.Search
+	392, // 325: clarifai.api.PostAnnotationSearchMetricsRequest.search_to_eval:type_name -> clarifai.api.Search
+	422, // 326: clarifai.api.PostAnnotationSearchMetricsRequest.data:type_name -> clarifai.api.Data
+	423, // 327: clarifai.api.PostAnnotationSearchMetricsRequest.evaluation_type:type_name -> clarifai.api.EvaluationType
+	367, // 328: clarifai.api.GetAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 329: clarifai.api.ListAnnotationSearchMetricsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 330: clarifai.api.MultiAnnotationSearchMetricsResponse.status:type_name -> clarifai.api.status.Status
+	424, // 331: clarifai.api.MultiAnnotationSearchMetricsResponse.annotation_search_metrics:type_name -> clarifai.api.AnnotationSearchMetrics
+	367, // 332: clarifai.api.ListAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 333: clarifai.api.GetAnnotationFilterRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 334: clarifai.api.PostAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	425, // 335: clarifai.api.PostAnnotationFiltersRequest.annotation_filters:type_name -> clarifai.api.AnnotationFilter
+	367, // 336: clarifai.api.PatchAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	425, // 337: clarifai.api.PatchAnnotationFiltersRequest.annotation_filters:type_name -> clarifai.api.AnnotationFilter
+	367, // 338: clarifai.api.DeleteAnnotationFiltersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 339: clarifai.api.MultiAnnotationFilterResponse.status:type_name -> clarifai.api.status.Status
+	425, // 340: clarifai.api.MultiAnnotationFilterResponse.annotation_filters:type_name -> clarifai.api.AnnotationFilter
+	368, // 341: clarifai.api.SingleAnnotationFilterResponse.status:type_name -> clarifai.api.status.Status
+	425, // 342: clarifai.api.SingleAnnotationFilterResponse.annotation_filter:type_name -> clarifai.api.AnnotationFilter
+	367, // 343: clarifai.api.GetUserRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 344: clarifai.api.SingleUserResponse.status:type_name -> clarifai.api.status.Status
+	376, // 345: clarifai.api.SingleUserResponse.user:type_name -> clarifai.api.User
+	367, // 346: clarifai.api.PostValidatePasswordRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	426, // 347: clarifai.api.PostValidatePasswordRequest.password:type_name -> clarifai.api.Password
+	368, // 348: clarifai.api.SinglePasswordValidationResponse.status:type_name -> clarifai.api.status.Status
+	427, // 349: clarifai.api.SinglePasswordValidationResponse.password_violations:type_name -> clarifai.api.PasswordViolations
+	367, // 350: clarifai.api.GetWorkflowRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 351: clarifai.api.ListWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 352: clarifai.api.PostWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	428, // 353: clarifai.api.PostWorkflowsRequest.workflows:type_name -> clarifai.api.Workflow
+	367, // 354: clarifai.api.PatchWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	428, // 355: clarifai.api.PatchWorkflowsRequest.workflows:type_name -> clarifai.api.Workflow
+	367, // 356: clarifai.api.PatchWorkflowIdsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	128, // 357: clarifai.api.PatchWorkflowIdsRequest.ids:type_name -> clarifai.api.IdUpdateSource
+	367, // 358: clarifai.api.DeleteWorkflowRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 359: clarifai.api.DeleteWorkflowsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 360: clarifai.api.SingleWorkflowResponse.status:type_name -> clarifai.api.status.Status
+	428, // 361: clarifai.api.SingleWorkflowResponse.workflow:type_name -> clarifai.api.Workflow
+	368, // 362: clarifai.api.MultiWorkflowResponse.status:type_name -> clarifai.api.status.Status
+	428, // 363: clarifai.api.MultiWorkflowResponse.workflows:type_name -> clarifai.api.Workflow
+	367, // 364: clarifai.api.PostWorkflowResultsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	385, // 365: clarifai.api.PostWorkflowResultsRequest.inputs:type_name -> clarifai.api.Input
+	429, // 366: clarifai.api.PostWorkflowResultsRequest.output_config:type_name -> clarifai.api.OutputConfig
+	430, // 367: clarifai.api.PostWorkflowResultsRequest.workflow_state:type_name -> clarifai.api.WorkflowState
+	366, // 368: clarifai.api.PostWorkflowResultsRequest.node_runner_selectors:type_name -> clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry
+	368, // 369: clarifai.api.PostWorkflowResultsResponse.status:type_name -> clarifai.api.status.Status
+	428, // 370: clarifai.api.PostWorkflowResultsResponse.workflow:type_name -> clarifai.api.Workflow
+	431, // 371: clarifai.api.PostWorkflowResultsResponse.results:type_name -> clarifai.api.WorkflowResult
+	430, // 372: clarifai.api.PostWorkflowResultsResponse.workflow_state:type_name -> clarifai.api.WorkflowState
+	367, // 373: clarifai.api.ListWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 374: clarifai.api.GetWorkflowVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 375: clarifai.api.DeleteWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 376: clarifai.api.PatchWorkflowVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	432, // 377: clarifai.api.PatchWorkflowVersionsRequest.workflow_versions:type_name -> clarifai.api.WorkflowVersion
+	368, // 378: clarifai.api.MultiWorkflowVersionResponse.status:type_name -> clarifai.api.status.Status
+	432, // 379: clarifai.api.MultiWorkflowVersionResponse.workflow_versions:type_name -> clarifai.api.WorkflowVersion
+	368, // 380: clarifai.api.SingleWorkflowVersionResponse.status:type_name -> clarifai.api.status.Status
+	432, // 381: clarifai.api.SingleWorkflowVersionResponse.workflow_version:type_name -> clarifai.api.WorkflowVersion
+	367, // 382: clarifai.api.PostAppDuplicationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	433, // 383: clarifai.api.PostAppDuplicationsRequest.app_duplications:type_name -> clarifai.api.AppDuplication
+	367, // 384: clarifai.api.GetAppDuplicationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 385: clarifai.api.ListAppDuplicationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 386: clarifai.api.MultiAppDuplicationsResponse.status:type_name -> clarifai.api.status.Status
+	433, // 387: clarifai.api.MultiAppDuplicationsResponse.app_duplications:type_name -> clarifai.api.AppDuplication
+	368, // 388: clarifai.api.SingleAppDuplicationResponse.status:type_name -> clarifai.api.status.Status
+	433, // 389: clarifai.api.SingleAppDuplicationResponse.app_duplication:type_name -> clarifai.api.AppDuplication
+	367, // 390: clarifai.api.PostTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	434, // 391: clarifai.api.PostTasksRequest.tasks:type_name -> clarifai.api.Task
+	367, // 392: clarifai.api.GetTaskRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 393: clarifai.api.ListTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	435, // 394: clarifai.api.ListTasksRequest.input_source_type:type_name -> clarifai.api.TaskInputSource.TaskInputSourceType
+	367, // 395: clarifai.api.PatchTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	434, // 396: clarifai.api.PatchTasksRequest.tasks:type_name -> clarifai.api.Task
+	367, // 397: clarifai.api.DeleteTasksRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 398: clarifai.api.MultiTaskResponse.status:type_name -> clarifai.api.status.Status
+	434, // 399: clarifai.api.MultiTaskResponse.tasks:type_name -> clarifai.api.Task
+	368, // 400: clarifai.api.SingleTaskResponse.status:type_name -> clarifai.api.status.Status
+	434, // 401: clarifai.api.SingleTaskResponse.task:type_name -> clarifai.api.Task
+	367, // 402: clarifai.api.GetTaskCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 403: clarifai.api.SingleTaskCountResponse.status:type_name -> clarifai.api.status.Status
+	436, // 404: clarifai.api.SingleTaskCountResponse.counts:type_name -> clarifai.api.TaskStatusCountPerUser
+	367, // 405: clarifai.api.PostLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	437, // 406: clarifai.api.PostLabelOrdersRequest.label_orders:type_name -> clarifai.api.LabelOrder
+	367, // 407: clarifai.api.GetLabelOrderRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 408: clarifai.api.ListLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 409: clarifai.api.PatchLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	437, // 410: clarifai.api.PatchLabelOrdersRequest.label_orders:type_name -> clarifai.api.LabelOrder
+	367, // 411: clarifai.api.DeleteLabelOrdersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 412: clarifai.api.MultiLabelOrderResponse.status:type_name -> clarifai.api.status.Status
+	437, // 413: clarifai.api.MultiLabelOrderResponse.label_orders:type_name -> clarifai.api.LabelOrder
+	368, // 414: clarifai.api.SingleLabelOrderResponse.status:type_name -> clarifai.api.status.Status
+	437, // 415: clarifai.api.SingleLabelOrderResponse.label_order:type_name -> clarifai.api.LabelOrder
+	367, // 416: clarifai.api.PostCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	438, // 417: clarifai.api.PostCollectorsRequest.collectors:type_name -> clarifai.api.Collector
+	367, // 418: clarifai.api.PatchCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	438, // 419: clarifai.api.PatchCollectorsRequest.collectors:type_name -> clarifai.api.Collector
+	367, // 420: clarifai.api.DeleteCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 421: clarifai.api.GetCollectorRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 422: clarifai.api.ListCollectorsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 423: clarifai.api.MultiCollectorResponse.status:type_name -> clarifai.api.status.Status
+	438, // 424: clarifai.api.MultiCollectorResponse.collectors:type_name -> clarifai.api.Collector
+	368, // 425: clarifai.api.SingleCollectorResponse.status:type_name -> clarifai.api.status.Status
+	438, // 426: clarifai.api.SingleCollectorResponse.collector:type_name -> clarifai.api.Collector
+	367, // 427: clarifai.api.PostStatValuesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	439, // 428: clarifai.api.PostStatValuesRequest.stat_values:type_name -> clarifai.api.StatValue
+	368, // 429: clarifai.api.MultiStatValueResponse.status:type_name -> clarifai.api.status.Status
+	439, // 430: clarifai.api.MultiStatValueResponse.stat_values:type_name -> clarifai.api.StatValue
+	367, // 431: clarifai.api.PostStatValuesAggregateRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	440, // 432: clarifai.api.PostStatValuesAggregateRequest.stat_value_aggregate_queries:type_name -> clarifai.api.StatValueAggregateQuery
+	368, // 433: clarifai.api.MultiStatValueAggregateResponse.status:type_name -> clarifai.api.status.Status
+	441, // 434: clarifai.api.MultiStatValueAggregateResponse.stat_value_aggregate_results:type_name -> clarifai.api.StatValueAggregateResult
+	367, // 435: clarifai.api.GetModuleRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 436: clarifai.api.ListModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 437: clarifai.api.PostModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	442, // 438: clarifai.api.PostModulesRequest.modules:type_name -> clarifai.api.Module
+	367, // 439: clarifai.api.PatchModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	442, // 440: clarifai.api.PatchModulesRequest.modules:type_name -> clarifai.api.Module
+	367, // 441: clarifai.api.DeleteModulesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 442: clarifai.api.SingleModuleResponse.status:type_name -> clarifai.api.status.Status
+	442, // 443: clarifai.api.SingleModuleResponse.module:type_name -> clarifai.api.Module
+	368, // 444: clarifai.api.MultiModuleResponse.status:type_name -> clarifai.api.status.Status
+	442, // 445: clarifai.api.MultiModuleResponse.modules:type_name -> clarifai.api.Module
+	367, // 446: clarifai.api.GetModuleVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 447: clarifai.api.ListModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 448: clarifai.api.PostModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	443, // 449: clarifai.api.PostModuleVersionsRequest.module_versions:type_name -> clarifai.api.ModuleVersion
+	367, // 450: clarifai.api.PatchModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	443, // 451: clarifai.api.PatchModuleVersionsRequest.module_versions:type_name -> clarifai.api.ModuleVersion
+	367, // 452: clarifai.api.DeleteModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 453: clarifai.api.GetModuleVersionUsageCountRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 454: clarifai.api.SingleModuleVersionResponse.status:type_name -> clarifai.api.status.Status
+	443, // 455: clarifai.api.SingleModuleVersionResponse.module_version:type_name -> clarifai.api.ModuleVersion
+	368, // 456: clarifai.api.MultiModuleVersionResponse.status:type_name -> clarifai.api.status.Status
+	443, // 457: clarifai.api.MultiModuleVersionResponse.module_versions:type_name -> clarifai.api.ModuleVersion
+	368, // 458: clarifai.api.SingleModuleVersionUsageCountResponse.status:type_name -> clarifai.api.status.Status
+	367, // 459: clarifai.api.GetInstalledModuleVersionRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 460: clarifai.api.ListInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 461: clarifai.api.PostInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	444, // 462: clarifai.api.PostInstalledModuleVersionsRequest.installed_module_versions:type_name -> clarifai.api.InstalledModuleVersion
+	367, // 463: clarifai.api.PostInstalledModuleVersionsKeyRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 464: clarifai.api.DeleteInstalledModuleVersionsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 465: clarifai.api.SingleInstalledModuleVersionResponse.status:type_name -> clarifai.api.status.Status
+	444, // 466: clarifai.api.SingleInstalledModuleVersionResponse.installed_module_version:type_name -> clarifai.api.InstalledModuleVersion
+	368, // 467: clarifai.api.MultiInstalledModuleVersionResponse.status:type_name -> clarifai.api.status.Status
+	444, // 468: clarifai.api.MultiInstalledModuleVersionResponse.installed_module_versions:type_name -> clarifai.api.InstalledModuleVersion
+	367, // 469: clarifai.api.ListNextTaskAssignmentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 470: clarifai.api.PostBulkOperationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	393, // 471: clarifai.api.PostBulkOperationsRequest.bulk_operations:type_name -> clarifai.api.BulkOperation
+	367, // 472: clarifai.api.ListBulkOperationsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 473: clarifai.api.GetBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 474: clarifai.api.CancelBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 475: clarifai.api.DeleteBulkOperationRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 476: clarifai.api.SingleBulkOperationsResponse.status:type_name -> clarifai.api.status.Status
+	393, // 477: clarifai.api.SingleBulkOperationsResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
+	368, // 478: clarifai.api.MultiBulkOperationsResponse.status:type_name -> clarifai.api.status.Status
+	393, // 479: clarifai.api.MultiBulkOperationsResponse.bulk_operation:type_name -> clarifai.api.BulkOperation
+	367, // 480: clarifai.api.PutTaskAssignmentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	1,   // 481: clarifai.api.PutTaskAssignmentsRequest.action:type_name -> clarifai.api.PutTaskAssignmentsRequestAction
+	297, // 482: clarifai.api.PutTaskAssignmentsRequest.label_submit_config:type_name -> clarifai.api.LabelSubmitConfig
+	298, // 483: clarifai.api.PutTaskAssignmentsRequest.review_start_config:type_name -> clarifai.api.ReviewStartConfig
+	299, // 484: clarifai.api.PutTaskAssignmentsRequest.review_approve_config:type_name -> clarifai.api.ReviewApproveConfig
+	300, // 485: clarifai.api.PutTaskAssignmentsRequest.review_request_changes_config:type_name -> clarifai.api.ReviewRequestChangesConfig
+	301, // 486: clarifai.api.PutTaskAssignmentsRequest.review_reject_config:type_name -> clarifai.api.ReviewRejectConfig
+	445, // 487: clarifai.api.LabelSubmitConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
+	371, // 488: clarifai.api.ReviewStartConfig.workers:type_name -> clarifai.api.Worker
+	445, // 489: clarifai.api.ReviewApproveConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
+	371, // 490: clarifai.api.ReviewApproveConfig.workers:type_name -> clarifai.api.Worker
+	445, // 491: clarifai.api.ReviewRequestChangesConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
+	371, // 492: clarifai.api.ReviewRequestChangesConfig.workers:type_name -> clarifai.api.Worker
+	445, // 493: clarifai.api.ReviewRejectConfig.task_assignments:type_name -> clarifai.api.TaskAssignment
+	371, // 494: clarifai.api.ReviewRejectConfig.workers:type_name -> clarifai.api.Worker
+	368, // 495: clarifai.api.MultiTaskAssignmentResponse.status:type_name -> clarifai.api.status.Status
+	445, // 496: clarifai.api.MultiTaskAssignmentResponse.task_assignments:type_name -> clarifai.api.TaskAssignment
+	367, // 497: clarifai.api.ListInputsAddJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 498: clarifai.api.GetInputsAddJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 499: clarifai.api.CancelInputsAddJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 500: clarifai.api.MultiInputsAddJobResponse.status:type_name -> clarifai.api.status.Status
+	387, // 501: clarifai.api.MultiInputsAddJobResponse.inputs_add_jobs:type_name -> clarifai.api.InputsAddJob
+	368, // 502: clarifai.api.SingleInputsAddJobResponse.status:type_name -> clarifai.api.status.Status
+	387, // 503: clarifai.api.SingleInputsAddJobResponse.inputs_add_job:type_name -> clarifai.api.InputsAddJob
+	367, // 504: clarifai.api.PostUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	446, // 505: clarifai.api.PostUploadsRequest.uploads:type_name -> clarifai.api.Upload
+	367, // 506: clarifai.api.DeleteUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 507: clarifai.api.ListUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 508: clarifai.api.GetUploadRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 509: clarifai.api.SingleUploadResponse.status:type_name -> clarifai.api.status.Status
+	446, // 510: clarifai.api.SingleUploadResponse.upload:type_name -> clarifai.api.Upload
+	368, // 511: clarifai.api.MultiUploadResponse.status:type_name -> clarifai.api.status.Status
+	446, // 512: clarifai.api.MultiUploadResponse.uploads:type_name -> clarifai.api.Upload
+	367, // 513: clarifai.api.PutUploadContentPartsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	408, // 514: clarifai.api.PutUploadContentPartsRequest.content_parts:type_name -> clarifai.api.UploadContentPart
+	367, // 515: clarifai.api.PostInputsDataSourcesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	447, // 516: clarifai.api.PostInputsDataSourcesRequest.data_sources:type_name -> clarifai.api.InputsDataSource
+	367, // 517: clarifai.api.GetInputsExtractionJobRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 518: clarifai.api.ListInputsExtractionJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 519: clarifai.api.SingleInputsExtractionJobResponse.status:type_name -> clarifai.api.status.Status
+	448, // 520: clarifai.api.SingleInputsExtractionJobResponse.inputs_extraction_job:type_name -> clarifai.api.InputsExtractionJob
+	368, // 521: clarifai.api.MultiInputsExtractionJobResponse.status:type_name -> clarifai.api.status.Status
+	448, // 522: clarifai.api.MultiInputsExtractionJobResponse.inputs_extraction_jobs:type_name -> clarifai.api.InputsExtractionJob
+	367, // 523: clarifai.api.CancelInputsExtractionJobsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 524: clarifai.api.PostInputsUploadsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	449, // 525: clarifai.api.PostInputsUploadsRequest.inputs_uploads:type_name -> clarifai.api.InputsUpload
+	367, // 526: clarifai.api.GetRunnerRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 527: clarifai.api.ListRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 528: clarifai.api.PostRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	450, // 529: clarifai.api.PostRunnersRequest.runners:type_name -> clarifai.api.Runner
+	367, // 530: clarifai.api.DeleteRunnersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 531: clarifai.api.SingleRunnerResponse.status:type_name -> clarifai.api.status.Status
+	450, // 532: clarifai.api.SingleRunnerResponse.runner:type_name -> clarifai.api.Runner
+	368, // 533: clarifai.api.MultiRunnerResponse.status:type_name -> clarifai.api.status.Status
+	450, // 534: clarifai.api.MultiRunnerResponse.runners:type_name -> clarifai.api.Runner
+	367, // 535: clarifai.api.ListRunnerItemsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 536: clarifai.api.PostRunnerItemOutputsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	332, // 537: clarifai.api.PostRunnerItemOutputsRequest.runner_item_outputs:type_name -> clarifai.api.RunnerItemOutput
+	368, // 538: clarifai.api.PostRunnerItemOutputsRequest.status:type_name -> clarifai.api.status.Status
+	368, // 539: clarifai.api.MultiRunnerItemResponse.status:type_name -> clarifai.api.status.Status
+	331, // 540: clarifai.api.MultiRunnerItemResponse.runner_items:type_name -> clarifai.api.RunnerItem
+	451, // 541: clarifai.api.RunnerItem.processing_info:type_name -> clarifai.api.ProcessingInfo
+	100, // 542: clarifai.api.RunnerItem.post_model_outputs_request:type_name -> clarifai.api.PostModelOutputsRequest
+	178, // 543: clarifai.api.RunnerItemOutput.multi_output_response:type_name -> clarifai.api.MultiOutputResponse
+	368, // 544: clarifai.api.MultiRunnerItemOutputResponse.status:type_name -> clarifai.api.status.Status
+	332, // 545: clarifai.api.MultiRunnerItemOutputResponse.runner_item_outputs:type_name -> clarifai.api.RunnerItemOutput
+	367, // 546: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	406, // 547: clarifai.api.PostModelVersionsTrainingTimeEstimateRequest.model_versions:type_name -> clarifai.api.ModelVersion
+	368, // 548: clarifai.api.MultiTrainingTimeEstimateResponse.status:type_name -> clarifai.api.status.Status
+	452, // 549: clarifai.api.MultiTrainingTimeEstimateResponse.training_time_estimates:type_name -> google.protobuf.Duration
+	368, // 550: clarifai.api.MultiCloudProviderResponse.status:type_name -> clarifai.api.status.Status
+	453, // 551: clarifai.api.MultiCloudProviderResponse.cloud_providers:type_name -> clarifai.api.CloudProvider
+	453, // 552: clarifai.api.ListCloudRegionsRequest.cloud_provider:type_name -> clarifai.api.CloudProvider
+	368, // 553: clarifai.api.MultiCloudRegionResponse.status:type_name -> clarifai.api.status.Status
+	453, // 554: clarifai.api.ListInstanceTypesRequest.cloud_provider:type_name -> clarifai.api.CloudProvider
+	368, // 555: clarifai.api.MultiInstanceTypeResponse.status:type_name -> clarifai.api.status.Status
+	454, // 556: clarifai.api.MultiInstanceTypeResponse.instance_types:type_name -> clarifai.api.InstanceType
+	367, // 557: clarifai.api.GetComputeClusterRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 558: clarifai.api.ListComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 559: clarifai.api.PostComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	455, // 560: clarifai.api.PostComputeClustersRequest.compute_clusters:type_name -> clarifai.api.ComputeCluster
+	367, // 561: clarifai.api.DeleteComputeClustersRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 562: clarifai.api.SingleComputeClusterResponse.status:type_name -> clarifai.api.status.Status
+	455, // 563: clarifai.api.SingleComputeClusterResponse.compute_cluster:type_name -> clarifai.api.ComputeCluster
+	368, // 564: clarifai.api.MultiComputeClusterResponse.status:type_name -> clarifai.api.status.Status
+	455, // 565: clarifai.api.MultiComputeClusterResponse.compute_clusters:type_name -> clarifai.api.ComputeCluster
+	367, // 566: clarifai.api.GetNodepoolRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 567: clarifai.api.ListNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 568: clarifai.api.PostNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	456, // 569: clarifai.api.PostNodepoolsRequest.nodepools:type_name -> clarifai.api.Nodepool
+	367, // 570: clarifai.api.PatchNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	456, // 571: clarifai.api.PatchNodepoolsRequest.nodepools:type_name -> clarifai.api.Nodepool
+	367, // 572: clarifai.api.DeleteNodepoolsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	368, // 573: clarifai.api.SingleNodepoolResponse.status:type_name -> clarifai.api.status.Status
+	456, // 574: clarifai.api.SingleNodepoolResponse.nodepool:type_name -> clarifai.api.Nodepool
+	368, // 575: clarifai.api.MultiNodepoolResponse.status:type_name -> clarifai.api.status.Status
+	456, // 576: clarifai.api.MultiNodepoolResponse.nodepools:type_name -> clarifai.api.Nodepool
+	367, // 577: clarifai.api.GetDeploymentRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 578: clarifai.api.ListDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 579: clarifai.api.PostDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	457, // 580: clarifai.api.PostDeploymentsRequest.deployments:type_name -> clarifai.api.Deployment
+	367, // 581: clarifai.api.DeleteDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	367, // 582: clarifai.api.PostAuditLogSearchesRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	458, // 583: clarifai.api.PostAuditLogSearchesRequest.query:type_name -> clarifai.api.AuditLogQuery
+	2,   // 584: clarifai.api.PostAuditLogSearchesRequest.pagination:type_name -> clarifai.api.Pagination
+	368, // 585: clarifai.api.MultiAuditLogEntryResponse.status:type_name -> clarifai.api.status.Status
+	459, // 586: clarifai.api.MultiAuditLogEntryResponse.entries:type_name -> clarifai.api.AuditLogEntry
+	367, // 587: clarifai.api.PatchDeploymentsRequest.user_app_id:type_name -> clarifai.api.UserAppIDSet
+	457, // 588: clarifai.api.PatchDeploymentsRequest.deployments:type_name -> clarifai.api.Deployment
+	368, // 589: clarifai.api.SingleDeploymentResponse.status:type_name -> clarifai.api.status.Status
+	457, // 590: clarifai.api.SingleDeploymentResponse.deployment:type_name -> clarifai.api.Deployment
+	368, // 591: clarifai.api.MultiDeploymentResponse.status:type_name -> clarifai.api.status.Status
+	457, // 592: clarifai.api.MultiDeploymentResponse.deployments:type_name -> clarifai.api.Deployment
+	368, // 593: clarifai.api.MultiWorkflowEvaluationTemplateResponse.status:type_name -> clarifai.api.status.Status
+	460, // 594: clarifai.api.MultiWorkflowEvaluationTemplateResponse.workflow_version_evaluation_templates:type_name -> clarifai.api.WorkflowVersionEvaluationTemplate
+	400, // 595: clarifai.api.PostWorkflowResultsRequest.NodeRunnerSelectorsEntry.value:type_name -> clarifai.api.RunnerSelector
+	48,  // 596: clarifai.api.V2.ListConceptRelations:input_type -> clarifai.api.ListConceptRelationsRequest
+	49,  // 597: clarifai.api.V2.PostConceptRelations:input_type -> clarifai.api.PostConceptRelationsRequest
+	50,  // 598: clarifai.api.V2.DeleteConceptRelations:input_type -> clarifai.api.DeleteConceptRelationsRequest
+	44,  // 599: clarifai.api.V2.GetConceptCounts:input_type -> clarifai.api.GetConceptCountsRequest
+	37,  // 600: clarifai.api.V2.GetConcept:input_type -> clarifai.api.GetConceptRequest
+	38,  // 601: clarifai.api.V2.ListConcepts:input_type -> clarifai.api.ListConceptsRequest
+	39,  // 602: clarifai.api.V2.ListModelConcepts:input_type -> clarifai.api.ListModelConceptsRequest
+	40,  // 603: clarifai.api.V2.PostConceptsSearches:input_type -> clarifai.api.PostConceptsSearchesRequest
+	42,  // 604: clarifai.api.V2.PostConcepts:input_type -> clarifai.api.PostConceptsRequest
+	43,  // 605: clarifai.api.V2.PatchConcepts:input_type -> clarifai.api.PatchConceptsRequest
+	55,  // 606: clarifai.api.V2.GetConceptLanguage:input_type -> clarifai.api.GetConceptLanguageRequest
+	56,  // 607: clarifai.api.V2.ListConceptLanguages:input_type -> clarifai.api.ListConceptLanguagesRequest
+	58,  // 608: clarifai.api.V2.PostConceptLanguages:input_type -> clarifai.api.PostConceptLanguagesRequest
+	57,  // 609: clarifai.api.V2.PatchConceptLanguages:input_type -> clarifai.api.PatchConceptLanguagesRequest
+	51,  // 610: clarifai.api.V2.ListKnowledgeGraphs:input_type -> clarifai.api.ListKnowledgeGraphsRequest
+	52,  // 611: clarifai.api.V2.PostKnowledgeGraphs:input_type -> clarifai.api.PostKnowledgeGraphsRequest
+	3,   // 612: clarifai.api.V2.GetAnnotation:input_type -> clarifai.api.GetAnnotationRequest
+	4,   // 613: clarifai.api.V2.ListAnnotations:input_type -> clarifai.api.ListAnnotationsRequest
+	5,   // 614: clarifai.api.V2.PostAnnotations:input_type -> clarifai.api.PostAnnotationsRequest
+	6,   // 615: clarifai.api.V2.PatchAnnotations:input_type -> clarifai.api.PatchAnnotationsRequest
+	7,   // 616: clarifai.api.V2.PatchAnnotationsStatus:input_type -> clarifai.api.PatchAnnotationsStatusRequest
+	9,   // 617: clarifai.api.V2.DeleteAnnotation:input_type -> clarifai.api.DeleteAnnotationRequest
+	10,  // 618: clarifai.api.V2.DeleteAnnotations:input_type -> clarifai.api.DeleteAnnotationsRequest
+	192, // 619: clarifai.api.V2.PatchAnnotationsSearches:input_type -> clarifai.api.PatchAnnotationsSearchesRequest
+	196, // 620: clarifai.api.V2.PostAnnotationsSearches:input_type -> clarifai.api.PostAnnotationsSearchesRequest
+	13,  // 621: clarifai.api.V2.ListAnnotationWorkers:input_type -> clarifai.api.ListAnnotationWorkersRequest
+	75,  // 622: clarifai.api.V2.GetInputCount:input_type -> clarifai.api.GetInputCountRequest
+	65,  // 623: clarifai.api.V2.StreamInputs:input_type -> clarifai.api.StreamInputsRequest
+	63,  // 624: clarifai.api.V2.GetInputSamples:input_type -> clarifai.api.GetInputSamplesRequest
+	61,  // 625: clarifai.api.V2.GetInput:input_type -> clarifai.api.GetInputRequest
+	62,  // 626: clarifai.api.V2.GetInputVideoManifest:input_type -> clarifai.api.GetVideoManifestRequest
+	64,  // 627: clarifai.api.V2.ListInputs:input_type -> clarifai.api.ListInputsRequest
+	66,  // 628: clarifai.api.V2.PostInputs:input_type -> clarifai.api.PostInputsRequest
+	67,  // 629: clarifai.api.V2.PatchInputs:input_type -> clarifai.api.PatchInputsRequest
+	68,  // 630: clarifai.api.V2.DeleteInput:input_type -> clarifai.api.DeleteInputRequest
+	69,  // 631: clarifai.api.V2.DeleteInputs:input_type -> clarifai.api.DeleteInputsRequest
+	191, // 632: clarifai.api.V2.PatchInputsSearches:input_type -> clarifai.api.PatchInputsSearchesRequest
+	198, // 633: clarifai.api.V2.PostInputsSearches:input_type -> clarifai.api.PostInputsSearchesRequest
+	100, // 634: clarifai.api.V2.PostModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
+	100, // 635: clarifai.api.V2.GenerateModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
+	100, // 636: clarifai.api.V2.StreamModelOutputs:input_type -> clarifai.api.PostModelOutputsRequest
+	76,  // 637: clarifai.api.V2.ListDatasets:input_type -> clarifai.api.ListDatasetsRequest
+	77,  // 638: clarifai.api.V2.GetDataset:input_type -> clarifai.api.GetDatasetRequest
+	78,  // 639: clarifai.api.V2.PostDatasets:input_type -> clarifai.api.PostDatasetsRequest
+	79,  // 640: clarifai.api.V2.PatchDatasets:input_type -> clarifai.api.PatchDatasetsRequest
+	80,  // 641: clarifai.api.V2.DeleteDatasets:input_type -> clarifai.api.DeleteDatasetsRequest
+	83,  // 642: clarifai.api.V2.ListDatasetInputs:input_type -> clarifai.api.ListDatasetInputsRequest
+	84,  // 643: clarifai.api.V2.GetDatasetInput:input_type -> clarifai.api.GetDatasetInputRequest
+	85,  // 644: clarifai.api.V2.PostDatasetInputs:input_type -> clarifai.api.PostDatasetInputsRequest
+	86,  // 645: clarifai.api.V2.DeleteDatasetInputs:input_type -> clarifai.api.DeleteDatasetInputsRequest
+	89,  // 646: clarifai.api.V2.ListDatasetVersions:input_type -> clarifai.api.ListDatasetVersionsRequest
+	90,  // 647: clarifai.api.V2.GetDatasetVersion:input_type -> clarifai.api.GetDatasetVersionRequest
+	91,  // 648: clarifai.api.V2.ListDatasetVersionMetricsGroups:input_type -> clarifai.api.ListDatasetVersionMetricsGroupsRequest
+	92,  // 649: clarifai.api.V2.PostDatasetVersions:input_type -> clarifai.api.PostDatasetVersionsRequest
+	93,  // 650: clarifai.api.V2.PatchDatasetVersions:input_type -> clarifai.api.PatchDatasetVersionsRequest
+	94,  // 651: clarifai.api.V2.DeleteDatasetVersions:input_type -> clarifai.api.DeleteDatasetVersionsRequest
+	95,  // 652: clarifai.api.V2.PutDatasetVersionExports:input_type -> clarifai.api.PutDatasetVersionExportsRequest
+	166, // 653: clarifai.api.V2.GetModelType:input_type -> clarifai.api.GetModelTypeRequest
+	168, // 654: clarifai.api.V2.ListOpenSourceLicenses:input_type -> clarifai.api.ListOpenSourceLicensesRequest
+	167, // 655: clarifai.api.V2.ListModelTypes:input_type -> clarifai.api.ListModelTypesRequest
+	114, // 656: clarifai.api.V2.GetModel:input_type -> clarifai.api.GetModelRequest
+	114, // 657: clarifai.api.V2.GetModelOutputInfo:input_type -> clarifai.api.GetModelRequest
+	115, // 658: clarifai.api.V2.ListModels:input_type -> clarifai.api.ListModelsRequest
+	116, // 659: clarifai.api.V2.GetResourceCounts:input_type -> clarifai.api.GetResourceCountsRequest
+	132, // 660: clarifai.api.V2.PostModelsSearches:input_type -> clarifai.api.PostModelsSearchesRequest
+	126, // 661: clarifai.api.V2.PostModels:input_type -> clarifai.api.PostModelsRequest
+	127, // 662: clarifai.api.V2.PatchModels:input_type -> clarifai.api.PatchModelsRequest
+	129, // 663: clarifai.api.V2.PatchModelIds:input_type -> clarifai.api.PatchModelIdsRequest
+	130, // 664: clarifai.api.V2.DeleteModel:input_type -> clarifai.api.DeleteModelRequest
+	131, // 665: clarifai.api.V2.DeleteModels:input_type -> clarifai.api.DeleteModelsRequest
+	119, // 666: clarifai.api.V2.PatchModelCheckConsents:input_type -> clarifai.api.PatchModelCheckConsentsRequest
+	118, // 667: clarifai.api.V2.PatchModelToolkits:input_type -> clarifai.api.PatchModelToolkitsRequest
+	120, // 668: clarifai.api.V2.PatchModelUseCases:input_type -> clarifai.api.PatchModelUseCasesRequest
+	121, // 669: clarifai.api.V2.PatchModelLanguages:input_type -> clarifai.api.PatchModelLanguagesRequest
+	101, // 670: clarifai.api.V2.ListModelInputs:input_type -> clarifai.api.ListModelInputsRequest
+	136, // 671: clarifai.api.V2.GetModelVersion:input_type -> clarifai.api.GetModelVersionRequest
+	137, // 672: clarifai.api.V2.ListModelVersions:input_type -> clarifai.api.ListModelVersionsRequest
+	148, // 673: clarifai.api.V2.PostWorkflowVersionsUnPublish:input_type -> clarifai.api.PostWorkflowVersionsUnPublishRequest
+	149, // 674: clarifai.api.V2.PostWorkflowVersionsPublish:input_type -> clarifai.api.PostWorkflowVersionsPublishRequest
+	153, // 675: clarifai.api.V2.PostModelVersionsPublish:input_type -> clarifai.api.PostModelVersionsPublishRequest
+	155, // 676: clarifai.api.V2.PostModelVersionsUnPublish:input_type -> clarifai.api.PostModelVersionsUnPublishRequest
+	141, // 677: clarifai.api.V2.PostModelVersions:input_type -> clarifai.api.PostModelVersionsRequest
+	135, // 678: clarifai.api.V2.PatchModelVersions:input_type -> clarifai.api.PatchModelVersionsRequest
+	138, // 679: clarifai.api.V2.DeleteModelVersion:input_type -> clarifai.api.DeleteModelVersionRequest
+	142, // 680: clarifai.api.V2.PostModelVersionsUpload:input_type -> clarifai.api.PostModelVersionsUploadRequest
+	145, // 681: clarifai.api.V2.PutModelVersionExports:input_type -> clarifai.api.PutModelVersionExportsRequest
+	146, // 682: clarifai.api.V2.GetModelVersionExport:input_type -> clarifai.api.GetModelVersionExportRequest
+	165, // 683: clarifai.api.V2.GetModelVersionMetrics:input_type -> clarifai.api.GetModelVersionMetricsRequest
+	164, // 684: clarifai.api.V2.PostModelVersionMetrics:input_type -> clarifai.api.PostModelVersionMetricsRequest
+	159, // 685: clarifai.api.V2.PostModelVersionEvaluations:input_type -> clarifai.api.PostModelVersionEvaluationsRequest
+	160, // 686: clarifai.api.V2.ListModelVersionEvaluations:input_type -> clarifai.api.ListModelVersionEvaluationsRequest
+	161, // 687: clarifai.api.V2.GetModelVersionEvaluation:input_type -> clarifai.api.GetModelVersionEvaluationRequest
+	156, // 688: clarifai.api.V2.PostEvaluations:input_type -> clarifai.api.PostEvaluationsRequest
+	157, // 689: clarifai.api.V2.ListEvaluations:input_type -> clarifai.api.ListEvaluationsRequest
+	158, // 690: clarifai.api.V2.GetEvaluation:input_type -> clarifai.api.GetEvaluationRequest
+	176, // 691: clarifai.api.V2.ListModelReferences:input_type -> clarifai.api.ListModelReferencesRequest
+	172, // 692: clarifai.api.V2.GetModelVersionInputExample:input_type -> clarifai.api.GetModelVersionInputExampleRequest
+	173, // 693: clarifai.api.V2.ListModelVersionInputExamples:input_type -> clarifai.api.ListModelVersionInputExamplesRequest
+	216, // 694: clarifai.api.V2.GetWorkflow:input_type -> clarifai.api.GetWorkflowRequest
+	217, // 695: clarifai.api.V2.ListWorkflows:input_type -> clarifai.api.ListWorkflowsRequest
+	218, // 696: clarifai.api.V2.PostWorkflows:input_type -> clarifai.api.PostWorkflowsRequest
+	219, // 697: clarifai.api.V2.PatchWorkflows:input_type -> clarifai.api.PatchWorkflowsRequest
+	220, // 698: clarifai.api.V2.PatchWorkflowIds:input_type -> clarifai.api.PatchWorkflowIdsRequest
+	221, // 699: clarifai.api.V2.DeleteWorkflow:input_type -> clarifai.api.DeleteWorkflowRequest
+	222, // 700: clarifai.api.V2.DeleteWorkflows:input_type -> clarifai.api.DeleteWorkflowsRequest
+	225, // 701: clarifai.api.V2.PostWorkflowResults:input_type -> clarifai.api.PostWorkflowResultsRequest
+	227, // 702: clarifai.api.V2.ListWorkflowVersions:input_type -> clarifai.api.ListWorkflowVersionsRequest
+	228, // 703: clarifai.api.V2.GetWorkflowVersion:input_type -> clarifai.api.GetWorkflowVersionRequest
+	229, // 704: clarifai.api.V2.DeleteWorkflowVersions:input_type -> clarifai.api.DeleteWorkflowVersionsRequest
+	230, // 705: clarifai.api.V2.PatchWorkflowVersions:input_type -> clarifai.api.PatchWorkflowVersionsRequest
+	106, // 706: clarifai.api.V2.GetKey:input_type -> clarifai.api.GetKeyRequest
+	107, // 707: clarifai.api.V2.ListKeys:input_type -> clarifai.api.ListKeysRequest
+	108, // 708: clarifai.api.V2.ListAppKeys:input_type -> clarifai.api.ListAppKeysRequest
+	110, // 709: clarifai.api.V2.DeleteKey:input_type -> clarifai.api.DeleteKeyRequest
+	109, // 710: clarifai.api.V2.PostKeys:input_type -> clarifai.api.PostKeysRequest
+	111, // 711: clarifai.api.V2.PatchKeys:input_type -> clarifai.api.PatchKeysRequest
+	181, // 712: clarifai.api.V2.MyScopes:input_type -> clarifai.api.MyScopesRequest
+	182, // 713: clarifai.api.V2.MyScopesUser:input_type -> clarifai.api.MyScopesUserRequest
+	183, // 714: clarifai.api.V2.MyScopesRoot:input_type -> clarifai.api.MyScopesRootRequest
+	180, // 715: clarifai.api.V2.ListScopes:input_type -> clarifai.api.ListScopesRequest
+	15,  // 716: clarifai.api.V2.GetApp:input_type -> clarifai.api.GetAppRequest
+	16,  // 717: clarifai.api.V2.ListApps:input_type -> clarifai.api.ListAppsRequest
+	18,  // 718: clarifai.api.V2.DeleteApp:input_type -> clarifai.api.DeleteAppRequest
+	17,  // 719: clarifai.api.V2.PostApps:input_type -> clarifai.api.PostAppsRequest
+	19,  // 720: clarifai.api.V2.PatchApps:input_type -> clarifai.api.PatchAppsRequest
+	20,  // 721: clarifai.api.V2.PatchAppsDetails:input_type -> clarifai.api.PatchAppsDetailsRequest
+	22,  // 722: clarifai.api.V2.PatchAppsIds:input_type -> clarifai.api.PatchAppsIdsRequest
+	21,  // 723: clarifai.api.V2.PatchApp:input_type -> clarifai.api.PatchAppRequest
+	23,  // 724: clarifai.api.V2.PostAppsSearches:input_type -> clarifai.api.PostAppsSearchesRequest
+	212, // 725: clarifai.api.V2.GetUser:input_type -> clarifai.api.GetUserRequest
+	214, // 726: clarifai.api.V2.PostValidatePassword:input_type -> clarifai.api.PostValidatePasswordRequest
+	188, // 727: clarifai.api.V2.GetSearch:input_type -> clarifai.api.GetSearchRequest
+	189, // 728: clarifai.api.V2.ListSearches:input_type -> clarifai.api.ListSearchesRequest
+	193, // 729: clarifai.api.V2.PatchSearches:input_type -> clarifai.api.PatchSearchesRequest
+	190, // 730: clarifai.api.V2.PostSearches:input_type -> clarifai.api.PostSearchesRequest
+	194, // 731: clarifai.api.V2.PostSearchesByID:input_type -> clarifai.api.PostSearchesByIDRequest
+	201, // 732: clarifai.api.V2.PostAnnotationSearchMetrics:input_type -> clarifai.api.PostAnnotationSearchMetricsRequest
+	202, // 733: clarifai.api.V2.GetAnnotationSearchMetrics:input_type -> clarifai.api.GetAnnotationSearchMetricsRequest
+	203, // 734: clarifai.api.V2.ListAnnotationSearchMetrics:input_type -> clarifai.api.ListAnnotationSearchMetricsRequest
+	197, // 735: clarifai.api.V2.DeleteAnnotationSearchMetrics:input_type -> clarifai.api.DeleteAnnotationSearchMetricsRequest
+	195, // 736: clarifai.api.V2.DeleteSearch:input_type -> clarifai.api.DeleteSearchRequest
+	205, // 737: clarifai.api.V2.ListAnnotationFilters:input_type -> clarifai.api.ListAnnotationFiltersRequest
+	206, // 738: clarifai.api.V2.GetAnnotationFilter:input_type -> clarifai.api.GetAnnotationFilterRequest
+	207, // 739: clarifai.api.V2.PostAnnotationFilters:input_type -> clarifai.api.PostAnnotationFiltersRequest
+	208, // 740: clarifai.api.V2.PatchAnnotationFilters:input_type -> clarifai.api.PatchAnnotationFiltersRequest
+	209, // 741: clarifai.api.V2.DeleteAnnotationFilters:input_type -> clarifai.api.DeleteAnnotationFiltersRequest
+	34,  // 742: clarifai.api.V2.ListStatusCodes:input_type -> clarifai.api.ListStatusCodesRequest
+	33,  // 743: clarifai.api.V2.GetStatusCode:input_type -> clarifai.api.GetStatusCodeRequest
+	26,  // 744: clarifai.api.V2.ListCollaborators:input_type -> clarifai.api.ListCollaboratorsRequest
+	27,  // 745: clarifai.api.V2.PostCollaborators:input_type -> clarifai.api.PostCollaboratorsRequest
+	28,  // 746: clarifai.api.V2.PatchCollaborators:input_type -> clarifai.api.PatchCollaboratorsRequest
+	29,  // 747: clarifai.api.V2.DeleteCollaborators:input_type -> clarifai.api.DeleteCollaboratorsRequest
+	31,  // 748: clarifai.api.V2.ListCollaborations:input_type -> clarifai.api.ListCollaborationsRequest
+	233, // 749: clarifai.api.V2.PostAppDuplications:input_type -> clarifai.api.PostAppDuplicationsRequest
+	235, // 750: clarifai.api.V2.ListAppDuplications:input_type -> clarifai.api.ListAppDuplicationsRequest
+	234, // 751: clarifai.api.V2.GetAppDuplication:input_type -> clarifai.api.GetAppDuplicationRequest
+	238, // 752: clarifai.api.V2.PostTasks:input_type -> clarifai.api.PostTasksRequest
+	245, // 753: clarifai.api.V2.GetTaskAnnotationCount:input_type -> clarifai.api.GetTaskCountRequest
+	245, // 754: clarifai.api.V2.GetTaskInputCount:input_type -> clarifai.api.GetTaskCountRequest
+	239, // 755: clarifai.api.V2.GetTask:input_type -> clarifai.api.GetTaskRequest
+	240, // 756: clarifai.api.V2.ListTasks:input_type -> clarifai.api.ListTasksRequest
+	241, // 757: clarifai.api.V2.PatchTasks:input_type -> clarifai.api.PatchTasksRequest
+	242, // 758: clarifai.api.V2.DeleteTasks:input_type -> clarifai.api.DeleteTasksRequest
+	247, // 759: clarifai.api.V2.PostLabelOrders:input_type -> clarifai.api.PostLabelOrdersRequest
+	248, // 760: clarifai.api.V2.GetLabelOrder:input_type -> clarifai.api.GetLabelOrderRequest
+	249, // 761: clarifai.api.V2.ListLabelOrders:input_type -> clarifai.api.ListLabelOrdersRequest
+	250, // 762: clarifai.api.V2.PatchLabelOrders:input_type -> clarifai.api.PatchLabelOrdersRequest
+	251, // 763: clarifai.api.V2.DeleteLabelOrders:input_type -> clarifai.api.DeleteLabelOrdersRequest
+	254, // 764: clarifai.api.V2.PostCollectors:input_type -> clarifai.api.PostCollectorsRequest
+	257, // 765: clarifai.api.V2.GetCollector:input_type -> clarifai.api.GetCollectorRequest
+	258, // 766: clarifai.api.V2.ListCollectors:input_type -> clarifai.api.ListCollectorsRequest
+	255, // 767: clarifai.api.V2.PatchCollectors:input_type -> clarifai.api.PatchCollectorsRequest
+	256, // 768: clarifai.api.V2.DeleteCollectors:input_type -> clarifai.api.DeleteCollectorsRequest
+	261, // 769: clarifai.api.V2.PostStatValues:input_type -> clarifai.api.PostStatValuesRequest
+	263, // 770: clarifai.api.V2.PostStatValuesAggregate:input_type -> clarifai.api.PostStatValuesAggregateRequest
+	265, // 771: clarifai.api.V2.GetModule:input_type -> clarifai.api.GetModuleRequest
+	266, // 772: clarifai.api.V2.ListModules:input_type -> clarifai.api.ListModulesRequest
+	267, // 773: clarifai.api.V2.PostModules:input_type -> clarifai.api.PostModulesRequest
+	268, // 774: clarifai.api.V2.PatchModules:input_type -> clarifai.api.PatchModulesRequest
+	269, // 775: clarifai.api.V2.DeleteModules:input_type -> clarifai.api.DeleteModulesRequest
+	272, // 776: clarifai.api.V2.GetModuleVersion:input_type -> clarifai.api.GetModuleVersionRequest
+	273, // 777: clarifai.api.V2.ListModuleVersions:input_type -> clarifai.api.ListModuleVersionsRequest
+	274, // 778: clarifai.api.V2.PostModuleVersions:input_type -> clarifai.api.PostModuleVersionsRequest
+	275, // 779: clarifai.api.V2.PatchModuleVersions:input_type -> clarifai.api.PatchModuleVersionsRequest
+	276, // 780: clarifai.api.V2.DeleteModuleVersions:input_type -> clarifai.api.DeleteModuleVersionsRequest
+	277, // 781: clarifai.api.V2.GetModuleVersionUsageCount:input_type -> clarifai.api.GetModuleVersionUsageCountRequest
+	281, // 782: clarifai.api.V2.GetInstalledModuleVersion:input_type -> clarifai.api.GetInstalledModuleVersionRequest
+	282, // 783: clarifai.api.V2.ListInstalledModuleVersions:input_type -> clarifai.api.ListInstalledModuleVersionsRequest
+	283, // 784: clarifai.api.V2.PostInstalledModuleVersions:input_type -> clarifai.api.PostInstalledModuleVersionsRequest
+	285, // 785: clarifai.api.V2.DeleteInstalledModuleVersions:input_type -> clarifai.api.DeleteInstalledModuleVersionsRequest
+	284, // 786: clarifai.api.V2.PostInstalledModuleVersionsKey:input_type -> clarifai.api.PostInstalledModuleVersionsKeyRequest
+	289, // 787: clarifai.api.V2.PostBulkOperations:input_type -> clarifai.api.PostBulkOperationsRequest
+	290, // 788: clarifai.api.V2.ListBulkOperations:input_type -> clarifai.api.ListBulkOperationsRequest
+	291, // 789: clarifai.api.V2.GetBulkOperation:input_type -> clarifai.api.GetBulkOperationRequest
+	292, // 790: clarifai.api.V2.CancelBulkOperations:input_type -> clarifai.api.CancelBulkOperationRequest
+	293, // 791: clarifai.api.V2.DeleteBulkOperations:input_type -> clarifai.api.DeleteBulkOperationRequest
+	288, // 792: clarifai.api.V2.ListNextTaskAssignments:input_type -> clarifai.api.ListNextTaskAssignmentsRequest
+	296, // 793: clarifai.api.V2.PutTaskAssignments:input_type -> clarifai.api.PutTaskAssignmentsRequest
+	303, // 794: clarifai.api.V2.ListInputsAddJobs:input_type -> clarifai.api.ListInputsAddJobsRequest
+	304, // 795: clarifai.api.V2.GetInputsAddJob:input_type -> clarifai.api.GetInputsAddJobRequest
+	305, // 796: clarifai.api.V2.CancelInputsAddJob:input_type -> clarifai.api.CancelInputsAddJobRequest
+	308, // 797: clarifai.api.V2.PostUploads:input_type -> clarifai.api.PostUploadsRequest
+	314, // 798: clarifai.api.V2.PutUploadContentParts:input_type -> clarifai.api.PutUploadContentPartsRequest
+	311, // 799: clarifai.api.V2.GetUpload:input_type -> clarifai.api.GetUploadRequest
+	310, // 800: clarifai.api.V2.ListUploads:input_type -> clarifai.api.ListUploadsRequest
+	309, // 801: clarifai.api.V2.DeleteUploads:input_type -> clarifai.api.DeleteUploadsRequest
+	315, // 802: clarifai.api.V2.PostInputsDataSources:input_type -> clarifai.api.PostInputsDataSourcesRequest
+	316, // 803: clarifai.api.V2.GetInputsExtractionJob:input_type -> clarifai.api.GetInputsExtractionJobRequest
+	317, // 804: clarifai.api.V2.ListInputsExtractionJobs:input_type -> clarifai.api.ListInputsExtractionJobsRequest
+	320, // 805: clarifai.api.V2.CancelInputsExtractionJobs:input_type -> clarifai.api.CancelInputsExtractionJobsRequest
+	321, // 806: clarifai.api.V2.PostInputsUploads:input_type -> clarifai.api.PostInputsUploadsRequest
+	322, // 807: clarifai.api.V2.GetRunner:input_type -> clarifai.api.GetRunnerRequest
+	323, // 808: clarifai.api.V2.ListRunners:input_type -> clarifai.api.ListRunnersRequest
+	324, // 809: clarifai.api.V2.PostRunners:input_type -> clarifai.api.PostRunnersRequest
+	325, // 810: clarifai.api.V2.DeleteRunners:input_type -> clarifai.api.DeleteRunnersRequest
+	328, // 811: clarifai.api.V2.ListRunnerItems:input_type -> clarifai.api.ListRunnerItemsRequest
+	329, // 812: clarifai.api.V2.PostRunnerItemOutputs:input_type -> clarifai.api.PostRunnerItemOutputsRequest
+	329, // 813: clarifai.api.V2.ProcessRunnerItems:input_type -> clarifai.api.PostRunnerItemOutputsRequest
+	334, // 814: clarifai.api.V2.PostModelVersionsTrainingTimeEstimate:input_type -> clarifai.api.PostModelVersionsTrainingTimeEstimateRequest
+	336, // 815: clarifai.api.V2.ListCloudProviders:input_type -> clarifai.api.ListCloudProvidersRequest
+	338, // 816: clarifai.api.V2.ListCloudRegions:input_type -> clarifai.api.ListCloudRegionsRequest
+	340, // 817: clarifai.api.V2.ListInstanceTypes:input_type -> clarifai.api.ListInstanceTypesRequest
+	342, // 818: clarifai.api.V2.GetComputeCluster:input_type -> clarifai.api.GetComputeClusterRequest
+	343, // 819: clarifai.api.V2.ListComputeClusters:input_type -> clarifai.api.ListComputeClustersRequest
+	344, // 820: clarifai.api.V2.PostComputeClusters:input_type -> clarifai.api.PostComputeClustersRequest
+	345, // 821: clarifai.api.V2.DeleteComputeClusters:input_type -> clarifai.api.DeleteComputeClustersRequest
+	348, // 822: clarifai.api.V2.GetNodepool:input_type -> clarifai.api.GetNodepoolRequest
+	349, // 823: clarifai.api.V2.ListNodepools:input_type -> clarifai.api.ListNodepoolsRequest
+	350, // 824: clarifai.api.V2.PostNodepools:input_type -> clarifai.api.PostNodepoolsRequest
+	351, // 825: clarifai.api.V2.PatchNodepools:input_type -> clarifai.api.PatchNodepoolsRequest
+	352, // 826: clarifai.api.V2.DeleteNodepools:input_type -> clarifai.api.DeleteNodepoolsRequest
+	355, // 827: clarifai.api.V2.GetDeployment:input_type -> clarifai.api.GetDeploymentRequest
+	356, // 828: clarifai.api.V2.ListDeployments:input_type -> clarifai.api.ListDeploymentsRequest
+	357, // 829: clarifai.api.V2.PostDeployments:input_type -> clarifai.api.PostDeploymentsRequest
+	361, // 830: clarifai.api.V2.PatchDeployments:input_type -> clarifai.api.PatchDeploymentsRequest
+	358, // 831: clarifai.api.V2.DeleteDeployments:input_type -> clarifai.api.DeleteDeploymentsRequest
+	359, // 832: clarifai.api.V2.PostAuditLogSearches:input_type -> clarifai.api.PostAuditLogSearchesRequest
+	364, // 833: clarifai.api.V2.ListWorkflowEvaluationTemplates:input_type -> clarifai.api.ListWorkflowEvaluationTemplatesRequest
+	103, // 834: clarifai.api.V2.PostLogEntries:input_type -> clarifai.api.PostLogEntriesRequest
+	104, // 835: clarifai.api.V2.ListLogEntries:input_type -> clarifai.api.ListLogEntriesRequest
+	105, // 836: clarifai.api.V2.StreamLogEntries:input_type -> clarifai.api.StreamLogEntriesRequest
+	102, // 837: clarifai.api.V2.PostComputePlaneMetrics:input_type -> clarifai.api.PostComputePlaneMetricsRequest
+	53,  // 838: clarifai.api.V2.ListConceptRelations:output_type -> clarifai.api.MultiConceptRelationResponse
+	53,  // 839: clarifai.api.V2.PostConceptRelations:output_type -> clarifai.api.MultiConceptRelationResponse
+	461, // 840: clarifai.api.V2.DeleteConceptRelations:output_type -> clarifai.api.status.BaseResponse
+	47,  // 841: clarifai.api.V2.GetConceptCounts:output_type -> clarifai.api.MultiConceptCountResponse
+	45,  // 842: clarifai.api.V2.GetConcept:output_type -> clarifai.api.SingleConceptResponse
+	46,  // 843: clarifai.api.V2.ListConcepts:output_type -> clarifai.api.MultiConceptResponse
+	46,  // 844: clarifai.api.V2.ListModelConcepts:output_type -> clarifai.api.MultiConceptResponse
+	46,  // 845: clarifai.api.V2.PostConceptsSearches:output_type -> clarifai.api.MultiConceptResponse
+	46,  // 846: clarifai.api.V2.PostConcepts:output_type -> clarifai.api.MultiConceptResponse
+	46,  // 847: clarifai.api.V2.PatchConcepts:output_type -> clarifai.api.MultiConceptResponse
+	59,  // 848: clarifai.api.V2.GetConceptLanguage:output_type -> clarifai.api.SingleConceptLanguageResponse
+	60,  // 849: clarifai.api.V2.ListConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
+	60,  // 850: clarifai.api.V2.PostConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
+	60,  // 851: clarifai.api.V2.PatchConceptLanguages:output_type -> clarifai.api.MultiConceptLanguageResponse
+	54,  // 852: clarifai.api.V2.ListKnowledgeGraphs:output_type -> clarifai.api.MultiKnowledgeGraphResponse
+	54,  // 853: clarifai.api.V2.PostKnowledgeGraphs:output_type -> clarifai.api.MultiKnowledgeGraphResponse
+	11,  // 854: clarifai.api.V2.GetAnnotation:output_type -> clarifai.api.SingleAnnotationResponse
+	12,  // 855: clarifai.api.V2.ListAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
+	12,  // 856: clarifai.api.V2.PostAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
+	12,  // 857: clarifai.api.V2.PatchAnnotations:output_type -> clarifai.api.MultiAnnotationResponse
+	8,   // 858: clarifai.api.V2.PatchAnnotationsStatus:output_type -> clarifai.api.PatchAnnotationsStatusResponse
+	461, // 859: clarifai.api.V2.DeleteAnnotation:output_type -> clarifai.api.status.BaseResponse
+	461, // 860: clarifai.api.V2.DeleteAnnotations:output_type -> clarifai.api.status.BaseResponse
+	200, // 861: clarifai.api.V2.PatchAnnotationsSearches:output_type -> clarifai.api.MultiSearchResponse
+	200, // 862: clarifai.api.V2.PostAnnotationsSearches:output_type -> clarifai.api.MultiSearchResponse
+	14,  // 863: clarifai.api.V2.ListAnnotationWorkers:output_type -> clarifai.api.MultiWorkerResponse
+	74,  // 864: clarifai.api.V2.GetInputCount:output_type -> clarifai.api.SingleInputCountResponse
+	72,  // 865: clarifai.api.V2.StreamInputs:output_type -> clarifai.api.MultiInputResponse
+	73,  // 866: clarifai.api.V2.GetInputSamples:output_type -> clarifai.api.MultiInputAnnotationResponse
+	70,  // 867: clarifai.api.V2.GetInput:output_type -> clarifai.api.SingleInputResponse
+	71,  // 868: clarifai.api.V2.GetInputVideoManifest:output_type -> clarifai.api.GetVideoManifestResponse
+	72,  // 869: clarifai.api.V2.ListInputs:output_type -> clarifai.api.MultiInputResponse
+	72,  // 870: clarifai.api.V2.PostInputs:output_type -> clarifai.api.MultiInputResponse
+	72,  // 871: clarifai.api.V2.PatchInputs:output_type -> clarifai.api.MultiInputResponse
+	461, // 872: clarifai.api.V2.DeleteInput:output_type -> clarifai.api.status.BaseResponse
+	461, // 873: clarifai.api.V2.DeleteInputs:output_type -> clarifai.api.status.BaseResponse
+	200, // 874: clarifai.api.V2.PatchInputsSearches:output_type -> clarifai.api.MultiSearchResponse
+	200, // 875: clarifai.api.V2.PostInputsSearches:output_type -> clarifai.api.MultiSearchResponse
+	178, // 876: clarifai.api.V2.PostModelOutputs:output_type -> clarifai.api.MultiOutputResponse
+	178, // 877: clarifai.api.V2.GenerateModelOutputs:output_type -> clarifai.api.MultiOutputResponse
+	178, // 878: clarifai.api.V2.StreamModelOutputs:output_type -> clarifai.api.MultiOutputResponse
+	81,  // 879: clarifai.api.V2.ListDatasets:output_type -> clarifai.api.MultiDatasetResponse
+	82,  // 880: clarifai.api.V2.GetDataset:output_type -> clarifai.api.SingleDatasetResponse
+	81,  // 881: clarifai.api.V2.PostDatasets:output_type -> clarifai.api.MultiDatasetResponse
+	81,  // 882: clarifai.api.V2.PatchDatasets:output_type -> clarifai.api.MultiDatasetResponse
+	461, // 883: clarifai.api.V2.DeleteDatasets:output_type -> clarifai.api.status.BaseResponse
+	87,  // 884: clarifai.api.V2.ListDatasetInputs:output_type -> clarifai.api.MultiDatasetInputResponse
+	88,  // 885: clarifai.api.V2.GetDatasetInput:output_type -> clarifai.api.SingleDatasetInputResponse
+	87,  // 886: clarifai.api.V2.PostDatasetInputs:output_type -> clarifai.api.MultiDatasetInputResponse
+	461, // 887: clarifai.api.V2.DeleteDatasetInputs:output_type -> clarifai.api.status.BaseResponse
+	96,  // 888: clarifai.api.V2.ListDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
+	99,  // 889: clarifai.api.V2.GetDatasetVersion:output_type -> clarifai.api.SingleDatasetVersionResponse
+	98,  // 890: clarifai.api.V2.ListDatasetVersionMetricsGroups:output_type -> clarifai.api.MultiDatasetVersionMetricsGroupResponse
+	96,  // 891: clarifai.api.V2.PostDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
+	96,  // 892: clarifai.api.V2.PatchDatasetVersions:output_type -> clarifai.api.MultiDatasetVersionResponse
+	461, // 893: clarifai.api.V2.DeleteDatasetVersions:output_type -> clarifai.api.status.BaseResponse
+	97,  // 894: clarifai.api.V2.PutDatasetVersionExports:output_type -> clarifai.api.MultiDatasetVersionExportResponse
+	170, // 895: clarifai.api.V2.GetModelType:output_type -> clarifai.api.SingleModelTypeResponse
+	169, // 896: clarifai.api.V2.ListOpenSourceLicenses:output_type -> clarifai.api.ListOpenSourceLicensesResponse
+	171, // 897: clarifai.api.V2.ListModelTypes:output_type -> clarifai.api.MultiModelTypeResponse
+	133, // 898: clarifai.api.V2.GetModel:output_type -> clarifai.api.SingleModelResponse
+	133, // 899: clarifai.api.V2.GetModelOutputInfo:output_type -> clarifai.api.SingleModelResponse
+	134, // 900: clarifai.api.V2.ListModels:output_type -> clarifai.api.MultiModelResponse
+	117, // 901: clarifai.api.V2.GetResourceCounts:output_type -> clarifai.api.GetResourceCountsResponse
+	134, // 902: clarifai.api.V2.PostModelsSearches:output_type -> clarifai.api.MultiModelResponse
+	133, // 903: clarifai.api.V2.PostModels:output_type -> clarifai.api.SingleModelResponse
+	134, // 904: clarifai.api.V2.PatchModels:output_type -> clarifai.api.MultiModelResponse
+	134, // 905: clarifai.api.V2.PatchModelIds:output_type -> clarifai.api.MultiModelResponse
+	461, // 906: clarifai.api.V2.DeleteModel:output_type -> clarifai.api.status.BaseResponse
+	461, // 907: clarifai.api.V2.DeleteModels:output_type -> clarifai.api.status.BaseResponse
+	123, // 908: clarifai.api.V2.PatchModelCheckConsents:output_type -> clarifai.api.MultiModelCheckConsentResponse
+	122, // 909: clarifai.api.V2.PatchModelToolkits:output_type -> clarifai.api.MultiModelToolkitResponse
+	124, // 910: clarifai.api.V2.PatchModelUseCases:output_type -> clarifai.api.MultiModelUseCaseResponse
+	125, // 911: clarifai.api.V2.PatchModelLanguages:output_type -> clarifai.api.MultiModelLanguageResponse
+	72,  // 912: clarifai.api.V2.ListModelInputs:output_type -> clarifai.api.MultiInputResponse
+	139, // 913: clarifai.api.V2.GetModelVersion:output_type -> clarifai.api.SingleModelVersionResponse
+	140, // 914: clarifai.api.V2.ListModelVersions:output_type -> clarifai.api.MultiModelVersionResponse
+	461, // 915: clarifai.api.V2.PostWorkflowVersionsUnPublish:output_type -> clarifai.api.status.BaseResponse
+	461, // 916: clarifai.api.V2.PostWorkflowVersionsPublish:output_type -> clarifai.api.status.BaseResponse
+	461, // 917: clarifai.api.V2.PostModelVersionsPublish:output_type -> clarifai.api.status.BaseResponse
+	461, // 918: clarifai.api.V2.PostModelVersionsUnPublish:output_type -> clarifai.api.status.BaseResponse
+	133, // 919: clarifai.api.V2.PostModelVersions:output_type -> clarifai.api.SingleModelResponse
+	140, // 920: clarifai.api.V2.PatchModelVersions:output_type -> clarifai.api.MultiModelVersionResponse
+	461, // 921: clarifai.api.V2.DeleteModelVersion:output_type -> clarifai.api.status.BaseResponse
+	143, // 922: clarifai.api.V2.PostModelVersionsUpload:output_type -> clarifai.api.PostModelVersionsUploadResponse
+	147, // 923: clarifai.api.V2.PutModelVersionExports:output_type -> clarifai.api.SingleModelVersionExportResponse
+	147, // 924: clarifai.api.V2.GetModelVersionExport:output_type -> clarifai.api.SingleModelVersionExportResponse
+	139, // 925: clarifai.api.V2.GetModelVersionMetrics:output_type -> clarifai.api.SingleModelVersionResponse
+	139, // 926: clarifai.api.V2.PostModelVersionMetrics:output_type -> clarifai.api.SingleModelVersionResponse
+	163, // 927: clarifai.api.V2.PostModelVersionEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
+	163, // 928: clarifai.api.V2.ListModelVersionEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
+	162, // 929: clarifai.api.V2.GetModelVersionEvaluation:output_type -> clarifai.api.SingleEvalMetricsResponse
+	163, // 930: clarifai.api.V2.PostEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
+	163, // 931: clarifai.api.V2.ListEvaluations:output_type -> clarifai.api.MultiEvalMetricsResponse
+	162, // 932: clarifai.api.V2.GetEvaluation:output_type -> clarifai.api.SingleEvalMetricsResponse
+	177, // 933: clarifai.api.V2.ListModelReferences:output_type -> clarifai.api.MultiModelReferenceResponse
+	174, // 934: clarifai.api.V2.GetModelVersionInputExample:output_type -> clarifai.api.SingleModelVersionInputExampleResponse
+	175, // 935: clarifai.api.V2.ListModelVersionInputExamples:output_type -> clarifai.api.MultiModelVersionInputExampleResponse
+	223, // 936: clarifai.api.V2.GetWorkflow:output_type -> clarifai.api.SingleWorkflowResponse
+	224, // 937: clarifai.api.V2.ListWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
+	224, // 938: clarifai.api.V2.PostWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
+	224, // 939: clarifai.api.V2.PatchWorkflows:output_type -> clarifai.api.MultiWorkflowResponse
+	224, // 940: clarifai.api.V2.PatchWorkflowIds:output_type -> clarifai.api.MultiWorkflowResponse
+	461, // 941: clarifai.api.V2.DeleteWorkflow:output_type -> clarifai.api.status.BaseResponse
+	461, // 942: clarifai.api.V2.DeleteWorkflows:output_type -> clarifai.api.status.BaseResponse
+	226, // 943: clarifai.api.V2.PostWorkflowResults:output_type -> clarifai.api.PostWorkflowResultsResponse
+	231, // 944: clarifai.api.V2.ListWorkflowVersions:output_type -> clarifai.api.MultiWorkflowVersionResponse
+	232, // 945: clarifai.api.V2.GetWorkflowVersion:output_type -> clarifai.api.SingleWorkflowVersionResponse
+	461, // 946: clarifai.api.V2.DeleteWorkflowVersions:output_type -> clarifai.api.status.BaseResponse
+	231, // 947: clarifai.api.V2.PatchWorkflowVersions:output_type -> clarifai.api.MultiWorkflowVersionResponse
+	112, // 948: clarifai.api.V2.GetKey:output_type -> clarifai.api.SingleKeyResponse
+	113, // 949: clarifai.api.V2.ListKeys:output_type -> clarifai.api.MultiKeyResponse
+	113, // 950: clarifai.api.V2.ListAppKeys:output_type -> clarifai.api.MultiKeyResponse
+	461, // 951: clarifai.api.V2.DeleteKey:output_type -> clarifai.api.status.BaseResponse
+	113, // 952: clarifai.api.V2.PostKeys:output_type -> clarifai.api.MultiKeyResponse
+	113, // 953: clarifai.api.V2.PatchKeys:output_type -> clarifai.api.MultiKeyResponse
+	185, // 954: clarifai.api.V2.MyScopes:output_type -> clarifai.api.MultiScopeResponse
+	186, // 955: clarifai.api.V2.MyScopesUser:output_type -> clarifai.api.MultiScopeUserResponse
+	187, // 956: clarifai.api.V2.MyScopesRoot:output_type -> clarifai.api.MultiScopeRootResponse
+	184, // 957: clarifai.api.V2.ListScopes:output_type -> clarifai.api.MultiScopeDepsResponse
+	24,  // 958: clarifai.api.V2.GetApp:output_type -> clarifai.api.SingleAppResponse
+	25,  // 959: clarifai.api.V2.ListApps:output_type -> clarifai.api.MultiAppResponse
+	461, // 960: clarifai.api.V2.DeleteApp:output_type -> clarifai.api.status.BaseResponse
+	25,  // 961: clarifai.api.V2.PostApps:output_type -> clarifai.api.MultiAppResponse
+	25,  // 962: clarifai.api.V2.PatchApps:output_type -> clarifai.api.MultiAppResponse
+	25,  // 963: clarifai.api.V2.PatchAppsDetails:output_type -> clarifai.api.MultiAppResponse
+	25,  // 964: clarifai.api.V2.PatchAppsIds:output_type -> clarifai.api.MultiAppResponse
+	24,  // 965: clarifai.api.V2.PatchApp:output_type -> clarifai.api.SingleAppResponse
+	25,  // 966: clarifai.api.V2.PostAppsSearches:output_type -> clarifai.api.MultiAppResponse
+	213, // 967: clarifai.api.V2.GetUser:output_type -> clarifai.api.SingleUserResponse
+	215, // 968: clarifai.api.V2.PostValidatePassword:output_type -> clarifai.api.SinglePasswordValidationResponse
+	199, // 969: clarifai.api.V2.GetSearch:output_type -> clarifai.api.SingleSearchResponse
+	200, // 970: clarifai.api.V2.ListSearches:output_type -> clarifai.api.MultiSearchResponse
+	200, // 971: clarifai.api.V2.PatchSearches:output_type -> clarifai.api.MultiSearchResponse
+	200, // 972: clarifai.api.V2.PostSearches:output_type -> clarifai.api.MultiSearchResponse
+	200, // 973: clarifai.api.V2.PostSearchesByID:output_type -> clarifai.api.MultiSearchResponse
+	204, // 974: clarifai.api.V2.PostAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
+	204, // 975: clarifai.api.V2.GetAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
+	204, // 976: clarifai.api.V2.ListAnnotationSearchMetrics:output_type -> clarifai.api.MultiAnnotationSearchMetricsResponse
+	461, // 977: clarifai.api.V2.DeleteAnnotationSearchMetrics:output_type -> clarifai.api.status.BaseResponse
+	461, // 978: clarifai.api.V2.DeleteSearch:output_type -> clarifai.api.status.BaseResponse
+	210, // 979: clarifai.api.V2.ListAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
+	211, // 980: clarifai.api.V2.GetAnnotationFilter:output_type -> clarifai.api.SingleAnnotationFilterResponse
+	210, // 981: clarifai.api.V2.PostAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
+	210, // 982: clarifai.api.V2.PatchAnnotationFilters:output_type -> clarifai.api.MultiAnnotationFilterResponse
+	461, // 983: clarifai.api.V2.DeleteAnnotationFilters:output_type -> clarifai.api.status.BaseResponse
+	36,  // 984: clarifai.api.V2.ListStatusCodes:output_type -> clarifai.api.MultiStatusCodeResponse
+	35,  // 985: clarifai.api.V2.GetStatusCode:output_type -> clarifai.api.SingleStatusCodeResponse
+	30,  // 986: clarifai.api.V2.ListCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
+	30,  // 987: clarifai.api.V2.PostCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
+	30,  // 988: clarifai.api.V2.PatchCollaborators:output_type -> clarifai.api.MultiCollaboratorsResponse
+	461, // 989: clarifai.api.V2.DeleteCollaborators:output_type -> clarifai.api.status.BaseResponse
+	32,  // 990: clarifai.api.V2.ListCollaborations:output_type -> clarifai.api.MultiCollaborationsResponse
+	236, // 991: clarifai.api.V2.PostAppDuplications:output_type -> clarifai.api.MultiAppDuplicationsResponse
+	236, // 992: clarifai.api.V2.ListAppDuplications:output_type -> clarifai.api.MultiAppDuplicationsResponse
+	237, // 993: clarifai.api.V2.GetAppDuplication:output_type -> clarifai.api.SingleAppDuplicationResponse
+	243, // 994: clarifai.api.V2.PostTasks:output_type -> clarifai.api.MultiTaskResponse
+	246, // 995: clarifai.api.V2.GetTaskAnnotationCount:output_type -> clarifai.api.SingleTaskCountResponse
+	246, // 996: clarifai.api.V2.GetTaskInputCount:output_type -> clarifai.api.SingleTaskCountResponse
+	244, // 997: clarifai.api.V2.GetTask:output_type -> clarifai.api.SingleTaskResponse
+	243, // 998: clarifai.api.V2.ListTasks:output_type -> clarifai.api.MultiTaskResponse
+	243, // 999: clarifai.api.V2.PatchTasks:output_type -> clarifai.api.MultiTaskResponse
+	461, // 1000: clarifai.api.V2.DeleteTasks:output_type -> clarifai.api.status.BaseResponse
+	252, // 1001: clarifai.api.V2.PostLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
+	253, // 1002: clarifai.api.V2.GetLabelOrder:output_type -> clarifai.api.SingleLabelOrderResponse
+	252, // 1003: clarifai.api.V2.ListLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
+	252, // 1004: clarifai.api.V2.PatchLabelOrders:output_type -> clarifai.api.MultiLabelOrderResponse
+	461, // 1005: clarifai.api.V2.DeleteLabelOrders:output_type -> clarifai.api.status.BaseResponse
+	259, // 1006: clarifai.api.V2.PostCollectors:output_type -> clarifai.api.MultiCollectorResponse
+	260, // 1007: clarifai.api.V2.GetCollector:output_type -> clarifai.api.SingleCollectorResponse
+	259, // 1008: clarifai.api.V2.ListCollectors:output_type -> clarifai.api.MultiCollectorResponse
+	259, // 1009: clarifai.api.V2.PatchCollectors:output_type -> clarifai.api.MultiCollectorResponse
+	461, // 1010: clarifai.api.V2.DeleteCollectors:output_type -> clarifai.api.status.BaseResponse
+	262, // 1011: clarifai.api.V2.PostStatValues:output_type -> clarifai.api.MultiStatValueResponse
+	264, // 1012: clarifai.api.V2.PostStatValuesAggregate:output_type -> clarifai.api.MultiStatValueAggregateResponse
+	270, // 1013: clarifai.api.V2.GetModule:output_type -> clarifai.api.SingleModuleResponse
+	271, // 1014: clarifai.api.V2.ListModules:output_type -> clarifai.api.MultiModuleResponse
+	271, // 1015: clarifai.api.V2.PostModules:output_type -> clarifai.api.MultiModuleResponse
+	271, // 1016: clarifai.api.V2.PatchModules:output_type -> clarifai.api.MultiModuleResponse
+	461, // 1017: clarifai.api.V2.DeleteModules:output_type -> clarifai.api.status.BaseResponse
+	278, // 1018: clarifai.api.V2.GetModuleVersion:output_type -> clarifai.api.SingleModuleVersionResponse
+	279, // 1019: clarifai.api.V2.ListModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
+	279, // 1020: clarifai.api.V2.PostModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
+	279, // 1021: clarifai.api.V2.PatchModuleVersions:output_type -> clarifai.api.MultiModuleVersionResponse
+	461, // 1022: clarifai.api.V2.DeleteModuleVersions:output_type -> clarifai.api.status.BaseResponse
+	280, // 1023: clarifai.api.V2.GetModuleVersionUsageCount:output_type -> clarifai.api.SingleModuleVersionUsageCountResponse
+	286, // 1024: clarifai.api.V2.GetInstalledModuleVersion:output_type -> clarifai.api.SingleInstalledModuleVersionResponse
+	287, // 1025: clarifai.api.V2.ListInstalledModuleVersions:output_type -> clarifai.api.MultiInstalledModuleVersionResponse
+	287, // 1026: clarifai.api.V2.PostInstalledModuleVersions:output_type -> clarifai.api.MultiInstalledModuleVersionResponse
+	461, // 1027: clarifai.api.V2.DeleteInstalledModuleVersions:output_type -> clarifai.api.status.BaseResponse
+	112, // 1028: clarifai.api.V2.PostInstalledModuleVersionsKey:output_type -> clarifai.api.SingleKeyResponse
+	295, // 1029: clarifai.api.V2.PostBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
+	295, // 1030: clarifai.api.V2.ListBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
+	294, // 1031: clarifai.api.V2.GetBulkOperation:output_type -> clarifai.api.SingleBulkOperationsResponse
+	295, // 1032: clarifai.api.V2.CancelBulkOperations:output_type -> clarifai.api.MultiBulkOperationsResponse
+	461, // 1033: clarifai.api.V2.DeleteBulkOperations:output_type -> clarifai.api.status.BaseResponse
+	72,  // 1034: clarifai.api.V2.ListNextTaskAssignments:output_type -> clarifai.api.MultiInputResponse
+	302, // 1035: clarifai.api.V2.PutTaskAssignments:output_type -> clarifai.api.MultiTaskAssignmentResponse
+	306, // 1036: clarifai.api.V2.ListInputsAddJobs:output_type -> clarifai.api.MultiInputsAddJobResponse
+	307, // 1037: clarifai.api.V2.GetInputsAddJob:output_type -> clarifai.api.SingleInputsAddJobResponse
+	307, // 1038: clarifai.api.V2.CancelInputsAddJob:output_type -> clarifai.api.SingleInputsAddJobResponse
+	313, // 1039: clarifai.api.V2.PostUploads:output_type -> clarifai.api.MultiUploadResponse
+	312, // 1040: clarifai.api.V2.PutUploadContentParts:output_type -> clarifai.api.SingleUploadResponse
+	312, // 1041: clarifai.api.V2.GetUpload:output_type -> clarifai.api.SingleUploadResponse
+	313, // 1042: clarifai.api.V2.ListUploads:output_type -> clarifai.api.MultiUploadResponse
+	461, // 1043: clarifai.api.V2.DeleteUploads:output_type -> clarifai.api.status.BaseResponse
+	306, // 1044: clarifai.api.V2.PostInputsDataSources:output_type -> clarifai.api.MultiInputsAddJobResponse
+	318, // 1045: clarifai.api.V2.GetInputsExtractionJob:output_type -> clarifai.api.SingleInputsExtractionJobResponse
+	319, // 1046: clarifai.api.V2.ListInputsExtractionJobs:output_type -> clarifai.api.MultiInputsExtractionJobResponse
+	319, // 1047: clarifai.api.V2.CancelInputsExtractionJobs:output_type -> clarifai.api.MultiInputsExtractionJobResponse
+	306, // 1048: clarifai.api.V2.PostInputsUploads:output_type -> clarifai.api.MultiInputsAddJobResponse
+	326, // 1049: clarifai.api.V2.GetRunner:output_type -> clarifai.api.SingleRunnerResponse
+	327, // 1050: clarifai.api.V2.ListRunners:output_type -> clarifai.api.MultiRunnerResponse
+	327, // 1051: clarifai.api.V2.PostRunners:output_type -> clarifai.api.MultiRunnerResponse
+	461, // 1052: clarifai.api.V2.DeleteRunners:output_type -> clarifai.api.status.BaseResponse
+	330, // 1053: clarifai.api.V2.ListRunnerItems:output_type -> clarifai.api.MultiRunnerItemResponse
+	333, // 1054: clarifai.api.V2.PostRunnerItemOutputs:output_type -> clarifai.api.MultiRunnerItemOutputResponse
+	330, // 1055: clarifai.api.V2.ProcessRunnerItems:output_type -> clarifai.api.MultiRunnerItemResponse
+	335, // 1056: clarifai.api.V2.PostModelVersionsTrainingTimeEstimate:output_type -> clarifai.api.MultiTrainingTimeEstimateResponse
+	337, // 1057: clarifai.api.V2.ListCloudProviders:output_type -> clarifai.api.MultiCloudProviderResponse
+	339, // 1058: clarifai.api.V2.ListCloudRegions:output_type -> clarifai.api.MultiCloudRegionResponse
+	341, // 1059: clarifai.api.V2.ListInstanceTypes:output_type -> clarifai.api.MultiInstanceTypeResponse
+	346, // 1060: clarifai.api.V2.GetComputeCluster:output_type -> clarifai.api.SingleComputeClusterResponse
+	347, // 1061: clarifai.api.V2.ListComputeClusters:output_type -> clarifai.api.MultiComputeClusterResponse
+	347, // 1062: clarifai.api.V2.PostComputeClusters:output_type -> clarifai.api.MultiComputeClusterResponse
+	461, // 1063: clarifai.api.V2.DeleteComputeClusters:output_type -> clarifai.api.status.BaseResponse
+	353, // 1064: clarifai.api.V2.GetNodepool:output_type -> clarifai.api.SingleNodepoolResponse
+	354, // 1065: clarifai.api.V2.ListNodepools:output_type -> clarifai.api.MultiNodepoolResponse
+	354, // 1066: clarifai.api.V2.PostNodepools:output_type -> clarifai.api.MultiNodepoolResponse
+	354, // 1067: clarifai.api.V2.PatchNodepools:output_type -> clarifai.api.MultiNodepoolResponse
+	461, // 1068: clarifai.api.V2.DeleteNodepools:output_type -> clarifai.api.status.BaseResponse
+	362, // 1069: clarifai.api.V2.GetDeployment:output_type -> clarifai.api.SingleDeploymentResponse
+	363, // 1070: clarifai.api.V2.ListDeployments:output_type -> clarifai.api.MultiDeploymentResponse
+	363, // 1071: clarifai.api.V2.PostDeployments:output_type -> clarifai.api.MultiDeploymentResponse
+	363, // 1072: clarifai.api.V2.PatchDeployments:output_type -> clarifai.api.MultiDeploymentResponse
+	461, // 1073: clarifai.api.V2.DeleteDeployments:output_type -> clarifai.api.status.BaseResponse
+	360, // 1074: clarifai.api.V2.PostAuditLogSearches:output_type -> clarifai.api.MultiAuditLogEntryResponse
+	365, // 1075: clarifai.api.V2.ListWorkflowEvaluationTemplates:output_type -> clarifai.api.MultiWorkflowEvaluationTemplateResponse
+	461, // 1076: clarifai.api.V2.PostLogEntries:output_type -> clarifai.api.status.BaseResponse
+	179, // 1077: clarifai.api.V2.ListLogEntries:output_type -> clarifai.api.MultiLogEntryResponse
+	179, // 1078: clarifai.api.V2.StreamLogEntries:output_type -> clarifai.api.MultiLogEntryResponse
+	461, // 1079: clarifai.api.V2.PostComputePlaneMetrics:output_type -> clarifai.api.status.BaseResponse
+	838, // [838:1080] is the sub-list for method output_type
+	596, // [596:838] is the sub-list for method input_type
+	596, // [596:596] is the sub-list for extension type_name
+	596, // [596:596] is the sub-list for extension extendee
+	0,   // [0:596] is the sub-list for field type_name
 }
 
 func init() { file_proto_clarifai_api_service_proto_init() }
@@ -35233,7 +35531,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[100].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListLogEntriesRequest); i {
+			switch v := v.(*PostComputePlaneMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35245,7 +35543,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[101].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetKeyRequest); i {
+			switch v := v.(*PostLogEntriesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35257,7 +35555,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[102].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListKeysRequest); i {
+			switch v := v.(*ListLogEntriesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35269,7 +35567,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[103].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListAppKeysRequest); i {
+			switch v := v.(*StreamLogEntriesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35281,7 +35579,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[104].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostKeysRequest); i {
+			switch v := v.(*GetKeyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35293,7 +35591,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[105].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteKeyRequest); i {
+			switch v := v.(*ListKeysRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35305,7 +35603,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[106].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchKeysRequest); i {
+			switch v := v.(*ListAppKeysRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35317,7 +35615,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[107].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleKeyResponse); i {
+			switch v := v.(*PostKeysRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35329,7 +35627,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[108].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiKeyResponse); i {
+			switch v := v.(*DeleteKeyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35341,7 +35639,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[109].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelRequest); i {
+			switch v := v.(*PatchKeysRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35353,7 +35651,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[110].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelsRequest); i {
+			switch v := v.(*SingleKeyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35365,7 +35663,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[111].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetResourceCountsRequest); i {
+			switch v := v.(*MultiKeyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35377,7 +35675,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[112].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetResourceCountsResponse); i {
+			switch v := v.(*GetModelRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35389,7 +35687,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[113].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelToolkitsRequest); i {
+			switch v := v.(*ListModelsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35401,7 +35699,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[114].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelCheckConsentsRequest); i {
+			switch v := v.(*GetResourceCountsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35413,7 +35711,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[115].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelUseCasesRequest); i {
+			switch v := v.(*GetResourceCountsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35425,7 +35723,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[116].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelLanguagesRequest); i {
+			switch v := v.(*PatchModelToolkitsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35437,7 +35735,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[117].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelToolkitResponse); i {
+			switch v := v.(*PatchModelCheckConsentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35449,7 +35747,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[118].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelCheckConsentResponse); i {
+			switch v := v.(*PatchModelUseCasesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35461,7 +35759,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[119].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelUseCaseResponse); i {
+			switch v := v.(*PatchModelLanguagesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35473,7 +35771,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[120].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelLanguageResponse); i {
+			switch v := v.(*MultiModelToolkitResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35485,7 +35783,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[121].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelsRequest); i {
+			switch v := v.(*MultiModelCheckConsentResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35497,7 +35795,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[122].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelsRequest); i {
+			switch v := v.(*MultiModelUseCaseResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35509,7 +35807,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[123].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*IdUpdateSource); i {
+			switch v := v.(*MultiModelLanguageResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35521,7 +35819,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[124].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelIdsRequest); i {
+			switch v := v.(*PostModelsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35533,7 +35831,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[125].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteModelRequest); i {
+			switch v := v.(*PatchModelsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35545,7 +35843,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[126].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteModelsRequest); i {
+			switch v := v.(*IdUpdateSource); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35557,7 +35855,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[127].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelsSearchesRequest); i {
+			switch v := v.(*PatchModelIdsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35569,7 +35867,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[128].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModelResponse); i {
+			switch v := v.(*DeleteModelRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35581,7 +35879,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[129].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelResponse); i {
+			switch v := v.(*DeleteModelsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35593,7 +35891,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[130].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModelVersionsRequest); i {
+			switch v := v.(*PostModelsSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35605,7 +35903,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[131].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelVersionRequest); i {
+			switch v := v.(*SingleModelResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35617,7 +35915,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[132].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelVersionsRequest); i {
+			switch v := v.(*MultiModelResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35629,7 +35927,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[133].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteModelVersionRequest); i {
+			switch v := v.(*PatchModelVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35641,7 +35939,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[134].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModelVersionResponse); i {
+			switch v := v.(*GetModelVersionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35653,7 +35951,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[135].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelVersionResponse); i {
+			switch v := v.(*ListModelVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35665,7 +35963,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[136].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsRequest); i {
+			switch v := v.(*DeleteModelVersionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35677,7 +35975,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[137].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsUploadRequest); i {
+			switch v := v.(*SingleModelVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35689,7 +35987,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[138].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsUploadResponse); i {
+			switch v := v.(*MultiModelVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35701,7 +35999,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[139].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsUploadConfig); i {
+			switch v := v.(*PostModelVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35713,7 +36011,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[140].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PutModelVersionExportsRequest); i {
+			switch v := v.(*PostModelVersionsUploadRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35725,7 +36023,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[141].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelVersionExportRequest); i {
+			switch v := v.(*PostModelVersionsUploadResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35737,7 +36035,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[142].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModelVersionExportResponse); i {
+			switch v := v.(*PostModelVersionsUploadConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35749,7 +36047,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[143].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostWorkflowVersionsUnPublishRequest); i {
+			switch v := v.(*PutModelVersionExportsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35761,7 +36059,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[144].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostWorkflowVersionsPublishRequest); i {
+			switch v := v.(*GetModelVersionExportRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35773,7 +36071,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[145].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WorkflowVersionPublishRequest); i {
+			switch v := v.(*SingleModelVersionExportResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35785,7 +36083,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[146].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WorkflowVersionUnPublishRequest); i {
+			switch v := v.(*PostWorkflowVersionsUnPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35797,7 +36095,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[147].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ModelVersionPublishRequest); i {
+			switch v := v.(*PostWorkflowVersionsPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35809,7 +36107,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[148].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsPublishRequest); i {
+			switch v := v.(*WorkflowVersionPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35821,7 +36119,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[149].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ModelVersionUnpublishRequest); i {
+			switch v := v.(*WorkflowVersionUnPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35833,7 +36131,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[150].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsUnPublishRequest); i {
+			switch v := v.(*ModelVersionPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35845,7 +36143,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[151].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostEvaluationsRequest); i {
+			switch v := v.(*PostModelVersionsPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35857,7 +36155,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[152].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListEvaluationsRequest); i {
+			switch v := v.(*ModelVersionUnpublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35869,7 +36167,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[153].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetEvaluationRequest); i {
+			switch v := v.(*PostModelVersionsUnPublishRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35881,7 +36179,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[154].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionEvaluationsRequest); i {
+			switch v := v.(*PostEvaluationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35893,7 +36191,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[155].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelVersionEvaluationsRequest); i {
+			switch v := v.(*ListEvaluationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35905,7 +36203,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[156].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelVersionEvaluationRequest); i {
+			switch v := v.(*GetEvaluationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35917,7 +36215,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[157].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleEvalMetricsResponse); i {
+			switch v := v.(*PostModelVersionEvaluationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35929,7 +36227,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[158].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiEvalMetricsResponse); i {
+			switch v := v.(*ListModelVersionEvaluationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35941,7 +36239,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[159].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionMetricsRequest); i {
+			switch v := v.(*GetModelVersionEvaluationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35953,7 +36251,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[160].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelVersionMetricsRequest); i {
+			switch v := v.(*SingleEvalMetricsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35965,7 +36263,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[161].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelTypeRequest); i {
+			switch v := v.(*MultiEvalMetricsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35977,7 +36275,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[162].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelTypesRequest); i {
+			switch v := v.(*PostModelVersionMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -35989,7 +36287,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[163].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListOpenSourceLicensesRequest); i {
+			switch v := v.(*GetModelVersionMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36001,7 +36299,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[164].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListOpenSourceLicensesResponse); i {
+			switch v := v.(*GetModelTypeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36013,7 +36311,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[165].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModelTypeResponse); i {
+			switch v := v.(*ListModelTypesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36025,7 +36323,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[166].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelTypeResponse); i {
+			switch v := v.(*ListOpenSourceLicensesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36037,7 +36335,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[167].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModelVersionInputExampleRequest); i {
+			switch v := v.(*ListOpenSourceLicensesResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36049,7 +36347,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[168].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelVersionInputExamplesRequest); i {
+			switch v := v.(*SingleModelTypeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36061,7 +36359,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[169].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModelVersionInputExampleResponse); i {
+			switch v := v.(*MultiModelTypeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36073,7 +36371,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[170].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelVersionInputExampleResponse); i {
+			switch v := v.(*GetModelVersionInputExampleRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36085,7 +36383,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[171].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModelReferencesRequest); i {
+			switch v := v.(*ListModelVersionInputExamplesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36097,7 +36395,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[172].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModelReferenceResponse); i {
+			switch v := v.(*SingleModelVersionInputExampleResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36109,7 +36407,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[173].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiOutputResponse); i {
+			switch v := v.(*MultiModelVersionInputExampleResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36121,7 +36419,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[174].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiLogEntryResponse); i {
+			switch v := v.(*ListModelReferencesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36133,7 +36431,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[175].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListScopesRequest); i {
+			switch v := v.(*MultiModelReferenceResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36145,7 +36443,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[176].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MyScopesRequest); i {
+			switch v := v.(*MultiOutputResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36157,7 +36455,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[177].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MyScopesUserRequest); i {
+			switch v := v.(*MultiLogEntryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36169,7 +36467,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[178].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MyScopesRootRequest); i {
+			switch v := v.(*ListScopesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36181,7 +36479,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[179].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiScopeDepsResponse); i {
+			switch v := v.(*MyScopesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36193,7 +36491,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[180].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiScopeResponse); i {
+			switch v := v.(*MyScopesUserRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36205,7 +36503,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[181].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiScopeUserResponse); i {
+			switch v := v.(*MyScopesRootRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36217,7 +36515,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[182].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiScopeRootResponse); i {
+			switch v := v.(*MultiScopeDepsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36229,7 +36527,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[183].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetSearchRequest); i {
+			switch v := v.(*MultiScopeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36241,7 +36539,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[184].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSearchesRequest); i {
+			switch v := v.(*MultiScopeUserResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36253,7 +36551,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[185].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostSearchesRequest); i {
+			switch v := v.(*MultiScopeRootResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36265,7 +36563,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[186].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchInputsSearchesRequest); i {
+			switch v := v.(*GetSearchRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36277,7 +36575,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[187].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchAnnotationsSearchesRequest); i {
+			switch v := v.(*ListSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36289,7 +36587,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[188].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchSearchesRequest); i {
+			switch v := v.(*PostSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36301,7 +36599,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[189].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostSearchesByIDRequest); i {
+			switch v := v.(*PatchInputsSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36313,7 +36611,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[190].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteSearchRequest); i {
+			switch v := v.(*PatchAnnotationsSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36325,7 +36623,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[191].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostAnnotationsSearchesRequest); i {
+			switch v := v.(*PatchSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36337,7 +36635,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[192].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteAnnotationSearchMetricsRequest); i {
+			switch v := v.(*PostSearchesByIDRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36349,7 +36647,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[193].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostInputsSearchesRequest); i {
+			switch v := v.(*DeleteSearchRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36361,7 +36659,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[194].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleSearchResponse); i {
+			switch v := v.(*PostAnnotationsSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36373,7 +36671,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[195].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiSearchResponse); i {
+			switch v := v.(*DeleteAnnotationSearchMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36385,7 +36683,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[196].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostAnnotationSearchMetricsRequest); i {
+			switch v := v.(*PostInputsSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36397,7 +36695,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[197].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAnnotationSearchMetricsRequest); i {
+			switch v := v.(*SingleSearchResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36409,7 +36707,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[198].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListAnnotationSearchMetricsRequest); i {
+			switch v := v.(*MultiSearchResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36421,7 +36719,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[199].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiAnnotationSearchMetricsResponse); i {
+			switch v := v.(*PostAnnotationSearchMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36433,7 +36731,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[200].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListAnnotationFiltersRequest); i {
+			switch v := v.(*GetAnnotationSearchMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36445,7 +36743,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[201].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAnnotationFilterRequest); i {
+			switch v := v.(*ListAnnotationSearchMetricsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36457,7 +36755,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[202].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostAnnotationFiltersRequest); i {
+			switch v := v.(*MultiAnnotationSearchMetricsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36469,7 +36767,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[203].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchAnnotationFiltersRequest); i {
+			switch v := v.(*ListAnnotationFiltersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36481,7 +36779,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[204].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteAnnotationFiltersRequest); i {
+			switch v := v.(*GetAnnotationFilterRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36493,7 +36791,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[205].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiAnnotationFilterResponse); i {
+			switch v := v.(*PostAnnotationFiltersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36505,7 +36803,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[206].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleAnnotationFilterResponse); i {
+			switch v := v.(*PatchAnnotationFiltersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36517,7 +36815,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[207].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserRequest); i {
+			switch v := v.(*DeleteAnnotationFiltersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36529,7 +36827,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[208].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleUserResponse); i {
+			switch v := v.(*MultiAnnotationFilterResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36541,7 +36839,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[209].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostValidatePasswordRequest); i {
+			switch v := v.(*SingleAnnotationFilterResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36553,7 +36851,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[210].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SinglePasswordValidationResponse); i {
+			switch v := v.(*GetUserRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36565,7 +36863,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[211].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetWorkflowRequest); i {
+			switch v := v.(*SingleUserResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36577,7 +36875,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[212].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListWorkflowsRequest); i {
+			switch v := v.(*PostValidatePasswordRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36589,7 +36887,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[213].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostWorkflowsRequest); i {
+			switch v := v.(*SinglePasswordValidationResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36601,7 +36899,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[214].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchWorkflowsRequest); i {
+			switch v := v.(*GetWorkflowRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36613,7 +36911,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[215].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchWorkflowIdsRequest); i {
+			switch v := v.(*ListWorkflowsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36625,7 +36923,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[216].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteWorkflowRequest); i {
+			switch v := v.(*PostWorkflowsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36637,7 +36935,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[217].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteWorkflowsRequest); i {
+			switch v := v.(*PatchWorkflowsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36649,7 +36947,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[218].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleWorkflowResponse); i {
+			switch v := v.(*PatchWorkflowIdsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36661,7 +36959,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[219].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiWorkflowResponse); i {
+			switch v := v.(*DeleteWorkflowRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36673,7 +36971,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[220].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostWorkflowResultsRequest); i {
+			switch v := v.(*DeleteWorkflowsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36685,7 +36983,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[221].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostWorkflowResultsResponse); i {
+			switch v := v.(*SingleWorkflowResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36697,7 +36995,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[222].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListWorkflowVersionsRequest); i {
+			switch v := v.(*MultiWorkflowResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36709,7 +37007,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[223].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetWorkflowVersionRequest); i {
+			switch v := v.(*PostWorkflowResultsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36721,7 +37019,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[224].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteWorkflowVersionsRequest); i {
+			switch v := v.(*PostWorkflowResultsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36733,7 +37031,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[225].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchWorkflowVersionsRequest); i {
+			switch v := v.(*ListWorkflowVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36745,7 +37043,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[226].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiWorkflowVersionResponse); i {
+			switch v := v.(*GetWorkflowVersionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36757,7 +37055,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[227].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleWorkflowVersionResponse); i {
+			switch v := v.(*DeleteWorkflowVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36769,7 +37067,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[228].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostAppDuplicationsRequest); i {
+			switch v := v.(*PatchWorkflowVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36781,7 +37079,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[229].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAppDuplicationRequest); i {
+			switch v := v.(*MultiWorkflowVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36793,7 +37091,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[230].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListAppDuplicationsRequest); i {
+			switch v := v.(*SingleWorkflowVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36805,7 +37103,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[231].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiAppDuplicationsResponse); i {
+			switch v := v.(*PostAppDuplicationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36817,7 +37115,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[232].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleAppDuplicationResponse); i {
+			switch v := v.(*GetAppDuplicationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36829,7 +37127,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[233].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostTasksRequest); i {
+			switch v := v.(*ListAppDuplicationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36841,7 +37139,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[234].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetTaskRequest); i {
+			switch v := v.(*MultiAppDuplicationsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36853,7 +37151,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[235].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListTasksRequest); i {
+			switch v := v.(*SingleAppDuplicationResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36865,7 +37163,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[236].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchTasksRequest); i {
+			switch v := v.(*PostTasksRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36877,7 +37175,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[237].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteTasksRequest); i {
+			switch v := v.(*GetTaskRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36889,7 +37187,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[238].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiTaskResponse); i {
+			switch v := v.(*ListTasksRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36901,7 +37199,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[239].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleTaskResponse); i {
+			switch v := v.(*PatchTasksRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36913,7 +37211,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[240].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetTaskCountRequest); i {
+			switch v := v.(*DeleteTasksRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36925,7 +37223,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[241].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleTaskCountResponse); i {
+			switch v := v.(*MultiTaskResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36937,7 +37235,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[242].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostLabelOrdersRequest); i {
+			switch v := v.(*SingleTaskResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36949,7 +37247,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[243].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetLabelOrderRequest); i {
+			switch v := v.(*GetTaskCountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36961,7 +37259,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[244].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListLabelOrdersRequest); i {
+			switch v := v.(*SingleTaskCountResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36973,7 +37271,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[245].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchLabelOrdersRequest); i {
+			switch v := v.(*PostLabelOrdersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36985,7 +37283,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[246].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteLabelOrdersRequest); i {
+			switch v := v.(*GetLabelOrderRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -36997,7 +37295,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[247].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiLabelOrderResponse); i {
+			switch v := v.(*ListLabelOrdersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37009,7 +37307,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[248].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleLabelOrderResponse); i {
+			switch v := v.(*PatchLabelOrdersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37021,7 +37319,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[249].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostCollectorsRequest); i {
+			switch v := v.(*DeleteLabelOrdersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37033,7 +37331,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[250].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchCollectorsRequest); i {
+			switch v := v.(*MultiLabelOrderResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37045,7 +37343,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[251].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteCollectorsRequest); i {
+			switch v := v.(*SingleLabelOrderResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37057,7 +37355,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[252].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetCollectorRequest); i {
+			switch v := v.(*PostCollectorsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37069,7 +37367,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[253].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListCollectorsRequest); i {
+			switch v := v.(*PatchCollectorsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37081,7 +37379,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[254].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiCollectorResponse); i {
+			switch v := v.(*DeleteCollectorsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37093,7 +37391,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[255].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleCollectorResponse); i {
+			switch v := v.(*GetCollectorRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37105,7 +37403,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[256].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostStatValuesRequest); i {
+			switch v := v.(*ListCollectorsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37117,7 +37415,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[257].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiStatValueResponse); i {
+			switch v := v.(*MultiCollectorResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37129,7 +37427,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[258].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostStatValuesAggregateRequest); i {
+			switch v := v.(*SingleCollectorResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37141,7 +37439,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[259].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiStatValueAggregateResponse); i {
+			switch v := v.(*PostStatValuesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37153,7 +37451,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[260].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModuleRequest); i {
+			switch v := v.(*MultiStatValueResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37165,7 +37463,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[261].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModulesRequest); i {
+			switch v := v.(*PostStatValuesAggregateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37177,7 +37475,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[262].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModulesRequest); i {
+			switch v := v.(*MultiStatValueAggregateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37189,7 +37487,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[263].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModulesRequest); i {
+			switch v := v.(*GetModuleRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37201,7 +37499,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[264].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteModulesRequest); i {
+			switch v := v.(*ListModulesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37213,7 +37511,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[265].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModuleResponse); i {
+			switch v := v.(*PostModulesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37225,7 +37523,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[266].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModuleResponse); i {
+			switch v := v.(*PatchModulesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37237,7 +37535,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[267].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModuleVersionRequest); i {
+			switch v := v.(*DeleteModulesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37249,7 +37547,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[268].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListModuleVersionsRequest); i {
+			switch v := v.(*SingleModuleResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37261,7 +37559,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[269].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModuleVersionsRequest); i {
+			switch v := v.(*MultiModuleResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37273,7 +37571,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[270].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchModuleVersionsRequest); i {
+			switch v := v.(*GetModuleVersionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37285,7 +37583,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[271].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteModuleVersionsRequest); i {
+			switch v := v.(*ListModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37297,7 +37595,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[272].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetModuleVersionUsageCountRequest); i {
+			switch v := v.(*PostModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37309,7 +37607,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[273].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModuleVersionResponse); i {
+			switch v := v.(*PatchModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37321,7 +37619,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[274].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiModuleVersionResponse); i {
+			switch v := v.(*DeleteModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37333,7 +37631,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[275].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleModuleVersionUsageCountResponse); i {
+			switch v := v.(*GetModuleVersionUsageCountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37345,7 +37643,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[276].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetInstalledModuleVersionRequest); i {
+			switch v := v.(*SingleModuleVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37357,7 +37655,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[277].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListInstalledModuleVersionsRequest); i {
+			switch v := v.(*MultiModuleVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37369,7 +37667,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[278].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostInstalledModuleVersionsRequest); i {
+			switch v := v.(*SingleModuleVersionUsageCountResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37381,7 +37679,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[279].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostInstalledModuleVersionsKeyRequest); i {
+			switch v := v.(*GetInstalledModuleVersionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37393,7 +37691,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[280].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteInstalledModuleVersionsRequest); i {
+			switch v := v.(*ListInstalledModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37405,7 +37703,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[281].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleInstalledModuleVersionResponse); i {
+			switch v := v.(*PostInstalledModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37417,7 +37715,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[282].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiInstalledModuleVersionResponse); i {
+			switch v := v.(*PostInstalledModuleVersionsKeyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37429,7 +37727,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[283].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListNextTaskAssignmentsRequest); i {
+			switch v := v.(*DeleteInstalledModuleVersionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37441,7 +37739,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[284].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostBulkOperationsRequest); i {
+			switch v := v.(*SingleInstalledModuleVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37453,7 +37751,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[285].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListBulkOperationsRequest); i {
+			switch v := v.(*MultiInstalledModuleVersionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37465,7 +37763,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[286].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetBulkOperationRequest); i {
+			switch v := v.(*ListNextTaskAssignmentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37477,7 +37775,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[287].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CancelBulkOperationRequest); i {
+			switch v := v.(*PostBulkOperationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37489,7 +37787,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[288].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteBulkOperationRequest); i {
+			switch v := v.(*ListBulkOperationsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37501,7 +37799,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[289].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleBulkOperationsResponse); i {
+			switch v := v.(*GetBulkOperationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37513,7 +37811,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[290].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiBulkOperationsResponse); i {
+			switch v := v.(*CancelBulkOperationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37525,7 +37823,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[291].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PutTaskAssignmentsRequest); i {
+			switch v := v.(*DeleteBulkOperationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37537,7 +37835,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[292].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LabelSubmitConfig); i {
+			switch v := v.(*SingleBulkOperationsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37549,7 +37847,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[293].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReviewStartConfig); i {
+			switch v := v.(*MultiBulkOperationsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37561,7 +37859,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[294].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReviewApproveConfig); i {
+			switch v := v.(*PutTaskAssignmentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37573,7 +37871,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[295].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReviewRequestChangesConfig); i {
+			switch v := v.(*LabelSubmitConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37585,7 +37883,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[296].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReviewRejectConfig); i {
+			switch v := v.(*ReviewStartConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37597,7 +37895,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[297].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiTaskAssignmentResponse); i {
+			switch v := v.(*ReviewApproveConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37609,7 +37907,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[298].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListInputsAddJobsRequest); i {
+			switch v := v.(*ReviewRequestChangesConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37621,7 +37919,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[299].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetInputsAddJobRequest); i {
+			switch v := v.(*ReviewRejectConfig); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37633,7 +37931,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[300].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CancelInputsAddJobRequest); i {
+			switch v := v.(*MultiTaskAssignmentResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37645,7 +37943,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[301].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiInputsAddJobResponse); i {
+			switch v := v.(*ListInputsAddJobsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37657,7 +37955,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[302].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleInputsAddJobResponse); i {
+			switch v := v.(*GetInputsAddJobRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37669,7 +37967,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[303].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostUploadsRequest); i {
+			switch v := v.(*CancelInputsAddJobRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37681,7 +37979,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[304].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteUploadsRequest); i {
+			switch v := v.(*MultiInputsAddJobResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37693,7 +37991,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[305].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUploadsRequest); i {
+			switch v := v.(*SingleInputsAddJobResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37705,7 +38003,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[306].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUploadRequest); i {
+			switch v := v.(*PostUploadsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37717,7 +38015,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[307].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleUploadResponse); i {
+			switch v := v.(*DeleteUploadsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37729,7 +38027,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[308].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiUploadResponse); i {
+			switch v := v.(*ListUploadsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37741,7 +38039,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[309].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PutUploadContentPartsRequest); i {
+			switch v := v.(*GetUploadRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37753,7 +38051,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[310].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostInputsDataSourcesRequest); i {
+			switch v := v.(*SingleUploadResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37765,7 +38063,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[311].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetInputsExtractionJobRequest); i {
+			switch v := v.(*MultiUploadResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37777,7 +38075,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[312].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListInputsExtractionJobsRequest); i {
+			switch v := v.(*PutUploadContentPartsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37789,7 +38087,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[313].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleInputsExtractionJobResponse); i {
+			switch v := v.(*PostInputsDataSourcesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37801,7 +38099,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[314].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiInputsExtractionJobResponse); i {
+			switch v := v.(*GetInputsExtractionJobRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37813,7 +38111,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[315].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CancelInputsExtractionJobsRequest); i {
+			switch v := v.(*ListInputsExtractionJobsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37825,7 +38123,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[316].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostInputsUploadsRequest); i {
+			switch v := v.(*SingleInputsExtractionJobResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37837,7 +38135,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[317].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetRunnerRequest); i {
+			switch v := v.(*MultiInputsExtractionJobResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37849,7 +38147,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[318].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRunnersRequest); i {
+			switch v := v.(*CancelInputsExtractionJobsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37861,7 +38159,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[319].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostRunnersRequest); i {
+			switch v := v.(*PostInputsUploadsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37873,7 +38171,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[320].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRunnersRequest); i {
+			switch v := v.(*GetRunnerRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37885,7 +38183,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[321].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleRunnerResponse); i {
+			switch v := v.(*ListRunnersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37897,7 +38195,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[322].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiRunnerResponse); i {
+			switch v := v.(*PostRunnersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37909,7 +38207,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[323].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRunnerItemsRequest); i {
+			switch v := v.(*DeleteRunnersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37921,7 +38219,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[324].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostRunnerItemOutputsRequest); i {
+			switch v := v.(*SingleRunnerResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37933,7 +38231,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[325].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiRunnerItemResponse); i {
+			switch v := v.(*MultiRunnerResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37945,7 +38243,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[326].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RunnerItem); i {
+			switch v := v.(*ListRunnerItemsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37957,7 +38255,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[327].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RunnerItemOutput); i {
+			switch v := v.(*PostRunnerItemOutputsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37969,7 +38267,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[328].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiRunnerItemOutputResponse); i {
+			switch v := v.(*MultiRunnerItemResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37981,7 +38279,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[329].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostModelVersionsTrainingTimeEstimateRequest); i {
+			switch v := v.(*RunnerItem); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -37993,7 +38291,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[330].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiTrainingTimeEstimateResponse); i {
+			switch v := v.(*RunnerItemOutput); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38005,7 +38303,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[331].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListCloudProvidersRequest); i {
+			switch v := v.(*MultiRunnerItemOutputResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38017,7 +38315,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[332].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiCloudProviderResponse); i {
+			switch v := v.(*PostModelVersionsTrainingTimeEstimateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38029,7 +38327,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[333].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListCloudRegionsRequest); i {
+			switch v := v.(*MultiTrainingTimeEstimateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38041,7 +38339,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[334].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiCloudRegionResponse); i {
+			switch v := v.(*ListCloudProvidersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38053,7 +38351,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[335].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListInstanceTypesRequest); i {
+			switch v := v.(*MultiCloudProviderResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38065,7 +38363,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[336].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiInstanceTypeResponse); i {
+			switch v := v.(*ListCloudRegionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38077,7 +38375,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[337].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetComputeClusterRequest); i {
+			switch v := v.(*MultiCloudRegionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38089,7 +38387,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[338].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListComputeClustersRequest); i {
+			switch v := v.(*ListInstanceTypesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38101,7 +38399,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[339].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostComputeClustersRequest); i {
+			switch v := v.(*MultiInstanceTypeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38113,7 +38411,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[340].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteComputeClustersRequest); i {
+			switch v := v.(*GetComputeClusterRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38125,7 +38423,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[341].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleComputeClusterResponse); i {
+			switch v := v.(*ListComputeClustersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38137,7 +38435,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[342].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiComputeClusterResponse); i {
+			switch v := v.(*PostComputeClustersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38149,7 +38447,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[343].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetNodepoolRequest); i {
+			switch v := v.(*DeleteComputeClustersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38161,7 +38459,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[344].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListNodepoolsRequest); i {
+			switch v := v.(*SingleComputeClusterResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38173,7 +38471,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[345].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostNodepoolsRequest); i {
+			switch v := v.(*MultiComputeClusterResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38185,7 +38483,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[346].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchNodepoolsRequest); i {
+			switch v := v.(*GetNodepoolRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38197,7 +38495,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[347].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteNodepoolsRequest); i {
+			switch v := v.(*ListNodepoolsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38209,7 +38507,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[348].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleNodepoolResponse); i {
+			switch v := v.(*PostNodepoolsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38221,7 +38519,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[349].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiNodepoolResponse); i {
+			switch v := v.(*PatchNodepoolsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38233,7 +38531,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[350].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDeploymentRequest); i {
+			switch v := v.(*DeleteNodepoolsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38245,7 +38543,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[351].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListDeploymentsRequest); i {
+			switch v := v.(*SingleNodepoolResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38257,7 +38555,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[352].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostDeploymentsRequest); i {
+			switch v := v.(*MultiNodepoolResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38269,7 +38567,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[353].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteDeploymentsRequest); i {
+			switch v := v.(*GetDeploymentRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38281,7 +38579,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[354].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PostAuditLogSearchesRequest); i {
+			switch v := v.(*ListDeploymentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38293,7 +38591,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[355].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiAuditLogEntryResponse); i {
+			switch v := v.(*PostDeploymentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38305,7 +38603,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[356].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PatchDeploymentsRequest); i {
+			switch v := v.(*DeleteDeploymentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38317,7 +38615,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[357].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SingleDeploymentResponse); i {
+			switch v := v.(*PostAuditLogSearchesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38329,7 +38627,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[358].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MultiDeploymentResponse); i {
+			switch v := v.(*MultiAuditLogEntryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38341,7 +38639,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[359].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListWorkflowEvaluationTemplatesRequest); i {
+			switch v := v.(*PatchDeploymentsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -38353,6 +38651,42 @@ func file_proto_clarifai_api_service_proto_init() {
 			}
 		}
 		file_proto_clarifai_api_service_proto_msgTypes[360].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SingleDeploymentResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_clarifai_api_service_proto_msgTypes[361].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MultiDeploymentResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_clarifai_api_service_proto_msgTypes[362].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListWorkflowEvaluationTemplatesRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_clarifai_api_service_proto_msgTypes[363].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MultiWorkflowEvaluationTemplateResponse); i {
 			case 0:
 				return &v.state
@@ -38378,24 +38712,24 @@ func file_proto_clarifai_api_service_proto_init() {
 		(*ListDatasetsRequest_SortByModifiedAt)(nil),
 		(*ListDatasetsRequest_SortById)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[110].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[113].OneofWrappers = []interface{}{
 		(*ListModelsRequest_SortByName)(nil),
 		(*ListModelsRequest_SortByNumInputs)(nil),
 		(*ListModelsRequest_SortByModifiedAt)(nil),
 		(*ListModelsRequest_SortByCreatedAt)(nil),
 		(*ListModelsRequest_SortByStarCount)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[132].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[135].OneofWrappers = []interface{}{
 		(*ListModelVersionsRequest_SortByStatusCode)(nil),
 		(*ListModelVersionsRequest_SortByNumInputs)(nil),
 		(*ListModelVersionsRequest_SortByDescription)(nil),
 		(*ListModelVersionsRequest_SortByCreatedAt)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[137].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[140].OneofWrappers = []interface{}{
 		(*PostModelVersionsUploadRequest_UploadConfig)(nil),
 		(*PostModelVersionsUploadRequest_ContentPart)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[152].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[155].OneofWrappers = []interface{}{
 		(*ListEvaluationsRequest_SortByAppId)(nil),
 		(*ListEvaluationsRequest_SortByRocAuc)(nil),
 		(*ListEvaluationsRequest_SortByF1)(nil),
@@ -38407,29 +38741,29 @@ func file_proto_clarifai_api_service_proto_init() {
 		(*ListEvaluationsRequest_SortByEvalDatasetId)(nil),
 		(*ListEvaluationsRequest_SortByTrainDatasetId)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[212].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[215].OneofWrappers = []interface{}{
 		(*ListWorkflowsRequest_SortById)(nil),
 		(*ListWorkflowsRequest_SortByModifiedAt)(nil),
 		(*ListWorkflowsRequest_SortByCreatedAt)(nil),
 		(*ListWorkflowsRequest_SortByStarCount)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[261].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[264].OneofWrappers = []interface{}{
 		(*ListModulesRequest_SortByCreatedAt)(nil),
 		(*ListModulesRequest_SortByStarCount)(nil),
 		(*ListModulesRequest_SortByModifiedAt)(nil),
 		(*ListModulesRequest_SortById)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[291].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[294].OneofWrappers = []interface{}{
 		(*PutTaskAssignmentsRequest_LabelSubmitConfig)(nil),
 		(*PutTaskAssignmentsRequest_ReviewStartConfig)(nil),
 		(*PutTaskAssignmentsRequest_ReviewApproveConfig)(nil),
 		(*PutTaskAssignmentsRequest_ReviewRequestChangesConfig)(nil),
 		(*PutTaskAssignmentsRequest_ReviewRejectConfig)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[326].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[329].OneofWrappers = []interface{}{
 		(*RunnerItem_PostModelOutputsRequest)(nil),
 	}
-	file_proto_clarifai_api_service_proto_msgTypes[327].OneofWrappers = []interface{}{
+	file_proto_clarifai_api_service_proto_msgTypes[330].OneofWrappers = []interface{}{
 		(*RunnerItemOutput_MultiOutputResponse)(nil),
 	}
 	type x struct{}
@@ -38438,7 +38772,7 @@ func file_proto_clarifai_api_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_clarifai_api_service_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   362,
+			NumMessages:   365,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

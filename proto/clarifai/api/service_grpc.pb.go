@@ -258,7 +258,10 @@ const (
 	V2_DeleteDeployments_FullMethodName                     = "/clarifai.api.V2/DeleteDeployments"
 	V2_PostAuditLogSearches_FullMethodName                  = "/clarifai.api.V2/PostAuditLogSearches"
 	V2_ListWorkflowEvaluationTemplates_FullMethodName       = "/clarifai.api.V2/ListWorkflowEvaluationTemplates"
+	V2_PostLogEntries_FullMethodName                        = "/clarifai.api.V2/PostLogEntries"
 	V2_ListLogEntries_FullMethodName                        = "/clarifai.api.V2/ListLogEntries"
+	V2_StreamLogEntries_FullMethodName                      = "/clarifai.api.V2/StreamLogEntries"
+	V2_PostComputePlaneMetrics_FullMethodName               = "/clarifai.api.V2/PostComputePlaneMetrics"
 )
 
 // V2Client is the client API for V2 service.
@@ -848,7 +851,10 @@ type V2Client interface {
 	DeleteDeployments(ctx context.Context, in *DeleteDeploymentsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	PostAuditLogSearches(ctx context.Context, in *PostAuditLogSearchesRequest, opts ...grpc.CallOption) (*MultiAuditLogEntryResponse, error)
 	ListWorkflowEvaluationTemplates(ctx context.Context, in *ListWorkflowEvaluationTemplatesRequest, opts ...grpc.CallOption) (*MultiWorkflowEvaluationTemplateResponse, error)
+	PostLogEntries(ctx context.Context, in *PostLogEntriesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error)
+	StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error)
+	PostComputePlaneMetrics(ctx context.Context, in *PostComputePlaneMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 }
 
 type v2Client struct {
@@ -3330,10 +3336,63 @@ func (c *v2Client) ListWorkflowEvaluationTemplates(ctx context.Context, in *List
 	return out, nil
 }
 
+func (c *v2Client) PostLogEntries(ctx context.Context, in *PostLogEntriesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_PostLogEntries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiLogEntryResponse)
 	err := c.cc.Invoke(ctx, V2_ListLogEntries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[4], V2_StreamLogEntries_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2StreamLogEntriesClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V2_StreamLogEntriesClient interface {
+	Recv() (*MultiLogEntryResponse, error)
+	grpc.ClientStream
+}
+
+type v2StreamLogEntriesClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2StreamLogEntriesClient) Recv() (*MultiLogEntryResponse, error) {
+	m := new(MultiLogEntryResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *v2Client) PostComputePlaneMetrics(ctx context.Context, in *PostComputePlaneMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_PostComputePlaneMetrics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3927,7 +3986,10 @@ type V2Server interface {
 	DeleteDeployments(context.Context, *DeleteDeploymentsRequest) (*status.BaseResponse, error)
 	PostAuditLogSearches(context.Context, *PostAuditLogSearchesRequest) (*MultiAuditLogEntryResponse, error)
 	ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error)
+	PostLogEntries(context.Context, *PostLogEntriesRequest) (*status.BaseResponse, error)
 	ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error)
+	StreamLogEntries(*StreamLogEntriesRequest, V2_StreamLogEntriesServer) error
+	PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4649,8 +4711,17 @@ func (UnimplementedV2Server) PostAuditLogSearches(context.Context, *PostAuditLog
 func (UnimplementedV2Server) ListWorkflowEvaluationTemplates(context.Context, *ListWorkflowEvaluationTemplatesRequest) (*MultiWorkflowEvaluationTemplateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowEvaluationTemplates not implemented")
 }
+func (UnimplementedV2Server) PostLogEntries(context.Context, *PostLogEntriesRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostLogEntries not implemented")
+}
 func (UnimplementedV2Server) ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListLogEntries not implemented")
+}
+func (UnimplementedV2Server) StreamLogEntries(*StreamLogEntriesRequest, V2_StreamLogEntriesServer) error {
+	return status1.Errorf(codes.Unimplemented, "method StreamLogEntries not implemented")
+}
+func (UnimplementedV2Server) PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostComputePlaneMetrics not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -8976,6 +9047,24 @@ func _V2_ListWorkflowEvaluationTemplates_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostLogEntries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLogEntriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostLogEntries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostLogEntries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostLogEntries(ctx, req.(*PostLogEntriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_ListLogEntries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListLogEntriesRequest)
 	if err := dec(in); err != nil {
@@ -8990,6 +9079,45 @@ func _V2_ListLogEntries_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListLogEntries(ctx, req.(*ListLogEntriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_StreamLogEntries_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamLogEntriesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(V2Server).StreamLogEntries(m, &v2StreamLogEntriesServer{ServerStream: stream})
+}
+
+type V2_StreamLogEntriesServer interface {
+	Send(*MultiLogEntryResponse) error
+	grpc.ServerStream
+}
+
+type v2StreamLogEntriesServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2StreamLogEntriesServer) Send(m *MultiLogEntryResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _V2_PostComputePlaneMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostComputePlaneMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostComputePlaneMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostComputePlaneMetrics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostComputePlaneMetrics(ctx, req.(*PostComputePlaneMetricsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -9938,8 +10066,16 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_ListWorkflowEvaluationTemplates_Handler,
 		},
 		{
+			MethodName: "PostLogEntries",
+			Handler:    _V2_PostLogEntries_Handler,
+		},
+		{
 			MethodName: "ListLogEntries",
 			Handler:    _V2_ListLogEntries_Handler,
+		},
+		{
+			MethodName: "PostComputePlaneMetrics",
+			Handler:    _V2_PostComputePlaneMetrics_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -9965,6 +10101,11 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:       _V2_ProcessRunnerItems_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "StreamLogEntries",
+			Handler:       _V2_StreamLogEntries_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "proto/clarifai/api/service.proto",
