@@ -105,6 +105,7 @@ const (
 	V2_PatchModelVersions_FullMethodName                    = "/clarifai.api.V2/PatchModelVersions"
 	V2_DeleteModelVersion_FullMethodName                    = "/clarifai.api.V2/DeleteModelVersion"
 	V2_PostModelVersionsUpload_FullMethodName               = "/clarifai.api.V2/PostModelVersionsUpload"
+	V2_PostModelMigration_FullMethodName                    = "/clarifai.api.V2/PostModelMigration"
 	V2_PutModelVersionExports_FullMethodName                = "/clarifai.api.V2/PutModelVersionExports"
 	V2_GetModelVersionExport_FullMethodName                 = "/clarifai.api.V2/GetModelVersionExport"
 	V2_GetModelVersionMetrics_FullMethodName                = "/clarifai.api.V2/GetModelVersionMetrics"
@@ -262,6 +263,10 @@ const (
 	V2_ListLogEntries_FullMethodName                        = "/clarifai.api.V2/ListLogEntries"
 	V2_StreamLogEntries_FullMethodName                      = "/clarifai.api.V2/StreamLogEntries"
 	V2_PostComputePlaneMetrics_FullMethodName               = "/clarifai.api.V2/PostComputePlaneMetrics"
+	V2_PostWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/PostWorkflowVersionEvaluations"
+	V2_GetWorkflowVersionEvaluation_FullMethodName          = "/clarifai.api.V2/GetWorkflowVersionEvaluation"
+	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
+	V2_PatchWorkflowVersionEvaluations_FullMethodName       = "/clarifai.api.V2/PatchWorkflowVersionEvaluations"
 )
 
 // V2Client is the client API for V2 service.
@@ -481,6 +486,8 @@ type V2Client interface {
 	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the model_version_id specified for your model_version.
 	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the model_bytes.
 	PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error)
+	// Kicks off conversion from the old Triton model format to the new Docker model format.
+	PostModelMigration(ctx context.Context, in *PostModelMigrationRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// Export a model
 	PutModelVersionExports(ctx context.Context, in *PutModelVersionExportsRequest, opts ...grpc.CallOption) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
@@ -855,6 +862,10 @@ type V2Client interface {
 	ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error)
 	StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error)
 	PostComputePlaneMetrics(ctx context.Context, in *PostComputePlaneMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	PostWorkflowVersionEvaluations(ctx context.Context, in *PostWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
+	GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error)
+	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
+	PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 }
 
 type v2Client struct {
@@ -1781,6 +1792,16 @@ func (x *v2PostModelVersionsUploadClient) Recv() (*PostModelVersionsUploadRespon
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *v2Client) PostModelMigration(ctx context.Context, in *PostModelMigrationRequest, opts ...grpc.CallOption) (*SingleModelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleModelResponse)
+	err := c.cc.Invoke(ctx, V2_PostModelMigration_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *v2Client) PutModelVersionExports(ctx context.Context, in *PutModelVersionExportsRequest, opts ...grpc.CallOption) (*SingleModelVersionExportResponse, error) {
@@ -3399,6 +3420,46 @@ func (c *v2Client) PostComputePlaneMetrics(ctx context.Context, in *PostComputeP
 	return out, nil
 }
 
+func (c *v2Client) PostWorkflowVersionEvaluations(ctx context.Context, in *PostWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiWorkflowVersionEvaluationResponse)
+	err := c.cc.Invoke(ctx, V2_PostWorkflowVersionEvaluations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleWorkflowVersionEvaluationResponse)
+	err := c.cc.Invoke(ctx, V2_GetWorkflowVersionEvaluation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiWorkflowVersionEvaluationResponse)
+	err := c.cc.Invoke(ctx, V2_ListWorkflowVersionEvaluations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiWorkflowVersionEvaluationResponse)
+	err := c.cc.Invoke(ctx, V2_PatchWorkflowVersionEvaluations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -3616,6 +3677,8 @@ type V2Server interface {
 	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the model_version_id specified for your model_version.
 	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the model_bytes.
 	PostModelVersionsUpload(V2_PostModelVersionsUploadServer) error
+	// Kicks off conversion from the old Triton model format to the new Docker model format.
+	PostModelMigration(context.Context, *PostModelMigrationRequest) (*SingleModelResponse, error)
 	// Export a model
 	PutModelVersionExports(context.Context, *PutModelVersionExportsRequest) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
@@ -3990,6 +4053,10 @@ type V2Server interface {
 	ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error)
 	StreamLogEntries(*StreamLogEntriesRequest, V2_StreamLogEntriesServer) error
 	PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error)
+	PostWorkflowVersionEvaluations(context.Context, *PostWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
+	GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error)
+	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
+	PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4251,6 +4318,9 @@ func (UnimplementedV2Server) DeleteModelVersion(context.Context, *DeleteModelVer
 }
 func (UnimplementedV2Server) PostModelVersionsUpload(V2_PostModelVersionsUploadServer) error {
 	return status1.Errorf(codes.Unimplemented, "method PostModelVersionsUpload not implemented")
+}
+func (UnimplementedV2Server) PostModelMigration(context.Context, *PostModelMigrationRequest) (*SingleModelResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostModelMigration not implemented")
 }
 func (UnimplementedV2Server) PutModelVersionExports(context.Context, *PutModelVersionExportsRequest) (*SingleModelVersionExportResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PutModelVersionExports not implemented")
@@ -4722,6 +4792,18 @@ func (UnimplementedV2Server) StreamLogEntries(*StreamLogEntriesRequest, V2_Strea
 }
 func (UnimplementedV2Server) PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostComputePlaneMetrics not implemented")
+}
+func (UnimplementedV2Server) PostWorkflowVersionEvaluations(context.Context, *PostWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowVersionEvaluations not implemented")
+}
+func (UnimplementedV2Server) GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetWorkflowVersionEvaluation not implemented")
+}
+func (UnimplementedV2Server) ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowVersionEvaluations not implemented")
+}
+func (UnimplementedV2Server) PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersionEvaluations not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -6283,6 +6365,24 @@ func (x *v2PostModelVersionsUploadServer) Recv() (*PostModelVersionsUploadReques
 		return nil, err
 	}
 	return m, nil
+}
+
+func _V2_PostModelMigration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostModelMigrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostModelMigration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostModelMigration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostModelMigration(ctx, req.(*PostModelMigrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _V2_PutModelVersionExports_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -9122,6 +9222,78 @@ func _V2_PostComputePlaneMetrics_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostWorkflowVersionEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostWorkflowVersionEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostWorkflowVersionEvaluations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostWorkflowVersionEvaluations(ctx, req.(*PostWorkflowVersionEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetWorkflowVersionEvaluation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkflowVersionEvaluationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetWorkflowVersionEvaluation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetWorkflowVersionEvaluation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetWorkflowVersionEvaluation(ctx, req.(*GetWorkflowVersionEvaluationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowVersionEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWorkflowVersionEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListWorkflowVersionEvaluations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWorkflowVersionEvaluations(ctx, req.(*ListWorkflowVersionEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchWorkflowVersionEvaluationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchWorkflowVersionEvaluations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchWorkflowVersionEvaluations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchWorkflowVersionEvaluations(ctx, req.(*PatchWorkflowVersionEvaluationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -9456,6 +9628,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteModelVersion",
 			Handler:    _V2_DeleteModelVersion_Handler,
+		},
+		{
+			MethodName: "PostModelMigration",
+			Handler:    _V2_PostModelMigration_Handler,
 		},
 		{
 			MethodName: "PutModelVersionExports",
@@ -10076,6 +10252,22 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostComputePlaneMetrics",
 			Handler:    _V2_PostComputePlaneMetrics_Handler,
+		},
+		{
+			MethodName: "PostWorkflowVersionEvaluations",
+			Handler:    _V2_PostWorkflowVersionEvaluations_Handler,
+		},
+		{
+			MethodName: "GetWorkflowVersionEvaluation",
+			Handler:    _V2_GetWorkflowVersionEvaluation_Handler,
+		},
+		{
+			MethodName: "ListWorkflowVersionEvaluations",
+			Handler:    _V2_ListWorkflowVersionEvaluations_Handler,
+		},
+		{
+			MethodName: "PatchWorkflowVersionEvaluations",
+			Handler:    _V2_PatchWorkflowVersionEvaluations_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
