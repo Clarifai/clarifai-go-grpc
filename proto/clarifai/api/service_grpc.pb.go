@@ -235,6 +235,7 @@ const (
 	V2_GetRunner_FullMethodName                             = "/clarifai.api.V2/GetRunner"
 	V2_ListRunners_FullMethodName                           = "/clarifai.api.V2/ListRunners"
 	V2_PostRunners_FullMethodName                           = "/clarifai.api.V2/PostRunners"
+	V2_PatchRunners_FullMethodName                          = "/clarifai.api.V2/PatchRunners"
 	V2_DeleteRunners_FullMethodName                         = "/clarifai.api.V2/DeleteRunners"
 	V2_ListRunnerItems_FullMethodName                       = "/clarifai.api.V2/ListRunnerItems"
 	V2_PostRunnerItemOutputs_FullMethodName                 = "/clarifai.api.V2/PostRunnerItemOutputs"
@@ -813,6 +814,8 @@ type V2Client interface {
 	ListRunners(ctx context.Context, in *ListRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
 	// Add a runners to a user.
 	PostRunners(ctx context.Context, in *PostRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
+	// Patch runners of a user.
+	PatchRunners(ctx context.Context, in *PatchRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error)
 	// Delete multiple runners in one request.
 	DeleteRunners(ctx context.Context, in *DeleteRunnersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List items for the remote runner to work on.
@@ -3095,6 +3098,16 @@ func (c *v2Client) PostRunners(ctx context.Context, in *PostRunnersRequest, opts
 	return out, nil
 }
 
+func (c *v2Client) PatchRunners(ctx context.Context, in *PatchRunnersRequest, opts ...grpc.CallOption) (*MultiRunnerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiRunnerResponse)
+	err := c.cc.Invoke(ctx, V2_PatchRunners_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) DeleteRunners(ctx context.Context, in *DeleteRunnersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(status.BaseResponse)
@@ -4004,6 +4017,8 @@ type V2Server interface {
 	ListRunners(context.Context, *ListRunnersRequest) (*MultiRunnerResponse, error)
 	// Add a runners to a user.
 	PostRunners(context.Context, *PostRunnersRequest) (*MultiRunnerResponse, error)
+	// Patch runners of a user.
+	PatchRunners(context.Context, *PatchRunnersRequest) (*MultiRunnerResponse, error)
 	// Delete multiple runners in one request.
 	DeleteRunners(context.Context, *DeleteRunnersRequest) (*status.BaseResponse, error)
 	// List items for the remote runner to work on.
@@ -4708,6 +4723,9 @@ func (UnimplementedV2Server) ListRunners(context.Context, *ListRunnersRequest) (
 }
 func (UnimplementedV2Server) PostRunners(context.Context, *PostRunnersRequest) (*MultiRunnerResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostRunners not implemented")
+}
+func (UnimplementedV2Server) PatchRunners(context.Context, *PatchRunnersRequest) (*MultiRunnerResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchRunners not implemented")
 }
 func (UnimplementedV2Server) DeleteRunners(context.Context, *DeleteRunnersRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteRunners not implemented")
@@ -8707,6 +8725,24 @@ func _V2_PostRunners_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchRunners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchRunnersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchRunners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchRunners_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchRunners(ctx, req.(*PatchRunnersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_DeleteRunners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRunnersRequest)
 	if err := dec(in); err != nil {
@@ -10148,6 +10184,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostRunners",
 			Handler:    _V2_PostRunners_Handler,
+		},
+		{
+			MethodName: "PatchRunners",
+			Handler:    _V2_PatchRunners_Handler,
 		},
 		{
 			MethodName: "DeleteRunners",
