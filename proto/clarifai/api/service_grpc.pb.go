@@ -373,7 +373,7 @@ type V2Client interface {
 	// Get predicted outputs from the model.
 	PostModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (*MultiOutputResponse, error)
 	// TODO(zeiler): will need to
-	// Single request but streaming resopnses.
+	// Single request but streaming responses.
 	GenerateModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (V2_GenerateModelOutputsClient, error)
 	// Stream of requests and stream of responses
 	StreamModelOutputs(ctx context.Context, opts ...grpc.CallOption) (V2_StreamModelOutputsClient, error)
@@ -3576,7 +3576,7 @@ type V2Server interface {
 	// Get predicted outputs from the model.
 	PostModelOutputs(context.Context, *PostModelOutputsRequest) (*MultiOutputResponse, error)
 	// TODO(zeiler): will need to
-	// Single request but streaming resopnses.
+	// Single request but streaming responses.
 	GenerateModelOutputs(*PostModelOutputsRequest, V2_GenerateModelOutputsServer) error
 	// Stream of requests and stream of responses
 	StreamModelOutputs(V2_StreamModelOutputsServer) error
