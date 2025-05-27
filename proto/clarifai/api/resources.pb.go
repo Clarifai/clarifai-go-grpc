@@ -22186,10 +22186,12 @@ type ComputeInfo struct {
 	// Amount of CPUs to use as a minimum. This follows kubernetes notation like: "1", "100m", "4.5", etc.
 	// See https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/
 	// For runners, this is the minimum amount of CPU requested for the runner pod.
+	// Optional. If unspecified, a small default is used.
 	CpuRequests string `protobuf:"bytes,7,opt,name=cpu_requests,json=cpuRequests,proto3" json:"cpu_requests,omitempty"`
 	// Amount of CPU memory to use as a minimum. This follows kubernetes notation like:
 	// 1Ki, 1500Mi, 3Gi, 4Ti, etc.
 	// For runners, this is the minimum amount of CPU memory requested for the runner pod.
+	// Optional. If unspecified, a small default is used.
 	CpuMemoryRequests string `protobuf:"bytes,8,opt,name=cpu_memory_requests,json=cpuMemoryRequests,proto3" json:"cpu_memory_requests,omitempty"`
 	// Amount of GPU/TPUs to use.
 	NumAccelerators uint32 `protobuf:"varint,3,opt,name=num_accelerators,json=numAccelerators,proto3" json:"num_accelerators,omitempty"`
