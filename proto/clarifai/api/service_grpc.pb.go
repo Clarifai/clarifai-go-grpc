@@ -268,8 +268,6 @@ const (
 	V2_GetWorkflowVersionEvaluation_FullMethodName          = "/clarifai.api.V2/GetWorkflowVersionEvaluation"
 	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
 	V2_PatchWorkflowVersionEvaluations_FullMethodName       = "/clarifai.api.V2/PatchWorkflowVersionEvaluations"
-	V2_GetMCP_FullMethodName                                = "/clarifai.api.V2/GetMCP"
-	V2_PostMCP_FullMethodName                               = "/clarifai.api.V2/PostMCP"
 )
 
 // V2Client is the client API for V2 service.
@@ -871,12 +869,6 @@ type V2Client interface {
 	GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
-	// The GET request to start an MCP session.
-	// Currently not supported in our API.
-	GetMCP(ctx context.Context, in *MCPRequest, opts ...grpc.CallOption) (*SingleMCPResponse, error)
-	// The POST request for interacting with MCP tools.
-	// This is the simplest form of MCP tool calls with stateless execution for now.
-	PostMCP(ctx context.Context, in *MCPRequest, opts ...grpc.CallOption) (*SingleMCPResponse, error)
 }
 
 type v2Client struct {
@@ -3481,26 +3473,6 @@ func (c *v2Client) PatchWorkflowVersionEvaluations(ctx context.Context, in *Patc
 	return out, nil
 }
 
-func (c *v2Client) GetMCP(ctx context.Context, in *MCPRequest, opts ...grpc.CallOption) (*SingleMCPResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleMCPResponse)
-	err := c.cc.Invoke(ctx, V2_GetMCP_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostMCP(ctx context.Context, in *MCPRequest, opts ...grpc.CallOption) (*SingleMCPResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleMCPResponse)
-	err := c.cc.Invoke(ctx, V2_PostMCP_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -4100,12 +4072,6 @@ type V2Server interface {
 	GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
-	// The GET request to start an MCP session.
-	// Currently not supported in our API.
-	GetMCP(context.Context, *MCPRequest) (*SingleMCPResponse, error)
-	// The POST request for interacting with MCP tools.
-	// This is the simplest form of MCP tool calls with stateless execution for now.
-	PostMCP(context.Context, *MCPRequest) (*SingleMCPResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4856,12 +4822,6 @@ func (UnimplementedV2Server) ListWorkflowVersionEvaluations(context.Context, *Li
 }
 func (UnimplementedV2Server) PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersionEvaluations not implemented")
-}
-func (UnimplementedV2Server) GetMCP(context.Context, *MCPRequest) (*SingleMCPResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetMCP not implemented")
-}
-func (UnimplementedV2Server) PostMCP(context.Context, *MCPRequest) (*SingleMCPResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostMCP not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -9370,42 +9330,6 @@ func _V2_PatchWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_GetMCP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MCPRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetMCP(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetMCP_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetMCP(ctx, req.(*MCPRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostMCP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MCPRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostMCP(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostMCP_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostMCP(ctx, req.(*MCPRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -10384,14 +10308,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PatchWorkflowVersionEvaluations",
 			Handler:    _V2_PatchWorkflowVersionEvaluations_Handler,
-		},
-		{
-			MethodName: "GetMCP",
-			Handler:    _V2_GetMCP_Handler,
-		},
-		{
-			MethodName: "PostMCP",
-			Handler:    _V2_PostMCP_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
