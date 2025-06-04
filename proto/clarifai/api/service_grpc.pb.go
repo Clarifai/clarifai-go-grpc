@@ -268,6 +268,12 @@ const (
 	V2_GetWorkflowVersionEvaluation_FullMethodName          = "/clarifai.api.V2/GetWorkflowVersionEvaluation"
 	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
 	V2_PatchWorkflowVersionEvaluations_FullMethodName       = "/clarifai.api.V2/PatchWorkflowVersionEvaluations"
+	V2_PostPipelineSteps_FullMethodName                     = "/clarifai.api.V2/PostPipelineSteps"
+	V2_GetPipelineStep_FullMethodName                       = "/clarifai.api.V2/GetPipelineStep"
+	V2_ListPipelineSteps_FullMethodName                     = "/clarifai.api.V2/ListPipelineSteps"
+	V2_PostPipelineStepVersionsUpload_FullMethodName        = "/clarifai.api.V2/PostPipelineStepVersionsUpload"
+	V2_ListPipelineStepVersions_FullMethodName              = "/clarifai.api.V2/ListPipelineStepVersions"
+	V2_GetPipelineStepVersion_FullMethodName                = "/clarifai.api.V2/GetPipelineStepVersion"
 )
 
 // V2Client is the client API for V2 service.
@@ -869,6 +875,17 @@ type V2Client interface {
 	GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
+	PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
+	GetPipelineStep(ctx context.Context, in *GetPipelineStepRequest, opts ...grpc.CallOption) (*SinglePipelineStepResponse, error)
+	ListPipelineSteps(ctx context.Context, in *ListPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the pipeline_step_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the pipeline_step_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the pipeline_step_version_id specified for your pipeline_step_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the pipeline_step_bytes.
+	PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error)
+	ListPipelineStepVersions(ctx context.Context, in *ListPipelineStepVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineStepVersionResponse, error)
+	GetPipelineStepVersion(ctx context.Context, in *GetPipelineStepVersionRequest, opts ...grpc.CallOption) (*SinglePipelineStepVersionResponse, error)
 }
 
 type v2Client struct {
@@ -3473,6 +3490,88 @@ func (c *v2Client) PatchWorkflowVersionEvaluations(ctx context.Context, in *Patc
 	return out, nil
 }
 
+func (c *v2Client) PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineStepResponse)
+	err := c.cc.Invoke(ctx, V2_PostPipelineSteps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetPipelineStep(ctx context.Context, in *GetPipelineStepRequest, opts ...grpc.CallOption) (*SinglePipelineStepResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SinglePipelineStepResponse)
+	err := c.cc.Invoke(ctx, V2_GetPipelineStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPipelineSteps(ctx context.Context, in *ListPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineStepResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineSteps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[5], V2_PostPipelineStepVersionsUpload_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2PostPipelineStepVersionsUploadClient{ClientStream: stream}
+	return x, nil
+}
+
+type V2_PostPipelineStepVersionsUploadClient interface {
+	Send(*PostPipelineStepVersionsUploadRequest) error
+	Recv() (*PostPipelineStepVersionsUploadResponse, error)
+	grpc.ClientStream
+}
+
+type v2PostPipelineStepVersionsUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2PostPipelineStepVersionsUploadClient) Send(m *PostPipelineStepVersionsUploadRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *v2PostPipelineStepVersionsUploadClient) Recv() (*PostPipelineStepVersionsUploadResponse, error) {
+	m := new(PostPipelineStepVersionsUploadResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *v2Client) ListPipelineStepVersions(ctx context.Context, in *ListPipelineStepVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineStepVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineStepVersionResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineStepVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetPipelineStepVersion(ctx context.Context, in *GetPipelineStepVersionRequest, opts ...grpc.CallOption) (*SinglePipelineStepVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SinglePipelineStepVersionResponse)
+	err := c.cc.Invoke(ctx, V2_GetPipelineStepVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V2Server is the server API for V2 service.
 // All implementations must embed UnimplementedV2Server
 // for forward compatibility
@@ -4072,6 +4171,17 @@ type V2Server interface {
 	GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
+	PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error)
+	GetPipelineStep(context.Context, *GetPipelineStepRequest) (*SinglePipelineStepResponse, error)
+	ListPipelineSteps(context.Context, *ListPipelineStepsRequest) (*MultiPipelineStepResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the pipeline_step_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the pipeline_step_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the pipeline_step_version_id specified for your pipeline_step_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the pipeline_step_bytes.
+	PostPipelineStepVersionsUpload(V2_PostPipelineStepVersionsUploadServer) error
+	ListPipelineStepVersions(context.Context, *ListPipelineStepVersionsRequest) (*MultiPipelineStepVersionResponse, error)
+	GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4822,6 +4932,24 @@ func (UnimplementedV2Server) ListWorkflowVersionEvaluations(context.Context, *Li
 }
 func (UnimplementedV2Server) PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersionEvaluations not implemented")
+}
+func (UnimplementedV2Server) PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelineSteps not implemented")
+}
+func (UnimplementedV2Server) GetPipelineStep(context.Context, *GetPipelineStepRequest) (*SinglePipelineStepResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineStep not implemented")
+}
+func (UnimplementedV2Server) ListPipelineSteps(context.Context, *ListPipelineStepsRequest) (*MultiPipelineStepResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineSteps not implemented")
+}
+func (UnimplementedV2Server) PostPipelineStepVersionsUpload(V2_PostPipelineStepVersionsUploadServer) error {
+	return status1.Errorf(codes.Unimplemented, "method PostPipelineStepVersionsUpload not implemented")
+}
+func (UnimplementedV2Server) ListPipelineStepVersions(context.Context, *ListPipelineStepVersionsRequest) (*MultiPipelineStepVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineStepVersions not implemented")
+}
+func (UnimplementedV2Server) GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineStepVersion not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -9330,6 +9458,122 @@ func _V2_PatchWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostPipelineSteps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPipelineStepsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPipelineSteps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostPipelineSteps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPipelineSteps(ctx, req.(*PostPipelineStepsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetPipelineStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPipelineStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetPipelineStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetPipelineStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetPipelineStep(ctx, req.(*GetPipelineStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPipelineSteps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineStepsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineSteps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineSteps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineSteps(ctx, req.(*ListPipelineStepsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPipelineStepVersionsUpload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(V2Server).PostPipelineStepVersionsUpload(&v2PostPipelineStepVersionsUploadServer{ServerStream: stream})
+}
+
+type V2_PostPipelineStepVersionsUploadServer interface {
+	Send(*PostPipelineStepVersionsUploadResponse) error
+	Recv() (*PostPipelineStepVersionsUploadRequest, error)
+	grpc.ServerStream
+}
+
+type v2PostPipelineStepVersionsUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2PostPipelineStepVersionsUploadServer) Send(m *PostPipelineStepVersionsUploadResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *v2PostPipelineStepVersionsUploadServer) Recv() (*PostPipelineStepVersionsUploadRequest, error) {
+	m := new(PostPipelineStepVersionsUploadRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _V2_ListPipelineStepVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineStepVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineStepVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineStepVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineStepVersions(ctx, req.(*ListPipelineStepVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetPipelineStepVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPipelineStepVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetPipelineStepVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetPipelineStepVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetPipelineStepVersion(ctx, req.(*GetPipelineStepVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V2_ServiceDesc is the grpc.ServiceDesc for V2 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -10309,6 +10553,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "PatchWorkflowVersionEvaluations",
 			Handler:    _V2_PatchWorkflowVersionEvaluations_Handler,
 		},
+		{
+			MethodName: "PostPipelineSteps",
+			Handler:    _V2_PostPipelineSteps_Handler,
+		},
+		{
+			MethodName: "GetPipelineStep",
+			Handler:    _V2_GetPipelineStep_Handler,
+		},
+		{
+			MethodName: "ListPipelineSteps",
+			Handler:    _V2_ListPipelineSteps_Handler,
+		},
+		{
+			MethodName: "ListPipelineStepVersions",
+			Handler:    _V2_ListPipelineStepVersions_Handler,
+		},
+		{
+			MethodName: "GetPipelineStepVersion",
+			Handler:    _V2_GetPipelineStepVersion_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -10338,6 +10602,12 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "StreamLogEntries",
 			Handler:       _V2_StreamLogEntries_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "PostPipelineStepVersionsUpload",
+			Handler:       _V2_PostPipelineStepVersionsUpload_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "proto/clarifai/api/service.proto",
