@@ -232,6 +232,7 @@ const (
 	V2_ListInputsExtractionJobs_FullMethodName              = "/clarifai.api.V2/ListInputsExtractionJobs"
 	V2_CancelInputsExtractionJobs_FullMethodName            = "/clarifai.api.V2/CancelInputsExtractionJobs"
 	V2_PostInputsUploads_FullMethodName                     = "/clarifai.api.V2/PostInputsUploads"
+	V2_ListPipelineVersionRuns_FullMethodName               = "/clarifai.api.V2/ListPipelineVersionRuns"
 	V2_GetRunner_FullMethodName                             = "/clarifai.api.V2/GetRunner"
 	V2_ListRunners_FullMethodName                           = "/clarifai.api.V2/ListRunners"
 	V2_PostRunners_FullMethodName                           = "/clarifai.api.V2/PostRunners"
@@ -268,12 +269,30 @@ const (
 	V2_GetWorkflowVersionEvaluation_FullMethodName          = "/clarifai.api.V2/GetWorkflowVersionEvaluation"
 	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
 	V2_PatchWorkflowVersionEvaluations_FullMethodName       = "/clarifai.api.V2/PatchWorkflowVersionEvaluations"
+	V2_ListWorkflowVersionEvaluationData_FullMethodName     = "/clarifai.api.V2/ListWorkflowVersionEvaluationData"
+	V2_PostPipelines_FullMethodName                         = "/clarifai.api.V2/PostPipelines"
+	V2_GetPipeline_FullMethodName                           = "/clarifai.api.V2/GetPipeline"
+	V2_ListPipelines_FullMethodName                         = "/clarifai.api.V2/ListPipelines"
+	V2_PatchPipelines_FullMethodName                        = "/clarifai.api.V2/PatchPipelines"
+	V2_DeletePipelines_FullMethodName                       = "/clarifai.api.V2/DeletePipelines"
+	V2_GetPipelineVersion_FullMethodName                    = "/clarifai.api.V2/GetPipelineVersion"
+	V2_ListPipelineVersions_FullMethodName                  = "/clarifai.api.V2/ListPipelineVersions"
+	V2_PatchPipelineVersions_FullMethodName                 = "/clarifai.api.V2/PatchPipelineVersions"
+	V2_DeletePipelineVersions_FullMethodName                = "/clarifai.api.V2/DeletePipelineVersions"
+	V2_GetPipelineVersionRun_FullMethodName                 = "/clarifai.api.V2/GetPipelineVersionRun"
+	V2_PostPipelineVersionRuns_FullMethodName               = "/clarifai.api.V2/PostPipelineVersionRuns"
+	V2_PatchPipelineVersionRuns_FullMethodName              = "/clarifai.api.V2/PatchPipelineVersionRuns"
 	V2_PostPipelineSteps_FullMethodName                     = "/clarifai.api.V2/PostPipelineSteps"
 	V2_GetPipelineStep_FullMethodName                       = "/clarifai.api.V2/GetPipelineStep"
 	V2_ListPipelineSteps_FullMethodName                     = "/clarifai.api.V2/ListPipelineSteps"
 	V2_PostPipelineStepVersionsUpload_FullMethodName        = "/clarifai.api.V2/PostPipelineStepVersionsUpload"
 	V2_ListPipelineStepVersions_FullMethodName              = "/clarifai.api.V2/ListPipelineStepVersions"
 	V2_GetPipelineStepVersion_FullMethodName                = "/clarifai.api.V2/GetPipelineStepVersion"
+	V2_GetSecret_FullMethodName                             = "/clarifai.api.V2/GetSecret"
+	V2_ListSecrets_FullMethodName                           = "/clarifai.api.V2/ListSecrets"
+	V2_PostSecrets_FullMethodName                           = "/clarifai.api.V2/PostSecrets"
+	V2_PatchSecrets_FullMethodName                          = "/clarifai.api.V2/PatchSecrets"
+	V2_DeleteSecrets_FullMethodName                         = "/clarifai.api.V2/DeleteSecrets"
 )
 
 // V2Client is the client API for V2 service.
@@ -813,6 +832,8 @@ type V2Client interface {
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	// See also GetInputsAddJob and then GetInputsExtractionJob
 	PostInputsUploads(ctx context.Context, in *PostInputsUploadsRequest, opts ...grpc.CallOption) (*MultiInputsAddJobResponse, error)
+	// putting above the Get Nodepool endpoint to make it appear above the other one
+	ListPipelineVersionRuns(ctx context.Context, in *ListPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
 	// Get a specific runner.
 	// TODO(zeiler): runner_id is a UUID so can list globally as well.
 	GetRunner(ctx context.Context, in *GetRunnerRequest, opts ...grpc.CallOption) (*SingleRunnerResponse, error)
@@ -875,6 +896,19 @@ type V2Client interface {
 	GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
+	ListWorkflowVersionEvaluationData(ctx context.Context, in *ListWorkflowVersionEvaluationDataRequest, opts ...grpc.CallOption) (*MultiListWorkflowVersionEvaluationDataResponse, error)
+	PostPipelines(ctx context.Context, in *PostPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
+	GetPipeline(ctx context.Context, in *GetPipelineRequest, opts ...grpc.CallOption) (*SinglePipelineResponse, error)
+	ListPipelines(ctx context.Context, in *ListPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
+	PatchPipelines(ctx context.Context, in *PatchPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
+	DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
+	GetPipelineVersion(ctx context.Context, in *GetPipelineVersionRequest, opts ...grpc.CallOption) (*SinglePipelineVersionResponse, error)
+	ListPipelineVersions(ctx context.Context, in *ListPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
+	PatchPipelineVersions(ctx context.Context, in *PatchPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
+	DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
+	GetPipelineVersionRun(ctx context.Context, in *GetPipelineVersionRunRequest, opts ...grpc.CallOption) (*SinglePipelineVersionRunResponse, error)
+	PostPipelineVersionRuns(ctx context.Context, in *PostPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
+	PatchPipelineVersionRuns(ctx context.Context, in *PatchPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
 	PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
 	GetPipelineStep(ctx context.Context, in *GetPipelineStepRequest, opts ...grpc.CallOption) (*SinglePipelineStepResponse, error)
 	ListPipelineSteps(ctx context.Context, in *ListPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
@@ -886,6 +920,11 @@ type V2Client interface {
 	PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error)
 	ListPipelineStepVersions(ctx context.Context, in *ListPipelineStepVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineStepVersionResponse, error)
 	GetPipelineStepVersion(ctx context.Context, in *GetPipelineStepVersionRequest, opts ...grpc.CallOption) (*SinglePipelineStepVersionResponse, error)
+	GetSecret(ctx context.Context, in *GetSecretRequest, opts ...grpc.CallOption) (*SingleSecretResponse, error)
+	ListSecrets(ctx context.Context, in *ListSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
+	PostSecrets(ctx context.Context, in *PostSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
+	PatchSecrets(ctx context.Context, in *PatchSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
+	DeleteSecrets(ctx context.Context, in *DeleteSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
 }
 
 type v2Client struct {
@@ -3085,6 +3124,16 @@ func (c *v2Client) PostInputsUploads(ctx context.Context, in *PostInputsUploadsR
 	return out, nil
 }
 
+func (c *v2Client) ListPipelineVersionRuns(ctx context.Context, in *ListPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionRunResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineVersionRuns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetRunner(ctx context.Context, in *GetRunnerRequest, opts ...grpc.CallOption) (*SingleRunnerResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleRunnerResponse)
@@ -3490,6 +3539,136 @@ func (c *v2Client) PatchWorkflowVersionEvaluations(ctx context.Context, in *Patc
 	return out, nil
 }
 
+func (c *v2Client) ListWorkflowVersionEvaluationData(ctx context.Context, in *ListWorkflowVersionEvaluationDataRequest, opts ...grpc.CallOption) (*MultiListWorkflowVersionEvaluationDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiListWorkflowVersionEvaluationDataResponse)
+	err := c.cc.Invoke(ctx, V2_ListWorkflowVersionEvaluationData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPipelines(ctx context.Context, in *PostPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineResponse)
+	err := c.cc.Invoke(ctx, V2_PostPipelines_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetPipeline(ctx context.Context, in *GetPipelineRequest, opts ...grpc.CallOption) (*SinglePipelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SinglePipelineResponse)
+	err := c.cc.Invoke(ctx, V2_GetPipeline_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPipelines(ctx context.Context, in *ListPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelines_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchPipelines(ctx context.Context, in *PatchPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineResponse)
+	err := c.cc.Invoke(ctx, V2_PatchPipelines_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineResponse)
+	err := c.cc.Invoke(ctx, V2_DeletePipelines_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetPipelineVersion(ctx context.Context, in *GetPipelineVersionRequest, opts ...grpc.CallOption) (*SinglePipelineVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SinglePipelineVersionResponse)
+	err := c.cc.Invoke(ctx, V2_GetPipelineVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPipelineVersions(ctx context.Context, in *ListPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchPipelineVersions(ctx context.Context, in *PatchPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionResponse)
+	err := c.cc.Invoke(ctx, V2_PatchPipelineVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionResponse)
+	err := c.cc.Invoke(ctx, V2_DeletePipelineVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetPipelineVersionRun(ctx context.Context, in *GetPipelineVersionRunRequest, opts ...grpc.CallOption) (*SinglePipelineVersionRunResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SinglePipelineVersionRunResponse)
+	err := c.cc.Invoke(ctx, V2_GetPipelineVersionRun_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPipelineVersionRuns(ctx context.Context, in *PostPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionRunResponse)
+	err := c.cc.Invoke(ctx, V2_PostPipelineVersionRuns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchPipelineVersionRuns(ctx context.Context, in *PatchPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionRunResponse)
+	err := c.cc.Invoke(ctx, V2_PatchPipelineVersionRuns_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiPipelineStepResponse)
@@ -3566,6 +3745,56 @@ func (c *v2Client) GetPipelineStepVersion(ctx context.Context, in *GetPipelineSt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SinglePipelineStepVersionResponse)
 	err := c.cc.Invoke(ctx, V2_GetPipelineStepVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetSecret(ctx context.Context, in *GetSecretRequest, opts ...grpc.CallOption) (*SingleSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleSecretResponse)
+	err := c.cc.Invoke(ctx, V2_GetSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListSecrets(ctx context.Context, in *ListSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiSecretResponse)
+	err := c.cc.Invoke(ctx, V2_ListSecrets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostSecrets(ctx context.Context, in *PostSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiSecretResponse)
+	err := c.cc.Invoke(ctx, V2_PostSecrets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchSecrets(ctx context.Context, in *PatchSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiSecretResponse)
+	err := c.cc.Invoke(ctx, V2_PatchSecrets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteSecrets(ctx context.Context, in *DeleteSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiSecretResponse)
+	err := c.cc.Invoke(ctx, V2_DeleteSecrets_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -4109,6 +4338,8 @@ type V2Server interface {
 	// Completing the upload will automatically begin unpacking the archive and uploading the contents as inputs.
 	// See also GetInputsAddJob and then GetInputsExtractionJob
 	PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error)
+	// putting above the Get Nodepool endpoint to make it appear above the other one
+	ListPipelineVersionRuns(context.Context, *ListPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
 	// Get a specific runner.
 	// TODO(zeiler): runner_id is a UUID so can list globally as well.
 	GetRunner(context.Context, *GetRunnerRequest) (*SingleRunnerResponse, error)
@@ -4171,6 +4402,19 @@ type V2Server interface {
 	GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
+	ListWorkflowVersionEvaluationData(context.Context, *ListWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error)
+	PostPipelines(context.Context, *PostPipelinesRequest) (*MultiPipelineResponse, error)
+	GetPipeline(context.Context, *GetPipelineRequest) (*SinglePipelineResponse, error)
+	ListPipelines(context.Context, *ListPipelinesRequest) (*MultiPipelineResponse, error)
+	PatchPipelines(context.Context, *PatchPipelinesRequest) (*MultiPipelineResponse, error)
+	DeletePipelines(context.Context, *DeletePipelinesRequest) (*MultiPipelineResponse, error)
+	GetPipelineVersion(context.Context, *GetPipelineVersionRequest) (*SinglePipelineVersionResponse, error)
+	ListPipelineVersions(context.Context, *ListPipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
+	PatchPipelineVersions(context.Context, *PatchPipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
+	DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
+	GetPipelineVersionRun(context.Context, *GetPipelineVersionRunRequest) (*SinglePipelineVersionRunResponse, error)
+	PostPipelineVersionRuns(context.Context, *PostPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
+	PatchPipelineVersionRuns(context.Context, *PatchPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
 	PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error)
 	GetPipelineStep(context.Context, *GetPipelineStepRequest) (*SinglePipelineStepResponse, error)
 	ListPipelineSteps(context.Context, *ListPipelineStepsRequest) (*MultiPipelineStepResponse, error)
@@ -4182,6 +4426,11 @@ type V2Server interface {
 	PostPipelineStepVersionsUpload(V2_PostPipelineStepVersionsUploadServer) error
 	ListPipelineStepVersions(context.Context, *ListPipelineStepVersionsRequest) (*MultiPipelineStepVersionResponse, error)
 	GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error)
+	GetSecret(context.Context, *GetSecretRequest) (*SingleSecretResponse, error)
+	ListSecrets(context.Context, *ListSecretsRequest) (*MultiSecretResponse, error)
+	PostSecrets(context.Context, *PostSecretsRequest) (*MultiSecretResponse, error)
+	PatchSecrets(context.Context, *PatchSecretsRequest) (*MultiSecretResponse, error)
+	DeleteSecrets(context.Context, *DeleteSecretsRequest) (*MultiSecretResponse, error)
 	mustEmbedUnimplementedV2Server()
 }
 
@@ -4825,6 +5074,9 @@ func (UnimplementedV2Server) CancelInputsExtractionJobs(context.Context, *Cancel
 func (UnimplementedV2Server) PostInputsUploads(context.Context, *PostInputsUploadsRequest) (*MultiInputsAddJobResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostInputsUploads not implemented")
 }
+func (UnimplementedV2Server) ListPipelineVersionRuns(context.Context, *ListPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineVersionRuns not implemented")
+}
 func (UnimplementedV2Server) GetRunner(context.Context, *GetRunnerRequest) (*SingleRunnerResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetRunner not implemented")
 }
@@ -4933,6 +5185,45 @@ func (UnimplementedV2Server) ListWorkflowVersionEvaluations(context.Context, *Li
 func (UnimplementedV2Server) PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchWorkflowVersionEvaluations not implemented")
 }
+func (UnimplementedV2Server) ListWorkflowVersionEvaluationData(context.Context, *ListWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowVersionEvaluationData not implemented")
+}
+func (UnimplementedV2Server) PostPipelines(context.Context, *PostPipelinesRequest) (*MultiPipelineResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelines not implemented")
+}
+func (UnimplementedV2Server) GetPipeline(context.Context, *GetPipelineRequest) (*SinglePipelineResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetPipeline not implemented")
+}
+func (UnimplementedV2Server) ListPipelines(context.Context, *ListPipelinesRequest) (*MultiPipelineResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelines not implemented")
+}
+func (UnimplementedV2Server) PatchPipelines(context.Context, *PatchPipelinesRequest) (*MultiPipelineResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelines not implemented")
+}
+func (UnimplementedV2Server) DeletePipelines(context.Context, *DeletePipelinesRequest) (*MultiPipelineResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelines not implemented")
+}
+func (UnimplementedV2Server) GetPipelineVersion(context.Context, *GetPipelineVersionRequest) (*SinglePipelineVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineVersion not implemented")
+}
+func (UnimplementedV2Server) ListPipelineVersions(context.Context, *ListPipelineVersionsRequest) (*MultiPipelineVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineVersions not implemented")
+}
+func (UnimplementedV2Server) PatchPipelineVersions(context.Context, *PatchPipelineVersionsRequest) (*MultiPipelineVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelineVersions not implemented")
+}
+func (UnimplementedV2Server) DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*MultiPipelineVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelineVersions not implemented")
+}
+func (UnimplementedV2Server) GetPipelineVersionRun(context.Context, *GetPipelineVersionRunRequest) (*SinglePipelineVersionRunResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineVersionRun not implemented")
+}
+func (UnimplementedV2Server) PostPipelineVersionRuns(context.Context, *PostPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelineVersionRuns not implemented")
+}
+func (UnimplementedV2Server) PatchPipelineVersionRuns(context.Context, *PatchPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelineVersionRuns not implemented")
+}
 func (UnimplementedV2Server) PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelineSteps not implemented")
 }
@@ -4950,6 +5241,21 @@ func (UnimplementedV2Server) ListPipelineStepVersions(context.Context, *ListPipe
 }
 func (UnimplementedV2Server) GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineStepVersion not implemented")
+}
+func (UnimplementedV2Server) GetSecret(context.Context, *GetSecretRequest) (*SingleSecretResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetSecret not implemented")
+}
+func (UnimplementedV2Server) ListSecrets(context.Context, *ListSecretsRequest) (*MultiSecretResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListSecrets not implemented")
+}
+func (UnimplementedV2Server) PostSecrets(context.Context, *PostSecretsRequest) (*MultiSecretResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostSecrets not implemented")
+}
+func (UnimplementedV2Server) PatchSecrets(context.Context, *PatchSecretsRequest) (*MultiSecretResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchSecrets not implemented")
+}
+func (UnimplementedV2Server) DeleteSecrets(context.Context, *DeleteSecretsRequest) (*MultiSecretResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteSecrets not implemented")
 }
 func (UnimplementedV2Server) mustEmbedUnimplementedV2Server() {}
 
@@ -8799,6 +9105,24 @@ func _V2_PostInputsUploads_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListPipelineVersionRuns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineVersionRunsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineVersionRuns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineVersionRuns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineVersionRuns(ctx, req.(*ListPipelineVersionRunsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetRunner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRunnerRequest)
 	if err := dec(in); err != nil {
@@ -9458,6 +9782,240 @@ func _V2_PatchWorkflowVersionEvaluations_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListWorkflowVersionEvaluationData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkflowVersionEvaluationDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListWorkflowVersionEvaluationData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListWorkflowVersionEvaluationData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListWorkflowVersionEvaluationData(ctx, req.(*ListWorkflowVersionEvaluationDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPipelines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPipelinesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPipelines(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostPipelines_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPipelines(ctx, req.(*PostPipelinesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetPipeline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPipelineRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetPipeline(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetPipeline_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetPipeline(ctx, req.(*GetPipelineRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPipelines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelinesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelines(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelines_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelines(ctx, req.(*ListPipelinesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchPipelines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchPipelinesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchPipelines(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchPipelines_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchPipelines(ctx, req.(*PatchPipelinesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeletePipelines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePipelinesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeletePipelines(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeletePipelines_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeletePipelines(ctx, req.(*DeletePipelinesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetPipelineVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPipelineVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetPipelineVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetPipelineVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetPipelineVersion(ctx, req.(*GetPipelineVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPipelineVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineVersions(ctx, req.(*ListPipelineVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchPipelineVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchPipelineVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchPipelineVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchPipelineVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchPipelineVersions(ctx, req.(*PatchPipelineVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeletePipelineVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePipelineVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeletePipelineVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeletePipelineVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeletePipelineVersions(ctx, req.(*DeletePipelineVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetPipelineVersionRun_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPipelineVersionRunRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetPipelineVersionRun(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetPipelineVersionRun_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetPipelineVersionRun(ctx, req.(*GetPipelineVersionRunRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPipelineVersionRuns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPipelineVersionRunsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPipelineVersionRuns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostPipelineVersionRuns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPipelineVersionRuns(ctx, req.(*PostPipelineVersionRunsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchPipelineVersionRuns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchPipelineVersionRunsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchPipelineVersionRuns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchPipelineVersionRuns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchPipelineVersionRuns(ctx, req.(*PatchPipelineVersionRunsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostPipelineSteps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostPipelineStepsRequest)
 	if err := dec(in); err != nil {
@@ -9570,6 +10128,96 @@ func _V2_GetPipelineStepVersion_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).GetPipelineStepVersion(ctx, req.(*GetPipelineStepVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetSecret(ctx, req.(*GetSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListSecrets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSecretsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListSecrets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListSecrets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListSecrets(ctx, req.(*ListSecretsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostSecrets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostSecretsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostSecrets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostSecrets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostSecrets(ctx, req.(*PostSecretsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchSecrets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchSecretsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchSecrets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchSecrets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchSecrets(ctx, req.(*PatchSecretsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteSecrets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSecretsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteSecrets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeleteSecrets_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteSecrets(ctx, req.(*DeleteSecretsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -10418,6 +11066,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostInputsUploads_Handler,
 		},
 		{
+			MethodName: "ListPipelineVersionRuns",
+			Handler:    _V2_ListPipelineVersionRuns_Handler,
+		},
+		{
 			MethodName: "GetRunner",
 			Handler:    _V2_GetRunner_Handler,
 		},
@@ -10554,6 +11206,58 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PatchWorkflowVersionEvaluations_Handler,
 		},
 		{
+			MethodName: "ListWorkflowVersionEvaluationData",
+			Handler:    _V2_ListWorkflowVersionEvaluationData_Handler,
+		},
+		{
+			MethodName: "PostPipelines",
+			Handler:    _V2_PostPipelines_Handler,
+		},
+		{
+			MethodName: "GetPipeline",
+			Handler:    _V2_GetPipeline_Handler,
+		},
+		{
+			MethodName: "ListPipelines",
+			Handler:    _V2_ListPipelines_Handler,
+		},
+		{
+			MethodName: "PatchPipelines",
+			Handler:    _V2_PatchPipelines_Handler,
+		},
+		{
+			MethodName: "DeletePipelines",
+			Handler:    _V2_DeletePipelines_Handler,
+		},
+		{
+			MethodName: "GetPipelineVersion",
+			Handler:    _V2_GetPipelineVersion_Handler,
+		},
+		{
+			MethodName: "ListPipelineVersions",
+			Handler:    _V2_ListPipelineVersions_Handler,
+		},
+		{
+			MethodName: "PatchPipelineVersions",
+			Handler:    _V2_PatchPipelineVersions_Handler,
+		},
+		{
+			MethodName: "DeletePipelineVersions",
+			Handler:    _V2_DeletePipelineVersions_Handler,
+		},
+		{
+			MethodName: "GetPipelineVersionRun",
+			Handler:    _V2_GetPipelineVersionRun_Handler,
+		},
+		{
+			MethodName: "PostPipelineVersionRuns",
+			Handler:    _V2_PostPipelineVersionRuns_Handler,
+		},
+		{
+			MethodName: "PatchPipelineVersionRuns",
+			Handler:    _V2_PatchPipelineVersionRuns_Handler,
+		},
+		{
 			MethodName: "PostPipelineSteps",
 			Handler:    _V2_PostPipelineSteps_Handler,
 		},
@@ -10572,6 +11276,26 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPipelineStepVersion",
 			Handler:    _V2_GetPipelineStepVersion_Handler,
+		},
+		{
+			MethodName: "GetSecret",
+			Handler:    _V2_GetSecret_Handler,
+		},
+		{
+			MethodName: "ListSecrets",
+			Handler:    _V2_ListSecrets_Handler,
+		},
+		{
+			MethodName: "PostSecrets",
+			Handler:    _V2_PostSecrets_Handler,
+		},
+		{
+			MethodName: "PatchSecrets",
+			Handler:    _V2_PatchSecrets_Handler,
+		},
+		{
+			MethodName: "DeleteSecrets",
+			Handler:    _V2_DeleteSecrets_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

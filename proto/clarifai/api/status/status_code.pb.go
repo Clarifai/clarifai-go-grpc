@@ -336,7 +336,7 @@ const (
 	StatusCode_SQS_OVERLIMIT              StatusCode = 41100
 	StatusCode_SQS_INVALID_RECEIPT_HANDLE StatusCode = 41101
 	StatusCode_SQS_UNKNOWN                StatusCode = 41102
-	// Search related errors 43xxxx
+	//Search related errors 43xxxx
 	StatusCode_SEARCH_INTERNAL_FAILURE           StatusCode = 43001
 	StatusCode_SEARCH_PROJECTION_FAILURE         StatusCode = 43002
 	StatusCode_SEARCH_PREDICTION_FAILURE         StatusCode = 43003
@@ -483,7 +483,7 @@ const (
 	StatusCode_JOB_CANCELLED        StatusCode = 64004
 	StatusCode_JOB_UNEXPECTED_ERROR StatusCode = 64006
 	StatusCode_JOB_CONFLICT         StatusCode = 64007
-	// auth issues
+	//auth issues
 	StatusCode_AUTH_MISSING_IDP_ASSOC StatusCode = 65000 // TODO: Knowledge graph related 80xxx
 	StatusCode_LIST_OBJECTS_FAILED    StatusCode = 66000
 	StatusCode_ARCHIVE_EXTRACT_FAILED StatusCode = 67000

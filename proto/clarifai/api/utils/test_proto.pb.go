@@ -30,7 +30,6 @@ type TestProto struct {
 	Value      float64 `protobuf:"fixed64,3,opt,name=value,proto3" json:"value,omitempty"`
 	ImageBytes []byte  `protobuf:"bytes,4,opt,name=image_bytes,json=imageBytes,proto3" json:"image_bytes,omitempty"`
 	// Types that are assignable to OneOfField:
-	//
 	//	*TestProto_StringOneof
 	//	*TestProto_BoolOneof
 	//	*TestProto_MessageOneof
