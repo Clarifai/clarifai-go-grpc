@@ -270,6 +270,7 @@ const (
 	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
 	V2_PatchWorkflowVersionEvaluations_FullMethodName       = "/clarifai.api.V2/PatchWorkflowVersionEvaluations"
 	V2_ListWorkflowVersionEvaluationData_FullMethodName     = "/clarifai.api.V2/ListWorkflowVersionEvaluationData"
+	V2_PostWorkflowVersionEvaluationData_FullMethodName     = "/clarifai.api.V2/PostWorkflowVersionEvaluationData"
 	V2_PostPipelines_FullMethodName                         = "/clarifai.api.V2/PostPipelines"
 	V2_GetPipeline_FullMethodName                           = "/clarifai.api.V2/GetPipeline"
 	V2_ListPipelines_FullMethodName                         = "/clarifai.api.V2/ListPipelines"
@@ -897,6 +898,7 @@ type V2Client interface {
 	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(ctx context.Context, in *PatchWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluationData(ctx context.Context, in *ListWorkflowVersionEvaluationDataRequest, opts ...grpc.CallOption) (*MultiListWorkflowVersionEvaluationDataResponse, error)
+	PostWorkflowVersionEvaluationData(ctx context.Context, in *PostWorkflowVersionEvaluationDataRequest, opts ...grpc.CallOption) (*MultiListWorkflowVersionEvaluationDataResponse, error)
 	PostPipelines(ctx context.Context, in *PostPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
 	GetPipeline(ctx context.Context, in *GetPipelineRequest, opts ...grpc.CallOption) (*SinglePipelineResponse, error)
 	ListPipelines(ctx context.Context, in *ListPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
@@ -3549,6 +3551,16 @@ func (c *v2Client) ListWorkflowVersionEvaluationData(ctx context.Context, in *Li
 	return out, nil
 }
 
+func (c *v2Client) PostWorkflowVersionEvaluationData(ctx context.Context, in *PostWorkflowVersionEvaluationDataRequest, opts ...grpc.CallOption) (*MultiListWorkflowVersionEvaluationDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiListWorkflowVersionEvaluationDataResponse)
+	err := c.cc.Invoke(ctx, V2_PostWorkflowVersionEvaluationData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostPipelines(ctx context.Context, in *PostPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiPipelineResponse)
@@ -4403,6 +4415,7 @@ type V2Server interface {
 	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	PatchWorkflowVersionEvaluations(context.Context, *PatchWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluationData(context.Context, *ListWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error)
+	PostWorkflowVersionEvaluationData(context.Context, *PostWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error)
 	PostPipelines(context.Context, *PostPipelinesRequest) (*MultiPipelineResponse, error)
 	GetPipeline(context.Context, *GetPipelineRequest) (*SinglePipelineResponse, error)
 	ListPipelines(context.Context, *ListPipelinesRequest) (*MultiPipelineResponse, error)
@@ -5187,6 +5200,9 @@ func (UnimplementedV2Server) PatchWorkflowVersionEvaluations(context.Context, *P
 }
 func (UnimplementedV2Server) ListWorkflowVersionEvaluationData(context.Context, *ListWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListWorkflowVersionEvaluationData not implemented")
+}
+func (UnimplementedV2Server) PostWorkflowVersionEvaluationData(context.Context, *PostWorkflowVersionEvaluationDataRequest) (*MultiListWorkflowVersionEvaluationDataResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowVersionEvaluationData not implemented")
 }
 func (UnimplementedV2Server) PostPipelines(context.Context, *PostPipelinesRequest) (*MultiPipelineResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelines not implemented")
@@ -9800,6 +9816,24 @@ func _V2_ListWorkflowVersionEvaluationData_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostWorkflowVersionEvaluationData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostWorkflowVersionEvaluationDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostWorkflowVersionEvaluationData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostWorkflowVersionEvaluationData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostWorkflowVersionEvaluationData(ctx, req.(*PostWorkflowVersionEvaluationDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostPipelines_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostPipelinesRequest)
 	if err := dec(in); err != nil {
@@ -11208,6 +11242,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListWorkflowVersionEvaluationData",
 			Handler:    _V2_ListWorkflowVersionEvaluationData_Handler,
+		},
+		{
+			MethodName: "PostWorkflowVersionEvaluationData",
+			Handler:    _V2_PostWorkflowVersionEvaluationData_Handler,
 		},
 		{
 			MethodName: "PostPipelines",
