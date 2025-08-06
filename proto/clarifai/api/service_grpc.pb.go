@@ -43,6 +43,10 @@ const (
 	V2_PatchAnnotationsStatus_FullMethodName                = "/clarifai.api.V2/PatchAnnotationsStatus"
 	V2_DeleteAnnotation_FullMethodName                      = "/clarifai.api.V2/DeleteAnnotation"
 	V2_DeleteAnnotations_FullMethodName                     = "/clarifai.api.V2/DeleteAnnotations"
+	V2_ListAnnotationTracks_FullMethodName                  = "/clarifai.api.V2/ListAnnotationTracks"
+	V2_PostAnnotationTracks_FullMethodName                  = "/clarifai.api.V2/PostAnnotationTracks"
+	V2_PatchAnnotationTracks_FullMethodName                 = "/clarifai.api.V2/PatchAnnotationTracks"
+	V2_DeleteAnnotationTracks_FullMethodName                = "/clarifai.api.V2/DeleteAnnotationTracks"
 	V2_PatchAnnotationsSearches_FullMethodName              = "/clarifai.api.V2/PatchAnnotationsSearches"
 	V2_PostAnnotationsSearches_FullMethodName               = "/clarifai.api.V2/PostAnnotationsSearches"
 	V2_ListAnnotationWorkers_FullMethodName                 = "/clarifai.api.V2/ListAnnotationWorkers"
@@ -355,6 +359,14 @@ type V2Client interface {
 	DeleteAnnotation(ctx context.Context, in *DeleteAnnotationRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(ctx context.Context, in *DeleteAnnotationsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// List all the annotation tracks.
+	ListAnnotationTracks(ctx context.Context, in *ListAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error)
+	// Post annotation tracks.
+	PostAnnotationTracks(ctx context.Context, in *PostAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error)
+	// Patch one or more annotation tracks.
+	PatchAnnotationTracks(ctx context.Context, in *PatchAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error)
+	// Delete multiple annotation tracks in one request.
+	DeleteAnnotationTracks(ctx context.Context, in *DeleteAnnotationTracksRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Patch saved annotations searches by ids.
 	PatchAnnotationsSearches(ctx context.Context, in *PatchAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a search over annotations
@@ -1161,6 +1173,46 @@ func (c *v2Client) DeleteAnnotations(ctx context.Context, in *DeleteAnnotationsR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, V2_DeleteAnnotations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListAnnotationTracks(ctx context.Context, in *ListAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiAnnotationTrackResponse)
+	err := c.cc.Invoke(ctx, V2_ListAnnotationTracks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostAnnotationTracks(ctx context.Context, in *PostAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiAnnotationTrackResponse)
+	err := c.cc.Invoke(ctx, V2_PostAnnotationTracks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PatchAnnotationTracks(ctx context.Context, in *PatchAnnotationTracksRequest, opts ...grpc.CallOption) (*MultiAnnotationTrackResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiAnnotationTrackResponse)
+	err := c.cc.Invoke(ctx, V2_PatchAnnotationTracks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteAnnotationTracks(ctx context.Context, in *DeleteAnnotationTracksRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_DeleteAnnotationTracks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3872,6 +3924,14 @@ type V2Server interface {
 	DeleteAnnotation(context.Context, *DeleteAnnotationRequest) (*status.BaseResponse, error)
 	// Delete multiple annotations in one request.
 	DeleteAnnotations(context.Context, *DeleteAnnotationsRequest) (*status.BaseResponse, error)
+	// List all the annotation tracks.
+	ListAnnotationTracks(context.Context, *ListAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error)
+	// Post annotation tracks.
+	PostAnnotationTracks(context.Context, *PostAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error)
+	// Patch one or more annotation tracks.
+	PatchAnnotationTracks(context.Context, *PatchAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error)
+	// Delete multiple annotation tracks in one request.
+	DeleteAnnotationTracks(context.Context, *DeleteAnnotationTracksRequest) (*status.BaseResponse, error)
 	// Patch saved annotations searches by ids.
 	PatchAnnotationsSearches(context.Context, *PatchAnnotationsSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a search over annotations
@@ -4519,6 +4579,18 @@ func (UnimplementedV2Server) DeleteAnnotation(context.Context, *DeleteAnnotation
 }
 func (UnimplementedV2Server) DeleteAnnotations(context.Context, *DeleteAnnotationsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotations not implemented")
+}
+func (UnimplementedV2Server) ListAnnotationTracks(context.Context, *ListAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotationTracks not implemented")
+}
+func (UnimplementedV2Server) PostAnnotationTracks(context.Context, *PostAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotationTracks not implemented")
+}
+func (UnimplementedV2Server) PatchAnnotationTracks(context.Context, *PatchAnnotationTracksRequest) (*MultiAnnotationTrackResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotationTracks not implemented")
+}
+func (UnimplementedV2Server) DeleteAnnotationTracks(context.Context, *DeleteAnnotationTracksRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotationTracks not implemented")
 }
 func (UnimplementedV2Server) PatchAnnotationsSearches(context.Context, *PatchAnnotationsSearchesRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchAnnotationsSearches not implemented")
@@ -5696,6 +5768,78 @@ func _V2_DeleteAnnotations_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeleteAnnotations(ctx, req.(*DeleteAnnotationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListAnnotationTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAnnotationTracksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListAnnotationTracks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListAnnotationTracks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListAnnotationTracks(ctx, req.(*ListAnnotationTracksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostAnnotationTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAnnotationTracksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostAnnotationTracks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostAnnotationTracks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostAnnotationTracks(ctx, req.(*PostAnnotationTracksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PatchAnnotationTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchAnnotationTracksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchAnnotationTracks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchAnnotationTracks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchAnnotationTracks(ctx, req.(*PatchAnnotationTracksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteAnnotationTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAnnotationTracksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteAnnotationTracks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeleteAnnotationTracks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteAnnotationTracks(ctx, req.(*DeleteAnnotationTracksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -10354,6 +10498,22 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAnnotations",
 			Handler:    _V2_DeleteAnnotations_Handler,
+		},
+		{
+			MethodName: "ListAnnotationTracks",
+			Handler:    _V2_ListAnnotationTracks_Handler,
+		},
+		{
+			MethodName: "PostAnnotationTracks",
+			Handler:    _V2_PostAnnotationTracks_Handler,
+		},
+		{
+			MethodName: "PatchAnnotationTracks",
+			Handler:    _V2_PatchAnnotationTracks_Handler,
+		},
+		{
+			MethodName: "DeleteAnnotationTracks",
+			Handler:    _V2_DeleteAnnotationTracks_Handler,
 		},
 		{
 			MethodName: "PatchAnnotationsSearches",
