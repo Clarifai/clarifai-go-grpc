@@ -915,11 +915,11 @@ type V2Client interface {
 	GetPipeline(ctx context.Context, in *GetPipelineRequest, opts ...grpc.CallOption) (*SinglePipelineResponse, error)
 	ListPipelines(ctx context.Context, in *ListPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
 	PatchPipelines(ctx context.Context, in *PatchPipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
-	DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error)
+	DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	GetPipelineVersion(ctx context.Context, in *GetPipelineVersionRequest, opts ...grpc.CallOption) (*SinglePipelineVersionResponse, error)
 	ListPipelineVersions(ctx context.Context, in *ListPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
 	PatchPipelineVersions(ctx context.Context, in *PatchPipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
-	DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error)
+	DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	GetPipelineVersionRun(ctx context.Context, in *GetPipelineVersionRunRequest, opts ...grpc.CallOption) (*SinglePipelineVersionRunResponse, error)
 	PostPipelineVersionRuns(ctx context.Context, in *PostPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
 	PatchPipelineVersionRuns(ctx context.Context, in *PatchPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
@@ -3653,9 +3653,9 @@ func (c *v2Client) PatchPipelines(ctx context.Context, in *PatchPipelinesRequest
 	return out, nil
 }
 
-func (c *v2Client) DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*MultiPipelineResponse, error) {
+func (c *v2Client) DeletePipelines(ctx context.Context, in *DeletePipelinesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiPipelineResponse)
+	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, V2_DeletePipelines_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -3693,9 +3693,9 @@ func (c *v2Client) PatchPipelineVersions(ctx context.Context, in *PatchPipelineV
 	return out, nil
 }
 
-func (c *v2Client) DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionResponse, error) {
+func (c *v2Client) DeletePipelineVersions(ctx context.Context, in *DeletePipelineVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiPipelineVersionResponse)
+	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, V2_DeletePipelineVersions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -4480,11 +4480,11 @@ type V2Server interface {
 	GetPipeline(context.Context, *GetPipelineRequest) (*SinglePipelineResponse, error)
 	ListPipelines(context.Context, *ListPipelinesRequest) (*MultiPipelineResponse, error)
 	PatchPipelines(context.Context, *PatchPipelinesRequest) (*MultiPipelineResponse, error)
-	DeletePipelines(context.Context, *DeletePipelinesRequest) (*MultiPipelineResponse, error)
+	DeletePipelines(context.Context, *DeletePipelinesRequest) (*status.BaseResponse, error)
 	GetPipelineVersion(context.Context, *GetPipelineVersionRequest) (*SinglePipelineVersionResponse, error)
 	ListPipelineVersions(context.Context, *ListPipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
 	PatchPipelineVersions(context.Context, *PatchPipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
-	DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*MultiPipelineVersionResponse, error)
+	DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*status.BaseResponse, error)
 	GetPipelineVersionRun(context.Context, *GetPipelineVersionRunRequest) (*SinglePipelineVersionRunResponse, error)
 	PostPipelineVersionRuns(context.Context, *PostPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
 	PatchPipelineVersionRuns(context.Context, *PatchPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
@@ -5288,7 +5288,7 @@ func (UnimplementedV2Server) ListPipelines(context.Context, *ListPipelinesReques
 func (UnimplementedV2Server) PatchPipelines(context.Context, *PatchPipelinesRequest) (*MultiPipelineResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelines not implemented")
 }
-func (UnimplementedV2Server) DeletePipelines(context.Context, *DeletePipelinesRequest) (*MultiPipelineResponse, error) {
+func (UnimplementedV2Server) DeletePipelines(context.Context, *DeletePipelinesRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelines not implemented")
 }
 func (UnimplementedV2Server) GetPipelineVersion(context.Context, *GetPipelineVersionRequest) (*SinglePipelineVersionResponse, error) {
@@ -5300,7 +5300,7 @@ func (UnimplementedV2Server) ListPipelineVersions(context.Context, *ListPipeline
 func (UnimplementedV2Server) PatchPipelineVersions(context.Context, *PatchPipelineVersionsRequest) (*MultiPipelineVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelineVersions not implemented")
 }
-func (UnimplementedV2Server) DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*MultiPipelineVersionResponse, error) {
+func (UnimplementedV2Server) DeletePipelineVersions(context.Context, *DeletePipelineVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelineVersions not implemented")
 }
 func (UnimplementedV2Server) GetPipelineVersionRun(context.Context, *GetPipelineVersionRunRequest) (*SinglePipelineVersionRunResponse, error) {
