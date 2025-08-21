@@ -7672,7 +7672,7 @@ type ListLogEntriesRequest struct {
 	// (optional URL parameter) The number of results that will be contained in each page. Defaults
 	// to 32.
 	PerPage uint32 `protobuf:"varint,2,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
-	// The type of log entry. Examples: model, agent, build, training.
+	// The type of log entry. Choose from [agent, builder, builder.events, runner, runner.events, pipeline.version.run]
 	LogType string `protobuf:"bytes,3,opt,name=log_type,json=logType,proto3" json:"log_type,omitempty"`
 	// Who the logs are for.
 	// The user app id, if a user produced the logs.
