@@ -38,6 +38,7 @@ const (
 	V2_PostKnowledgeGraphs_FullMethodName                   = "/clarifai.api.V2/PostKnowledgeGraphs"
 	V2_GetAnnotation_FullMethodName                         = "/clarifai.api.V2/GetAnnotation"
 	V2_ListAnnotations_FullMethodName                       = "/clarifai.api.V2/ListAnnotations"
+	V2_PostTrackAnnotationsSearches_FullMethodName          = "/clarifai.api.V2/PostTrackAnnotationsSearches"
 	V2_PostAnnotations_FullMethodName                       = "/clarifai.api.V2/PostAnnotations"
 	V2_PatchAnnotations_FullMethodName                      = "/clarifai.api.V2/PatchAnnotations"
 	V2_PatchAnnotationsStatus_FullMethodName                = "/clarifai.api.V2/PatchAnnotationsStatus"
@@ -347,6 +348,8 @@ type V2Client interface {
 	GetAnnotation(ctx context.Context, in *GetAnnotationRequest, opts ...grpc.CallOption) (*SingleAnnotationResponse, error)
 	// List all the annotation.
 	ListAnnotations(ctx context.Context, in *ListAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
+	// List video track annotations for a specific input.
+	PostTrackAnnotationsSearches(ctx context.Context, in *PostTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Post annotations.
 	PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -1127,6 +1130,16 @@ func (c *v2Client) ListAnnotations(ctx context.Context, in *ListAnnotationsReque
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiAnnotationResponse)
 	err := c.cc.Invoke(ctx, V2_ListAnnotations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostTrackAnnotationsSearches(ctx context.Context, in *PostTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiAnnotationResponse)
+	err := c.cc.Invoke(ctx, V2_PostTrackAnnotationsSearches_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3934,6 +3947,8 @@ type V2Server interface {
 	GetAnnotation(context.Context, *GetAnnotationRequest) (*SingleAnnotationResponse, error)
 	// List all the annotation.
 	ListAnnotations(context.Context, *ListAnnotationsRequest) (*MultiAnnotationResponse, error)
+	// List video track annotations for a specific input.
+	PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error)
 	// Post annotations.
 	PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -4590,6 +4605,9 @@ func (UnimplementedV2Server) GetAnnotation(context.Context, *GetAnnotationReques
 }
 func (UnimplementedV2Server) ListAnnotations(context.Context, *ListAnnotationsRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotations not implemented")
+}
+func (UnimplementedV2Server) PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostTrackAnnotationsSearches not implemented")
 }
 func (UnimplementedV2Server) PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotations not implemented")
@@ -5710,6 +5728,24 @@ func _V2_ListAnnotations_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).ListAnnotations(ctx, req.(*ListAnnotationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostTrackAnnotationsSearches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostTrackAnnotationsSearchesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostTrackAnnotationsSearches(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostTrackAnnotationsSearches_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostTrackAnnotationsSearches(ctx, req.(*PostTrackAnnotationsSearchesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -10546,6 +10582,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAnnotations",
 			Handler:    _V2_ListAnnotations_Handler,
+		},
+		{
+			MethodName: "PostTrackAnnotationsSearches",
+			Handler:    _V2_PostTrackAnnotationsSearches_Handler,
 		},
 		{
 			MethodName: "PostAnnotations",
