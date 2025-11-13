@@ -254,6 +254,7 @@ const (
 	V2_ListComputeClusters_FullMethodName                   = "/clarifai.api.V2/ListComputeClusters"
 	V2_PostComputeClusters_FullMethodName                   = "/clarifai.api.V2/PostComputeClusters"
 	V2_DeleteComputeClusters_FullMethodName                 = "/clarifai.api.V2/DeleteComputeClusters"
+	V2_PatchComputeClusters_FullMethodName                  = "/clarifai.api.V2/PatchComputeClusters"
 	V2_GetNodepool_FullMethodName                           = "/clarifai.api.V2/GetNodepool"
 	V2_ListNodepools_FullMethodName                         = "/clarifai.api.V2/ListNodepools"
 	V2_PostNodepools_FullMethodName                         = "/clarifai.api.V2/PostNodepools"
@@ -890,6 +891,7 @@ type V2Client interface {
 	PostComputeClusters(ctx context.Context, in *PostComputeClustersRequest, opts ...grpc.CallOption) (*MultiComputeClusterResponse, error)
 	// Delete multiple compute_clusters in one request.
 	DeleteComputeClusters(ctx context.Context, in *DeleteComputeClustersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	PatchComputeClusters(ctx context.Context, in *PatchComputeClustersRequest, opts ...grpc.CallOption) (*MultiComputeClusterResponse, error)
 	// Nodepools CRUD
 	GetNodepool(ctx context.Context, in *GetNodepoolRequest, opts ...grpc.CallOption) (*SingleNodepoolResponse, error)
 	ListNodepools(ctx context.Context, in *ListNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
@@ -3387,6 +3389,16 @@ func (c *v2Client) DeleteComputeClusters(ctx context.Context, in *DeleteComputeC
 	return out, nil
 }
 
+func (c *v2Client) PatchComputeClusters(ctx context.Context, in *PatchComputeClustersRequest, opts ...grpc.CallOption) (*MultiComputeClusterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiComputeClusterResponse)
+	err := c.cc.Invoke(ctx, V2_PatchComputeClusters_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetNodepool(ctx context.Context, in *GetNodepoolRequest, opts ...grpc.CallOption) (*SingleNodepoolResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleNodepoolResponse)
@@ -4489,6 +4501,7 @@ type V2Server interface {
 	PostComputeClusters(context.Context, *PostComputeClustersRequest) (*MultiComputeClusterResponse, error)
 	// Delete multiple compute_clusters in one request.
 	DeleteComputeClusters(context.Context, *DeleteComputeClustersRequest) (*status.BaseResponse, error)
+	PatchComputeClusters(context.Context, *PatchComputeClustersRequest) (*MultiComputeClusterResponse, error)
 	// Nodepools CRUD
 	GetNodepool(context.Context, *GetNodepoolRequest) (*SingleNodepoolResponse, error)
 	ListNodepools(context.Context, *ListNodepoolsRequest) (*MultiNodepoolResponse, error)
@@ -5253,6 +5266,9 @@ func (UnimplementedV2Server) PostComputeClusters(context.Context, *PostComputeCl
 }
 func (UnimplementedV2Server) DeleteComputeClusters(context.Context, *DeleteComputeClustersRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteComputeClusters not implemented")
+}
+func (UnimplementedV2Server) PatchComputeClusters(context.Context, *PatchComputeClustersRequest) (*MultiComputeClusterResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PatchComputeClusters not implemented")
 }
 func (UnimplementedV2Server) GetNodepool(context.Context, *GetNodepoolRequest) (*SingleNodepoolResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetNodepool not implemented")
@@ -9647,6 +9663,24 @@ func _V2_DeleteComputeClusters_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PatchComputeClusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchComputeClustersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PatchComputeClusters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PatchComputeClusters_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PatchComputeClusters(ctx, req.(*PatchComputeClustersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetNodepool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetNodepoolRequest)
 	if err := dec(in); err != nil {
@@ -11430,6 +11464,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteComputeClusters",
 			Handler:    _V2_DeleteComputeClusters_Handler,
+		},
+		{
+			MethodName: "PatchComputeClusters",
+			Handler:    _V2_PatchComputeClusters_Handler,
 		},
 		{
 			MethodName: "GetNodepool",
