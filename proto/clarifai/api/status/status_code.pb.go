@@ -446,6 +446,7 @@ const (
 	StatusCode_LABEL_ORDER_SUCCESS     StatusCode = 55003
 	StatusCode_LABEL_ORDER_CANCELED    StatusCode = 55004
 	// License Related Status Code 600xx
+	// DEPRECATED: License feature is fully deprecated now.
 	StatusCode_LICENSE_ACTIVE          StatusCode = 60000
 	StatusCode_LICENSE_DOES_NOT_EXIST  StatusCode = 60001
 	StatusCode_LICENSE_NEED_UPDATE     StatusCode = 60002
