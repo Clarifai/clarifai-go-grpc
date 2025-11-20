@@ -162,10 +162,6 @@ const (
 	V2_PatchSearches_FullMethodName                         = "/clarifai.api.V2/PatchSearches"
 	V2_PostSearches_FullMethodName                          = "/clarifai.api.V2/PostSearches"
 	V2_PostSearchesByID_FullMethodName                      = "/clarifai.api.V2/PostSearchesByID"
-	V2_PostAnnotationSearchMetrics_FullMethodName           = "/clarifai.api.V2/PostAnnotationSearchMetrics"
-	V2_GetAnnotationSearchMetrics_FullMethodName            = "/clarifai.api.V2/GetAnnotationSearchMetrics"
-	V2_ListAnnotationSearchMetrics_FullMethodName           = "/clarifai.api.V2/ListAnnotationSearchMetrics"
-	V2_DeleteAnnotationSearchMetrics_FullMethodName         = "/clarifai.api.V2/DeleteAnnotationSearchMetrics"
 	V2_DeleteSearch_FullMethodName                          = "/clarifai.api.V2/DeleteSearch"
 	V2_ListAnnotationFilters_FullMethodName                 = "/clarifai.api.V2/ListAnnotationFilters"
 	V2_GetAnnotationFilter_FullMethodName                   = "/clarifai.api.V2/GetAnnotationFilter"
@@ -655,14 +651,6 @@ type V2Client interface {
 	PostSearches(ctx context.Context, in *PostSearchesRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(ctx context.Context, in *PostSearchesByIDRequest, opts ...grpc.CallOption) (*MultiSearchResponse, error)
-	// Evaluate the results of two search requests
-	PostAnnotationSearchMetrics(ctx context.Context, in *PostAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
-	// Get the evaluation results between two search requests
-	GetAnnotationSearchMetrics(ctx context.Context, in *GetAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
-	// List the evaluation results between two search requests
-	ListAnnotationSearchMetrics(ctx context.Context, in *ListAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error)
-	// DeleteAnnotationSearchMetrics
-	DeleteAnnotationSearchMetrics(ctx context.Context, in *DeleteAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(ctx context.Context, in *DeleteSearchRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// List all the annotation filters.
@@ -2447,46 +2435,6 @@ func (c *v2Client) PostSearchesByID(ctx context.Context, in *PostSearchesByIDReq
 	return out, nil
 }
 
-func (c *v2Client) PostAnnotationSearchMetrics(ctx context.Context, in *PostAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiAnnotationSearchMetricsResponse)
-	err := c.cc.Invoke(ctx, V2_PostAnnotationSearchMetrics_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) GetAnnotationSearchMetrics(ctx context.Context, in *GetAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiAnnotationSearchMetricsResponse)
-	err := c.cc.Invoke(ctx, V2_GetAnnotationSearchMetrics_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListAnnotationSearchMetrics(ctx context.Context, in *ListAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*MultiAnnotationSearchMetricsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiAnnotationSearchMetricsResponse)
-	err := c.cc.Invoke(ctx, V2_ListAnnotationSearchMetrics_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteAnnotationSearchMetrics(ctx context.Context, in *DeleteAnnotationSearchMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_DeleteAnnotationSearchMetrics_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) DeleteSearch(ctx context.Context, in *DeleteSearchRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(status.BaseResponse)
@@ -4265,14 +4213,6 @@ type V2Server interface {
 	PostSearches(context.Context, *PostSearchesRequest) (*MultiSearchResponse, error)
 	// Execute a previously saved legacy search.
 	PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error)
-	// Evaluate the results of two search requests
-	PostAnnotationSearchMetrics(context.Context, *PostAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
-	// Get the evaluation results between two search requests
-	GetAnnotationSearchMetrics(context.Context, *GetAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
-	// List the evaluation results between two search requests
-	ListAnnotationSearchMetrics(context.Context, *ListAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error)
-	// DeleteAnnotationSearchMetrics
-	DeleteAnnotationSearchMetrics(context.Context, *DeleteAnnotationSearchMetricsRequest) (*status.BaseResponse, error)
 	// Delete a saved search.
 	DeleteSearch(context.Context, *DeleteSearchRequest) (*status.BaseResponse, error)
 	// List all the annotation filters.
@@ -4990,18 +4930,6 @@ func (UnimplementedV2Server) PostSearches(context.Context, *PostSearchesRequest)
 }
 func (UnimplementedV2Server) PostSearchesByID(context.Context, *PostSearchesByIDRequest) (*MultiSearchResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostSearchesByID not implemented")
-}
-func (UnimplementedV2Server) PostAnnotationSearchMetrics(context.Context, *PostAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotationSearchMetrics not implemented")
-}
-func (UnimplementedV2Server) GetAnnotationSearchMetrics(context.Context, *GetAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetAnnotationSearchMetrics not implemented")
-}
-func (UnimplementedV2Server) ListAnnotationSearchMetrics(context.Context, *ListAnnotationSearchMetricsRequest) (*MultiAnnotationSearchMetricsResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListAnnotationSearchMetrics not implemented")
-}
-func (UnimplementedV2Server) DeleteAnnotationSearchMetrics(context.Context, *DeleteAnnotationSearchMetricsRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteAnnotationSearchMetrics not implemented")
 }
 func (UnimplementedV2Server) DeleteSearch(context.Context, *DeleteSearchRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteSearch not implemented")
@@ -7995,78 +7923,6 @@ func _V2_PostSearchesByID_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostSearchesByID(ctx, req.(*PostSearchesByIDRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostAnnotationSearchMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostAnnotationSearchMetricsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostAnnotationSearchMetrics(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostAnnotationSearchMetrics_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostAnnotationSearchMetrics(ctx, req.(*PostAnnotationSearchMetricsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_GetAnnotationSearchMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAnnotationSearchMetricsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetAnnotationSearchMetrics(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetAnnotationSearchMetrics_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetAnnotationSearchMetrics(ctx, req.(*GetAnnotationSearchMetricsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListAnnotationSearchMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAnnotationSearchMetricsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListAnnotationSearchMetrics(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListAnnotationSearchMetrics_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListAnnotationSearchMetrics(ctx, req.(*ListAnnotationSearchMetricsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteAnnotationSearchMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAnnotationSearchMetricsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteAnnotationSearchMetrics(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_DeleteAnnotationSearchMetrics_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteAnnotationSearchMetrics(ctx, req.(*DeleteAnnotationSearchMetricsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -11100,22 +10956,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostSearchesByID",
 			Handler:    _V2_PostSearchesByID_Handler,
-		},
-		{
-			MethodName: "PostAnnotationSearchMetrics",
-			Handler:    _V2_PostAnnotationSearchMetrics_Handler,
-		},
-		{
-			MethodName: "GetAnnotationSearchMetrics",
-			Handler:    _V2_GetAnnotationSearchMetrics_Handler,
-		},
-		{
-			MethodName: "ListAnnotationSearchMetrics",
-			Handler:    _V2_ListAnnotationSearchMetrics_Handler,
-		},
-		{
-			MethodName: "DeleteAnnotationSearchMetrics",
-			Handler:    _V2_DeleteAnnotationSearchMetrics_Handler,
 		},
 		{
 			MethodName: "DeleteSearch",

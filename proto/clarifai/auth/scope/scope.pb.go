@@ -120,7 +120,8 @@ const (
 	// Deprecated: Do not use.
 	S_Workflows_Patch S = 20
 	// To delete we need read/write.
-	S_Workflows_Delete       S = 21
+	S_Workflows_Delete S = 21
+	// DEPRECATED
 	S_WorkflowMetrics_Get    S = 96
 	S_WorkflowMetrics_Add    S = 97
 	S_WorkflowMetrics_Delete S = 98
@@ -194,6 +195,7 @@ const (
 	// To delete label orders we need read/write
 	S_LabelOrders_Delete S = 69
 	// CRUD on FindDuplicateAnnotationsJobs table
+	// DEPRECATED
 	S_FindDuplicateAnnotationsJobs_Add    S = 102
 	S_FindDuplicateAnnotationsJobs_Get    S = 103
 	S_FindDuplicateAnnotationsJobs_Delete S = 104
