@@ -39,6 +39,7 @@ const (
 	V2_GetAnnotation_FullMethodName                         = "/clarifai.api.V2/GetAnnotation"
 	V2_ListAnnotations_FullMethodName                       = "/clarifai.api.V2/ListAnnotations"
 	V2_PostTrackAnnotationsSearches_FullMethodName          = "/clarifai.api.V2/PostTrackAnnotationsSearches"
+	V2_StreamTrackAnnotationsSearches_FullMethodName        = "/clarifai.api.V2/StreamTrackAnnotationsSearches"
 	V2_PostAnnotations_FullMethodName                       = "/clarifai.api.V2/PostAnnotations"
 	V2_PatchAnnotations_FullMethodName                      = "/clarifai.api.V2/PatchAnnotations"
 	V2_PatchAnnotationsStatus_FullMethodName                = "/clarifai.api.V2/PatchAnnotationsStatus"
@@ -291,6 +292,16 @@ const (
 	V2_PostPipelineStepVersionsUpload_FullMethodName        = "/clarifai.api.V2/PostPipelineStepVersionsUpload"
 	V2_ListPipelineStepVersions_FullMethodName              = "/clarifai.api.V2/ListPipelineStepVersions"
 	V2_GetPipelineStepVersion_FullMethodName                = "/clarifai.api.V2/GetPipelineStepVersion"
+	V2_DeletePipelineSteps_FullMethodName                   = "/clarifai.api.V2/DeletePipelineSteps"
+	V2_DeletePipelineStepVersions_FullMethodName            = "/clarifai.api.V2/DeletePipelineStepVersions"
+	V2_PostArtifacts_FullMethodName                         = "/clarifai.api.V2/PostArtifacts"
+	V2_GetArtifact_FullMethodName                           = "/clarifai.api.V2/GetArtifact"
+	V2_ListArtifacts_FullMethodName                         = "/clarifai.api.V2/ListArtifacts"
+	V2_DeleteArtifact_FullMethodName                        = "/clarifai.api.V2/DeleteArtifact"
+	V2_PostArtifactVersionsUpload_FullMethodName            = "/clarifai.api.V2/PostArtifactVersionsUpload"
+	V2_ListArtifactVersions_FullMethodName                  = "/clarifai.api.V2/ListArtifactVersions"
+	V2_GetArtifactVersion_FullMethodName                    = "/clarifai.api.V2/GetArtifactVersion"
+	V2_DeleteArtifactVersion_FullMethodName                 = "/clarifai.api.V2/DeleteArtifactVersion"
 	V2_GetSecret_FullMethodName                             = "/clarifai.api.V2/GetSecret"
 	V2_ListSecrets_FullMethodName                           = "/clarifai.api.V2/ListSecrets"
 	V2_PostSecrets_FullMethodName                           = "/clarifai.api.V2/PostSecrets"
@@ -347,6 +358,8 @@ type V2Client interface {
 	ListAnnotations(ctx context.Context, in *ListAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// List video track annotations for a specific input.
 	PostTrackAnnotationsSearches(ctx context.Context, in *PostTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
+	// Stream video track annotations for a specific input one-by-one.
+	StreamTrackAnnotationsSearches(ctx context.Context, in *StreamTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (V2_StreamTrackAnnotationsSearchesClient, error)
 	// Post annotations.
 	PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -929,6 +942,21 @@ type V2Client interface {
 	PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error)
 	ListPipelineStepVersions(ctx context.Context, in *ListPipelineStepVersionsRequest, opts ...grpc.CallOption) (*MultiPipelineStepVersionResponse, error)
 	GetPipelineStepVersion(ctx context.Context, in *GetPipelineStepVersionRequest, opts ...grpc.CallOption) (*SinglePipelineStepVersionResponse, error)
+	DeletePipelineSteps(ctx context.Context, in *DeletePipelineStepsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	DeletePipelineStepVersions(ctx context.Context, in *DeletePipelineStepVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	PostArtifacts(ctx context.Context, in *PostArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error)
+	GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*SingleArtifactResponse, error)
+	ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error)
+	DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the artifact_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the artifact_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the artifact_version_id specified for your artifact_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the artifact_bytes.
+	PostArtifactVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostArtifactVersionsUploadClient, error)
+	ListArtifactVersions(ctx context.Context, in *ListArtifactVersionsRequest, opts ...grpc.CallOption) (*MultiArtifactVersionResponse, error)
+	GetArtifactVersion(ctx context.Context, in *GetArtifactVersionRequest, opts ...grpc.CallOption) (*SingleArtifactVersionResponse, error)
+	DeleteArtifactVersion(ctx context.Context, in *DeleteArtifactVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	GetSecret(ctx context.Context, in *GetSecretRequest, opts ...grpc.CallOption) (*SingleSecretResponse, error)
 	ListSecrets(ctx context.Context, in *ListSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
 	PostSecrets(ctx context.Context, in *PostSecretsRequest, opts ...grpc.CallOption) (*MultiSecretResponse, error)
@@ -1134,6 +1162,39 @@ func (c *v2Client) PostTrackAnnotationsSearches(ctx context.Context, in *PostTra
 		return nil, err
 	}
 	return out, nil
+}
+
+func (c *v2Client) StreamTrackAnnotationsSearches(ctx context.Context, in *StreamTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (V2_StreamTrackAnnotationsSearchesClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], V2_StreamTrackAnnotationsSearches_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2StreamTrackAnnotationsSearchesClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V2_StreamTrackAnnotationsSearchesClient interface {
+	Recv() (*SingleAnnotationResponse, error)
+	grpc.ClientStream
+}
+
+type v2StreamTrackAnnotationsSearchesClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2StreamTrackAnnotationsSearchesClient) Recv() (*SingleAnnotationResponse, error) {
+	m := new(SingleAnnotationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *v2Client) PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error) {
@@ -1388,7 +1449,7 @@ func (c *v2Client) PostModelOutputs(ctx context.Context, in *PostModelOutputsReq
 
 func (c *v2Client) GenerateModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (V2_GenerateModelOutputsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], V2_GenerateModelOutputs_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[1], V2_GenerateModelOutputs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1421,7 +1482,7 @@ func (x *v2GenerateModelOutputsClient) Recv() (*MultiOutputResponse, error) {
 
 func (c *v2Client) StreamModelOutputs(ctx context.Context, opts ...grpc.CallOption) (V2_StreamModelOutputsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[1], V2_StreamModelOutputs_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[2], V2_StreamModelOutputs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1884,7 +1945,7 @@ func (c *v2Client) DeleteModelVersion(ctx context.Context, in *DeleteModelVersio
 
 func (c *v2Client) PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[2], V2_PostModelVersionsUpload_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[3], V2_PostModelVersionsUpload_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3227,7 +3288,7 @@ func (c *v2Client) PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItem
 
 func (c *v2Client) ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[3], V2_ProcessRunnerItems_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[4], V2_ProcessRunnerItems_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3489,7 +3550,7 @@ func (c *v2Client) ListLogEntries(ctx context.Context, in *ListLogEntriesRequest
 
 func (c *v2Client) StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[4], V2_StreamLogEntries_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[5], V2_StreamLogEntries_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3742,7 +3803,7 @@ func (c *v2Client) ListPipelineSteps(ctx context.Context, in *ListPipelineStepsR
 
 func (c *v2Client) PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[5], V2_PostPipelineStepVersionsUpload_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[6], V2_PostPipelineStepVersionsUpload_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3786,6 +3847,128 @@ func (c *v2Client) GetPipelineStepVersion(ctx context.Context, in *GetPipelineSt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SinglePipelineStepVersionResponse)
 	err := c.cc.Invoke(ctx, V2_GetPipelineStepVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeletePipelineSteps(ctx context.Context, in *DeletePipelineStepsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_DeletePipelineSteps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeletePipelineStepVersions(ctx context.Context, in *DeletePipelineStepVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_DeletePipelineStepVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostArtifacts(ctx context.Context, in *PostArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiArtifactResponse)
+	err := c.cc.Invoke(ctx, V2_PostArtifacts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*SingleArtifactResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleArtifactResponse)
+	err := c.cc.Invoke(ctx, V2_GetArtifact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiArtifactResponse)
+	err := c.cc.Invoke(ctx, V2_ListArtifacts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_DeleteArtifact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostArtifactVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostArtifactVersionsUploadClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[7], V2_PostArtifactVersionsUpload_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2PostArtifactVersionsUploadClient{ClientStream: stream}
+	return x, nil
+}
+
+type V2_PostArtifactVersionsUploadClient interface {
+	Send(*PostArtifactVersionsUploadRequest) error
+	Recv() (*PostArtifactVersionsUploadResponse, error)
+	grpc.ClientStream
+}
+
+type v2PostArtifactVersionsUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2PostArtifactVersionsUploadClient) Send(m *PostArtifactVersionsUploadRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *v2PostArtifactVersionsUploadClient) Recv() (*PostArtifactVersionsUploadResponse, error) {
+	m := new(PostArtifactVersionsUploadResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *v2Client) ListArtifactVersions(ctx context.Context, in *ListArtifactVersionsRequest, opts ...grpc.CallOption) (*MultiArtifactVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiArtifactVersionResponse)
+	err := c.cc.Invoke(ctx, V2_ListArtifactVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) GetArtifactVersion(ctx context.Context, in *GetArtifactVersionRequest, opts ...grpc.CallOption) (*SingleArtifactVersionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleArtifactVersionResponse)
+	err := c.cc.Invoke(ctx, V2_GetArtifactVersion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteArtifactVersion(ctx context.Context, in *DeleteArtifactVersionRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_DeleteArtifactVersion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3909,6 +4092,8 @@ type V2Server interface {
 	ListAnnotations(context.Context, *ListAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// List video track annotations for a specific input.
 	PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error)
+	// Stream video track annotations for a specific input one-by-one.
+	StreamTrackAnnotationsSearches(*StreamTrackAnnotationsSearchesRequest, V2_StreamTrackAnnotationsSearchesServer) error
 	// Post annotations.
 	PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -4491,6 +4676,21 @@ type V2Server interface {
 	PostPipelineStepVersionsUpload(V2_PostPipelineStepVersionsUploadServer) error
 	ListPipelineStepVersions(context.Context, *ListPipelineStepVersionsRequest) (*MultiPipelineStepVersionResponse, error)
 	GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error)
+	DeletePipelineSteps(context.Context, *DeletePipelineStepsRequest) (*status.BaseResponse, error)
+	DeletePipelineStepVersions(context.Context, *DeletePipelineStepVersionsRequest) (*status.BaseResponse, error)
+	PostArtifacts(context.Context, *PostArtifactsRequest) (*MultiArtifactResponse, error)
+	GetArtifact(context.Context, *GetArtifactRequest) (*SingleArtifactResponse, error)
+	ListArtifacts(context.Context, *ListArtifactsRequest) (*MultiArtifactResponse, error)
+	DeleteArtifact(context.Context, *DeleteArtifactRequest) (*status.BaseResponse, error)
+	// This is a streaming endpoint, the request has a field, upload_data, which can either be the config for the upload or the actual data to upload.
+	// The config must be sent first before the artifact_bytes can be uploaded.
+	// Once the config has been sent, the server will respond with a confirmation containing the artifact_version_id.
+	// This is so that if your upload is interrupted, you can resume the upload by sending the config again with the artifact_version_id specified for your artifact_version.
+	// The actual upload will be done via a multipart upload, the latest successful part_id will be sent from the server in the response to the artifact_bytes.
+	PostArtifactVersionsUpload(V2_PostArtifactVersionsUploadServer) error
+	ListArtifactVersions(context.Context, *ListArtifactVersionsRequest) (*MultiArtifactVersionResponse, error)
+	GetArtifactVersion(context.Context, *GetArtifactVersionRequest) (*SingleArtifactVersionResponse, error)
+	DeleteArtifactVersion(context.Context, *DeleteArtifactVersionRequest) (*status.BaseResponse, error)
 	GetSecret(context.Context, *GetSecretRequest) (*SingleSecretResponse, error)
 	ListSecrets(context.Context, *ListSecretsRequest) (*MultiSecretResponse, error)
 	PostSecrets(context.Context, *PostSecretsRequest) (*MultiSecretResponse, error)
@@ -4561,6 +4761,9 @@ func (UnimplementedV2Server) ListAnnotations(context.Context, *ListAnnotationsRe
 }
 func (UnimplementedV2Server) PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostTrackAnnotationsSearches not implemented")
+}
+func (UnimplementedV2Server) StreamTrackAnnotationsSearches(*StreamTrackAnnotationsSearchesRequest, V2_StreamTrackAnnotationsSearchesServer) error {
+	return status1.Errorf(codes.Unimplemented, "method StreamTrackAnnotationsSearches not implemented")
 }
 func (UnimplementedV2Server) PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotations not implemented")
@@ -5318,6 +5521,36 @@ func (UnimplementedV2Server) ListPipelineStepVersions(context.Context, *ListPipe
 func (UnimplementedV2Server) GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetPipelineStepVersion not implemented")
 }
+func (UnimplementedV2Server) DeletePipelineSteps(context.Context, *DeletePipelineStepsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelineSteps not implemented")
+}
+func (UnimplementedV2Server) DeletePipelineStepVersions(context.Context, *DeletePipelineStepVersionsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelineStepVersions not implemented")
+}
+func (UnimplementedV2Server) PostArtifacts(context.Context, *PostArtifactsRequest) (*MultiArtifactResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostArtifacts not implemented")
+}
+func (UnimplementedV2Server) GetArtifact(context.Context, *GetArtifactRequest) (*SingleArtifactResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetArtifact not implemented")
+}
+func (UnimplementedV2Server) ListArtifacts(context.Context, *ListArtifactsRequest) (*MultiArtifactResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListArtifacts not implemented")
+}
+func (UnimplementedV2Server) DeleteArtifact(context.Context, *DeleteArtifactRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteArtifact not implemented")
+}
+func (UnimplementedV2Server) PostArtifactVersionsUpload(V2_PostArtifactVersionsUploadServer) error {
+	return status1.Errorf(codes.Unimplemented, "method PostArtifactVersionsUpload not implemented")
+}
+func (UnimplementedV2Server) ListArtifactVersions(context.Context, *ListArtifactVersionsRequest) (*MultiArtifactVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListArtifactVersions not implemented")
+}
+func (UnimplementedV2Server) GetArtifactVersion(context.Context, *GetArtifactVersionRequest) (*SingleArtifactVersionResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method GetArtifactVersion not implemented")
+}
+func (UnimplementedV2Server) DeleteArtifactVersion(context.Context, *DeleteArtifactVersionRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteArtifactVersion not implemented")
+}
 func (UnimplementedV2Server) GetSecret(context.Context, *GetSecretRequest) (*SingleSecretResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetSecret not implemented")
 }
@@ -5692,6 +5925,27 @@ func _V2_PostTrackAnnotationsSearches_Handler(srv interface{}, ctx context.Conte
 		return srv.(V2Server).PostTrackAnnotationsSearches(ctx, req.(*PostTrackAnnotationsSearchesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_StreamTrackAnnotationsSearches_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamTrackAnnotationsSearchesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(V2Server).StreamTrackAnnotationsSearches(m, &v2StreamTrackAnnotationsSearchesServer{ServerStream: stream})
+}
+
+type V2_StreamTrackAnnotationsSearchesServer interface {
+	Send(*SingleAnnotationResponse) error
+	grpc.ServerStream
+}
+
+type v2StreamTrackAnnotationsSearchesServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2StreamTrackAnnotationsSearchesServer) Send(m *SingleAnnotationResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _V2_PostAnnotations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -10268,6 +10522,194 @@ func _V2_GetPipelineStepVersion_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_DeletePipelineSteps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePipelineStepsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeletePipelineSteps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeletePipelineSteps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeletePipelineSteps(ctx, req.(*DeletePipelineStepsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeletePipelineStepVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePipelineStepVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeletePipelineStepVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeletePipelineStepVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeletePipelineStepVersions(ctx, req.(*DeletePipelineStepVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostArtifacts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostArtifactsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostArtifacts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostArtifacts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostArtifacts(ctx, req.(*PostArtifactsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArtifactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetArtifact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetArtifact(ctx, req.(*GetArtifactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListArtifacts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArtifactsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListArtifacts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListArtifacts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListArtifacts(ctx, req.(*ListArtifactsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArtifactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeleteArtifact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteArtifact(ctx, req.(*DeleteArtifactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostArtifactVersionsUpload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(V2Server).PostArtifactVersionsUpload(&v2PostArtifactVersionsUploadServer{ServerStream: stream})
+}
+
+type V2_PostArtifactVersionsUploadServer interface {
+	Send(*PostArtifactVersionsUploadResponse) error
+	Recv() (*PostArtifactVersionsUploadRequest, error)
+	grpc.ServerStream
+}
+
+type v2PostArtifactVersionsUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2PostArtifactVersionsUploadServer) Send(m *PostArtifactVersionsUploadResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *v2PostArtifactVersionsUploadServer) Recv() (*PostArtifactVersionsUploadRequest, error) {
+	m := new(PostArtifactVersionsUploadRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _V2_ListArtifactVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArtifactVersionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListArtifactVersions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListArtifactVersions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListArtifactVersions(ctx, req.(*ListArtifactVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_GetArtifactVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArtifactVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).GetArtifactVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_GetArtifactVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).GetArtifactVersion(ctx, req.(*GetArtifactVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteArtifactVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArtifactVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteArtifactVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeleteArtifactVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteArtifactVersion(ctx, req.(*DeleteArtifactVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSecretRequest)
 	if err := dec(in); err != nil {
@@ -11462,6 +11904,42 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_GetPipelineStepVersion_Handler,
 		},
 		{
+			MethodName: "DeletePipelineSteps",
+			Handler:    _V2_DeletePipelineSteps_Handler,
+		},
+		{
+			MethodName: "DeletePipelineStepVersions",
+			Handler:    _V2_DeletePipelineStepVersions_Handler,
+		},
+		{
+			MethodName: "PostArtifacts",
+			Handler:    _V2_PostArtifacts_Handler,
+		},
+		{
+			MethodName: "GetArtifact",
+			Handler:    _V2_GetArtifact_Handler,
+		},
+		{
+			MethodName: "ListArtifacts",
+			Handler:    _V2_ListArtifacts_Handler,
+		},
+		{
+			MethodName: "DeleteArtifact",
+			Handler:    _V2_DeleteArtifact_Handler,
+		},
+		{
+			MethodName: "ListArtifactVersions",
+			Handler:    _V2_ListArtifactVersions_Handler,
+		},
+		{
+			MethodName: "GetArtifactVersion",
+			Handler:    _V2_GetArtifactVersion_Handler,
+		},
+		{
+			MethodName: "DeleteArtifactVersion",
+			Handler:    _V2_DeleteArtifactVersion_Handler,
+		},
+		{
 			MethodName: "GetSecret",
 			Handler:    _V2_GetSecret_Handler,
 		},
@@ -11491,6 +11969,11 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamTrackAnnotationsSearches",
+			Handler:       _V2_StreamTrackAnnotationsSearches_Handler,
+			ServerStreams: true,
+		},
 		{
 			StreamName:    "GenerateModelOutputs",
 			Handler:       _V2_GenerateModelOutputs_Handler,
@@ -11522,6 +12005,12 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "PostPipelineStepVersionsUpload",
 			Handler:       _V2_PostPipelineStepVersionsUpload_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "PostArtifactVersionsUpload",
+			Handler:       _V2_PostArtifactVersionsUpload_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
