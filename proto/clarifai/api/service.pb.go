@@ -191,9 +191,7 @@ type Pagination struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// (optional URL parameter) The page number. Pagination is used to split the results into chunks. Defaults to 1.
-	Page uint32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	// (optional URL parameter) The number of results that will be contained in each page. Defaults to 128.
+	Page    uint32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage uint32 `protobuf:"varint,2,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
 }
 
