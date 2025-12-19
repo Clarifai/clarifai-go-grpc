@@ -1181,7 +1181,7 @@ func (c *v2Client) StreamTrackAnnotationsSearches(ctx context.Context, in *Strea
 }
 
 type V2_StreamTrackAnnotationsSearchesClient interface {
-	Recv() (*SingleAnnotationResponse, error)
+	Recv() (*SingleStreamTrackAnnotationResponse, error)
 	grpc.ClientStream
 }
 
@@ -1189,8 +1189,8 @@ type v2StreamTrackAnnotationsSearchesClient struct {
 	grpc.ClientStream
 }
 
-func (x *v2StreamTrackAnnotationsSearchesClient) Recv() (*SingleAnnotationResponse, error) {
-	m := new(SingleAnnotationResponse)
+func (x *v2StreamTrackAnnotationsSearchesClient) Recv() (*SingleStreamTrackAnnotationResponse, error) {
+	m := new(SingleStreamTrackAnnotationResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -5936,7 +5936,7 @@ func _V2_StreamTrackAnnotationsSearches_Handler(srv interface{}, stream grpc.Ser
 }
 
 type V2_StreamTrackAnnotationsSearchesServer interface {
-	Send(*SingleAnnotationResponse) error
+	Send(*SingleStreamTrackAnnotationResponse) error
 	grpc.ServerStream
 }
 
@@ -5944,7 +5944,7 @@ type v2StreamTrackAnnotationsSearchesServer struct {
 	grpc.ServerStream
 }
 
-func (x *v2StreamTrackAnnotationsSearchesServer) Send(m *SingleAnnotationResponse) error {
+func (x *v2StreamTrackAnnotationsSearchesServer) Send(m *SingleStreamTrackAnnotationResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
