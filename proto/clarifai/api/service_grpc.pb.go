@@ -286,6 +286,7 @@ const (
 	V2_GetPipelineVersionRun_FullMethodName                 = "/clarifai.api.V2/GetPipelineVersionRun"
 	V2_PostPipelineVersionRuns_FullMethodName               = "/clarifai.api.V2/PostPipelineVersionRuns"
 	V2_PatchPipelineVersionRuns_FullMethodName              = "/clarifai.api.V2/PatchPipelineVersionRuns"
+	V2_ListPipelineVersionRunStatusLogs_FullMethodName      = "/clarifai.api.V2/ListPipelineVersionRunStatusLogs"
 	V2_PostPipelineSteps_FullMethodName                     = "/clarifai.api.V2/PostPipelineSteps"
 	V2_GetPipelineStep_FullMethodName                       = "/clarifai.api.V2/GetPipelineStep"
 	V2_ListPipelineSteps_FullMethodName                     = "/clarifai.api.V2/ListPipelineSteps"
@@ -931,6 +932,7 @@ type V2Client interface {
 	GetPipelineVersionRun(ctx context.Context, in *GetPipelineVersionRunRequest, opts ...grpc.CallOption) (*SinglePipelineVersionRunResponse, error)
 	PostPipelineVersionRuns(ctx context.Context, in *PostPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
 	PatchPipelineVersionRuns(ctx context.Context, in *PatchPipelineVersionRunsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunResponse, error)
+	ListPipelineVersionRunStatusLogs(ctx context.Context, in *ListPipelineVersionRunStatusLogsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunStatusLogResponse, error)
 	PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
 	GetPipelineStep(ctx context.Context, in *GetPipelineStepRequest, opts ...grpc.CallOption) (*SinglePipelineStepResponse, error)
 	ListPipelineSteps(ctx context.Context, in *ListPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error)
@@ -3771,6 +3773,16 @@ func (c *v2Client) PatchPipelineVersionRuns(ctx context.Context, in *PatchPipeli
 	return out, nil
 }
 
+func (c *v2Client) ListPipelineVersionRunStatusLogs(ctx context.Context, in *ListPipelineVersionRunStatusLogsRequest, opts ...grpc.CallOption) (*MultiPipelineVersionRunStatusLogResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineVersionRunStatusLogResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineVersionRunStatusLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostPipelineSteps(ctx context.Context, in *PostPipelineStepsRequest, opts ...grpc.CallOption) (*MultiPipelineStepResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiPipelineStepResponse)
@@ -4665,6 +4677,7 @@ type V2Server interface {
 	GetPipelineVersionRun(context.Context, *GetPipelineVersionRunRequest) (*SinglePipelineVersionRunResponse, error)
 	PostPipelineVersionRuns(context.Context, *PostPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
 	PatchPipelineVersionRuns(context.Context, *PatchPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error)
+	ListPipelineVersionRunStatusLogs(context.Context, *ListPipelineVersionRunStatusLogsRequest) (*MultiPipelineVersionRunStatusLogResponse, error)
 	PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error)
 	GetPipelineStep(context.Context, *GetPipelineStepRequest) (*SinglePipelineStepResponse, error)
 	ListPipelineSteps(context.Context, *ListPipelineStepsRequest) (*MultiPipelineStepResponse, error)
@@ -5502,6 +5515,9 @@ func (UnimplementedV2Server) PostPipelineVersionRuns(context.Context, *PostPipel
 }
 func (UnimplementedV2Server) PatchPipelineVersionRuns(context.Context, *PatchPipelineVersionRunsRequest) (*MultiPipelineVersionRunResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PatchPipelineVersionRuns not implemented")
+}
+func (UnimplementedV2Server) ListPipelineVersionRunStatusLogs(context.Context, *ListPipelineVersionRunStatusLogsRequest) (*MultiPipelineVersionRunStatusLogResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineVersionRunStatusLogs not implemented")
 }
 func (UnimplementedV2Server) PostPipelineSteps(context.Context, *PostPipelineStepsRequest) (*MultiPipelineStepResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelineSteps not implemented")
@@ -10406,6 +10422,24 @@ func _V2_PatchPipelineVersionRuns_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_ListPipelineVersionRunStatusLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineVersionRunStatusLogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineVersionRunStatusLogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineVersionRunStatusLogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineVersionRunStatusLogs(ctx, req.(*ListPipelineVersionRunStatusLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_PostPipelineSteps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostPipelineStepsRequest)
 	if err := dec(in); err != nil {
@@ -11882,6 +11916,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PatchPipelineVersionRuns",
 			Handler:    _V2_PatchPipelineVersionRuns_Handler,
+		},
+		{
+			MethodName: "ListPipelineVersionRunStatusLogs",
+			Handler:    _V2_ListPipelineVersionRunStatusLogs_Handler,
 		},
 		{
 			MethodName: "PostPipelineSteps",
