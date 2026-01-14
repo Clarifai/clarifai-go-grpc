@@ -39,7 +39,8 @@ const (
 	V2_GetAnnotation_FullMethodName                         = "/clarifai.api.V2/GetAnnotation"
 	V2_ListAnnotations_FullMethodName                       = "/clarifai.api.V2/ListAnnotations"
 	V2_PostTrackAnnotationsSearches_FullMethodName          = "/clarifai.api.V2/PostTrackAnnotationsSearches"
-	V2_StreamTrackAnnotationsSearches_FullMethodName        = "/clarifai.api.V2/StreamTrackAnnotationsSearches"
+	V2_StreamAnnotations_FullMethodName                     = "/clarifai.api.V2/StreamAnnotations"
+	V2_StreamLivestreamAnnotations_FullMethodName           = "/clarifai.api.V2/StreamLivestreamAnnotations"
 	V2_PostAnnotations_FullMethodName                       = "/clarifai.api.V2/PostAnnotations"
 	V2_PatchAnnotations_FullMethodName                      = "/clarifai.api.V2/PatchAnnotations"
 	V2_PatchAnnotationsStatus_FullMethodName                = "/clarifai.api.V2/PatchAnnotationsStatus"
@@ -359,8 +360,11 @@ type V2Client interface {
 	ListAnnotations(ctx context.Context, in *ListAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// List video track annotations for a specific input.
 	PostTrackAnnotationsSearches(ctx context.Context, in *PostTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
-	// Stream video track annotations for a specific input one-by-one.
-	StreamTrackAnnotationsSearches(ctx context.Context, in *StreamTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (V2_StreamTrackAnnotationsSearchesClient, error)
+	// Stream annotations for a specific input one-by-one.
+	StreamAnnotations(ctx context.Context, in *StreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamAnnotationsClient, error)
+	// Stream live video annotations as they are being created by the runner.
+	// This endpoint reads from Redis instead of the database for real-time streaming.
+	StreamLivestreamAnnotations(ctx context.Context, in *StreamLivestreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamLivestreamAnnotationsClient, error)
 	// Post annotations.
 	PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -1166,13 +1170,13 @@ func (c *v2Client) PostTrackAnnotationsSearches(ctx context.Context, in *PostTra
 	return out, nil
 }
 
-func (c *v2Client) StreamTrackAnnotationsSearches(ctx context.Context, in *StreamTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (V2_StreamTrackAnnotationsSearchesClient, error) {
+func (c *v2Client) StreamAnnotations(ctx context.Context, in *StreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamAnnotationsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], V2_StreamTrackAnnotationsSearches_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[0], V2_StreamAnnotations_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &v2StreamTrackAnnotationsSearchesClient{ClientStream: stream}
+	x := &v2StreamAnnotationsClient{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1182,17 +1186,50 @@ func (c *v2Client) StreamTrackAnnotationsSearches(ctx context.Context, in *Strea
 	return x, nil
 }
 
-type V2_StreamTrackAnnotationsSearchesClient interface {
-	Recv() (*SingleStreamTrackAnnotationResponse, error)
+type V2_StreamAnnotationsClient interface {
+	Recv() (*SingleStreamAnnotationResponse, error)
 	grpc.ClientStream
 }
 
-type v2StreamTrackAnnotationsSearchesClient struct {
+type v2StreamAnnotationsClient struct {
 	grpc.ClientStream
 }
 
-func (x *v2StreamTrackAnnotationsSearchesClient) Recv() (*SingleStreamTrackAnnotationResponse, error) {
-	m := new(SingleStreamTrackAnnotationResponse)
+func (x *v2StreamAnnotationsClient) Recv() (*SingleStreamAnnotationResponse, error) {
+	m := new(SingleStreamAnnotationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *v2Client) StreamLivestreamAnnotations(ctx context.Context, in *StreamLivestreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamLivestreamAnnotationsClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[1], V2_StreamLivestreamAnnotations_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &v2StreamLivestreamAnnotationsClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V2_StreamLivestreamAnnotationsClient interface {
+	Recv() (*SingleStreamAnnotationResponse, error)
+	grpc.ClientStream
+}
+
+type v2StreamLivestreamAnnotationsClient struct {
+	grpc.ClientStream
+}
+
+func (x *v2StreamLivestreamAnnotationsClient) Recv() (*SingleStreamAnnotationResponse, error) {
+	m := new(SingleStreamAnnotationResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -1451,7 +1488,7 @@ func (c *v2Client) PostModelOutputs(ctx context.Context, in *PostModelOutputsReq
 
 func (c *v2Client) GenerateModelOutputs(ctx context.Context, in *PostModelOutputsRequest, opts ...grpc.CallOption) (V2_GenerateModelOutputsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[1], V2_GenerateModelOutputs_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[2], V2_GenerateModelOutputs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1484,7 +1521,7 @@ func (x *v2GenerateModelOutputsClient) Recv() (*MultiOutputResponse, error) {
 
 func (c *v2Client) StreamModelOutputs(ctx context.Context, opts ...grpc.CallOption) (V2_StreamModelOutputsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[2], V2_StreamModelOutputs_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[3], V2_StreamModelOutputs_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1947,7 +1984,7 @@ func (c *v2Client) DeleteModelVersion(ctx context.Context, in *DeleteModelVersio
 
 func (c *v2Client) PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[3], V2_PostModelVersionsUpload_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[4], V2_PostModelVersionsUpload_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3290,7 +3327,7 @@ func (c *v2Client) PostRunnerItemOutputs(ctx context.Context, in *PostRunnerItem
 
 func (c *v2Client) ProcessRunnerItems(ctx context.Context, opts ...grpc.CallOption) (V2_ProcessRunnerItemsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[4], V2_ProcessRunnerItems_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[5], V2_ProcessRunnerItems_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3552,7 +3589,7 @@ func (c *v2Client) ListLogEntries(ctx context.Context, in *ListLogEntriesRequest
 
 func (c *v2Client) StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[5], V2_StreamLogEntries_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[6], V2_StreamLogEntries_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3815,7 +3852,7 @@ func (c *v2Client) ListPipelineSteps(ctx context.Context, in *ListPipelineStepsR
 
 func (c *v2Client) PostPipelineStepVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostPipelineStepVersionsUploadClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[6], V2_PostPipelineStepVersionsUpload_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[7], V2_PostPipelineStepVersionsUpload_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3927,7 +3964,7 @@ func (c *v2Client) DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest
 
 func (c *v2Client) PostArtifactVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostArtifactVersionsUploadClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[7], V2_PostArtifactVersionsUpload_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V2_ServiceDesc.Streams[8], V2_PostArtifactVersionsUpload_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -4104,8 +4141,11 @@ type V2Server interface {
 	ListAnnotations(context.Context, *ListAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// List video track annotations for a specific input.
 	PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error)
-	// Stream video track annotations for a specific input one-by-one.
-	StreamTrackAnnotationsSearches(*StreamTrackAnnotationsSearchesRequest, V2_StreamTrackAnnotationsSearchesServer) error
+	// Stream annotations for a specific input one-by-one.
+	StreamAnnotations(*StreamAnnotationsRequest, V2_StreamAnnotationsServer) error
+	// Stream live video annotations as they are being created by the runner.
+	// This endpoint reads from Redis instead of the database for real-time streaming.
+	StreamLivestreamAnnotations(*StreamLivestreamAnnotationsRequest, V2_StreamLivestreamAnnotationsServer) error
 	// Post annotations.
 	PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error)
 	// Patch one or more annotations.
@@ -4775,8 +4815,11 @@ func (UnimplementedV2Server) ListAnnotations(context.Context, *ListAnnotationsRe
 func (UnimplementedV2Server) PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostTrackAnnotationsSearches not implemented")
 }
-func (UnimplementedV2Server) StreamTrackAnnotationsSearches(*StreamTrackAnnotationsSearchesRequest, V2_StreamTrackAnnotationsSearchesServer) error {
-	return status1.Errorf(codes.Unimplemented, "method StreamTrackAnnotationsSearches not implemented")
+func (UnimplementedV2Server) StreamAnnotations(*StreamAnnotationsRequest, V2_StreamAnnotationsServer) error {
+	return status1.Errorf(codes.Unimplemented, "method StreamAnnotations not implemented")
+}
+func (UnimplementedV2Server) StreamLivestreamAnnotations(*StreamLivestreamAnnotationsRequest, V2_StreamLivestreamAnnotationsServer) error {
+	return status1.Errorf(codes.Unimplemented, "method StreamLivestreamAnnotations not implemented")
 }
 func (UnimplementedV2Server) PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostAnnotations not implemented")
@@ -5943,24 +5986,45 @@ func _V2_PostTrackAnnotationsSearches_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_StreamTrackAnnotationsSearches_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamTrackAnnotationsSearchesRequest)
+func _V2_StreamAnnotations_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamAnnotationsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(V2Server).StreamTrackAnnotationsSearches(m, &v2StreamTrackAnnotationsSearchesServer{ServerStream: stream})
+	return srv.(V2Server).StreamAnnotations(m, &v2StreamAnnotationsServer{ServerStream: stream})
 }
 
-type V2_StreamTrackAnnotationsSearchesServer interface {
-	Send(*SingleStreamTrackAnnotationResponse) error
+type V2_StreamAnnotationsServer interface {
+	Send(*SingleStreamAnnotationResponse) error
 	grpc.ServerStream
 }
 
-type v2StreamTrackAnnotationsSearchesServer struct {
+type v2StreamAnnotationsServer struct {
 	grpc.ServerStream
 }
 
-func (x *v2StreamTrackAnnotationsSearchesServer) Send(m *SingleStreamTrackAnnotationResponse) error {
+func (x *v2StreamAnnotationsServer) Send(m *SingleStreamAnnotationResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _V2_StreamLivestreamAnnotations_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamLivestreamAnnotationsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(V2Server).StreamLivestreamAnnotations(m, &v2StreamLivestreamAnnotationsServer{ServerStream: stream})
+}
+
+type V2_StreamLivestreamAnnotationsServer interface {
+	Send(*SingleStreamAnnotationResponse) error
+	grpc.ServerStream
+}
+
+type v2StreamLivestreamAnnotationsServer struct {
+	grpc.ServerStream
+}
+
+func (x *v2StreamLivestreamAnnotationsServer) Send(m *SingleStreamAnnotationResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -12008,8 +12072,13 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "StreamTrackAnnotationsSearches",
-			Handler:       _V2_StreamTrackAnnotationsSearches_Handler,
+			StreamName:    "StreamAnnotations",
+			Handler:       _V2_StreamAnnotations_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "StreamLivestreamAnnotations",
+			Handler:       _V2_StreamLivestreamAnnotations_Handler,
 			ServerStreams: true,
 		},
 		{
