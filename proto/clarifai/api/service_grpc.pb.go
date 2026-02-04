@@ -113,6 +113,7 @@ const (
 	V2_DeleteModelVersion_FullMethodName                    = "/clarifai.api.V2/DeleteModelVersion"
 	V2_PostModelVersionsUpload_FullMethodName               = "/clarifai.api.V2/PostModelVersionsUpload"
 	V2_PostModelMigration_FullMethodName                    = "/clarifai.api.V2/PostModelMigration"
+	V2_DeleteModelMigration_FullMethodName                  = "/clarifai.api.V2/DeleteModelMigration"
 	V2_PutModelVersionExports_FullMethodName                = "/clarifai.api.V2/PutModelVersionExports"
 	V2_GetModelVersionExport_FullMethodName                 = "/clarifai.api.V2/GetModelVersionExport"
 	V2_GetModelVersionMetrics_FullMethodName                = "/clarifai.api.V2/GetModelVersionMetrics"
@@ -547,6 +548,8 @@ type V2Client interface {
 	PostModelVersionsUpload(ctx context.Context, opts ...grpc.CallOption) (V2_PostModelVersionsUploadClient, error)
 	// Kicks off conversion from the old Triton model format to the new Docker model format.
 	PostModelMigration(ctx context.Context, in *PostModelMigrationRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
+	// Reverts a model migration from Docker format back to Triton format.
+	DeleteModelMigration(ctx context.Context, in *DeleteModelMigrationRequest, opts ...grpc.CallOption) (*SingleModelResponse, error)
 	// Export a model
 	PutModelVersionExports(ctx context.Context, in *PutModelVersionExportsRequest, opts ...grpc.CallOption) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
@@ -2018,6 +2021,16 @@ func (c *v2Client) PostModelMigration(ctx context.Context, in *PostModelMigratio
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleModelResponse)
 	err := c.cc.Invoke(ctx, V2_PostModelMigration_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) DeleteModelMigration(ctx context.Context, in *DeleteModelMigrationRequest, opts ...grpc.CallOption) (*SingleModelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SingleModelResponse)
+	err := c.cc.Invoke(ctx, V2_DeleteModelMigration_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -4328,6 +4341,8 @@ type V2Server interface {
 	PostModelVersionsUpload(V2_PostModelVersionsUploadServer) error
 	// Kicks off conversion from the old Triton model format to the new Docker model format.
 	PostModelMigration(context.Context, *PostModelMigrationRequest) (*SingleModelResponse, error)
+	// Reverts a model migration from Docker format back to Triton format.
+	DeleteModelMigration(context.Context, *DeleteModelMigrationRequest) (*SingleModelResponse, error)
 	// Export a model
 	PutModelVersionExports(context.Context, *PutModelVersionExportsRequest) (*SingleModelVersionExportResponse, error)
 	// GetModelVersionExport
@@ -5036,6 +5051,9 @@ func (UnimplementedV2Server) PostModelVersionsUpload(V2_PostModelVersionsUploadS
 }
 func (UnimplementedV2Server) PostModelMigration(context.Context, *PostModelMigrationRequest) (*SingleModelResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostModelMigration not implemented")
+}
+func (UnimplementedV2Server) DeleteModelMigration(context.Context, *DeleteModelMigrationRequest) (*SingleModelResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModelMigration not implemented")
 }
 func (UnimplementedV2Server) PutModelVersionExports(context.Context, *PutModelVersionExportsRequest) (*SingleModelVersionExportResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PutModelVersionExports not implemented")
@@ -7339,6 +7357,24 @@ func _V2_PostModelMigration_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostModelMigration(ctx, req.(*PostModelMigrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_DeleteModelMigration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteModelMigrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).DeleteModelMigration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_DeleteModelMigration_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).DeleteModelMigration(ctx, req.(*DeleteModelMigrationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -11292,6 +11328,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostModelMigration",
 			Handler:    _V2_PostModelMigration_Handler,
+		},
+		{
+			MethodName: "DeleteModelMigration",
+			Handler:    _V2_DeleteModelMigration_Handler,
 		},
 		{
 			MethodName: "PutModelVersionExports",
