@@ -200,22 +200,6 @@ const (
 	V2_DeleteCollectors_FullMethodName                      = "/clarifai.api.V2/DeleteCollectors"
 	V2_PostStatValues_FullMethodName                        = "/clarifai.api.V2/PostStatValues"
 	V2_PostStatValuesAggregate_FullMethodName               = "/clarifai.api.V2/PostStatValuesAggregate"
-	V2_GetModule_FullMethodName                             = "/clarifai.api.V2/GetModule"
-	V2_ListModules_FullMethodName                           = "/clarifai.api.V2/ListModules"
-	V2_PostModules_FullMethodName                           = "/clarifai.api.V2/PostModules"
-	V2_PatchModules_FullMethodName                          = "/clarifai.api.V2/PatchModules"
-	V2_DeleteModules_FullMethodName                         = "/clarifai.api.V2/DeleteModules"
-	V2_GetModuleVersion_FullMethodName                      = "/clarifai.api.V2/GetModuleVersion"
-	V2_ListModuleVersions_FullMethodName                    = "/clarifai.api.V2/ListModuleVersions"
-	V2_PostModuleVersions_FullMethodName                    = "/clarifai.api.V2/PostModuleVersions"
-	V2_PatchModuleVersions_FullMethodName                   = "/clarifai.api.V2/PatchModuleVersions"
-	V2_DeleteModuleVersions_FullMethodName                  = "/clarifai.api.V2/DeleteModuleVersions"
-	V2_GetModuleVersionUsageCount_FullMethodName            = "/clarifai.api.V2/GetModuleVersionUsageCount"
-	V2_GetInstalledModuleVersion_FullMethodName             = "/clarifai.api.V2/GetInstalledModuleVersion"
-	V2_ListInstalledModuleVersions_FullMethodName           = "/clarifai.api.V2/ListInstalledModuleVersions"
-	V2_PostInstalledModuleVersions_FullMethodName           = "/clarifai.api.V2/PostInstalledModuleVersions"
-	V2_DeleteInstalledModuleVersions_FullMethodName         = "/clarifai.api.V2/DeleteInstalledModuleVersions"
-	V2_PostInstalledModuleVersionsKey_FullMethodName        = "/clarifai.api.V2/PostInstalledModuleVersionsKey"
 	V2_PostBulkOperations_FullMethodName                    = "/clarifai.api.V2/PostBulkOperations"
 	V2_ListBulkOperations_FullMethodName                    = "/clarifai.api.V2/ListBulkOperations"
 	V2_GetBulkOperation_FullMethodName                      = "/clarifai.api.V2/GetBulkOperation"
@@ -270,6 +254,7 @@ const (
 	V2_ListLogEntries_FullMethodName                        = "/clarifai.api.V2/ListLogEntries"
 	V2_StreamLogEntries_FullMethodName                      = "/clarifai.api.V2/StreamLogEntries"
 	V2_PostComputePlaneMetrics_FullMethodName               = "/clarifai.api.V2/PostComputePlaneMetrics"
+	V2_PostRunnerReplicaTaskMetrics_FullMethodName          = "/clarifai.api.V2/PostRunnerReplicaTaskMetrics"
 	V2_PostWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/PostWorkflowVersionEvaluations"
 	V2_GetWorkflowVersionEvaluation_FullMethodName          = "/clarifai.api.V2/GetWorkflowVersionEvaluation"
 	V2_ListWorkflowVersionEvaluations_FullMethodName        = "/clarifai.api.V2/ListWorkflowVersionEvaluations"
@@ -363,8 +348,8 @@ type V2Client interface {
 	PostTrackAnnotationsSearches(ctx context.Context, in *PostTrackAnnotationsSearchesRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
 	// Stream annotations for a specific input one-by-one.
 	StreamAnnotations(ctx context.Context, in *StreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamAnnotationsClient, error)
-	// Stream live video annotations as they are being created by the runner.
-	// This endpoint reads from Redis instead of the database for real-time streaming.
+	// Stream live video annotations as soon as they are available.
+	// This endpoint will NOT replay old annotations, but only stream new annotations that are generated after the stream is opened.
 	StreamLivestreamAnnotations(ctx context.Context, in *StreamLivestreamAnnotationsRequest, opts ...grpc.CallOption) (V2_StreamLivestreamAnnotationsClient, error)
 	// Post annotations.
 	PostAnnotations(ctx context.Context, in *PostAnnotationsRequest, opts ...grpc.CallOption) (*MultiAnnotationResponse, error)
@@ -759,41 +744,6 @@ type V2Client interface {
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
-	// Get a specific module from an app.
-	GetModule(ctx context.Context, in *GetModuleRequest, opts ...grpc.CallOption) (*SingleModuleResponse, error)
-	// List all the modules in community, by user or by app.
-	ListModules(ctx context.Context, in *ListModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error)
-	// Add a modules to an app.
-	PostModules(ctx context.Context, in *PostModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error)
-	// Patch one or more modules.
-	PatchModules(ctx context.Context, in *PatchModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error)
-	// Delete multiple modules in one request.
-	DeleteModules(ctx context.Context, in *DeleteModulesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Get a specific module version for a module.
-	GetModuleVersion(ctx context.Context, in *GetModuleVersionRequest, opts ...grpc.CallOption) (*SingleModuleVersionResponse, error)
-	// List all the modules versions for a given module.
-	ListModuleVersions(ctx context.Context, in *ListModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
-	// Create a new module version to trigger training of the module.
-	PostModuleVersions(ctx context.Context, in *PostModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
-	// Modify details of an existing module version.
-	PatchModuleVersions(ctx context.Context, in *PatchModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error)
-	// Delete a multiple module version.
-	DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Get usage count for specific module version.
-	GetModuleVersionUsageCount(ctx context.Context, in *GetModuleVersionUsageCountRequest, opts ...grpc.CallOption) (*SingleModuleVersionUsageCountResponse, error)
-	// Get installed modules vesrions for an app.
-	GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error)
-	// List installed modules vesrions for an app.
-	ListInstalledModuleVersions(ctx context.Context, in *ListInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error)
-	// Install a new module version which will deploy the specific ModuleVersion to the app in the url.
-	PostInstalledModuleVersions(ctx context.Context, in *PostInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error)
-	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app
-	// in the url.
-	// This cleaned up any associated caller keys so needs the Keys_Delete scope.
-	DeleteInstalledModuleVersions(ctx context.Context, in *DeleteInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Assign a key that the caller owns to be used when accessing this installed module version
-	// If this endpoint is called with a different key then it overwrites what is there.
-	PostInstalledModuleVersionsKey(ctx context.Context, in *PostInstalledModuleVersionsKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -921,6 +871,8 @@ type V2Client interface {
 	ListLogEntries(ctx context.Context, in *ListLogEntriesRequest, opts ...grpc.CallOption) (*MultiLogEntryResponse, error)
 	StreamLogEntries(ctx context.Context, in *StreamLogEntriesRequest, opts ...grpc.CallOption) (V2_StreamLogEntriesClient, error)
 	PostComputePlaneMetrics(ctx context.Context, in *PostComputePlaneMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Post task metrics from runner replicas.
+	PostRunnerReplicaTaskMetrics(ctx context.Context, in *PostRunnerReplicaTaskMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	PostWorkflowVersionEvaluations(ctx context.Context, in *PostWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
 	GetWorkflowVersionEvaluation(ctx context.Context, in *GetWorkflowVersionEvaluationRequest, opts ...grpc.CallOption) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(ctx context.Context, in *ListWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error)
@@ -2898,166 +2850,6 @@ func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValu
 	return out, nil
 }
 
-func (c *v2Client) GetModule(ctx context.Context, in *GetModuleRequest, opts ...grpc.CallOption) (*SingleModuleResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleModuleResponse)
-	err := c.cc.Invoke(ctx, V2_GetModule_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListModules(ctx context.Context, in *ListModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleResponse)
-	err := c.cc.Invoke(ctx, V2_ListModules_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostModules(ctx context.Context, in *PostModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleResponse)
-	err := c.cc.Invoke(ctx, V2_PostModules_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PatchModules(ctx context.Context, in *PatchModulesRequest, opts ...grpc.CallOption) (*MultiModuleResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleResponse)
-	err := c.cc.Invoke(ctx, V2_PatchModules_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteModules(ctx context.Context, in *DeleteModulesRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_DeleteModules_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) GetModuleVersion(ctx context.Context, in *GetModuleVersionRequest, opts ...grpc.CallOption) (*SingleModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_GetModuleVersion_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListModuleVersions(ctx context.Context, in *ListModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_ListModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostModuleVersions(ctx context.Context, in *PostModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_PostModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PatchModuleVersions(ctx context.Context, in *PatchModuleVersionsRequest, opts ...grpc.CallOption) (*MultiModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_PatchModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteModuleVersions(ctx context.Context, in *DeleteModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_DeleteModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) GetModuleVersionUsageCount(ctx context.Context, in *GetModuleVersionUsageCountRequest, opts ...grpc.CallOption) (*SingleModuleVersionUsageCountResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleModuleVersionUsageCountResponse)
-	err := c.cc.Invoke(ctx, V2_GetModuleVersionUsageCount_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) GetInstalledModuleVersion(ctx context.Context, in *GetInstalledModuleVersionRequest, opts ...grpc.CallOption) (*SingleInstalledModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleInstalledModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_GetInstalledModuleVersion_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListInstalledModuleVersions(ctx context.Context, in *ListInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiInstalledModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_ListInstalledModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostInstalledModuleVersions(ctx context.Context, in *PostInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*MultiInstalledModuleVersionResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiInstalledModuleVersionResponse)
-	err := c.cc.Invoke(ctx, V2_PostInstalledModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteInstalledModuleVersions(ctx context.Context, in *DeleteInstalledModuleVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_DeleteInstalledModuleVersions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostInstalledModuleVersionsKey(ctx context.Context, in *PostInstalledModuleVersionsKeyRequest, opts ...grpc.CallOption) (*SingleKeyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleKeyResponse)
-	err := c.cc.Invoke(ctx, V2_PostInstalledModuleVersionsKey_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) PostBulkOperations(ctx context.Context, in *PostBulkOperationsRequest, opts ...grpc.CallOption) (*MultiBulkOperationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiBulkOperationsResponse)
@@ -3643,6 +3435,16 @@ func (c *v2Client) PostComputePlaneMetrics(ctx context.Context, in *PostComputeP
 	return out, nil
 }
 
+func (c *v2Client) PostRunnerReplicaTaskMetrics(ctx context.Context, in *PostRunnerReplicaTaskMetricsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_PostRunnerReplicaTaskMetrics_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) PostWorkflowVersionEvaluations(ctx context.Context, in *PostWorkflowVersionEvaluationsRequest, opts ...grpc.CallOption) (*MultiWorkflowVersionEvaluationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiWorkflowVersionEvaluationResponse)
@@ -4156,8 +3958,8 @@ type V2Server interface {
 	PostTrackAnnotationsSearches(context.Context, *PostTrackAnnotationsSearchesRequest) (*MultiAnnotationResponse, error)
 	// Stream annotations for a specific input one-by-one.
 	StreamAnnotations(*StreamAnnotationsRequest, V2_StreamAnnotationsServer) error
-	// Stream live video annotations as they are being created by the runner.
-	// This endpoint reads from Redis instead of the database for real-time streaming.
+	// Stream live video annotations as soon as they are available.
+	// This endpoint will NOT replay old annotations, but only stream new annotations that are generated after the stream is opened.
 	StreamLivestreamAnnotations(*StreamLivestreamAnnotationsRequest, V2_StreamLivestreamAnnotationsServer) error
 	// Post annotations.
 	PostAnnotations(context.Context, *PostAnnotationsRequest) (*MultiAnnotationResponse, error)
@@ -4552,41 +4354,6 @@ type V2Server interface {
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
 	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
-	// Get a specific module from an app.
-	GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error)
-	// List all the modules in community, by user or by app.
-	ListModules(context.Context, *ListModulesRequest) (*MultiModuleResponse, error)
-	// Add a modules to an app.
-	PostModules(context.Context, *PostModulesRequest) (*MultiModuleResponse, error)
-	// Patch one or more modules.
-	PatchModules(context.Context, *PatchModulesRequest) (*MultiModuleResponse, error)
-	// Delete multiple modules in one request.
-	DeleteModules(context.Context, *DeleteModulesRequest) (*status.BaseResponse, error)
-	// Get a specific module version for a module.
-	GetModuleVersion(context.Context, *GetModuleVersionRequest) (*SingleModuleVersionResponse, error)
-	// List all the modules versions for a given module.
-	ListModuleVersions(context.Context, *ListModuleVersionsRequest) (*MultiModuleVersionResponse, error)
-	// Create a new module version to trigger training of the module.
-	PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error)
-	// Modify details of an existing module version.
-	PatchModuleVersions(context.Context, *PatchModuleVersionsRequest) (*MultiModuleVersionResponse, error)
-	// Delete a multiple module version.
-	DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error)
-	// Get usage count for specific module version.
-	GetModuleVersionUsageCount(context.Context, *GetModuleVersionUsageCountRequest) (*SingleModuleVersionUsageCountResponse, error)
-	// Get installed modules vesrions for an app.
-	GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error)
-	// List installed modules vesrions for an app.
-	ListInstalledModuleVersions(context.Context, *ListInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error)
-	// Install a new module version which will deploy the specific ModuleVersion to the app in the url.
-	PostInstalledModuleVersions(context.Context, *PostInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error)
-	// Uninstall an installed module version which will deploy the specific ModuleVersion to the app
-	// in the url.
-	// This cleaned up any associated caller keys so needs the Keys_Delete scope.
-	DeleteInstalledModuleVersions(context.Context, *DeleteInstalledModuleVersionsRequest) (*status.BaseResponse, error)
-	// Assign a key that the caller owns to be used when accessing this installed module version
-	// If this endpoint is called with a different key then it overwrites what is there.
-	PostInstalledModuleVersionsKey(context.Context, *PostInstalledModuleVersionsKeyRequest) (*SingleKeyResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -4714,6 +4481,8 @@ type V2Server interface {
 	ListLogEntries(context.Context, *ListLogEntriesRequest) (*MultiLogEntryResponse, error)
 	StreamLogEntries(*StreamLogEntriesRequest, V2_StreamLogEntriesServer) error
 	PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error)
+	// Post task metrics from runner replicas.
+	PostRunnerReplicaTaskMetrics(context.Context, *PostRunnerReplicaTaskMetricsRequest) (*status.BaseResponse, error)
 	PostWorkflowVersionEvaluations(context.Context, *PostWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
 	GetWorkflowVersionEvaluation(context.Context, *GetWorkflowVersionEvaluationRequest) (*SingleWorkflowVersionEvaluationResponse, error)
 	ListWorkflowVersionEvaluations(context.Context, *ListWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error)
@@ -5313,54 +5082,6 @@ func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequ
 func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValuesAggregate not implemented")
 }
-func (UnimplementedV2Server) GetModule(context.Context, *GetModuleRequest) (*SingleModuleResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetModule not implemented")
-}
-func (UnimplementedV2Server) ListModules(context.Context, *ListModulesRequest) (*MultiModuleResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListModules not implemented")
-}
-func (UnimplementedV2Server) PostModules(context.Context, *PostModulesRequest) (*MultiModuleResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostModules not implemented")
-}
-func (UnimplementedV2Server) PatchModules(context.Context, *PatchModulesRequest) (*MultiModuleResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PatchModules not implemented")
-}
-func (UnimplementedV2Server) DeleteModules(context.Context, *DeleteModulesRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModules not implemented")
-}
-func (UnimplementedV2Server) GetModuleVersion(context.Context, *GetModuleVersionRequest) (*SingleModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetModuleVersion not implemented")
-}
-func (UnimplementedV2Server) ListModuleVersions(context.Context, *ListModuleVersionsRequest) (*MultiModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListModuleVersions not implemented")
-}
-func (UnimplementedV2Server) PostModuleVersions(context.Context, *PostModuleVersionsRequest) (*MultiModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostModuleVersions not implemented")
-}
-func (UnimplementedV2Server) PatchModuleVersions(context.Context, *PatchModuleVersionsRequest) (*MultiModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PatchModuleVersions not implemented")
-}
-func (UnimplementedV2Server) DeleteModuleVersions(context.Context, *DeleteModuleVersionsRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteModuleVersions not implemented")
-}
-func (UnimplementedV2Server) GetModuleVersionUsageCount(context.Context, *GetModuleVersionUsageCountRequest) (*SingleModuleVersionUsageCountResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetModuleVersionUsageCount not implemented")
-}
-func (UnimplementedV2Server) GetInstalledModuleVersion(context.Context, *GetInstalledModuleVersionRequest) (*SingleInstalledModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetInstalledModuleVersion not implemented")
-}
-func (UnimplementedV2Server) ListInstalledModuleVersions(context.Context, *ListInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListInstalledModuleVersions not implemented")
-}
-func (UnimplementedV2Server) PostInstalledModuleVersions(context.Context, *PostInstalledModuleVersionsRequest) (*MultiInstalledModuleVersionResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostInstalledModuleVersions not implemented")
-}
-func (UnimplementedV2Server) DeleteInstalledModuleVersions(context.Context, *DeleteInstalledModuleVersionsRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteInstalledModuleVersions not implemented")
-}
-func (UnimplementedV2Server) PostInstalledModuleVersionsKey(context.Context, *PostInstalledModuleVersionsKeyRequest) (*SingleKeyResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostInstalledModuleVersionsKey not implemented")
-}
 func (UnimplementedV2Server) PostBulkOperations(context.Context, *PostBulkOperationsRequest) (*MultiBulkOperationsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostBulkOperations not implemented")
 }
@@ -5522,6 +5243,9 @@ func (UnimplementedV2Server) StreamLogEntries(*StreamLogEntriesRequest, V2_Strea
 }
 func (UnimplementedV2Server) PostComputePlaneMetrics(context.Context, *PostComputePlaneMetricsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostComputePlaneMetrics not implemented")
+}
+func (UnimplementedV2Server) PostRunnerReplicaTaskMetrics(context.Context, *PostRunnerReplicaTaskMetricsRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostRunnerReplicaTaskMetrics not implemented")
 }
 func (UnimplementedV2Server) PostWorkflowVersionEvaluations(context.Context, *PostWorkflowVersionEvaluationsRequest) (*MultiWorkflowVersionEvaluationResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostWorkflowVersionEvaluations not implemented")
@@ -8927,294 +8651,6 @@ func _V2_PostStatValuesAggregate_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_GetModule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetModuleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetModule(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetModule_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetModule(ctx, req.(*GetModuleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListModules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListModulesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListModules(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListModules_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListModules(ctx, req.(*ListModulesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostModules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostModulesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostModules(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostModules_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostModules(ctx, req.(*PostModulesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PatchModules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PatchModulesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PatchModules(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PatchModules_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PatchModules(ctx, req.(*PatchModulesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteModules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteModulesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteModules(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_DeleteModules_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteModules(ctx, req.(*DeleteModulesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_GetModuleVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetModuleVersionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetModuleVersion(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetModuleVersion_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetModuleVersion(ctx, req.(*GetModuleVersionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListModuleVersions(ctx, req.(*ListModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostModuleVersions(ctx, req.(*PostModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PatchModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PatchModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PatchModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PatchModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PatchModuleVersions(ctx, req.(*PatchModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_DeleteModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteModuleVersions(ctx, req.(*DeleteModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_GetModuleVersionUsageCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetModuleVersionUsageCountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetModuleVersionUsageCount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetModuleVersionUsageCount_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetModuleVersionUsageCount(ctx, req.(*GetModuleVersionUsageCountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_GetInstalledModuleVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetInstalledModuleVersionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetInstalledModuleVersion(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetInstalledModuleVersion_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetInstalledModuleVersion(ctx, req.(*GetInstalledModuleVersionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListInstalledModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListInstalledModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListInstalledModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListInstalledModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListInstalledModuleVersions(ctx, req.(*ListInstalledModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostInstalledModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostInstalledModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostInstalledModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostInstalledModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostInstalledModuleVersions(ctx, req.(*PostInstalledModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteInstalledModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteInstalledModuleVersionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteInstalledModuleVersions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_DeleteInstalledModuleVersions_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteInstalledModuleVersions(ctx, req.(*DeleteInstalledModuleVersionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostInstalledModuleVersionsKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostInstalledModuleVersionsKeyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostInstalledModuleVersionsKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostInstalledModuleVersionsKey_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostInstalledModuleVersionsKey(ctx, req.(*PostInstalledModuleVersionsKeyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_PostBulkOperations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostBulkOperationsRequest)
 	if err := dec(in); err != nil {
@@ -10194,6 +9630,24 @@ func _V2_PostComputePlaneMetrics_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).PostComputePlaneMetrics(ctx, req.(*PostComputePlaneMetricsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostRunnerReplicaTaskMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostRunnerReplicaTaskMetricsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostRunnerReplicaTaskMetrics(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostRunnerReplicaTaskMetrics_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostRunnerReplicaTaskMetrics(ctx, req.(*PostRunnerReplicaTaskMetricsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -11678,70 +11132,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_PostStatValuesAggregate_Handler,
 		},
 		{
-			MethodName: "GetModule",
-			Handler:    _V2_GetModule_Handler,
-		},
-		{
-			MethodName: "ListModules",
-			Handler:    _V2_ListModules_Handler,
-		},
-		{
-			MethodName: "PostModules",
-			Handler:    _V2_PostModules_Handler,
-		},
-		{
-			MethodName: "PatchModules",
-			Handler:    _V2_PatchModules_Handler,
-		},
-		{
-			MethodName: "DeleteModules",
-			Handler:    _V2_DeleteModules_Handler,
-		},
-		{
-			MethodName: "GetModuleVersion",
-			Handler:    _V2_GetModuleVersion_Handler,
-		},
-		{
-			MethodName: "ListModuleVersions",
-			Handler:    _V2_ListModuleVersions_Handler,
-		},
-		{
-			MethodName: "PostModuleVersions",
-			Handler:    _V2_PostModuleVersions_Handler,
-		},
-		{
-			MethodName: "PatchModuleVersions",
-			Handler:    _V2_PatchModuleVersions_Handler,
-		},
-		{
-			MethodName: "DeleteModuleVersions",
-			Handler:    _V2_DeleteModuleVersions_Handler,
-		},
-		{
-			MethodName: "GetModuleVersionUsageCount",
-			Handler:    _V2_GetModuleVersionUsageCount_Handler,
-		},
-		{
-			MethodName: "GetInstalledModuleVersion",
-			Handler:    _V2_GetInstalledModuleVersion_Handler,
-		},
-		{
-			MethodName: "ListInstalledModuleVersions",
-			Handler:    _V2_ListInstalledModuleVersions_Handler,
-		},
-		{
-			MethodName: "PostInstalledModuleVersions",
-			Handler:    _V2_PostInstalledModuleVersions_Handler,
-		},
-		{
-			MethodName: "DeleteInstalledModuleVersions",
-			Handler:    _V2_DeleteInstalledModuleVersions_Handler,
-		},
-		{
-			MethodName: "PostInstalledModuleVersionsKey",
-			Handler:    _V2_PostInstalledModuleVersionsKey_Handler,
-		},
-		{
 			MethodName: "PostBulkOperations",
 			Handler:    _V2_PostBulkOperations_Handler,
 		},
@@ -11948,6 +11338,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostComputePlaneMetrics",
 			Handler:    _V2_PostComputePlaneMetrics_Handler,
+		},
+		{
+			MethodName: "PostRunnerReplicaTaskMetrics",
+			Handler:    _V2_PostRunnerReplicaTaskMetrics_Handler,
 		},
 		{
 			MethodName: "PostWorkflowVersionEvaluations",
