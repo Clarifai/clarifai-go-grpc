@@ -243,6 +243,7 @@ const (
 	V2_PostNodepools_FullMethodName                         = "/clarifai.api.V2/PostNodepools"
 	V2_PatchNodepools_FullMethodName                        = "/clarifai.api.V2/PatchNodepools"
 	V2_DeleteNodepools_FullMethodName                       = "/clarifai.api.V2/DeleteNodepools"
+	V2_PostNodepoolStatus_FullMethodName                    = "/clarifai.api.V2/PostNodepoolStatus"
 	V2_GetDeployment_FullMethodName                         = "/clarifai.api.V2/GetDeployment"
 	V2_ListDeployments_FullMethodName                       = "/clarifai.api.V2/ListDeployments"
 	V2_PostDeployments_FullMethodName                       = "/clarifai.api.V2/PostDeployments"
@@ -282,6 +283,8 @@ const (
 	V2_GetPipelineStepVersion_FullMethodName                = "/clarifai.api.V2/GetPipelineStepVersion"
 	V2_DeletePipelineSteps_FullMethodName                   = "/clarifai.api.V2/DeletePipelineSteps"
 	V2_DeletePipelineStepVersions_FullMethodName            = "/clarifai.api.V2/DeletePipelineStepVersions"
+	V2_ListPipelineTemplates_FullMethodName                 = "/clarifai.api.V2/ListPipelineTemplates"
+	V2_PostPipelineVersionRunFromTemplate_FullMethodName    = "/clarifai.api.V2/PostPipelineVersionRunFromTemplate"
 	V2_PostArtifacts_FullMethodName                         = "/clarifai.api.V2/PostArtifacts"
 	V2_GetArtifact_FullMethodName                           = "/clarifai.api.V2/GetArtifact"
 	V2_ListArtifacts_FullMethodName                         = "/clarifai.api.V2/ListArtifacts"
@@ -858,6 +861,8 @@ type V2Client interface {
 	PatchNodepools(ctx context.Context, in *PatchNodepoolsRequest, opts ...grpc.CallOption) (*MultiNodepoolResponse, error)
 	// Delete multiple nodepools in one request.
 	DeleteNodepools(ctx context.Context, in *DeleteNodepoolsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Update nodepool status. Called by the agent to report nodepool health/errors.
+	PostNodepoolStatus(ctx context.Context, in *PostNodepoolStatusRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Deployments CRUD
 	GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*SingleDeploymentResponse, error)
 	ListDeployments(ctx context.Context, in *ListDeploymentsRequest, opts ...grpc.CallOption) (*MultiDeploymentResponse, error)
@@ -905,6 +910,11 @@ type V2Client interface {
 	GetPipelineStepVersion(ctx context.Context, in *GetPipelineStepVersionRequest, opts ...grpc.CallOption) (*SinglePipelineStepVersionResponse, error)
 	DeletePipelineSteps(ctx context.Context, in *DeletePipelineStepsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	DeletePipelineStepVersions(ctx context.Context, in *DeletePipelineStepVersionsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
+	// Lists pipeline templates, which are ready-to-use templates that can simply be run on demand.
+	ListPipelineTemplates(ctx context.Context, in *ListPipelineTemplatesRequest, opts ...grpc.CallOption) (*MultiPipelineTemplateResponse, error)
+	// Creates a Pipeline, PipelineVersion, and PipelineVersionRun from a PipelineTemplate.
+	// This is a convenience endpoint for users to quickly get started with running pipelines.
+	PostPipelineVersionRunFromTemplate(ctx context.Context, in *PostPipelineVersionRunFromTemplateRequest, opts ...grpc.CallOption) (*PostPipelineVersionRunFromTemplateResponse, error)
 	PostArtifacts(ctx context.Context, in *PostArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error)
 	GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*SingleArtifactResponse, error)
 	ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*MultiArtifactResponse, error)
@@ -3302,6 +3312,16 @@ func (c *v2Client) DeleteNodepools(ctx context.Context, in *DeleteNodepoolsReque
 	return out, nil
 }
 
+func (c *v2Client) PostNodepoolStatus(ctx context.Context, in *PostNodepoolStatusRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(status.BaseResponse)
+	err := c.cc.Invoke(ctx, V2_PostNodepoolStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *v2Client) GetDeployment(ctx context.Context, in *GetDeploymentRequest, opts ...grpc.CallOption) (*SingleDeploymentResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleDeploymentResponse)
@@ -3731,6 +3751,26 @@ func (c *v2Client) DeletePipelineStepVersions(ctx context.Context, in *DeletePip
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, V2_DeletePipelineStepVersions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) ListPipelineTemplates(ctx context.Context, in *ListPipelineTemplatesRequest, opts ...grpc.CallOption) (*MultiPipelineTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultiPipelineTemplateResponse)
+	err := c.cc.Invoke(ctx, V2_ListPipelineTemplates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v2Client) PostPipelineVersionRunFromTemplate(ctx context.Context, in *PostPipelineVersionRunFromTemplateRequest, opts ...grpc.CallOption) (*PostPipelineVersionRunFromTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostPipelineVersionRunFromTemplateResponse)
+	err := c.cc.Invoke(ctx, V2_PostPipelineVersionRunFromTemplate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -4468,6 +4508,8 @@ type V2Server interface {
 	PatchNodepools(context.Context, *PatchNodepoolsRequest) (*MultiNodepoolResponse, error)
 	// Delete multiple nodepools in one request.
 	DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error)
+	// Update nodepool status. Called by the agent to report nodepool health/errors.
+	PostNodepoolStatus(context.Context, *PostNodepoolStatusRequest) (*status.BaseResponse, error)
 	// Deployments CRUD
 	GetDeployment(context.Context, *GetDeploymentRequest) (*SingleDeploymentResponse, error)
 	ListDeployments(context.Context, *ListDeploymentsRequest) (*MultiDeploymentResponse, error)
@@ -4515,6 +4557,11 @@ type V2Server interface {
 	GetPipelineStepVersion(context.Context, *GetPipelineStepVersionRequest) (*SinglePipelineStepVersionResponse, error)
 	DeletePipelineSteps(context.Context, *DeletePipelineStepsRequest) (*status.BaseResponse, error)
 	DeletePipelineStepVersions(context.Context, *DeletePipelineStepVersionsRequest) (*status.BaseResponse, error)
+	// Lists pipeline templates, which are ready-to-use templates that can simply be run on demand.
+	ListPipelineTemplates(context.Context, *ListPipelineTemplatesRequest) (*MultiPipelineTemplateResponse, error)
+	// Creates a Pipeline, PipelineVersion, and PipelineVersionRun from a PipelineTemplate.
+	// This is a convenience endpoint for users to quickly get started with running pipelines.
+	PostPipelineVersionRunFromTemplate(context.Context, *PostPipelineVersionRunFromTemplateRequest) (*PostPipelineVersionRunFromTemplateResponse, error)
 	PostArtifacts(context.Context, *PostArtifactsRequest) (*MultiArtifactResponse, error)
 	GetArtifact(context.Context, *GetArtifactRequest) (*SingleArtifactResponse, error)
 	ListArtifacts(context.Context, *ListArtifactsRequest) (*MultiArtifactResponse, error)
@@ -5211,6 +5258,9 @@ func (UnimplementedV2Server) PatchNodepools(context.Context, *PatchNodepoolsRequ
 func (UnimplementedV2Server) DeleteNodepools(context.Context, *DeleteNodepoolsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteNodepools not implemented")
 }
+func (UnimplementedV2Server) PostNodepoolStatus(context.Context, *PostNodepoolStatusRequest) (*status.BaseResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostNodepoolStatus not implemented")
+}
 func (UnimplementedV2Server) GetDeployment(context.Context, *GetDeploymentRequest) (*SingleDeploymentResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method GetDeployment not implemented")
 }
@@ -5327,6 +5377,12 @@ func (UnimplementedV2Server) DeletePipelineSteps(context.Context, *DeletePipelin
 }
 func (UnimplementedV2Server) DeletePipelineStepVersions(context.Context, *DeletePipelineStepVersionsRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeletePipelineStepVersions not implemented")
+}
+func (UnimplementedV2Server) ListPipelineTemplates(context.Context, *ListPipelineTemplatesRequest) (*MultiPipelineTemplateResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method ListPipelineTemplates not implemented")
+}
+func (UnimplementedV2Server) PostPipelineVersionRunFromTemplate(context.Context, *PostPipelineVersionRunFromTemplateRequest) (*PostPipelineVersionRunFromTemplateResponse, error) {
+	return nil, status1.Errorf(codes.Unimplemented, "method PostPipelineVersionRunFromTemplate not implemented")
 }
 func (UnimplementedV2Server) PostArtifacts(context.Context, *PostArtifactsRequest) (*MultiArtifactResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostArtifacts not implemented")
@@ -9433,6 +9489,24 @@ func _V2_DeleteNodepools_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V2_PostNodepoolStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostNodepoolStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostNodepoolStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostNodepoolStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostNodepoolStatus(ctx, req.(*PostNodepoolStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _V2_GetDeployment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDeploymentRequest)
 	if err := dec(in); err != nil {
@@ -10142,6 +10216,42 @@ func _V2_DeletePipelineStepVersions_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(V2Server).DeletePipelineStepVersions(ctx, req.(*DeletePipelineStepVersionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_ListPipelineTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPipelineTemplatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).ListPipelineTemplates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_ListPipelineTemplates_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).ListPipelineTemplates(ctx, req.(*ListPipelineTemplatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V2_PostPipelineVersionRunFromTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPipelineVersionRunFromTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V2Server).PostPipelineVersionRunFromTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V2_PostPipelineVersionRunFromTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V2Server).PostPipelineVersionRunFromTemplate(ctx, req.(*PostPipelineVersionRunFromTemplateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -11300,6 +11410,10 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _V2_DeleteNodepools_Handler,
 		},
 		{
+			MethodName: "PostNodepoolStatus",
+			Handler:    _V2_PostNodepoolStatus_Handler,
+		},
+		{
 			MethodName: "GetDeployment",
 			Handler:    _V2_GetDeployment_Handler,
 		},
@@ -11446,6 +11560,14 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePipelineStepVersions",
 			Handler:    _V2_DeletePipelineStepVersions_Handler,
+		},
+		{
+			MethodName: "ListPipelineTemplates",
+			Handler:    _V2_ListPipelineTemplates_Handler,
+		},
+		{
+			MethodName: "PostPipelineVersionRunFromTemplate",
+			Handler:    _V2_PostPipelineVersionRunFromTemplate_Handler,
 		},
 		{
 			MethodName: "PostArtifacts",
