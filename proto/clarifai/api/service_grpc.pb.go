@@ -193,11 +193,6 @@ const (
 	V2_ListLabelOrders_FullMethodName                       = "/clarifai.api.V2/ListLabelOrders"
 	V2_PatchLabelOrders_FullMethodName                      = "/clarifai.api.V2/PatchLabelOrders"
 	V2_DeleteLabelOrders_FullMethodName                     = "/clarifai.api.V2/DeleteLabelOrders"
-	V2_PostCollectors_FullMethodName                        = "/clarifai.api.V2/PostCollectors"
-	V2_GetCollector_FullMethodName                          = "/clarifai.api.V2/GetCollector"
-	V2_ListCollectors_FullMethodName                        = "/clarifai.api.V2/ListCollectors"
-	V2_PatchCollectors_FullMethodName                       = "/clarifai.api.V2/PatchCollectors"
-	V2_DeleteCollectors_FullMethodName                      = "/clarifai.api.V2/DeleteCollectors"
 	V2_PostStatValues_FullMethodName                        = "/clarifai.api.V2/PostStatValues"
 	V2_PostStatValuesAggregate_FullMethodName               = "/clarifai.api.V2/PostStatValuesAggregate"
 	V2_PostBulkOperations_FullMethodName                    = "/clarifai.api.V2/PostBulkOperations"
@@ -686,20 +681,17 @@ type V2Client interface {
 	DeleteCollaborators(ctx context.Context, in *DeleteCollaboratorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(ctx context.Context, in *ListCollaborationsRequest, opts ...grpc.CallOption) (*MultiCollaborationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// PostAppDuplications starts async app duplication jobs which copy resources
-	// (inputs, annotations, models etc) from one application to another. It can
-	// also create the destination application if it does not exist, with fields
-	// (description, metadata etc) copied from the source application.
-	//
-	// A duplication job can be started by any user that can read from the source
-	// application (the target of this call) and can create and write to the
-	// destination application. The duplication is associated with the user that
-	// created it, so in order to read the status and progress of the job, that
-	// user's ID has to be used in the call to GetAppDuplication, which might be
-	// different to the source application owner ID in this call.
+	// (inputs, annotations, models etc) from one application to another.
 	PostAppDuplications(ctx context.Context, in *PostAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// ListAppDuplications lists all app duplication jobs created by the user.
 	ListAppDuplications(ctx context.Context, in *ListAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// GetAppDuplication returns an app duplication job created by the user.
 	GetAppDuplication(ctx context.Context, in *GetAppDuplicationRequest, opts ...grpc.CallOption) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
@@ -727,22 +719,6 @@ type V2Client interface {
 	// Delete multiple label orders in one request.
 	// this do not change task status
 	DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// Add a list of Collectors to an app.
-	// In the handler of this endpoint we also check for all the scopes of the  POST /inputs
-	// endpoint.
-	// Those current scopes are listed here as a hard requirement.
-	// They are needed when adding the collectors just so we now that you have permission with
-	// that key at least to do the writing to this app with POST /inputs.
-	PostCollectors(ctx context.Context, in *PostCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error)
-	// Get a specific collector from an app.
-	GetCollector(ctx context.Context, in *GetCollectorRequest, opts ...grpc.CallOption) (*SingleCollectorResponse, error)
-	// List all the collectors.
-	ListCollectors(ctx context.Context, in *ListCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error)
-	// Patch one or more collectors.
-	PatchCollectors(ctx context.Context, in *PatchCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error)
-	// Delete multiple collectors in one request.
-	// This call is asynchronous. Use DeleteCollector if you want a synchronous version.
-	DeleteCollectors(ctx context.Context, in *DeleteCollectorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
 	// PostStatValues
 	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
@@ -2640,6 +2616,7 @@ func (c *v2Client) ListCollaborations(ctx context.Context, in *ListCollaboration
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) PostAppDuplications(ctx context.Context, in *PostAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiAppDuplicationsResponse)
@@ -2650,6 +2627,7 @@ func (c *v2Client) PostAppDuplications(ctx context.Context, in *PostAppDuplicati
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) ListAppDuplications(ctx context.Context, in *ListAppDuplicationsRequest, opts ...grpc.CallOption) (*MultiAppDuplicationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiAppDuplicationsResponse)
@@ -2660,6 +2638,7 @@ func (c *v2Client) ListAppDuplications(ctx context.Context, in *ListAppDuplicati
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *v2Client) GetAppDuplication(ctx context.Context, in *GetAppDuplicationRequest, opts ...grpc.CallOption) (*SingleAppDuplicationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SingleAppDuplicationResponse)
@@ -2784,56 +2763,6 @@ func (c *v2Client) DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(status.BaseResponse)
 	err := c.cc.Invoke(ctx, V2_DeleteLabelOrders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostCollectors(ctx context.Context, in *PostCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiCollectorResponse)
-	err := c.cc.Invoke(ctx, V2_PostCollectors_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) GetCollector(ctx context.Context, in *GetCollectorRequest, opts ...grpc.CallOption) (*SingleCollectorResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SingleCollectorResponse)
-	err := c.cc.Invoke(ctx, V2_GetCollector_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) ListCollectors(ctx context.Context, in *ListCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiCollectorResponse)
-	err := c.cc.Invoke(ctx, V2_ListCollectors_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PatchCollectors(ctx context.Context, in *PatchCollectorsRequest, opts ...grpc.CallOption) (*MultiCollectorResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiCollectorResponse)
-	err := c.cc.Invoke(ctx, V2_PatchCollectors_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) DeleteCollectors(ctx context.Context, in *DeleteCollectorsRequest, opts ...grpc.CallOption) (*status.BaseResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(status.BaseResponse)
-	err := c.cc.Invoke(ctx, V2_DeleteCollectors_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -4333,20 +4262,17 @@ type V2Server interface {
 	DeleteCollaborators(context.Context, *DeleteCollaboratorsRequest) (*status.BaseResponse, error)
 	// Collaboration includes the app user are invitied to work on
 	ListCollaborations(context.Context, *ListCollaborationsRequest) (*MultiCollaborationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// PostAppDuplications starts async app duplication jobs which copy resources
-	// (inputs, annotations, models etc) from one application to another. It can
-	// also create the destination application if it does not exist, with fields
-	// (description, metadata etc) copied from the source application.
-	//
-	// A duplication job can be started by any user that can read from the source
-	// application (the target of this call) and can create and write to the
-	// destination application. The duplication is associated with the user that
-	// created it, so in order to read the status and progress of the job, that
-	// user's ID has to be used in the call to GetAppDuplication, which might be
-	// different to the source application owner ID in this call.
+	// (inputs, annotations, models etc) from one application to another.
 	PostAppDuplications(context.Context, *PostAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// ListAppDuplications lists all app duplication jobs created by the user.
 	ListAppDuplications(context.Context, *ListAppDuplicationsRequest) (*MultiAppDuplicationsResponse, error)
+	// Deprecated: Do not use.
+	// Deprecated: App duplication is no longer supported.
 	// GetAppDuplication returns an app duplication job created by the user.
 	GetAppDuplication(context.Context, *GetAppDuplicationRequest) (*SingleAppDuplicationResponse, error)
 	// Add tasks to an app.
@@ -4374,22 +4300,6 @@ type V2Server interface {
 	// Delete multiple label orders in one request.
 	// this do not change task status
 	DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error)
-	// Add a list of Collectors to an app.
-	// In the handler of this endpoint we also check for all the scopes of the  POST /inputs
-	// endpoint.
-	// Those current scopes are listed here as a hard requirement.
-	// They are needed when adding the collectors just so we now that you have permission with
-	// that key at least to do the writing to this app with POST /inputs.
-	PostCollectors(context.Context, *PostCollectorsRequest) (*MultiCollectorResponse, error)
-	// Get a specific collector from an app.
-	GetCollector(context.Context, *GetCollectorRequest) (*SingleCollectorResponse, error)
-	// List all the collectors.
-	ListCollectors(context.Context, *ListCollectorsRequest) (*MultiCollectorResponse, error)
-	// Patch one or more collectors.
-	PatchCollectors(context.Context, *PatchCollectorsRequest) (*MultiCollectorResponse, error)
-	// Delete multiple collectors in one request.
-	// This call is asynchronous. Use DeleteCollector if you want a synchronous version.
-	DeleteCollectors(context.Context, *DeleteCollectorsRequest) (*status.BaseResponse, error)
 	// PostStatValues
 	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
 	// PostStatValuesAggregate
@@ -5107,21 +5017,6 @@ func (UnimplementedV2Server) PatchLabelOrders(context.Context, *PatchLabelOrders
 }
 func (UnimplementedV2Server) DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteLabelOrders not implemented")
-}
-func (UnimplementedV2Server) PostCollectors(context.Context, *PostCollectorsRequest) (*MultiCollectorResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostCollectors not implemented")
-}
-func (UnimplementedV2Server) GetCollector(context.Context, *GetCollectorRequest) (*SingleCollectorResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method GetCollector not implemented")
-}
-func (UnimplementedV2Server) ListCollectors(context.Context, *ListCollectorsRequest) (*MultiCollectorResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method ListCollectors not implemented")
-}
-func (UnimplementedV2Server) PatchCollectors(context.Context, *PatchCollectorsRequest) (*MultiCollectorResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PatchCollectors not implemented")
-}
-func (UnimplementedV2Server) DeleteCollectors(context.Context, *DeleteCollectorsRequest) (*status.BaseResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method DeleteCollectors not implemented")
 }
 func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValues not implemented")
@@ -8581,96 +8476,6 @@ func _V2_DeleteLabelOrders_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_PostCollectors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostCollectorsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostCollectors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostCollectors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostCollectors(ctx, req.(*PostCollectorsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_GetCollector_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCollectorRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).GetCollector(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_GetCollector_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).GetCollector(ctx, req.(*GetCollectorRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_ListCollectors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListCollectorsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).ListCollectors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_ListCollectors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).ListCollectors(ctx, req.(*ListCollectorsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PatchCollectors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PatchCollectorsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PatchCollectors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PatchCollectors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PatchCollectors(ctx, req.(*PatchCollectorsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_DeleteCollectors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCollectorsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).DeleteCollectors(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_DeleteCollectors_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).DeleteCollectors(ctx, req.(*DeleteCollectorsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_PostStatValues_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostStatValuesRequest)
 	if err := dec(in); err != nil {
@@ -11212,26 +11017,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteLabelOrders",
 			Handler:    _V2_DeleteLabelOrders_Handler,
-		},
-		{
-			MethodName: "PostCollectors",
-			Handler:    _V2_PostCollectors_Handler,
-		},
-		{
-			MethodName: "GetCollector",
-			Handler:    _V2_GetCollector_Handler,
-		},
-		{
-			MethodName: "ListCollectors",
-			Handler:    _V2_ListCollectors_Handler,
-		},
-		{
-			MethodName: "PatchCollectors",
-			Handler:    _V2_PatchCollectors_Handler,
-		},
-		{
-			MethodName: "DeleteCollectors",
-			Handler:    _V2_DeleteCollectors_Handler,
 		},
 		{
 			MethodName: "PostStatValues",
