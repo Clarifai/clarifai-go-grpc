@@ -193,8 +193,6 @@ const (
 	V2_ListLabelOrders_FullMethodName                       = "/clarifai.api.V2/ListLabelOrders"
 	V2_PatchLabelOrders_FullMethodName                      = "/clarifai.api.V2/PatchLabelOrders"
 	V2_DeleteLabelOrders_FullMethodName                     = "/clarifai.api.V2/DeleteLabelOrders"
-	V2_PostStatValues_FullMethodName                        = "/clarifai.api.V2/PostStatValues"
-	V2_PostStatValuesAggregate_FullMethodName               = "/clarifai.api.V2/PostStatValuesAggregate"
 	V2_PostBulkOperations_FullMethodName                    = "/clarifai.api.V2/PostBulkOperations"
 	V2_ListBulkOperations_FullMethodName                    = "/clarifai.api.V2/ListBulkOperations"
 	V2_GetBulkOperation_FullMethodName                      = "/clarifai.api.V2/GetBulkOperation"
@@ -719,10 +717,6 @@ type V2Client interface {
 	// Delete multiple label orders in one request.
 	// this do not change task status
 	DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersRequest, opts ...grpc.CallOption) (*status.BaseResponse, error)
-	// PostStatValues
-	PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error)
-	// PostStatValuesAggregate
-	PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -2769,26 +2763,6 @@ func (c *v2Client) DeleteLabelOrders(ctx context.Context, in *DeleteLabelOrdersR
 	return out, nil
 }
 
-func (c *v2Client) PostStatValues(ctx context.Context, in *PostStatValuesRequest, opts ...grpc.CallOption) (*MultiStatValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiStatValueResponse)
-	err := c.cc.Invoke(ctx, V2_PostStatValues_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *v2Client) PostStatValuesAggregate(ctx context.Context, in *PostStatValuesAggregateRequest, opts ...grpc.CallOption) (*MultiStatValueAggregateResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MultiStatValueAggregateResponse)
-	err := c.cc.Invoke(ctx, V2_PostStatValuesAggregate_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *v2Client) PostBulkOperations(ctx context.Context, in *PostBulkOperationsRequest, opts ...grpc.CallOption) (*MultiBulkOperationsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MultiBulkOperationsResponse)
@@ -4300,10 +4274,6 @@ type V2Server interface {
 	// Delete multiple label orders in one request.
 	// this do not change task status
 	DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error)
-	// PostStatValues
-	PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error)
-	// PostStatValuesAggregate
-	PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error)
 	// Perform bulk operations on a list of inputs based on input source.
 	// Operation include add, update, delete of concepts, metadata and geo data.
 	// This is an Asynchronous process. Use ListBulkOperations or GetBulkOperation to check the status.
@@ -5017,12 +4987,6 @@ func (UnimplementedV2Server) PatchLabelOrders(context.Context, *PatchLabelOrders
 }
 func (UnimplementedV2Server) DeleteLabelOrders(context.Context, *DeleteLabelOrdersRequest) (*status.BaseResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method DeleteLabelOrders not implemented")
-}
-func (UnimplementedV2Server) PostStatValues(context.Context, *PostStatValuesRequest) (*MultiStatValueResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValues not implemented")
-}
-func (UnimplementedV2Server) PostStatValuesAggregate(context.Context, *PostStatValuesAggregateRequest) (*MultiStatValueAggregateResponse, error) {
-	return nil, status1.Errorf(codes.Unimplemented, "method PostStatValuesAggregate not implemented")
 }
 func (UnimplementedV2Server) PostBulkOperations(context.Context, *PostBulkOperationsRequest) (*MultiBulkOperationsResponse, error) {
 	return nil, status1.Errorf(codes.Unimplemented, "method PostBulkOperations not implemented")
@@ -8476,42 +8440,6 @@ func _V2_DeleteLabelOrders_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V2_PostStatValues_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostStatValuesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostStatValues(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostStatValues_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostStatValues(ctx, req.(*PostStatValuesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _V2_PostStatValuesAggregate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostStatValuesAggregateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(V2Server).PostStatValuesAggregate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V2_PostStatValuesAggregate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V2Server).PostStatValuesAggregate(ctx, req.(*PostStatValuesAggregateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _V2_PostBulkOperations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostBulkOperationsRequest)
 	if err := dec(in); err != nil {
@@ -11017,14 +10945,6 @@ var V2_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteLabelOrders",
 			Handler:    _V2_DeleteLabelOrders_Handler,
-		},
-		{
-			MethodName: "PostStatValues",
-			Handler:    _V2_PostStatValues_Handler,
-		},
-		{
-			MethodName: "PostStatValuesAggregate",
-			Handler:    _V2_PostStatValuesAggregate_Handler,
 		},
 		{
 			MethodName: "PostBulkOperations",
