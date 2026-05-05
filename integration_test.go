@@ -2,7 +2,6 @@ package tests
 
 import (
 	"context"
-	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -26,6 +25,10 @@ func TestGetModel(t *testing.T) {
 	check(err)
 	assertSuccessResponse(t, response.Status)
 
+	// Fix: nil check before accessing response.Model fields
+	if response.Model == nil {
+		t.Fatal("Expected model in response, got nil")
+	}
 	if response.Model.Name != "Image Recognition" {
 		t.Errorf("Expected model name `Image Recognition`, got `%s`\n", response.Model.Name)
 	}
@@ -75,7 +78,8 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	fileBytes, err := ioutil.ReadFile("test_assets/red-truck.png")
+	// Fix: ioutil.ReadFile is deprecated since Go 1.16, use os.ReadFile
+	fileBytes, err := os.ReadFile("test_assets/red-truck.png")
 	check(err)
 
 	response, err := client.PostModelOutputs(
@@ -237,7 +241,8 @@ func makeClient() api.V2Client {
 		grpcBaseUrl = "api.clarifai.com"
 	}
 	port := "443"
-	conn, err := grpc.Dial(grpcBaseUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
+	// Fix: grpc.Dial is deprecated in gRPC v1.80+, use grpc.NewClient
+	conn, err := grpc.NewClient(grpcBaseUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	check(err)
 	return api.NewV2Client(conn)
 }

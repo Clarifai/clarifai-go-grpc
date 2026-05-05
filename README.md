@@ -45,7 +45,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-conn, err := grpc.Dial(
+conn, err := grpc.NewClient(
     "api.clarifai.com:443",
     grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")),
 )
