@@ -78,7 +78,6 @@ func TestPostModelOutputsWithFileBytes(t *testing.T) {
 	client := makeClient()
 	ctx := makeContext()
 
-	// Fix: ioutil.ReadFile is deprecated since Go 1.16, use os.ReadFile
 	fileBytes, err := os.ReadFile("test_assets/red-truck.png")
 	check(err)
 
