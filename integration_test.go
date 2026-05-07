@@ -240,7 +240,6 @@ func makeClient() api.V2Client {
 		grpcBaseUrl = "api.clarifai.com"
 	}
 	port := "443"
-	// Fix: grpc.Dial is deprecated in gRPC v1.80+, use grpc.NewClient
 	conn, err := grpc.NewClient(grpcBaseUrl+":"+port, grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	check(err)
 	return api.NewV2Client(conn)
